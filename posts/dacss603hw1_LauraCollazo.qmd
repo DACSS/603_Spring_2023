@@ -1,0 +1,216 @@
+---
+title: "DACSS 603 Homework 1"
+author: "Laura Collazo"
+description: "This is Homework 1 for DASS 603."
+date: "02/19/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# Libraries
+
+```{r, echo=T, message=FALSE}
+
+library(readxl)
+library(tidyverse)
+
+```
+
+# Question 1
+
+Read in data for question 1.
+
+```{r, echo=T}
+
+df <- read_excel("_data/LungCapData.xls")
+
+```
+
+## a
+
+The distribution of LungCap looks as follows:
+
+```{r, echo=T}
+
+hist(df$LungCap)
+
+```
+
+The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
+
+## b
+
+The distribution of LungCap by Gender looks as follows:
+
+```{r, echo=T}
+
+boxplot(df$LungCap ~ df$Gender)
+
+```
+The distribution shows that males, on average, have a higher lung capacity than females.  
+
+## c
+
+The mean lung capacities for smokers and non-smokers is shown below.
+
+```{r, echo=T}
+
+df %>% 
+  group_by(Smoke) %>% 
+  summarise(mean = mean(LungCap))
+
+```
+
+These means are not what I would have expected to see. This shows smokers have a higher mean lung capacity than non-smokers.
+
+## d
+
+The mean lung capacities for smokers and non-smokers by age group is shown below.
+
+```{r, echo=T}
+
+df_age_group <- df %>% 
+  mutate(
+    age_group = case_when(
+      Age < 14 ~ "less than or equal to 13",
+      Age == 14 ~ "14 to 15",
+      Age == 15 ~ "14 to 15",
+      Age == 16 ~ "16 to 17",
+      Age == 17 ~ "16 to 17",
+      Age > 17 ~ "greater than or equal to 18")
+  ) 
+
+df_age_group %>%
+  group_by(age_group, Smoke) %>% 
+  summarise(mean = mean(LungCap))
+
+```
+
+## e
+
+The distribution of LungCap by age_group and smoker looks as follows:
+
+```{r, echo=T}
+
+ggplot(df_age_group, aes(x=age_group, y=LungCap, color = Smoke)) +
+  geom_boxplot()
+
+```
+
+The mean lung capacity for non-smokers is higher than smokers for all age groups except for those age 13 or younger. This is interesting as it was observed earlier that overall smokers have a higher mean lung capacity than non-smokers. This led me to wonder if there are more individuals age 13 or younger in this sample than other age groups, and also what the count of smokers versus non smokers is for this sample. 
+
+The count by age group and smoker type is shown below.
+
+```{r, echo=T}
+
+df_age_group %>% 
+  group_by(age_group, Smoke) %>% 
+  summarise(total_count = n())
+
+```
+
+The overall count by smoker type is shown below.
+
+```{r, echo=T}
+
+df %>% 
+  group_by(Smoke) %>% 
+  summarise(total_count = n())
+
+```
+
+# Question 2
+
+Data for question 2.
+
+```{r, echo=T}
+
+convictions <- data.frame(number_convictions = 0:4, freq = c(128, 434, 160, 64, 24)) %>% 
+  mutate(prop = freq/810)
+
+print(convictions)
+
+```
+
+## a
+
+The probability that a randomly selected inmate has exactly 2 prior convictions is as follows:
+
+```{r, echo=T}
+
+dbinom(x= 1, size= 1, prob= 160/810)
+
+```
+
+## b
+
+The probability that a randomly selected inmate has fewer than 2 prior convictions is as follows:
+
+```{r, echo=T}
+
+dbinom(x= 1, size= 1, prob= sum(128/810 + 434/810))
+
+```
+
+## c
+
+The probability that a randomly selected inmate has 2 or fewer prior convictions is as follows:
+
+```{r, echo=T}
+
+dbinom(x= 1, size= 1, prob= sum(128/810 + 434/810 + 160/810))
+
+```
+
+## d
+
+The probability that a randomly selected inmate has more than 2 prior convictions is as follows:
+
+```{r, echo=T}
+
+dbinom(x= 1, size= 1, prob= sum(64/810 + 24/810))
+
+```
+## e
+
+The expected value for the number of prior convictions is as follows:
+
+```{r, echo=T}
+
+ev <- sum(convictions$number_convictions * convictions$prop)
+
+print(ev)
+
+```
+
+## f
+
+The variance for prior convictions is as follows:
+
+```{r, echo=T}
+
+var <- sum((convictions$number - ev) ^ 2 * convictions$prop)
+
+print(var)
+
+```
+The standard deviation for prior convictions is as follows:
+
+```{r, echo=T}
+
+sd <- sqrt(var)
+
+print(sd)
+
+```
+
+---
+
