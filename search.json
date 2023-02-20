@@ -1,5 +1,54 @@
 [
   {
+    "objectID": "posts/HW1_MiguelCuriel.html",
+    "href": "posts/HW1_MiguelCuriel.html",
+    "title": "Homework 1",
+    "section": "",
+    "text": "First, let’s read in the data from the Excel file:\n\n\nCode\nlibrary(readxl)\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n\n\nCode\nhist(df$LungCap)\n\n\n\n\n\nThe histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).\n\n\n\nCompare the probability distribution of the LungCap with respect to Males and Females?\n\n\nCode\nsuppressPackageStartupMessages(library(dplyr))\nboxplot(LungCap~Gender, data=df)\n\n\n\n\n\nThe boxplot suggests that males tend to have a slightly higher lung capacity than females. While the mean of both genders is close to each other (~8), males’ interquartile range is slightly higher (approximately from 6.5 to 10) when compared to the females’ (approximately from 6 to 9).\n\n\n\nCompare the mean lung capacities for smokers and non-smokers. Does it make sense?\n\n\nCode\ndf %>%\n  group_by(Smoke) %>%\n  summarise(mean = mean(LungCap), n = n())\n\n\n# A tibble: 2 × 3\n  Smoke  mean     n\n  <chr> <dbl> <int>\n1 no     7.77   648\n2 yes    8.65    77\n\n\nSmokers have a mean lung capacity of 8.65, versus non-smokers who have a lung capacity of 7.77. These results do not make sense, as we would expect non-smokers to have greater lung capacity.\n\n\n\nExamine the relationship between Smoking and Lung Capacity within age groups: “less than or equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.\n\n\nCode\nage_groups <- df %>% \n  mutate(\n    # Create categories\n    AgeGroup = case_when(\n      Age <= 13            ~ \"0 to 13\",\n      Age == 14 | Age == 15 ~ \"14 to 15\",\n      Age == 16 | Age == 17 ~ \"16 to 17\",\n      Age >= 18             ~ \"18 and above\"\n    ),\n    # Convert to factor\n    AgeGroup = factor(\n      AgeGroup,\n      level = c(\"0 to 13\", \"14 to 15\",\"16 to 17\", \"18 and above\")\n    )\n  )\n\nboxplot(LungCap~AgeGroup, data=age_groups)\n\n\n\n\n\nThe boxplot suggests that the greater the age, the greater the lung capacity. This is especially evident when comparing the lowest age group (0-13) versus the rest of them, but between the two oldest age groups (16-17 vs 18+), this is the least evident. This makes sense as the greatest physical growth usually happens earlier in life - from childhood to puberty - but then this slows down in the late teens and it almost entirely stops during young adulthood.\n\n\n\nCompare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c. What could possibly be going on here?\n\n\nCode\nlibrary(ggplot2)\n\nage_groups %>% ggplot(aes(x=AgeGroup, y=LungCap, fill=Smoke)) + geom_boxplot()\n\n\n\n\n\nThe answer is different than what I found in 1.C. I previously found that the lung capacity mean for non-smokers was less than the smoking counterpart; however, this new box plot suggests that most non-smoking age groups actually have better lung capacity than smokers. The only age group where this condition isn’t met is in the youngest ages (0-13) so it is likely that this group that is skewing the overall smoker versus non-smoker analysis."
+  },
+  {
+    "objectID": "posts/HW1_MiguelCuriel.html#a-1",
+    "href": "posts/HW1_MiguelCuriel.html#a-1",
+    "title": "Homework 1",
+    "section": "a",
+    "text": "a\nWhat is the probability that a randomly selected inmate has exactly 2 prior convictions?\n160/810 = .1975 = 19.75%"
+  },
+  {
+    "objectID": "posts/HW1_MiguelCuriel.html#b-1",
+    "href": "posts/HW1_MiguelCuriel.html#b-1",
+    "title": "Homework 1",
+    "section": "b",
+    "text": "b\nWhat is the probability that a randomly selected inmate has fewer than 2 prior convictions?\n(128+434)/810 = 562/810 = .6938 = 69.38%"
+  },
+  {
+    "objectID": "posts/HW1_MiguelCuriel.html#c-1",
+    "href": "posts/HW1_MiguelCuriel.html#c-1",
+    "title": "Homework 1",
+    "section": "c",
+    "text": "c\nWhat is the probability that a randomly selected inmate has 2 or fewer prior convictions?\n(128+434+160)/810 = 722/810 = .8914 = 89.14%"
+  },
+  {
+    "objectID": "posts/HW1_MiguelCuriel.html#d-1",
+    "href": "posts/HW1_MiguelCuriel.html#d-1",
+    "title": "Homework 1",
+    "section": "d",
+    "text": "d\nWhat is the probability that a randomly selected inmate has more than 2 prior convictions?\n(64+24)/810 = 88/810 = .1086 = 10.86%"
+  },
+  {
+    "objectID": "posts/HW1_MiguelCuriel.html#e-1",
+    "href": "posts/HW1_MiguelCuriel.html#e-1",
+    "title": "Homework 1",
+    "section": "e",
+    "text": "e\nWhat is the expected value for the number of prior convictions? (The expected value of a discrete random variable X, symbolized as E(X), is often referred to as the long-term average or mean)\n\n\nCode\n(0*128/810) + (1*434/810) + (2*160/810) + (3*64/810) + (4*24/810) \n\n\n[1] 1.28642"
+  },
+  {
+    "objectID": "posts/HW1_MiguelCuriel.html#f",
+    "href": "posts/HW1_MiguelCuriel.html#f",
+    "title": "Homework 1",
+    "section": "f",
+    "text": "f\nCalculate the variance and the standard deviation for the Prior Convictions.\nBelow is the variance:\n\n\nCode\n((0-1.28642)^2 * 0) + ((1-1.28642)^2 * .5358) + ((2-1.28642)^2 * .395) + ((3-1.28642)^2 * .237) + ((4-1.28642)^2 * .1185)\n\n\n[1] 1.813581\n\n\nAnd below is the standard deviation:\n\n\nCode\nsqrt(((0-1.28642)^2 * 0) + ((1-1.28642)^2 * .5358) + ((2-1.28642)^2 * .395) + ((3-1.28642)^2 * .237) + ((4-1.28642)^2 * .1185))\n\n\n[1] 1.346693"
+  },
+  {
     "objectID": "posts/dacss603hw1_LauraCollazo.html",
     "href": "posts/dacss603hw1_LauraCollazo.html",
     "title": "DACSS 603 Homework 1",
@@ -95,7 +144,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/Rowena.Kosher.html",
