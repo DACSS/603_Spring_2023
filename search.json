@@ -1,5 +1,89 @@
 [
   {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html",
+    "href": "posts/dacss603hw1_LauraCollazo.html",
+    "title": "DACSS 603 Homework 1",
+    "section": "",
+    "text": "Code\nlibrary(readxl)\nlibrary(tidyverse)"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#a",
+    "href": "posts/dacss603hw1_LauraCollazo.html#a",
+    "title": "DACSS 603 Homework 1",
+    "section": "a",
+    "text": "a\nThe distribution of LungCap looks as follows:\n\n\nCode\nhist(df$LungCap)\n\n\n\n\n\nThe histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15)."
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#b",
+    "href": "posts/dacss603hw1_LauraCollazo.html#b",
+    "title": "DACSS 603 Homework 1",
+    "section": "b",
+    "text": "b\nThe distribution of LungCap by Gender looks as follows:\n\n\nCode\nboxplot(df$LungCap ~ df$Gender)\n\n\n\n\n\nThe distribution shows that males, on average, have a higher lung capacity than females."
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#c",
+    "href": "posts/dacss603hw1_LauraCollazo.html#c",
+    "title": "DACSS 603 Homework 1",
+    "section": "c",
+    "text": "c\nThe mean lung capacities for smokers and non-smokers is shown below.\n\n\nCode\ndf %>% \n  group_by(Smoke) %>% \n  summarise(mean = mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke  mean\n  <chr> <dbl>\n1 no     7.77\n2 yes    8.65\n\n\nThese means are not what I would have expected to see. This shows smokers have a higher mean lung capacity than non-smokers."
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#d",
+    "href": "posts/dacss603hw1_LauraCollazo.html#d",
+    "title": "DACSS 603 Homework 1",
+    "section": "d",
+    "text": "d\nThe mean lung capacities for smokers and non-smokers by age group is shown below.\n\n\nCode\ndf_age_group <- df %>% \n  mutate(\n    age_group = case_when(\n      Age < 14 ~ \"less than or equal to 13\",\n      Age == 14 ~ \"14 to 15\",\n      Age == 15 ~ \"14 to 15\",\n      Age == 16 ~ \"16 to 17\",\n      Age == 17 ~ \"16 to 17\",\n      Age > 17 ~ \"greater than or equal to 18\")\n  ) \n\ndf_age_group %>%\n  group_by(age_group, Smoke) %>% \n  summarise(mean = mean(LungCap))\n\n\n`summarise()` has grouped output by 'age_group'. You can override using the\n`.groups` argument.\n\n\n# A tibble: 8 × 3\n# Groups:   age_group [4]\n  age_group                   Smoke  mean\n  <chr>                       <chr> <dbl>\n1 14 to 15                    no     9.14\n2 14 to 15                    yes    8.39\n3 16 to 17                    no    10.5 \n4 16 to 17                    yes    9.38\n5 greater than or equal to 18 no    11.1 \n6 greater than or equal to 18 yes   10.5 \n7 less than or equal to 13    no     6.36\n8 less than or equal to 13    yes    7.20"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#e",
+    "href": "posts/dacss603hw1_LauraCollazo.html#e",
+    "title": "DACSS 603 Homework 1",
+    "section": "e",
+    "text": "e\nThe distribution of LungCap by age_group and smoker looks as follows:\n\n\nCode\nggplot(df_age_group, aes(x=age_group, y=LungCap, color = Smoke)) +\n  geom_boxplot()\n\n\n\n\n\nThe mean lung capacity for non-smokers is higher than smokers for all age groups except for those age 13 or younger. This is interesting as it was observed earlier that overall smokers have a higher mean lung capacity than non-smokers. This led me to wonder if there are more individuals age 13 or younger in this sample than other age groups, and also what the count of smokers versus non smokers is for this sample.\nThe count by age group and smoker type is shown below.\n\n\nCode\ndf_age_group %>% \n  group_by(age_group, Smoke) %>% \n  summarise(total_count = n())\n\n\n`summarise()` has grouped output by 'age_group'. You can override using the\n`.groups` argument.\n\n\n# A tibble: 8 × 3\n# Groups:   age_group [4]\n  age_group                   Smoke total_count\n  <chr>                       <chr>       <int>\n1 14 to 15                    no            105\n2 14 to 15                    yes            15\n3 16 to 17                    no             77\n4 16 to 17                    yes            20\n5 greater than or equal to 18 no             65\n6 greater than or equal to 18 yes            15\n7 less than or equal to 13    no            401\n8 less than or equal to 13    yes            27\n\n\nThe overall count by smoker type is shown below.\n\n\nCode\ndf %>% \n  group_by(Smoke) %>% \n  summarise(total_count = n())\n\n\n# A tibble: 2 × 2\n  Smoke total_count\n  <chr>       <int>\n1 no            648\n2 yes            77"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#a-1",
+    "href": "posts/dacss603hw1_LauraCollazo.html#a-1",
+    "title": "DACSS 603 Homework 1",
+    "section": "a",
+    "text": "a\nThe probability that a randomly selected inmate has exactly 2 prior convictions is as follows:\n\n\nCode\ndbinom(x= 1, size= 1, prob= 160/810)\n\n\n[1] 0.1975309"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#b-1",
+    "href": "posts/dacss603hw1_LauraCollazo.html#b-1",
+    "title": "DACSS 603 Homework 1",
+    "section": "b",
+    "text": "b\nThe probability that a randomly selected inmate has fewer than 2 prior convictions is as follows:\n\n\nCode\ndbinom(x= 1, size= 1, prob= sum(128/810 + 434/810))\n\n\n[1] 0.6938272"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#c-1",
+    "href": "posts/dacss603hw1_LauraCollazo.html#c-1",
+    "title": "DACSS 603 Homework 1",
+    "section": "c",
+    "text": "c\nThe probability that a randomly selected inmate has 2 or fewer prior convictions is as follows:\n\n\nCode\ndbinom(x= 1, size= 1, prob= sum(128/810 + 434/810 + 160/810))\n\n\n[1] 0.891358"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#d-1",
+    "href": "posts/dacss603hw1_LauraCollazo.html#d-1",
+    "title": "DACSS 603 Homework 1",
+    "section": "d",
+    "text": "d\nThe probability that a randomly selected inmate has more than 2 prior convictions is as follows:\n\n\nCode\ndbinom(x= 1, size= 1, prob= sum(64/810 + 24/810))\n\n\n[1] 0.108642"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#e-1",
+    "href": "posts/dacss603hw1_LauraCollazo.html#e-1",
+    "title": "DACSS 603 Homework 1",
+    "section": "e",
+    "text": "e\nThe expected value for the number of prior convictions is as follows:\n\n\nCode\nev <- sum(convictions$number_convictions * convictions$prop)\n\nprint(ev)\n\n\n[1] 1.28642"
+  },
+  {
+    "objectID": "posts/dacss603hw1_LauraCollazo.html#f",
+    "href": "posts/dacss603hw1_LauraCollazo.html#f",
+    "title": "DACSS 603 Homework 1",
+    "section": "f",
+    "text": "f\nThe variance for prior convictions is as follows:\n\n\nCode\nvar <- sum((convictions$number - ev) ^ 2 * convictions$prop)\n\nprint(var)\n\n\n[1] 0.8562353\n\n\nThe standard deviation for prior convictions is as follows:\n\n\nCode\nsd <- sqrt(var)\n\nprint(sd)\n\n\n[1] 0.9253298"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "Contributors",
@@ -11,7 +95,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/Rowena.Kosher.html",
