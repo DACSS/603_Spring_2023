@@ -1,0 +1,138 @@
+---
+title: "HW1"
+author: "Liam Tucksmith"
+desription: "FinishedHW1"
+date: "02/20/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - Liam Tucksmith
+  - LungCapData
+  - tidyverse
+  - readxl
+  - ggplot2
+  - dplyr
+  - tidyr
+---
+
+```{r, echo=T}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo=T}
+df <- read_excel("_data/LungCapData.xls")
+```
+
+1.
+
+a. What does the distribution of LungCap look like?
+```{r, echo=T}
+hist(df$LungCap)
+```
+The distribution looks normal, the observations are centered around the mean with minimal outliers.
+
+b) Compare the probability distribution of the LungCap with respect to Males and Females?
+```{r, echo=T}
+lungCapP <- pnorm(df$LungCap, mean(df$LungCap), sd(df$LungCap))
+boxplot(lungCapP~df$Gender)
+```
+For both male and female, the probability distribution of the LungCap is similiar. For male, the median line is slightly higher than female, suggesting that their average lungCap is slightly higher for males than females. Also, for male the median is directly in the middle, suggesting that the data isn't particularly skewed. For female the split appears to have more values fall below the mean than above, telling us that the data skews moreso than for male. 
+
+c) Compare the mean lung capacities for smokers and non-smokers. Does it make sense?
+```{r, echo=T}
+dfSmokeLungCap <- df %>% group_by(Smoke) %>% 
+    summarise(mean_LungCap=mean(LungCap))
+
+print(dfSmokeLungCap)
+```
+No, the lungCap average does not make sense. We would expect that the lung capacity for smokers would be lower than it is for non-smokers, but we are seeing the opposite, as the lungCap for smokers is higher than it is for non-smokers. 
+
+d) Examine the relationship between Smoking and Lung Capacity within age groups: “less than or
+equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.
+```{r, echo=T}
+dfAgeRanges <- df %>% 
+  mutate(ageRange = case_when(
+    df$Age<=13 ~ "A",
+    between(df$Age, 14, 15) ~ "B",
+    between(df$Age, 16, 17) ~ "C",
+    df$Age>=18 ~ "D"
+  ))
+
+print(dfAgeRanges)
+```
+
+e) Compare the lung capacities for smokers and non-smokers within each age group. Is your answer
+different from the one in part c. What could possibly be going on here?
+```{r, echo=T}
+dfMeanAgeRanges <- dfAgeRanges %>% group_by(ageRange, Smoke) %>% 
+    summarise(mean_LungCap=mean(LungCap))
+
+print(dfMeanAgeRanges)
+```
+Here, there is a more varied relationship between smoking and lung capacity due to age as a mitigating variable. Here, the lung capacity for non-smokers is higher than the lung capacity for smokers in youngest age range, but the other age ranges display the opposite relationship. This may be due to the possibility that smoking has a stronger influence on lungCapacity the longer you smoke. So younger folks may have only smoked for a year or so, while folks in the older age ranges have spent many more years smoking. While there still isn't a clear indirect or direct relationship between smoking and lung capacity with this view, adding the ageRange variable showed that there is more to the relationship than was found in part C. 
+
+2.
+
+```{r, echo=T}
+x <- c(0,1,2,3,4)
+frequency <- c(128,434,160,64,24)
+df_2 <- data.frame(x, frequency)
+```
+
+
+a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+
+```{r, echo=T}
+prob_a = dpois(df_2[3,1], df_2[3,2]/(sum(df_2$frequency)))
+print(prob_a)
+```
+
+b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+
+```{r, echo=T}
+prob_b = ppois(df_2[2,1], (df_2[2,2]+df_2[1,2])/(sum(df_2$frequency)))
+print(prob_b)
+```
+
+c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
+```{r, echo=T}
+prob_c = ppois(df_2[3,1], (df_2[3,2]+df_2[2,2]+df_2[1,2])/(sum(df_2$frequency)))
+print(prob_c)
+```
+
+d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
+```{r, echo=T}
+df_2d <- df_2[4:5,]
+prob_d = 1 - (ppois(df_2d[2,1],(df_2[4,2]+df_2[5,2])/(sum(df_2$frequency))))
+print(prob_d)              
+```
+e) What is the expected value1 for the number of prior convictions?
+```{r, echo=T}
+probs_e = dpois(df_2$x, df_2$frequency/(sum(df_2$frequency)))
+eval = sum(df_2$x*probs_e)
+print(eval)
+```
+
+
+f) Calculate the variance and the standard deviation for the Prior Convictions.
+```{r, echo=T}
+var_f <- var(rep(df_2$x, df_2$frequency))
+print(var_f)
+
+sd_f <- sd(rep(df_2$x, df_2$frequency))
+print(sd_f)
+```
