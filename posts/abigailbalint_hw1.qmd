@@ -1,0 +1,173 @@
+---
+title: "Homework 1"
+author: "Abigail Balint"
+desription: "Distributions and probability"
+date: "02/23/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - homework1
+  - abigailbalint
+  - lungcap
+  - prisoner
+  - ggplot2
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1 - Lung Capacity 
+
+Reading in LungCapData --
+
+```{r, echo=T}
+
+lung <- read_excel("_data/LungCapData.xls")
+head(lung,2)
+```
+Looking at some basic descriptive stats --
+
+```{r, echo=T}
+
+glimpse(lung)
+mean(lung$LungCap, na.rm = T)
+var(lung$LungCap, na.rm = T)
+sd(lung$LungCap, na.rm = T)
+range(lung$LungCap, na.rm = T)
+```
+
+a) What does the distribution of LungCap look like? 
+
+```{r}
+ggplot(lung, aes(x = LungCap)) +
+  geom_histogram()
+```
+The distribution looks relatively normal. There is a clear concentration of the sample around 7-8 and the outliers are only a very small portion of the sample.
+
+
+b) Compare the probability distribution of the LungCap with respect to Males and Females
+
+```{r}
+ggplot(lung, aes(x=LungCap)) + 
+    geom_boxplot(fill="slateblue", alpha=0.2) + 
+    xlab("Lung Capacity") +
+  facet_wrap("Gender")
+```
+The probability distribution is pretty similar between male and female, but males skew to a higher lung capacity overall and the median line is at around 8 whereas female is closer to 7.5. 
+
+c) Compare the mean lung capacities for smokers and non-smokers. Does it make sense?
+
+```{r}
+lung %>%
+  group_by(Smoke) %>%
+  summarise(mean = mean(LungCap), n = n())
+```
+We would expect the lung capacities for non smokers to be higher but the mean for smokers is actually a little bit higher.
+
+d) Examine the relationship between Smoking and Lung Capacity within age groups: “less than or  equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”. 
+
+Recoding the age groups --
+
+```{r}
+lunggroup <- lung %>%
+  mutate(`AgeGroup` = dplyr::case_when(
+    `Age` >= 0 & `Age` < 14 ~ "0-13",
+    `Age` >= 14 & `Age` < 16 ~ "14-15",
+    `Age` >= 16 & `Age` < 18 ~ "16-17",
+    `Age` >= 18 ~ "18+" ))
+head(lunggroup)
+```
+Mean lung capacity by age group -- 
+
+```{r}
+lunggroup %>%
+group_by(Smoke, AgeGroup) %>%
+  summarise(mean = mean(LungCap), n = n())
+```
+For both smokers and non-smokers, the lung capacity goes up as the age increases with 18+ having the highest average capacity. In all age ranges besides 0-13 (the broadest range), the mean is higher for non-smokers than smokers.
+
+e. Compare the lung capacities for smokers and non-smokers within each age group. Is your answer  different from the one in part c. What could possibly be going on here? 
+
+```{r}
+ggplot(lunggroup, aes(x=LungCap, fill=Smoke)) + 
+    geom_boxplot() + 
+    xlab("Lung Capacity") +
+  facet_wrap("AgeGroup")
+```
+I'm seeing that the results by age group are slightly different than in part C. Above I can see that the average for all age ranges is higher for non-smokers, besides age group 0-13. I can see in my results in part D that the sample size for 0-13 non-smokers is extremely high, much higher than any other group of smokers or non-smokers, so with this higher sample size comes more variance. The median lines are actually pretty close but the outliers are probably affecting the mean.
+
+
+## Question 2 
+
+Creating a data frame -- 
+
+```{r}
+priorconviction <- c(0,1,2,3,4)
+prisoners <- c(128,434,160,64,24)
+q2 <- data.frame(priorconviction, prisoners)
+head(q2)
+```
+
+
+a) What is the probability that a randomly selected inmate has exactly 2 prior convictions? 
+```{r}
+160/810
+```
+ I found it to be .1975 or 19.75%
+ 
+b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions? 
+```{r}
+(434+128)/810
+```
+To get this I added the sample of 0 or 1 prior conviction and it comes out to .69 or 69%.
+
+c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions? 
+```{r}
+(128+434+160)/810
+```
+To get this I added the sample of 0 or 1 or 2 prior convictions and it comes out to .89 or 89%.
+
+d) What is the probability that a randomly selected inmate has more than 2 prior convictions? 
+```{r}
+(64+24)/810
+```
+To get this I added the sample of 3 or 4 prior convictions and it comes out to .108 or 11%.
+
+e) What is the expected value1 for the number of prior convictions? 
+```{r}
+sum(q2$priorconviction*prisoners)
+1042/810
+```
+
+To get this I summed all of the numbers of prior convictions by the amount of prisoners (1042) then divided this by total sample (810) to get a final expected value of 1.28 prior convictions.
+
+f) Calculate the variance and the standard deviation for the Prior Convictions. 
+
+```{r}
+var(q2$priorconviction)
+var(q2$priorconviction)*(5-1)/5
+```
+
+I used the above code to find a sample variance of 2.5 and a population variance of 2.
+
+```{r}
+sd(q2$priorconviction)
+```
+
+I used the standard deviation function to calculate the above.
+
+
+:::
