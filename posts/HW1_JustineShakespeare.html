@@ -192,6 +192,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#a." id="toc-a." class="nav-link" data-scroll-target="#a.">1a.</a></li>
   <li><a href="#b." id="toc-b." class="nav-link" data-scroll-target="#b.">1b.</a></li>
   <li><a href="#c." id="toc-c." class="nav-link" data-scroll-target="#c.">1c.</a></li>
+  <li><a href="#d.-1e" id="toc-d.-1e" class="nav-link" data-scroll-target="#d.-1e">1d. &amp; 1e</a></li>
   </ul></li>
   <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a>
   <ul class="collapse">
@@ -334,7 +335,10 @@ $ Caesarean &lt;chr&gt; "no", "no", "yes", "no", "no", "no", "yes", "no", "no", 
 2 yes           8.65</code></pre>
 </div>
 </div>
-<p>We can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:</p>
+</section>
+<section id="d.-1e" class="level2">
+<h2 class="anchored" data-anchor-id="d.-1e">1d. &amp; 1e</h2>
+<p>To examine the relationship between smoking and lung capacity within age groups we can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -346,7 +350,7 @@ $ Caesarean &lt;chr&gt; "no", "no", "yes", "no", "no", "no", "yes", "no", "no", 
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">&gt;=</span><span class="dv">18</span> <span class="sc">~</span> <span class="st">"d. Greater than or equal to 18"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>With this new variable we can examine the relationship between lung capacity, age, and smoking status. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:</p>
+<p>With this new variable we can more easily compare the lung capacities for smokers and non-smokers within each age group. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:</p>
 <section id="lung-capacity-by-age-for-non-smokers" class="level4">
 <h4 class="anchored" data-anchor-id="lung-capacity-by-age-for-non-smokers">Lung capacity by age for NON-SMOKERS:</h4>
 <div class="cell">
@@ -388,6 +392,7 @@ $ Caesarean &lt;chr&gt; "no", "no", "yes", "no", "no", "no", "yes", "no", "no", 
 4 d. Greater than or equal to 18        10.5 </code></pre>
 </div>
 </div>
+<p>This data shows that lung capacity generally increases with age.</p>
 <p>It is interesting to note that on average all age groups that did not smoke had a higher lung capacity <em>except</em> for those who were 13 or under. The group found to have the lowest lung capacity in the whole dataset were children 13 or under who did <em>not</em> smoke.</p>
 <p>Since the finding related to this age group (study subjects aged 13 or under) was unexpected, I used the filter() and table() functions to examine the sample size of this group.</p>
 <div class="cell">
@@ -896,134 +901,137 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb31-59"><a href="#cb31-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"Mean_LungCap"</span><span class="ot">=</span><span class="fu">mean</span>(LungCap))</span>
 <span id="cb31-60"><a href="#cb31-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb31-61"><a href="#cb31-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-62"><a href="#cb31-62" aria-hidden="true" tabindex="-1"></a>We can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:</span>
-<span id="cb31-63"><a href="#cb31-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-64"><a href="#cb31-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb31-65"><a href="#cb31-65" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb31-66"><a href="#cb31-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AgeGroups =</span> <span class="fu">case_when</span>(</span>
-<span id="cb31-67"><a href="#cb31-67" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">&lt;=</span><span class="dv">13</span> <span class="sc">~</span> <span class="st">"a. Less than or equal to 13"</span>,</span>
-<span id="cb31-68"><a href="#cb31-68" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">==</span><span class="dv">14</span> <span class="sc">|</span> Age<span class="sc">==</span><span class="dv">15</span> <span class="sc">~</span> <span class="st">"b. 14 or 15"</span>, </span>
-<span id="cb31-69"><a href="#cb31-69" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">==</span><span class="dv">16</span> <span class="sc">|</span> Age<span class="sc">==</span><span class="dv">17</span> <span class="sc">~</span> <span class="st">"c. 16 or 17"</span>,</span>
-<span id="cb31-70"><a href="#cb31-70" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">&gt;=</span><span class="dv">18</span> <span class="sc">~</span> <span class="st">"d. Greater than or equal to 18"</span>))</span>
-<span id="cb31-71"><a href="#cb31-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-72"><a href="#cb31-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-73"><a href="#cb31-73" aria-hidden="true" tabindex="-1"></a>With this new variable we can examine the relationship between lung capacity, age, and smoking status. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:</span>
-<span id="cb31-74"><a href="#cb31-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-75"><a href="#cb31-75" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Lung capacity by age for NON-SMOKERS:</span></span>
-<span id="cb31-76"><a href="#cb31-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-77"><a href="#cb31-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb31-78"><a href="#cb31-78" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, Smoke<span class="sc">==</span><span class="st">"no"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-79"><a href="#cb31-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AgeGroups) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-80"><a href="#cb31-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"Mean_LungCap"</span><span class="ot">=</span><span class="fu">mean</span>(LungCap)) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-81"><a href="#cb31-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AgeGroups)</span>
-<span id="cb31-82"><a href="#cb31-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-83"><a href="#cb31-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-84"><a href="#cb31-84" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Lung capacity by age for SMOKERS:</span></span>
-<span id="cb31-85"><a href="#cb31-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-86"><a href="#cb31-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb31-87"><a href="#cb31-87" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, Smoke<span class="sc">==</span><span class="st">"yes"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-88"><a href="#cb31-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AgeGroups) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-89"><a href="#cb31-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"Mean_LungCap"</span><span class="ot">=</span><span class="fu">mean</span>(LungCap)) <span class="sc">%&gt;%</span> </span>
-<span id="cb31-90"><a href="#cb31-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AgeGroups)</span>
-<span id="cb31-91"><a href="#cb31-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-92"><a href="#cb31-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-93"><a href="#cb31-93" aria-hidden="true" tabindex="-1"></a>It is interesting to note that on average all age groups that did not smoke had a higher lung capacity *except* for those who were 13 or under. The group found to have the lowest lung capacity in the whole dataset were children 13 or under who did *not* smoke. </span>
-<span id="cb31-94"><a href="#cb31-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-95"><a href="#cb31-95" aria-hidden="true" tabindex="-1"></a>Since the finding related to this age group (study subjects aged 13 or under) was unexpected, I used the filter() and table() functions to examine the sample size of this group. </span>
-<span id="cb31-96"><a href="#cb31-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-62"><a href="#cb31-62" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1d. &amp; 1e</span></span>
+<span id="cb31-63"><a href="#cb31-63" aria-hidden="true" tabindex="-1"></a>To examine the relationship between smoking and lung capacity within age groups we can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:</span>
+<span id="cb31-64"><a href="#cb31-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-65"><a href="#cb31-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb31-66"><a href="#cb31-66" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb31-67"><a href="#cb31-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AgeGroups =</span> <span class="fu">case_when</span>(</span>
+<span id="cb31-68"><a href="#cb31-68" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">&lt;=</span><span class="dv">13</span> <span class="sc">~</span> <span class="st">"a. Less than or equal to 13"</span>,</span>
+<span id="cb31-69"><a href="#cb31-69" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">==</span><span class="dv">14</span> <span class="sc">|</span> Age<span class="sc">==</span><span class="dv">15</span> <span class="sc">~</span> <span class="st">"b. 14 or 15"</span>, </span>
+<span id="cb31-70"><a href="#cb31-70" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">==</span><span class="dv">16</span> <span class="sc">|</span> Age<span class="sc">==</span><span class="dv">17</span> <span class="sc">~</span> <span class="st">"c. 16 or 17"</span>,</span>
+<span id="cb31-71"><a href="#cb31-71" aria-hidden="true" tabindex="-1"></a>    Age<span class="sc">&gt;=</span><span class="dv">18</span> <span class="sc">~</span> <span class="st">"d. Greater than or equal to 18"</span>))</span>
+<span id="cb31-72"><a href="#cb31-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-73"><a href="#cb31-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-74"><a href="#cb31-74" aria-hidden="true" tabindex="-1"></a>With this new variable we can more easily compare the lung capacities for smokers and non-smokers within each age group. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:</span>
+<span id="cb31-75"><a href="#cb31-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-76"><a href="#cb31-76" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Lung capacity by age for NON-SMOKERS:</span></span>
+<span id="cb31-77"><a href="#cb31-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-78"><a href="#cb31-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb31-79"><a href="#cb31-79" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, Smoke<span class="sc">==</span><span class="st">"no"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-80"><a href="#cb31-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AgeGroups) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-81"><a href="#cb31-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"Mean_LungCap"</span><span class="ot">=</span><span class="fu">mean</span>(LungCap)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-82"><a href="#cb31-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AgeGroups)</span>
+<span id="cb31-83"><a href="#cb31-83" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-84"><a href="#cb31-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-85"><a href="#cb31-85" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Lung capacity by age for SMOKERS:</span></span>
+<span id="cb31-86"><a href="#cb31-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-87"><a href="#cb31-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb31-88"><a href="#cb31-88" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, Smoke<span class="sc">==</span><span class="st">"yes"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-89"><a href="#cb31-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AgeGroups) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-90"><a href="#cb31-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="st">"Mean_LungCap"</span><span class="ot">=</span><span class="fu">mean</span>(LungCap)) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-91"><a href="#cb31-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AgeGroups)</span>
+<span id="cb31-92"><a href="#cb31-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-93"><a href="#cb31-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-94"><a href="#cb31-94" aria-hidden="true" tabindex="-1"></a>This data shows that lung capacity generally increases with age. </span>
+<span id="cb31-95"><a href="#cb31-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-96"><a href="#cb31-96" aria-hidden="true" tabindex="-1"></a>It is interesting to note that on average all age groups that did not smoke had a higher lung capacity *except* for those who were 13 or under. The group found to have the lowest lung capacity in the whole dataset were children 13 or under who did *not* smoke. </span>
 <span id="cb31-97"><a href="#cb31-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-100"><a href="#cb31-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-101"><a href="#cb31-101" aria-hidden="true" tabindex="-1"></a>Thirteen_and_under <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, AgeGroups <span class="sc">==</span> <span class="st">"a. Less than or equal to 13"</span>)</span>
-<span id="cb31-102"><a href="#cb31-102" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Thirteen_and_under<span class="sc">$</span>Smoke)</span>
-<span id="cb31-103"><a href="#cb31-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-104"><a href="#cb31-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-105"><a href="#cb31-105" aria-hidden="true" tabindex="-1"></a>According to this data, there were only 27 children in this study 13 years old or under who reported smoking. In order to better understand the relationship between age, smoking status and lung capacity we could run another study with a larger sample size. </span>
-<span id="cb31-106"><a href="#cb31-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-98"><a href="#cb31-98" aria-hidden="true" tabindex="-1"></a>Since the finding related to this age group (study subjects aged 13 or under) was unexpected, I used the filter() and table() functions to examine the sample size of this group. </span>
+<span id="cb31-99"><a href="#cb31-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-100"><a href="#cb31-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-103"><a href="#cb31-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-104"><a href="#cb31-104" aria-hidden="true" tabindex="-1"></a>Thirteen_and_under <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, AgeGroups <span class="sc">==</span> <span class="st">"a. Less than or equal to 13"</span>)</span>
+<span id="cb31-105"><a href="#cb31-105" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(Thirteen_and_under<span class="sc">$</span>Smoke)</span>
+<span id="cb31-106"><a href="#cb31-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb31-107"><a href="#cb31-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-108"><a href="#cb31-108" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb31-108"><a href="#cb31-108" aria-hidden="true" tabindex="-1"></a>According to this data, there were only 27 children in this study 13 years old or under who reported smoking. In order to better understand the relationship between age, smoking status and lung capacity we could run another study with a larger sample size. </span>
 <span id="cb31-109"><a href="#cb31-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-110"><a href="#cb31-110" aria-hidden="true" tabindex="-1"></a>Part 2 of the homework provided a table and stated, "Let X = number of prior convictions for prisoners at a state prison at which there are 810  prisoners." I have recreated the table as a dataframe here and added an additional column that gives the probability for each prior conviction by dividing frequency values by the total number of prisoners:</span>
-<span id="cb31-111"><a href="#cb31-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-112"><a href="#cb31-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb31-113"><a href="#cb31-113" aria-hidden="true" tabindex="-1"></a>freq_num_prisoners <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">128</span>, <span class="dv">434</span>, <span class="dv">160</span>, <span class="dv">64</span>, <span class="dv">24</span>)</span>
-<span id="cb31-114"><a href="#cb31-114" aria-hidden="true" tabindex="-1"></a>X_prior_convictions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
-<span id="cb31-115"><a href="#cb31-115" aria-hidden="true" tabindex="-1"></a>probability <span class="ot">&lt;-</span> freq_num_prisoners<span class="sc">/</span><span class="dv">810</span></span>
-<span id="cb31-116"><a href="#cb31-116" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X_prior_convictions,freq_num_prisoners,probability)</span>
-<span id="cb31-117"><a href="#cb31-117" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb31-118"><a href="#cb31-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-119"><a href="#cb31-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-120"><a href="#cb31-120" aria-hidden="true" tabindex="-1"></a>With this table we can answer several of the questions for HW1, part 2:</span>
-<span id="cb31-121"><a href="#cb31-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-122"><a href="#cb31-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2a. </span></span>
-<span id="cb31-123"><a href="#cb31-123" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has exactly 2 prior convictions?* </span>
+<span id="cb31-110"><a href="#cb31-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-111"><a href="#cb31-111" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb31-112"><a href="#cb31-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-113"><a href="#cb31-113" aria-hidden="true" tabindex="-1"></a>Part 2 of the homework provided a table and stated, "Let X = number of prior convictions for prisoners at a state prison at which there are 810  prisoners." I have recreated the table as a dataframe here and added an additional column that gives the probability for each prior conviction by dividing frequency values by the total number of prisoners:</span>
+<span id="cb31-114"><a href="#cb31-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-115"><a href="#cb31-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb31-116"><a href="#cb31-116" aria-hidden="true" tabindex="-1"></a>freq_num_prisoners <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">128</span>, <span class="dv">434</span>, <span class="dv">160</span>, <span class="dv">64</span>, <span class="dv">24</span>)</span>
+<span id="cb31-117"><a href="#cb31-117" aria-hidden="true" tabindex="-1"></a>X_prior_convictions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb31-118"><a href="#cb31-118" aria-hidden="true" tabindex="-1"></a>probability <span class="ot">&lt;-</span> freq_num_prisoners<span class="sc">/</span><span class="dv">810</span></span>
+<span id="cb31-119"><a href="#cb31-119" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(X_prior_convictions,freq_num_prisoners,probability)</span>
+<span id="cb31-120"><a href="#cb31-120" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb31-121"><a href="#cb31-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-122"><a href="#cb31-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-123"><a href="#cb31-123" aria-hidden="true" tabindex="-1"></a>With this table we can answer several of the questions for HW1, part 2:</span>
 <span id="cb31-124"><a href="#cb31-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-125"><a href="#cb31-125" aria-hidden="true" tabindex="-1"></a>In the table above we can see that the probability that a randomly selected inmate has 2 prior convictions is .1975, or .2 rounded.</span>
-<span id="cb31-126"><a href="#cb31-126" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-127"><a href="#cb31-127" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2b. </span></span>
-<span id="cb31-128"><a href="#cb31-128" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has fewer than 2 prior convictions?* </span>
-<span id="cb31-129"><a href="#cb31-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-130"><a href="#cb31-130" aria-hidden="true" tabindex="-1"></a>This question is looking for the cumulative probability that an inmate has less than 2 prior convictions. We can find cumulative probability by adding the relevant probabilities: The probability that an inmate has 0 convictions is .16 and the probability that an inmate has 1 conviction is .54.</span>
-<span id="cb31-131"><a href="#cb31-131" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-134"><a href="#cb31-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-135"><a href="#cb31-135" aria-hidden="true" tabindex="-1"></a><span class="co"># We can see these numbers in the table above, but as a reminder and a way to </span></span>
-<span id="cb31-136"><a href="#cb31-136" aria-hidden="true" tabindex="-1"></a><span class="co"># double check, we can calculate those probabilities again before adding them:</span></span>
-<span id="cb31-137"><a href="#cb31-137" aria-hidden="true" tabindex="-1"></a>zero_convictions <span class="ot">&lt;-</span> <span class="dv">128</span><span class="sc">/</span><span class="dv">810</span></span>
-<span id="cb31-138"><a href="#cb31-138" aria-hidden="true" tabindex="-1"></a>one_conviction <span class="ot">&lt;-</span> <span class="dv">434</span><span class="sc">/</span><span class="dv">810</span></span>
-<span id="cb31-139"><a href="#cb31-139" aria-hidden="true" tabindex="-1"></a>Prob_fewer_than_2 <span class="ot">&lt;-</span> zero_convictions <span class="sc">+</span> one_conviction</span>
-<span id="cb31-140"><a href="#cb31-140" aria-hidden="true" tabindex="-1"></a>Prob_fewer_than_2</span>
-<span id="cb31-141"><a href="#cb31-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-142"><a href="#cb31-142" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-143"><a href="#cb31-143" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2c. </span></span>
-<span id="cb31-144"><a href="#cb31-144" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has 2 or fewer prior convictions?*</span>
-<span id="cb31-145"><a href="#cb31-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-146"><a href="#cb31-146" aria-hidden="true" tabindex="-1"></a>To find the probability that a randomly selected inmate has 2 or fewer prior convictions we use the same method as the in the previous question: add together the probabilities for X = 0, X = 1, and X = 2:</span>
-<span id="cb31-147"><a href="#cb31-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-150"><a href="#cb31-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-151"><a href="#cb31-151" aria-hidden="true" tabindex="-1"></a><span class="co"># We can see these numbers in the table above, but as a reminder and a way to </span></span>
-<span id="cb31-152"><a href="#cb31-152" aria-hidden="true" tabindex="-1"></a><span class="co"># double check, we can calculate those probabilities again before adding them:</span></span>
-<span id="cb31-153"><a href="#cb31-153" aria-hidden="true" tabindex="-1"></a>two_convictions <span class="ot">&lt;-</span> <span class="dv">160</span><span class="sc">/</span><span class="dv">810</span></span>
-<span id="cb31-154"><a href="#cb31-154" aria-hidden="true" tabindex="-1"></a>Prob_2_or_fewer <span class="ot">&lt;-</span> zero_convictions <span class="sc">+</span> one_conviction <span class="sc">+</span> two_convictions</span>
-<span id="cb31-155"><a href="#cb31-155" aria-hidden="true" tabindex="-1"></a>Prob_2_or_fewer </span>
-<span id="cb31-156"><a href="#cb31-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-157"><a href="#cb31-157" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-158"><a href="#cb31-158" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-159"><a href="#cb31-159" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2d. </span></span>
-<span id="cb31-160"><a href="#cb31-160" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has more than 2 prior convictions?* </span>
-<span id="cb31-161"><a href="#cb31-161" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-162"><a href="#cb31-162" aria-hidden="true" tabindex="-1"></a>To find the probability that a randomly selected inmate has more than 2 prior convictions we use the same method as in the previous questions, except that we add the probabilities of X = 3 and X = 4:</span>
-<span id="cb31-163"><a href="#cb31-163" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-166"><a href="#cb31-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-167"><a href="#cb31-167" aria-hidden="true" tabindex="-1"></a><span class="co"># We can see these numbers in the table above, but as a reminder and a way to </span></span>
-<span id="cb31-168"><a href="#cb31-168" aria-hidden="true" tabindex="-1"></a><span class="co"># double check, we can calculate those probabilities again before adding them:</span></span>
-<span id="cb31-169"><a href="#cb31-169" aria-hidden="true" tabindex="-1"></a>three_convictions <span class="ot">&lt;-</span> <span class="dv">64</span><span class="sc">/</span><span class="dv">810</span></span>
-<span id="cb31-170"><a href="#cb31-170" aria-hidden="true" tabindex="-1"></a>four_convictions <span class="ot">&lt;-</span> <span class="dv">24</span><span class="sc">/</span><span class="dv">810</span></span>
-<span id="cb31-171"><a href="#cb31-171" aria-hidden="true" tabindex="-1"></a>Prob_2_or_more <span class="ot">&lt;-</span> three_convictions <span class="sc">+</span> four_convictions</span>
-<span id="cb31-172"><a href="#cb31-172" aria-hidden="true" tabindex="-1"></a>Prob_2_or_more </span>
-<span id="cb31-173"><a href="#cb31-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-174"><a href="#cb31-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-175"><a href="#cb31-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-176"><a href="#cb31-176" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2e. </span></span>
-<span id="cb31-177"><a href="#cb31-177" aria-hidden="true" tabindex="-1"></a>*What is the expected value for the number of prior convictions?* </span>
+<span id="cb31-125"><a href="#cb31-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2a. </span></span>
+<span id="cb31-126"><a href="#cb31-126" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has exactly 2 prior convictions?* </span>
+<span id="cb31-127"><a href="#cb31-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-128"><a href="#cb31-128" aria-hidden="true" tabindex="-1"></a>In the table above we can see that the probability that a randomly selected inmate has 2 prior convictions is .1975, or .2 rounded.</span>
+<span id="cb31-129"><a href="#cb31-129" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-130"><a href="#cb31-130" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2b. </span></span>
+<span id="cb31-131"><a href="#cb31-131" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has fewer than 2 prior convictions?* </span>
+<span id="cb31-132"><a href="#cb31-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-133"><a href="#cb31-133" aria-hidden="true" tabindex="-1"></a>This question is looking for the cumulative probability that an inmate has less than 2 prior convictions. We can find cumulative probability by adding the relevant probabilities: The probability that an inmate has 0 convictions is .16 and the probability that an inmate has 1 conviction is .54.</span>
+<span id="cb31-134"><a href="#cb31-134" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-137"><a href="#cb31-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-138"><a href="#cb31-138" aria-hidden="true" tabindex="-1"></a><span class="co"># We can see these numbers in the table above, but as a reminder and a way to </span></span>
+<span id="cb31-139"><a href="#cb31-139" aria-hidden="true" tabindex="-1"></a><span class="co"># double check, we can calculate those probabilities again before adding them:</span></span>
+<span id="cb31-140"><a href="#cb31-140" aria-hidden="true" tabindex="-1"></a>zero_convictions <span class="ot">&lt;-</span> <span class="dv">128</span><span class="sc">/</span><span class="dv">810</span></span>
+<span id="cb31-141"><a href="#cb31-141" aria-hidden="true" tabindex="-1"></a>one_conviction <span class="ot">&lt;-</span> <span class="dv">434</span><span class="sc">/</span><span class="dv">810</span></span>
+<span id="cb31-142"><a href="#cb31-142" aria-hidden="true" tabindex="-1"></a>Prob_fewer_than_2 <span class="ot">&lt;-</span> zero_convictions <span class="sc">+</span> one_conviction</span>
+<span id="cb31-143"><a href="#cb31-143" aria-hidden="true" tabindex="-1"></a>Prob_fewer_than_2</span>
+<span id="cb31-144"><a href="#cb31-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-145"><a href="#cb31-145" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-146"><a href="#cb31-146" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2c. </span></span>
+<span id="cb31-147"><a href="#cb31-147" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has 2 or fewer prior convictions?*</span>
+<span id="cb31-148"><a href="#cb31-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-149"><a href="#cb31-149" aria-hidden="true" tabindex="-1"></a>To find the probability that a randomly selected inmate has 2 or fewer prior convictions we use the same method as the in the previous question: add together the probabilities for X = 0, X = 1, and X = 2:</span>
+<span id="cb31-150"><a href="#cb31-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-153"><a href="#cb31-153" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-154"><a href="#cb31-154" aria-hidden="true" tabindex="-1"></a><span class="co"># We can see these numbers in the table above, but as a reminder and a way to </span></span>
+<span id="cb31-155"><a href="#cb31-155" aria-hidden="true" tabindex="-1"></a><span class="co"># double check, we can calculate those probabilities again before adding them:</span></span>
+<span id="cb31-156"><a href="#cb31-156" aria-hidden="true" tabindex="-1"></a>two_convictions <span class="ot">&lt;-</span> <span class="dv">160</span><span class="sc">/</span><span class="dv">810</span></span>
+<span id="cb31-157"><a href="#cb31-157" aria-hidden="true" tabindex="-1"></a>Prob_2_or_fewer <span class="ot">&lt;-</span> zero_convictions <span class="sc">+</span> one_conviction <span class="sc">+</span> two_convictions</span>
+<span id="cb31-158"><a href="#cb31-158" aria-hidden="true" tabindex="-1"></a>Prob_2_or_fewer </span>
+<span id="cb31-159"><a href="#cb31-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-160"><a href="#cb31-160" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-161"><a href="#cb31-161" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-162"><a href="#cb31-162" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2d. </span></span>
+<span id="cb31-163"><a href="#cb31-163" aria-hidden="true" tabindex="-1"></a>*What is the probability that a randomly selected inmate has more than 2 prior convictions?* </span>
+<span id="cb31-164"><a href="#cb31-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-165"><a href="#cb31-165" aria-hidden="true" tabindex="-1"></a>To find the probability that a randomly selected inmate has more than 2 prior convictions we use the same method as in the previous questions, except that we add the probabilities of X = 3 and X = 4:</span>
+<span id="cb31-166"><a href="#cb31-166" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-169"><a href="#cb31-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-170"><a href="#cb31-170" aria-hidden="true" tabindex="-1"></a><span class="co"># We can see these numbers in the table above, but as a reminder and a way to </span></span>
+<span id="cb31-171"><a href="#cb31-171" aria-hidden="true" tabindex="-1"></a><span class="co"># double check, we can calculate those probabilities again before adding them:</span></span>
+<span id="cb31-172"><a href="#cb31-172" aria-hidden="true" tabindex="-1"></a>three_convictions <span class="ot">&lt;-</span> <span class="dv">64</span><span class="sc">/</span><span class="dv">810</span></span>
+<span id="cb31-173"><a href="#cb31-173" aria-hidden="true" tabindex="-1"></a>four_convictions <span class="ot">&lt;-</span> <span class="dv">24</span><span class="sc">/</span><span class="dv">810</span></span>
+<span id="cb31-174"><a href="#cb31-174" aria-hidden="true" tabindex="-1"></a>Prob_2_or_more <span class="ot">&lt;-</span> three_convictions <span class="sc">+</span> four_convictions</span>
+<span id="cb31-175"><a href="#cb31-175" aria-hidden="true" tabindex="-1"></a>Prob_2_or_more </span>
+<span id="cb31-176"><a href="#cb31-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-177"><a href="#cb31-177" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-178"><a href="#cb31-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-179"><a href="#cb31-179" aria-hidden="true" tabindex="-1"></a>To find the expected value for the number of prior convictions we multiply each possible value of X by its probability of occurring and add that up over all X. To do this in R I used some of the same variables I created above to calculate the expected value:</span>
-<span id="cb31-180"><a href="#cb31-180" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-183"><a href="#cb31-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-184"><a href="#cb31-184" aria-hidden="true" tabindex="-1"></a>ExpVal <span class="ot">&lt;-</span> <span class="fu">sum</span>(probability<span class="sc">*</span>X_prior_convictions)</span>
-<span id="cb31-185"><a href="#cb31-185" aria-hidden="true" tabindex="-1"></a>ExpVal</span>
-<span id="cb31-186"><a href="#cb31-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-187"><a href="#cb31-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-188"><a href="#cb31-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2f. </span></span>
-<span id="cb31-189"><a href="#cb31-189" aria-hidden="true" tabindex="-1"></a>*Calculate the variance and the standard deviation for the Prior Convictions.* </span>
+<span id="cb31-179"><a href="#cb31-179" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2e. </span></span>
+<span id="cb31-180"><a href="#cb31-180" aria-hidden="true" tabindex="-1"></a>*What is the expected value for the number of prior convictions?* </span>
+<span id="cb31-181"><a href="#cb31-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-182"><a href="#cb31-182" aria-hidden="true" tabindex="-1"></a>To find the expected value for the number of prior convictions we multiply each possible value of X by its probability of occurring and add that up over all X. To do this in R I used some of the same variables I created above to calculate the expected value:</span>
+<span id="cb31-183"><a href="#cb31-183" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb31-186"><a href="#cb31-186" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-187"><a href="#cb31-187" aria-hidden="true" tabindex="-1"></a>ExpVal <span class="ot">&lt;-</span> <span class="fu">sum</span>(probability<span class="sc">*</span>X_prior_convictions)</span>
+<span id="cb31-188"><a href="#cb31-188" aria-hidden="true" tabindex="-1"></a>ExpVal</span>
+<span id="cb31-189"><a href="#cb31-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb31-190"><a href="#cb31-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-191"><a href="#cb31-191" aria-hidden="true" tabindex="-1"></a>To calculate the variance I used the expected value we just calculated and the following equation for variance: E<span class="co">[</span><span class="ot">(X-u)^2</span><span class="co">]</span>. Once I found the variance, I was able to find the standard deviation, since it is the square root of the variance:</span>
-<span id="cb31-192"><a href="#cb31-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-195"><a href="#cb31-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-196"><a href="#cb31-196" aria-hidden="true" tabindex="-1"></a>VarX <span class="ot">&lt;-</span> <span class="fu">sum</span>((X_prior_convictions<span class="sc">-</span>ExpVal)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>probability)</span>
-<span id="cb31-197"><a href="#cb31-197" aria-hidden="true" tabindex="-1"></a>VarX</span>
-<span id="cb31-198"><a href="#cb31-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-199"><a href="#cb31-199" aria-hidden="true" tabindex="-1"></a>sdX <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(VarX)</span>
-<span id="cb31-200"><a href="#cb31-200" aria-hidden="true" tabindex="-1"></a>sdX</span>
-<span id="cb31-201"><a href="#cb31-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb31-191"><a href="#cb31-191" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2f. </span></span>
+<span id="cb31-192"><a href="#cb31-192" aria-hidden="true" tabindex="-1"></a>*Calculate the variance and the standard deviation for the Prior Convictions.* </span>
+<span id="cb31-193"><a href="#cb31-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-194"><a href="#cb31-194" aria-hidden="true" tabindex="-1"></a>To calculate the variance I used the expected value we just calculated and the following equation for variance: E<span class="co">[</span><span class="ot">(X-u)^2</span><span class="co">]</span>. Once I found the variance, I was able to find the standard deviation, since it is the square root of the variance:</span>
+<span id="cb31-195"><a href="#cb31-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-198"><a href="#cb31-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb31-199"><a href="#cb31-199" aria-hidden="true" tabindex="-1"></a>VarX <span class="ot">&lt;-</span> <span class="fu">sum</span>((X_prior_convictions<span class="sc">-</span>ExpVal)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span>probability)</span>
+<span id="cb31-200"><a href="#cb31-200" aria-hidden="true" tabindex="-1"></a>VarX</span>
+<span id="cb31-201"><a href="#cb31-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-202"><a href="#cb31-202" aria-hidden="true" tabindex="-1"></a>sdX <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(VarX)</span>
+<span id="cb31-203"><a href="#cb31-203" aria-hidden="true" tabindex="-1"></a>sdX</span>
+<span id="cb31-204"><a href="#cb31-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
