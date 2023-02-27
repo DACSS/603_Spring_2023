@@ -59,7 +59,8 @@ df %>%
   summarize("Mean_LungCap"=mean(LungCap))
 ```
 
-We can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:
+## 1d. & 1e
+To examine the relationship between smoking and lung capacity within age groups we can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:
 
 ```{r, echo=T}
 df <- df %>% 
@@ -70,7 +71,7 @@ df <- df %>%
     Age>=18 ~ "d. Greater than or equal to 18"))
 ```
 
-With this new variable we can examine the relationship between lung capacity, age, and smoking status. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:
+With this new variable we can more easily compare the lung capacities for smokers and non-smokers within each age group. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:
 
 #### Lung capacity by age for NON-SMOKERS:
 
@@ -89,6 +90,8 @@ filter(df, Smoke=="yes") %>%
   summarize("Mean_LungCap"=mean(LungCap)) %>% 
   arrange(AgeGroups)
 ```
+
+This data shows that lung capacity generally increases with age. 
 
 It is interesting to note that on average all age groups that did not smoke had a higher lung capacity *except* for those who were 13 or under. The group found to have the lowest lung capacity in the whole dataset were children 13 or under who did *not* smoke. 
 
