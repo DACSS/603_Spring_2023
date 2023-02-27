@@ -1,0 +1,190 @@
+---
+title: "Homework 1"
+author: "Justine Shakespeare"
+description: "Homework 1 for DACSS 603"
+date: "02/26/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - descriptive statistics 
+  - probability
+---
+
+# Question 1
+
+We start by loading the appropriate packages and reading in the data from the Excel file:
+
+```{r, echo=T}
+library(readxl)
+library(tidyverse)
+df <- read_excel("_data/LungCapData.xls")
+```
+
+We can use the glimpse() function to take a look at the data:
+
+```{r, echo=T}
+glimpse(df)
+```
+
+This shows that this dataset has 725 observations (rows) and 6 variables (columns). The first three columns are labeled: LungCap, Age, and Height and they are all classified as double, which is a type of numeric variable. The last three columns are Smoke, Gender, and Caesarean, which are all classified as character variables. LungCap refers to the lung capacity of the person, Age, Height, and Gender all describe the relevant characteristics of that person. Smoke is a dichotomous variable which records whether a person smokes or not. Caesarean is also a dichotomous variable that reflects whether a person was born by a caesaren or not. 
+
+
+## 1a. 
+The distribution of the LungCap variable looks as follows:
+
+```{r, echo=T}
+hist(df$LungCap)
+```
+
+The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean.
+
+## 1b.
+We can use the boxplot function to compare the distribution of the LungCap variable with respect to males and females. 
+
+```{r, echo=T}
+boxplot(LungCap ~ Gender, data=df)
+```
+
+## 1c.
+By using pipes, the group_by() and the summarize() functions we can take a look at the mean lung capacity of smokers and non-smokers. The results are counter-intuitive: it looks as though the mean lung capacity for those who smoke is larger than those who do not.
+
+```{r, echo=T}
+df %>% 
+  group_by(Smoke) %>% 
+  summarize("Mean_LungCap"=mean(LungCap))
+```
+
+We can use the mutate() and case_when() functions and piping to create an ordinal variable that captures different age groups:
+
+```{r, echo=T}
+df <- df %>% 
+  mutate(AgeGroups = case_when(
+    Age<=13 ~ "a. Less than or equal to 13",
+    Age==14 | Age==15 ~ "b. 14 or 15", 
+    Age==16 | Age==17 ~ "c. 16 or 17",
+    Age>=18 ~ "d. Greater than or equal to 18"))
+```
+
+With this new variable we can examine the relationship between lung capacity, age, and smoking status. The following tables show the mean lung capacity for study subjects arranged by age group, first for those who reported not smoking and second for those who did report smoking:
+
+#### Lung capacity by age for NON-SMOKERS:
+
+```{r, echo=T}
+filter(df, Smoke=="no") %>% 
+  group_by(AgeGroups) %>% 
+  summarize("Mean_LungCap"=mean(LungCap)) %>% 
+  arrange(AgeGroups)
+```
+
+#### Lung capacity by age for SMOKERS:
+
+```{r, echo=T}
+filter(df, Smoke=="yes") %>% 
+  group_by(AgeGroups) %>% 
+  summarize("Mean_LungCap"=mean(LungCap)) %>% 
+  arrange(AgeGroups)
+```
+
+It is interesting to note that on average all age groups that did not smoke had a higher lung capacity *except* for those who were 13 or under. The group found to have the lowest lung capacity in the whole dataset were children 13 or under who did *not* smoke. 
+
+Since the finding related to this age group (study subjects aged 13 or under) was unexpected, I used the filter() and table() functions to examine the sample size of this group. 
+
+
+```{r}
+Thirteen_and_under <- filter(df, AgeGroups == "a. Less than or equal to 13")
+table(Thirteen_and_under$Smoke)
+```
+
+According to this data, there were only 27 children in this study 13 years old or under who reported smoking. In order to better understand the relationship between age, smoking status and lung capacity we could run another study with a larger sample size. 
+
+
+# Question 2
+
+Part 2 of the homework provided a table and stated, "Let X = number of prior convictions for prisoners at a state prison at which there are 810  prisoners." I have recreated the table as a dataframe here and added an additional column that gives the probability for each prior conviction by dividing frequency values by the total number of prisoners:
+
+```{r, echo=T}
+freq_num_prisoners <- c(128, 434, 160, 64, 24)
+X_prior_convictions <- c(0,1,2,3,4)
+probability <- freq_num_prisoners/810
+df <- data.frame(X_prior_convictions,freq_num_prisoners,probability)
+df
+```
+
+With this table we can answer several of the questions for HW1, part 2:
+
+## 2a. 
+*What is the probability that a randomly selected inmate has exactly 2 prior convictions?* 
+
+In the table above we can see that the probability that a randomly selected inmate has 2 prior convictions is .1975, or .2 rounded.
+  
+## 2b. 
+*What is the probability that a randomly selected inmate has fewer than 2 prior convictions?* 
+
+This question is looking for the cumulative probability that an inmate has less than 2 prior convictions. We can find cumulative probability by adding the relevant probabilities: The probability that an inmate has 0 convictions is .16 and the probability that an inmate has 1 conviction is .54.
+  
+```{r}
+# We can see these numbers in the table above, but as a reminder and a way to 
+# double check, we can calculate those probabilities again before adding them:
+zero_convictions <- 128/810
+one_conviction <- 434/810
+Prob_fewer_than_2 <- zero_convictions + one_conviction
+Prob_fewer_than_2
+```
+  
+## 2c. 
+*What is the probability that a randomly selected inmate has 2 or fewer prior convictions?*
+
+To find the probability that a randomly selected inmate has 2 or fewer prior convictions we use the same method as the in the previous question: add together the probabilities for X = 0, X = 1, and X = 2:
+
+```{r}
+# We can see these numbers in the table above, but as a reminder and a way to 
+# double check, we can calculate those probabilities again before adding them:
+two_convictions <- 160/810
+Prob_2_or_fewer <- zero_convictions + one_conviction + two_convictions
+Prob_2_or_fewer 
+```
+  
+  
+## 2d. 
+*What is the probability that a randomly selected inmate has more than 2 prior convictions?* 
+
+To find the probability that a randomly selected inmate has more than 2 prior convictions we use the same method as in the previous questions, except that we add the probabilities of X = 3 and X = 4:
+  
+```{r}
+# We can see these numbers in the table above, but as a reminder and a way to 
+# double check, we can calculate those probabilities again before adding them:
+three_convictions <- 64/810
+four_convictions <- 24/810
+Prob_2_or_more <- three_convictions + four_convictions
+Prob_2_or_more 
+```
+
+
+## 2e. 
+*What is the expected value for the number of prior convictions?* 
+
+To find the expected value for the number of prior convictions we multiply each possible value of X by its probability of occurring and add that up over all X. To do this in R I used some of the same variables I created above to calculate the expected value:
+  
+```{r}
+ExpVal <- sum(probability*X_prior_convictions)
+ExpVal
+```
+
+## 2f. 
+*Calculate the variance and the standard deviation for the Prior Convictions.* 
+
+To calculate the variance I used the expected value we just calculated and the following equation for variance: E[(X-u)^2]. Once I found the variance, I was able to find the standard deviation, since it is the square root of the variance:
+
+```{r}
+VarX <- sum((X_prior_convictions-ExpVal)^2*probability)
+VarX
+
+sdX <- sqrt(VarX)
+sdX
+```
+
