@@ -1,0 +1,116 @@
+---
+  title: "Homework 1"
+author: "Justin Burnworth"
+description: "HW 1"
+date: "02/28/2023"
+format:
+  html:
+  toc: true
+code-fold: true
+code-copy: true
+code-tools: true
+categories:
+
+---
+  
+  # Question 1
+  
+  ## a
+  
+ #First, let's read in the data from the Excel file:
+
+
+{r, ECHO = T}
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+df <- read_excel("LungCapData-2.xls")
+```
+
+
+#he distribution of LungCap looks as follows:
+
+```
+{r, echo=T}
+
+hist(df$LungCap)
+
+ggplot(df, aes(df$LungCap)) +
+  geom_histogram()
+
+
+
+```
+
+#he histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
+
+ ##b
+
+```{r, echo=T}
+
+ggplot(df, aes(x= LungCap, fill = Gender)) +
+  geom_boxplot()
+  ```
+  #t looks like males have a small amount more LungCap
+  
+  ##C
+  
+  ```{r, echo=T}
+  df %>% group_by(Smoke) %>%
+  summarise(mean_LungCap = mean(LungCap))
+```
+ #This makes sense that those that do not smoke would have a higher LungCap
+  
+  
+  ##d 
+ 
+```{r, echo=T}
+  df <- df %>%
+  mutate(Age_Smoke = case_when(Age <=13 ~ "Cateogory 1",
+                         Age =14 & 15 ~ "Category 2",
+                         Age =16 & 17 ~ "Cateogry 3",
+                         Age >= 18 ~ "Cateogry 4",
+                         TRUE ~ NA_character_))
+
+
+df %>%
+  group_by(Age_Smoke) %>%
+  summarise(mean_LungCap = mean(LungCap))
+```
+ #It looks as though the LungCap decreases with the older age groups. 
+  
+##E
+
+```{r, echo=T}
+df %>% group_by(Smoke) %>%
+  group_by(Age_Smoke) %>%
+  summarise(Mean_LungCap = mean(df$LungCap))
+```
+  
+  
+  #Question 2
+  ##a, b, c, d, 
+  
+```{r, echo=T}
+  128/810
+434/810
+160/810
+554/810
+24/810
+```
+   #e 
+```{r, echo=T}
+  prior <- c(128, 434, 160, 64, 24)
+  probs <- c(.158, .536, .198, .684, .030)
+  sum(prior*probs)
+```
+
+#f
+
+```{r, echo=T}
+var(second, na.rm = T)
+sd(second)
+```
+ 
+ 
