@@ -25,13 +25,13 @@ First, let's read in the data from the Excel file:
 library(readxl)
 library(dplyr)
 library(ggplot2)
-getwd()
+#getwd()
 df <- read_excel("LungCapData.xls")
 View(df)
 ```
 
 
-###(1a) The distribution of LungCap looks as follows:
+The distribution of LungCap looks as follows:
 
 ```{r, echo=T}
 hist(df$LungCap)
@@ -39,14 +39,14 @@ hist(df$LungCap)
 
 The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
 
-###(1b) The probability distribution of the LungCap with respect to gender is as follows:
+## (1b) The probability distribution of the LungCap with respect to gender is as follows:
 
 ```{r BoxPlot}
 boxplot(df$LungCap ~ df$Gender)
 
 ```
 
-### (1c) The mean lung capacities for smokers and non-smokers can be found in the table below:
+## (1c) The mean lung capacities for smokers and non-smokers can be found in the table below:
 
 ```{r mean comparison}
 df %>%
@@ -56,7 +56,7 @@ df %>%
 These means are not what I would expect. It looks like those who smoke ("yes") have a higher long capacity (8.65) than those who do not smoke (7.77).
 
 
-### (1d) The relationship between Smoking and Lung Capacity within age groups 
+## (1d) The relationship between Smoking and Lung Capacity within age groups 
 
 ```{r additional variable of age group}
 #Age groups defined by:
@@ -90,7 +90,7 @@ dbinom(x=6,size=8,prob=.5)
 
 ```
 
-###(1e) Compare the lung capacities for smokers and non-smokers within each age group. 
+## (1e) Compare the lung capacities for smokers and non-smokers within each age group. 
 ```{r relationship btw age_group & LungCap}
 ggplot(df, aes(x=age_group, y=LungCap, color = Smoke)) +
   geom_boxplot()
@@ -99,7 +99,7 @@ ggplot(df, aes(x=age_group, y=LungCap, color = Smoke)) +
 This data visualization makes more sense for what we expect from lung capacity when comparing smokers to non smokers. It looks like lunch capacity increases as the participants get older. The data could have more participants who are smokers and who are older. This unbalance in participants could be skewing the overall average lunch capacity. 
 
 
-###Question 2:Setting up the Dataframe
+# Question 2:Setting up the Dataframe
 ```{r Probability table}
 StatePrison <- data.frame(number_convictions = 0:4, InMateCount = c(128, 434, 160, 64, 24)) %>%
                             mutate(Probability = InMateCount/810)
@@ -108,33 +108,33 @@ View(StatePrison)
 
 ```
 
-###(2a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+## (2a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
 ```{r probablity question (a)}
 dbinom(x = 1, size = 1, p = 160/810)
 ```
 
 
-###(2b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+## (2b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
 
 ```{r Probability question (b)}
 dbinom(x = 1, size = 1, p = sum(128+434)/810)
 ```
 
 
-###(2c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
+## (2c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
 
 ```{r probability question (c)}
 dbinom(x = 1, size = 1, p = sum(128+434+160)/810)
 ```
 
-###(2d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
+## (2d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
 
 ```{r probability question (d)}
 
 dbinom(x = 1, size = 1, p = sum(64+24)/810)
 
 ```
-###( 2e) What is the expected value for the number of prior convictions?
+## (2e) What is the expected value for the number of prior convictions?
 
 ```{r probability question (e)}
 
@@ -144,7 +144,7 @@ print(EV)
 ```
 
 
-###(2f) Calculate the variance and the standard deviation for the Prior Convictions.
+## (2f) Calculate the variance and the standard deviation for the Prior Convictions.
 
 ```{r probability question (f)}
 Var <- sum((StatePrison$number_convictions - EV) ^ 2 * StatePrison$Probability)
