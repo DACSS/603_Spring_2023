@@ -119,6 +119,13 @@
     "text": "2f\nVariance for the Prior Convictions:\n\n\nCode\nv <-sum(((Pc$Prior_convitions-e)^2)*Pc$Probability)\nv\n\n\n[1] 0.8562353\n\n\nstandard deviation for the Prior Convictions:\n\n\nCode\nsqrt(v)\n\n\n[1] 0.9253298"
   },
   {
+    "objectID": "posts/HW1_RahulSomu.html",
+    "href": "posts/HW1_RahulSomu.html",
+    "title": "Homework1",
+    "section": "",
+    "text": "First, let’s read in the data from the Excel file:\n\n\nCode\nlibrary(readxl)\nlibrary(dplyr)\n\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\n\nCode\nlibrary(ggplot2)\ngetwd()\n\n\n[1] \"/Users/rahulsomu/Documents/DACSS_601/603_repo/posts\"\n\n\nCode\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n1a) The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).\n\n\nCode\nhist(df$LungCap)\n\n\n\n\n\n1b) Median lung capacity of male is greater than that of female.\n\n\nCode\nboxplot(LungCap ~ Gender, data = df, xlab = \"Gender\", ylab = \"Lung Capacity\",\n        main = \"Distribution of Lung Capacity by Gender\")\n\n\n\n\n\n1c) Logically mean lung capacity of non-smokers should be more than of smokers but with the data, it’s other way round\n\n\nCode\n# Calculate the mean lung capacity for smokers and non-smokers\nmean_lungcap_smokers <- mean(df$LungCap[df$Smoke == \"yes\"])\nmean_lungcap_non_smokers <- mean(df$LungCap[df$Smoke == \"no\"])\n\n# Print the mean lung capacities\ncat(\"Mean lung capacity for smokers:\", round(mean_lungcap_smokers, 2), \"\\n\")\n\n\nMean lung capacity for smokers: 8.65 \n\n\nCode\ncat(\"Mean lung capacity for non-smokers:\", round(mean_lungcap_non_smokers, 2), \"\\n\")\n\n\nMean lung capacity for non-smokers: 7.77 \n\n\n1d) The average lung capacity growth for the non-smokers is more that of the smokers. The lung capacity has been gradually increasing with age 1e) The discrepancy in 1c is due the data for the 13 or younger age where the average lung capacity for the non-smokers is less that of the smokers. Also there have been more data points for 13 or younger age group non-smokers which is affecting the mean of entire distribution.\n\n\nCode\n# Define the age groups\ndf <- df %>%\n  mutate(age_groups = cut(Age, c(0, 13, 15, 17, Inf), labels = c(\"<= 13\", \"14-15\", \"16-17\", \">= 18\")))\n\n# Compare the probability distribution of lung capacity by gender\ndf %>%\n  ggplot(aes(x = Gender, y = LungCap)) +\n  geom_boxplot() +\n  labs(x = \"Gender\", y = \"Lung Capacity\", \n       title = \"Lung Capacity by Gender\")\n\n\n\n\n\nCode\n# Compare the mean lung capacities for smokers and non-smokers\ndf %>%\n  group_by(Smoke) %>%\n  summarize(mean_lungcap = mean(LungCap)) %>%\n  print()\n\n\n# A tibble: 2 × 2\n  Smoke mean_lungcap\n  <chr>        <dbl>\n1 no            7.77\n2 yes           8.65\n\n\nCode\n# Examine the relationship between smoking and lung capacity within age groups\ndf %>%\n  filter(Smoke %in% c(\"yes\", \"no\")) %>%\n  group_by(age_groups, Smoke) %>%\n  summarize(mean_lungcap = mean(LungCap)) %>%\n  print()\n\n\n`summarise()` has grouped output by 'age_groups'. You can override using the\n`.groups` argument.\n\n\n# A tibble: 8 × 3\n# Groups:   age_groups [4]\n  age_groups Smoke mean_lungcap\n  <fct>      <chr>        <dbl>\n1 <= 13      no            6.36\n2 <= 13      yes           7.20\n3 14-15      no            9.14\n4 14-15      yes           8.39\n5 16-17      no           10.5 \n6 16-17      yes           9.38\n7 >= 18      no           11.1 \n8 >= 18      yes          10.5 \n\n\nCode\n# Compare the lung capacities for smokers and non-smokers within each age group\ndf %>%\n  filter(Smoke %in% c(\"yes\", \"no\")) %>%\n  ggplot(aes(x = age_groups, y = LungCap, fill = Smoke)) +\n  geom_boxplot() +\n  labs(x = \"Age Group\", y = \"Lung Capacity\", \n       title = \"Lung Capacity by Smoking Status and Age Group\")\n\n\n\n\n\n#Challange2"
+  },
+  {
     "objectID": "posts/HW1_LTucksmith.html",
     "href": "posts/HW1_LTucksmith.html",
     "title": "HW1",
@@ -347,14 +354,14 @@
     "href": "about.html",
     "title": "Contributors",
     "section": "",
-    "text": "Find out more about our DACSS students who contributed to the blog.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAdithya Parupudi\n\n\n\n\n\n\n\n\n\n\n\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\n\n\n\n\n\nPranav Bharadwaj Komaravolu\n\n\n\n\n\n\n\n\n\n\n\n\n\nRowena\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Find out more about our DACSS students who contributed to the blog.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAdithya Parupudi\n\n\n\n\n\n\n\n\n\n\n\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\n\n\n\n\n\nPranav Bharadwaj Komaravolu\n\n\n\n\n\n\n\n\n\n\n\n\n\nRahul Somu\n\n\n\n\n\n\n\n\n\n\n\n\n\nRowena\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/AdithyaParupudi_about.html",
@@ -495,6 +502,55 @@
     "title": "Pranav Bharadwaj Komaravolu",
     "section": "Fun fact",
     "text": "Fun fact\nWill learn some by the end of this semester :)"
+  },
+  {
+    "objectID": "about/RahulSomu.html",
+    "href": "about/RahulSomu.html",
+    "title": "Rahul Somu",
+    "section": "",
+    "text": "##Instructions"
+  },
+  {
+    "objectID": "about/RahulSomu.html#educationwork-background",
+    "href": "about/RahulSomu.html#educationwork-background",
+    "title": "Rahul Somu",
+    "section": "Education/Work Background",
+    "text": "Education/Work Background\nBachelors in Electrical engineering at BITS Pilani -India 3years of professional work experience as software engineer"
+  },
+  {
+    "objectID": "about/RahulSomu.html#r-experience",
+    "href": "about/RahulSomu.html#r-experience",
+    "title": "Rahul Somu",
+    "section": "R experience",
+    "text": "R experience\nBeginner"
+  },
+  {
+    "objectID": "about/RahulSomu.html#research-interests",
+    "href": "about/RahulSomu.html#research-interests",
+    "title": "Rahul Somu",
+    "section": "Research interests",
+    "text": "Research interests\nBig Data Analytics"
+  },
+  {
+    "objectID": "about/RahulSomu.html#hometown",
+    "href": "about/RahulSomu.html#hometown",
+    "title": "Rahul Somu",
+    "section": "Hometown",
+    "text": "Hometown\nHyderabad - India"
+  },
+  {
+    "objectID": "about/RahulSomu.html#hobbies",
+    "href": "about/RahulSomu.html#hobbies",
+    "title": "Rahul Somu",
+    "section": "Hobbies",
+    "text": "Hobbies\nSoccer and gaming"
+  },
+  {
+    "objectID": "about/RahulSomu.html#fun-fact",
+    "href": "about/RahulSomu.html#fun-fact",
+    "title": "Rahul Somu",
+    "section": "Fun fact",
+    "text": "Fun fact"
   },
   {
     "objectID": "about/MiguelCuriel.html",
