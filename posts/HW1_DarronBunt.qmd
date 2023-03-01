@@ -1,0 +1,243 @@
+---
+title: "Homework - 1"
+author: "Darron Bunt"
+description: "Homework assignment 1 - Darron Bunt"
+date: "02/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+```{r setup, echo=FALSE}
+#| label: setup
+#| warning: false
+#| message: false
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+```
+
+
+# Question 1
+
+Use the *LungCapData* to answer the following questions. (Hint: Using *dplyr*, especially
+*group_by()* and *summarize()* can help you answer the following questions relatively efficiently.)
+
+## A
+
+What does the distribution of *LungCap* look like? (Hint: Plot a histogram with probability density on the y axis)
+
+First, let's read in the data from the Excel file:
+
+```{r}
+LungCapData <- read_excel("_data/LungCapData.xls")
+```
+
+The distribution of LungCap looks as follows:
+
+```{r}
+hist(LungCapData$LungCap)
+```
+
+The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean, while very few observations are close to the margins (0 and 15).
+
+## B
+
+Compare the probability distribution of the *LungCap* with respect to Males and Females? (Hint:
+make boxplots separated by gender using the *boxplot()* function)
+
+
+```{r}
+# Create a boxplot comparing LungCap for males and females
+boxplot(LungCap~Gender, data=LungCapData)
+```
+
+The boxplot suggests that the median for lung capacity in males is slightly higher than that of females. The IQR for lung capacity in males is also slightly higher than that of females. The minimum value for females is lower than that of males, as is the maximum. All of this suggests that males are more likely to have a greater lung capacity than females. 
+
+## C
+
+Compare the mean lung capacities for smokers and non-smokers. Does it make sense?
+
+```{r}
+# Calculate mean lung capacity for smokers and non-smokers
+LungCapData %>%
+  group_by(Smoke) %>%
+  summarise_at(vars(LungCap),
+               list(LCap = mean))
+```
+This suggests that the mean lung capacity for smokers is greater than that of non-smokers. This is not what I would have expected given the (negative) impact that smoking has on the lungs. 
+
+## D
+
+Examine the relationship between Smoking and Lung Capacity within age groups: “less than or
+equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.
+
+```{r}
+# Create a new variable, AgeGroup, using the parameters outlined above
+AgeSmokeLC <- LungCapData %>%
+ mutate(
+   AgeGroup = case_when(
+     Age <= 13 ~ "13 and Under",
+     Age == 14 | Age == 15 ~ "14-15",
+     Age == 16 | Age == 17 ~ "16-17", 
+     Age >= 18 ~ "18 and Over")) 
+
+# Calculate the mean lung capacity for smokers and non-smokers in each age group  
+  AgeSmokeLCMean <- AgeSmokeLC %>%
+    group_by(AgeGroup, Smoke) %>%
+  summarise_at(vars(LungCap),
+               list(MeanLungCap = mean)) %>%
+  arrange(desc(MeanLungCap))
+AgeSmokeLCMean
+
+```  
+
+This suggests that lung capacity increases with age; the mean lung capacity for each subsequent age category is greater than the one before it. Individuals aged 13 and under who smoke have a greater mean lung capacity than those who do not; however, at ages 14-15, 16-17, and 18+,   non-smokers have a greater lung capacity than their similarly aged smoking counterparts.
+
+## E
+
+Compare the lung capacities for smokers and non-smokers within each age group. Is your answer
+different from the one in part c. What could possibly be going on here?
+
+From the age group data above, we can ascertain that in the majority of age groups (three of the four), non-smokers have greater mean lung capacity than smokers, and yet when we calculated the mean lung capacity solely for smokers/non-smokers (ie. not accounting for age), smokers had greater mean lung capacity. The mean lung capacities for smokers/non-smokers (again, not accounting for age) are also lower than one might expect considering that when we do account for age, most of the represented groups have a higher mean lung capacity. This would suggest that something is skewing our results. 
+
+One way to gain insight into this is to examine how many respondents fell into each age/smoking status category.
+
+```{r}
+# Count number of responses in each age group who are smokers/non-smokers
+AgeSmokeLC %>%
+  count(AgeGroup, Smoke)
+  
+```
+
+There are more non-smoking individuals aged 13 and Under in this sample than all other categories combined. Accordingly, data from this group can (and has) skewed the overall non-smoking mean.  
+
+# Question 2
+
+Let X = number of prior convictions for prisoners at a state prison at which there are 810
+prisoners.
+
+X         0    1    2 3   4
+Frequency 128 434 160 64 24
+
+First, I need to turn the above into a data frame.
+
+```{r}
+# Create data frame for above data
+PriorConvictions <- data.frame(PriorConv=0:4, Inmates = c(128, 434, 160, 64, 24))
+PriorConvictions
+
+```
+## A
+
+What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+
+To answer this question, we are going to need to know the total number of inmates.
+
+```{r}
+#Find total number of inmates
+sum(PriorConvictions$Inmates)
+```
+To calculate this probability we are going calculate the binomial distribution. For this, we require three main arguments: 
+x - the number specifying the outcomes you're trying to calculate (for this question, x=1)
+size - the size of the experiment (for this question, size=1)
+prob - the probability of success for any one trial in the experiment (for this question, prob = the total number of inmates with two convictions / the total number of inmates, or 160/810)
+
+```{r}
+# Calculate probability of randomly selecting an inmate with two prior convictions
+dbinom(x=1, size=1, prob=(160/810))
+```
+The probability of randomly selecting an inmate with two prior convictions is roughly 19.8%. 
+
+## B
+
+What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+
+Having fewer than two prior convictions would mean that the inmate could either have zero or one prior convictions.
+
+x = 1
+size = 1
+prob = ((the total number of inmates with no prior convictions + inmates with 1 conviction) / the total number of inmates, or ((128 + 434)/810), or 562/810.
+
+```{r}
+# Calculate probability of randomly selecting an inmate with less than two prior convictions
+dbinom(x=1, size=1, prob=(562/810))
+```
+The probability of randomly selecting an inmate with fewer than two prior convictions is roughly 69.4%. 
+
+## C
+
+What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
+
+Having two or fewer prior convictions would mean that the inmate could either have zero, one, or two prior convictions.
+
+x = 1
+size = 1
+prob = ((the total number of inmates with no prior convictions + inmates with 1 conviction + inmates with 2 convictions) / the total number of inmates, or ((128 + 434 + 160)/810), or 722/810.
+
+```{r}
+# Calculate probability of randomly selecting an inmate with two or fewer prior convictions
+dbinom(x=1, size=1, prob=(722/810))
+```
+The probability of randomly selecting an inmate with two or fewer prior convictions is roughly 89.1%. 
+
+## D
+
+What is the probability that a randomly selected inmate has more than 2 prior convictions?
+
+Having more than two prior convictions would mean that the inmate could either have three or four prior convictions.
+
+x = 1
+size = 1
+prob = ((the total number of inmates with 3 convictions + inmates with 4 convictions) / the total number of inmates, or ((64+24)/810), or 88/810.
+
+```{r}
+# Calculate probability of randomly selecting an inmate with more than two prior convictions
+dbinom(x=1, size=1, prob=(88/810))
+```
+The probability of randomly selecting an inmate with more than two prior convictions is roughly 10.9%. 
+
+## E
+
+What is the expected value for the number of prior convictions? (The expected value of a discrete random variable X, symbolized as E(X), is often referred to as the long-term
+average or mean)
+
+In order to calculate the expected value for the number of prior convictions, we will need to use the proportional breakdown of the number of inmates with each number of convictions.
+
+```{r}
+# Calculate proportion of inmates with 0,1,2,3,4 convictions
+PriorConvictionsProp <- PriorConvictions %>%
+  mutate(Proportion = Inmates/810)
+PriorConvictionsProp
+```
+```{r}
+# Calculate the expected value for prior number of convictions
+ExpValue <- sum(PriorConvictionsProp$PriorConv*PriorConvictionsProp$Proportion)
+ExpValue
+```
+The expected value is 1.29 prior convictions.
+
+## F
+
+Calculate the variance and the standard deviation for the Prior Convictions.
+
+```{r}
+# Calculate the variance for prior convictions
+PriorConvVar <- sum((PriorConvictionsProp$PriorConv - ExpValue) ^ 2 * PriorConvictionsProp$Proportion)
+PriorConvVar
+
+```
+
+```{r}
+# Calculate the standard deviation for prior convictions
+PriorConvSTD <- sqrt(PriorConvVar)
+PriorConvSTD
+```
