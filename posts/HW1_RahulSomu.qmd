@@ -1,0 +1,153 @@
+---
+title: "Homework1"
+author: "Rahul Somu"
+description: "HW1 course blog qmd file"
+date: "02/27/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1
+
+## a
+
+First, let's read in the data from the Excel file:
+
+```{r, echo=T}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+getwd()
+df <- read_excel("_data/LungCapData.xls")
+```
+
+
+The distribution of LungCap looks as follows:
+
+1a) The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
+
+
+```{r, echo=T}
+hist(df$LungCap)
+```
+
+1b) Median lung capacity of male is greater than that of female.
+
+```{r, echo=T}
+boxplot(LungCap ~ Gender, data = df, xlab = "Gender", ylab = "Lung Capacity",
+        main = "Distribution of Lung Capacity by Gender")
+```
+
+1c) Logically mean lung capacity of non-smokers should be more than of smokers but with the data, it's other way round
+
+```{r, echo=T}
+# Calculate the mean lung capacity for smokers and non-smokers
+mean_lungcap_smokers <- mean(df$LungCap[df$Smoke == "yes"])
+mean_lungcap_non_smokers <- mean(df$LungCap[df$Smoke == "no"])
+
+# Print the mean lung capacities
+cat("Mean lung capacity for smokers:", round(mean_lungcap_smokers, 2), "\n")
+cat("Mean lung capacity for non-smokers:", round(mean_lungcap_non_smokers, 2), "\n")
+```
+
+1d) The average lung capacity growth for the non-smokers is more that of the smokers.
+The lung capacity has been gradually increasing with age
+1e) The discrepancy in 1c is due the data for the 13 or younger age where the average lung capacity for the non-smokers is less that of the smokers. Also there have been more data points for 13 or younger age group non-smokers which is affecting the mean of entire distribution.
+
+```{r, echo=T}
+# Define the age groups
+df <- df %>%
+  mutate(age_groups = cut(Age, c(0, 13, 15, 17, Inf), labels = c("<= 13", "14-15", "16-17", ">= 18")))
+
+# Compare the probability distribution of lung capacity by gender
+df %>%
+  ggplot(aes(x = Gender, y = LungCap)) +
+  geom_boxplot() +
+  labs(x = "Gender", y = "Lung Capacity", 
+       title = "Lung Capacity by Gender")
+
+# Compare the mean lung capacities for smokers and non-smokers
+df %>%
+  group_by(Smoke) %>%
+  summarize(mean_lungcap = mean(LungCap)) %>%
+  print()
+
+# Examine the relationship between smoking and lung capacity within age groups
+df %>%
+  filter(Smoke %in% c("yes", "no")) %>%
+  group_by(age_groups, Smoke) %>%
+  summarize(mean_lungcap = mean(LungCap)) %>%
+  print()
+
+# Compare the lung capacities for smokers and non-smokers within each age group
+df %>%
+  filter(Smoke %in% c("yes", "no")) %>%
+  ggplot(aes(x = age_groups, y = LungCap, fill = Smoke)) +
+  geom_boxplot() +
+  labs(x = "Age Group", y = "Lung Capacity", 
+       title = "Lung Capacity by Smoking Status and Age Group")
+
+
+```
+
+#Challange2
+
+# 2a) probability of having exactly 2 prior convictions: 0.1975
+
+```{r, echo=T}
+# Define the values
+x <- c(0, 1, 2, 3, 4)
+
+p2 <- 160/810
+p2
+```
+# 2b) probability of having fewer than 2 prior convictions: 0.6938272
+
+```{r, echo=T}
+p_less2 <- (128 + 434) / 810
+p_less2
+```
+
+# 2c) probability of having 2 or fewer prior convictions: 0.891358
+
+```{r, echo=T}
+p_2less <- (128 + 434 + 160) / 810
+p_2less
+```
+
+# 2d)probability of having more than 2 prior convictions: 0.108642
+
+```{r, echo=T}
+p_more2 <- (64 + 24) / 810
+p_more2
+```
+
+# 2e)expected value for the number of prior convictions: 1.28642
+
+```{r, echo=T}
+ex <- sum(c(0, 1, 2, 3, 4) * c(128, 434, 160, 64, 24) / 810)
+ex
+```
+
+#2f) Variance: 0.898864 & Standard deviation: 0.9480844
+
+```{r, echo=T}
+p_x <- c(0.158, 0.536, 0.198, 0.079, 0.029)
+mu <- 1.502
+
+# Calculate variance and standard deviation
+variance <- sum((x - mu)^2 * p_x)
+sd <- sqrt(variance)
+
+# Print results
+cat("Variance:", variance, "\n")
+cat("Standard deviation:", sd)
+```
