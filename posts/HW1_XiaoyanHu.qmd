@@ -1,0 +1,98 @@
+---
+title: "Homework 1"
+author: "Xiaoyan"
+description: "Template of course blog qmd file"
+date: "02/27/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+```{r}
+library(tidyr)
+library(dplyr)
+library(readxl)
+library(ggplot2)
+data<-read_excel("/Users/cassie199/Desktop/23spring/603_Spring_2023-1/posts/_data/LungCapData.xls")
+head(data)
+```
+# Question 1
+1. Use the LungCapData to answer the following questions. (Hint: Using dplyr, especially
+group_by() and summarize() can help you answer the following questions relatively efficiently.)
+a) What does the distribution of LungCap look like? (Hint: Plot a histogram with probability density on the y axis)
+
+-the distribution of LungCap looks like a normal distribution
+```{r}
+ggplot(data, aes(x=LungCap)) + geom_histogram()
+```
+b) Compare the probability distribution of the LungCap with respect to Males and Females? (Hint:make boxplots separated by gender using the boxplot() function)
+```{r}
+boxplot(data$LungCap~data$Gender)
+```
+c) Compare the mean lung capacities for smokers and non-smokers. Does it make sense?
+```{r}
+boxplot(data$LungCap~data$Smoke)
+```
+d) Examine the relationship between Smoking and Lung Capacity within age groups: “less than or
+equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.
+```{r}
+age_ranges <- c("<=13", "14-15", "16-17",  ">18")
+data$age_ranges <- cut(data$Age, breaks = c(13, 14,15, 16,17, 18),
+                     include.lowest = TRUE)
+ggplot(data, aes(x = age_ranges, y = LungCap)) +
+  geom_boxplot() +
+  labs(x = "Age Range", y = "LungCap")
+```
+e) Compare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c. What could possibly be going on here?
+
+#Question 2
+
+2. Let X = number of prior convictions for prisoners at a state prison at which there are 810
+prisoners.
+
+X 0 1 2 3 4
+Frequency 128 434 160 64 24
+
+a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+```{r, echo=T}
+n<-810
+X<-tibble(x=0:4,
+          F=c(128,434,160,64,24))
+X
+pa<-160/n
+pa
+
+```
+b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+```{r, echo=T}
+pb<-(128+434)/n
+pb
+```
+c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
+```{r, echo=T}
+pc<-(128+434+160)/n
+pc
+```
+d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
+```{r, echo=T}
+pd<-(64+24)/n
+pd
+```
+e) What is the expected value1 for the number of prior convictions?
+```{r, echo=T}
+prior<-c(434,160,64,24)
+mean(prior)
+```
+f) Calculate the variance and the standard deviation for the Prior Convictions.
+```{r, echo=T}
+var(prior)
+sd(prior)
+```
+
+
