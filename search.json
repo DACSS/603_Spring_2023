@@ -119,6 +119,55 @@
     "text": "2f\nVariance for the Prior Convictions:\n\n\nCode\nv <-sum(((Pc$Prior_convitions-e)^2)*Pc$Probability)\nv\n\n\n[1] 0.8562353\n\n\nstandard deviation for the Prior Convictions:\n\n\nCode\nsqrt(v)\n\n\n[1] 0.9253298"
   },
   {
+    "objectID": "posts/HW1_ChristineBrydges.html",
+    "href": "posts/HW1_ChristineBrydges.html",
+    "title": "Homework 1",
+    "section": "",
+    "text": "First, let’s read in the data from the Excel file:\n\n\nCode\nlibrary(readxl)\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n\n\nCode\nhist(df$LungCap)\n\n\n\n\n\nThe histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).\n\n\n\nThe distribution and mean of the probability density of Lung Capacity can be shown in the box plots below, separated by genders ‘Male’ and ‘Female’\n\n\nCode\n# Create a Box Plot with Lung Capacity on y-axis, grouped by gender\nboxplot(LungCap~ Gender, data = df)\n\n# Add a title\ntitle(\"Lung Capacity: Males vs. Females\")\n\n\n\n\n\nThe boxplot suggests that there is no significant difference between lung capacity of females and males, as the error bars of each boxplot significantly overlap. Additionally, the mean of the probability density of lung capacity appear to be close between female and male constituents.\n\n\n\n\n\nCode\n# Create a Box Plot with Lung Capacity on y-axis, grouped by populations that smoke or do not smoke \nboxplot(LungCap~ Smoke, data = df)\n\n# Add a title\ntitle(\"Lung Capacity: Smokers vs. Non-Smokers\")\n\n\n\n\n\nThe boxplot suggests that smokers have a higher lung capacity than non-smokers, which is counter-intuitive.\n#c Next, we will explore the differences of lung capacity of non-smokers and smokers, broken down by age group, as shown in the boxplot below. The green color is used to call out groups that do smoke while the blue color is used to call out groups that do not smoke.\n\n\nCode\n#Group respondents into specific Age Groups \nAgeGroups <- cut(df$Age, breaks=c(0,13,15,17,19), labels=c('<13','14-15','16-17','>=18'))\nlevels(AgeGroups)\n\n\n[1] \"<13\"   \"14-15\" \"16-17\" \">=18\" \n\n\nCode\n#Create a stratified box plot based on two factors: Smoking vs. Nonsmoking and Age groups\nboxplot(df$LungCap~df$Smoke*AgeGroups, ylab=\"LungCap\", main=\"LungCap vs. Smoke, by AgeGroup\", las = 2, col=c(4,3))\n\n\n\n\n\nFrom these boxplots, you can see that when you separate the smoking and nonsmoking groups by age, the smokers have a higher lung capacity than non-smokers. This is because age is a confounding variable, with young people gaining lung capacity as they have bigger bodies, and with older peope generally smoking more than younger people . Once you take out age from consideration and compare “apples to apples” people of the same age but differences in whether they smoke or not, you can see that smoking DOES have a negative effect on lung capacity."
+  },
+  {
+    "objectID": "posts/HW1_ChristineBrydges.html#a.-here-we-will-explore-the-probability-that-a-randomly-selected-inmate-has-exactly-2-prior-convictions-based-on-a-dataset-given-to-us.",
+    "href": "posts/HW1_ChristineBrydges.html#a.-here-we-will-explore-the-probability-that-a-randomly-selected-inmate-has-exactly-2-prior-convictions-based-on-a-dataset-given-to-us.",
+    "title": "Homework 1",
+    "section": "a. Here, we will explore the probability that a randomly selected inmate has exactly 2 prior convictions, based on a dataset given to us.",
+    "text": "a. Here, we will explore the probability that a randomly selected inmate has exactly 2 prior convictions, based on a dataset given to us.\nSince the data set is not continuous or binomial, we will use basic probability functions to find probabilities.\n\n\nCode\n#Calculate the probability of a prisoner having exactly 2 convictions (events/total possible events)\nprobability = (150/810) * 100\nprint(probability)\n\n\n[1] 18.51852\n\n\nWe can see that the probability of a prisoner having exactly 2 convictions is 18.5%."
+  },
+  {
+    "objectID": "posts/HW1_ChristineBrydges.html#b.",
+    "href": "posts/HW1_ChristineBrydges.html#b.",
+    "title": "Homework 1",
+    "section": "b.",
+    "text": "b.\nNext, we’ll look at the probability that a randomly selected inmate has fewer than 2 prior convictions.\n\n\nCode\n# Calculate the probability of a prisoner having 0, or 1 convictions (fewer than 2 prior convictions) (events/total possible events)\nlessthan2convictions <- 128 + 434 \nprobabilitylessthan2 <- (lessthan2convictions/810) * 100\nprint(probabilitylessthan2)\n\n\n[1] 69.38272\n\n\nWe can see that the probability of a prisoner having less than 2 convictions is 69.4%."
+  },
+  {
+    "objectID": "posts/HW1_ChristineBrydges.html#c.",
+    "href": "posts/HW1_ChristineBrydges.html#c.",
+    "title": "Homework 1",
+    "section": "c. ",
+    "text": "c. \nNext, we’ll look at the probability that a randomly selected inmate has 2 or less prior convictions.\n\n\nCode\n# Calculate the probability of a prisoner having 0, 1, or 2 convictions ( 2 or fewer prior convictions) (events/total possible events)\ntwoorlessconvictions <- 128 + 434 + 160\nprobability2orless <- (twoorlessconvictions/810) * 100\nprint(probability2orless)\n\n\n[1] 89.1358\n\n\nWe can see that the probability of a prisoner having 2 or less convictions is 89.1%."
+  },
+  {
+    "objectID": "posts/HW1_ChristineBrydges.html#d.",
+    "href": "posts/HW1_ChristineBrydges.html#d.",
+    "title": "Homework 1",
+    "section": "d. ",
+    "text": "d. \nNext, we’ll look at the probability that a randomly selected inmate has more than 2 prior convictions.\n\n\nCode\n#Calculate the probability of a prisoner having more than 2 convictions ( 3 or 4 prior convictions) (events/total possible events)\nmorethan2convictions <- 64 + 24\nprobabilitymorethan2 <- (morethan2convictions/810) * 100\nprint(probabilitymorethan2)\n\n\n[1] 10.8642\n\n\nWe can see that the probability of a prisoner having more than 2 convictions is 10.9%."
+  },
+  {
+    "objectID": "posts/HW1_ChristineBrydges.html#d.-1",
+    "href": "posts/HW1_ChristineBrydges.html#d.-1",
+    "title": "Homework 1",
+    "section": "d. ",
+    "text": "d. \nHere, we’ll calculate the expected value for the number of prior convictions.\n\n\nCode\n#define values\nx <- c(0,1,2,3,4)\n\n#define probabilities\nfrequency <- c(128/810, 434/810, 160/810, 64/810, 24/810)\n\n#calculate expected value\nsum(x * frequency)\n\n\n[1] 1.28642\n\n\nThe expected value is 1.29 prior convictions."
+  },
+  {
+    "objectID": "posts/HW1_ChristineBrydges.html#f.",
+    "href": "posts/HW1_ChristineBrydges.html#f.",
+    "title": "Homework 1",
+    "section": "f. ",
+    "text": "f. \nIn this final section, we’ll calculate the variance and standard deviation for the prior convictions.\n\n\nCode\n# calculate variance of frequencies\nfrequency <- c(128, 434, 160, 64, 24)\nvar(frequency)\n\n\n[1] 25948\n\n\nThe variance is 5948.\n\n\nCode\n# calculate standard deviation of prior convictions \nfrequency <- c(128, 434, 160, 64, 24)\nsd(frequency)\n\n\n[1] 161.0838\n\n\nThe standard deviation is 161.1."
+  },
+  {
     "objectID": "posts/HW1_RahulSomu.html",
     "href": "posts/HW1_RahulSomu.html",
     "title": "Homework1",
@@ -361,7 +410,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/AdithyaParupudi_about.html",
