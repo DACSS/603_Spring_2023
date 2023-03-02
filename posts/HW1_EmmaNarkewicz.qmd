@@ -123,9 +123,21 @@ df_by_age %>%
 
 ```
 
-##e
+Finally,  I once again used the group_by(), select(), and summarise_all() function, grouping by age_range & smoking status & calculating the mean lung capacity for smokers & non smokers in each age range, which I will interpret in 1e.
 
-To answer question 1e, I once again used the group_by(), select(), and summarise_all() function, grouping by age_range & smoking status & calculating the mean lung capacity for smokers & non smokers in each age range. In contrast to 1c, where smokers had a higher mean lung capacity than non-smokers (8.64 L vs 7.77 L), for every age group except for 13 or younger non-smokers had a higher lung capacity than non-smokers.
+```{r}
+##Mean lung cap by age_range smoker vs. non-smoker
+df_by_age %>%
+  group_by(`Smoke`, `Age_Range`) %>%
+  select(`Age_Range`, `LungCap`, `Smoke`) %>%
+  summarise_all(mean, na.rm = TRUE)
+
+
+```
+
+
+##e
+ In contrast to 1c, where smokers had a higher mean lung capacity than non-smokers (8.64 L vs 7.77 L), for every age group except for 13 or younger non-smokers had a higher lung capacity than non-smokers.
 
 -   For the 13 or younger: non-smoker lung capacity = 6.36L, smoker lung capacity = 7.20 L
 -   For 14-15: non-smoker lung capacity = 9.14 L, smoker lung capacity = 8.39 L
@@ -136,14 +148,6 @@ Considering that in part d it was found that average lung capacity increases wit
 
 It is worth noting also that the sample smoking & nonsmoking mean lung capacity are closer to the mean lung capacity of the 13 & younger & 14-15 year old age groups, reflecting the larger number of younger folks in the sample compare.
 
-```{r}
-##Mean lung cap by age_range smoker vs. non-smoker
-df_by_age %>%
-  group_by(`Smoke`, `Age_Range`) %>%
-  select(`Age_Range`, `LungCap`, `Smoke`) %>%
-  summarise_all(mean, na.rm = TRUE)
-
-```
 
 For fun, I calculated the mean age for smokers & non smokers in the sample, and smokers indeed were older with a mean age of 14.8, compared to a mean non-smoker age of 12.03.
 
@@ -245,9 +249,10 @@ expected_value
 
 ##f
 
-To calculate the variance of the sample I used the equation Var(X) = Σx^2p − μ2, where the mean is the expected value calculated in e. 
+To calculate the variance of the sample I used the equation Var(X) = Σx^2p − μ^2, where the mean is the expected value calculated in e.
 
-This gives a variance of **0.856** years squaredand a standard deviation of 0.925 years.
+
+This gives a variance of **0.856** years squared and a standard deviation of **0.925** years.
 
 
 
