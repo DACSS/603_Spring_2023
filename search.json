@@ -168,6 +168,132 @@
     "text": "f. \nIn this final section, we’ll calculate the variance and standard deviation for the prior convictions.\n\n\nCode\n# calculate variance of frequencies\nfrequency <- c(128, 434, 160, 64, 24)\nvar(frequency)\n\n\n[1] 25948\n\n\nThe variance is 5948.\n\n\nCode\n# calculate standard deviation of prior convictions \nfrequency <- c(128, 434, 160, 64, 24)\nsd(frequency)\n\n\n[1] 161.0838\n\n\nThe standard deviation is 161.1."
   },
   {
+    "objectID": "posts/HW1_DarronBunt.html#a",
+    "href": "posts/HW1_DarronBunt.html#a",
+    "title": "Homework - 1",
+    "section": "A",
+    "text": "A\nWhat does the distribution of LungCap look like? (Hint: Plot a histogram with probability density on the y axis)\nFirst, let’s read in the data from the Excel file:\n\n\nCode\nLungCapData <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n\n\nCode\nhist(LungCapData$LungCap)\n\n\n\n\n\nThe histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean, while very few observations are close to the margins (0 and 15)."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#b",
+    "href": "posts/HW1_DarronBunt.html#b",
+    "title": "Homework - 1",
+    "section": "B",
+    "text": "B\nCompare the probability distribution of the LungCap with respect to Males and Females? (Hint: make boxplots separated by gender using the boxplot() function)\n\n\nCode\n# Create a boxplot comparing LungCap for males and females\nboxplot(LungCap~Gender, data=LungCapData)\n\n\n\n\n\nThe boxplot suggests that the median for lung capacity in males is slightly higher than that of females. The IQR for lung capacity in males is also slightly higher than that of females. The minimum value for females is lower than that of males, as is the maximum. All of this suggests that males are more likely to have a greater lung capacity than females."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#c",
+    "href": "posts/HW1_DarronBunt.html#c",
+    "title": "Homework - 1",
+    "section": "C",
+    "text": "C\nCompare the mean lung capacities for smokers and non-smokers. Does it make sense?\n\n\nCode\n# Calculate mean lung capacity for smokers and non-smokers\nLungCapData %>%\n  group_by(Smoke) %>%\n  summarise_at(vars(LungCap),\n               list(LCap = mean))\n\n\n# A tibble: 2 × 2\n  Smoke  LCap\n  <chr> <dbl>\n1 no     7.77\n2 yes    8.65\n\n\nThis suggests that the mean lung capacity for smokers is greater than that of non-smokers. This is not what I would have expected given the (negative) impact that smoking has on the lungs."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#d",
+    "href": "posts/HW1_DarronBunt.html#d",
+    "title": "Homework - 1",
+    "section": "D",
+    "text": "D\nExamine the relationship between Smoking and Lung Capacity within age groups: “less than or equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.\n\n\nCode\n# Create a new variable, AgeGroup, using the parameters outlined above\nAgeSmokeLC <- LungCapData %>%\n mutate(\n   AgeGroup = case_when(\n     Age <= 13 ~ \"13 and Under\",\n     Age == 14 | Age == 15 ~ \"14-15\",\n     Age == 16 | Age == 17 ~ \"16-17\", \n     Age >= 18 ~ \"18 and Over\")) \n\n# Calculate the mean lung capacity for smokers and non-smokers in each age group  \n  AgeSmokeLCMean <- AgeSmokeLC %>%\n    group_by(AgeGroup, Smoke) %>%\n  summarise_at(vars(LungCap),\n               list(MeanLungCap = mean)) %>%\n  arrange(desc(MeanLungCap))\nAgeSmokeLCMean\n\n\n# A tibble: 8 × 3\n# Groups:   AgeGroup [4]\n  AgeGroup     Smoke MeanLungCap\n  <chr>        <chr>       <dbl>\n1 18 and Over  no          11.1 \n2 18 and Over  yes         10.5 \n3 16-17        no          10.5 \n4 16-17        yes          9.38\n5 14-15        no           9.14\n6 14-15        yes          8.39\n7 13 and Under yes          7.20\n8 13 and Under no           6.36\n\n\nThis suggests that lung capacity increases with age; the mean lung capacity for each subsequent age category is greater than the one before it. Individuals aged 13 and under who smoke have a greater mean lung capacity than those who do not; however, at ages 14-15, 16-17, and 18+, non-smokers have a greater lung capacity than their similarly aged smoking counterparts."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#e",
+    "href": "posts/HW1_DarronBunt.html#e",
+    "title": "Homework - 1",
+    "section": "E",
+    "text": "E\nCompare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c. What could possibly be going on here?\nFrom the age group data above, we can ascertain that in the majority of age groups (three of the four), non-smokers have greater mean lung capacity than smokers, and yet when we calculated the mean lung capacity solely for smokers/non-smokers (ie. not accounting for age), smokers had greater mean lung capacity. The mean lung capacities for smokers/non-smokers (again, not accounting for age) are also lower than one might expect considering that when we do account for age, most of the represented groups have a higher mean lung capacity. This would suggest that something is skewing our results.\nOne way to gain insight into this is to examine how many respondents fell into each age/smoking status category.\n\n\nCode\n# Count number of responses in each age group who are smokers/non-smokers\nAgeSmokeLC %>%\n  count(AgeGroup, Smoke)\n\n\n# A tibble: 8 × 3\n  AgeGroup     Smoke     n\n  <chr>        <chr> <int>\n1 13 and Under no      401\n2 13 and Under yes      27\n3 14-15        no      105\n4 14-15        yes      15\n5 16-17        no       77\n6 16-17        yes      20\n7 18 and Over  no       65\n8 18 and Over  yes      15\n\n\nThere are more non-smoking individuals aged 13 and Under in this sample than all other categories combined. Accordingly, data from this group can (and has) skewed the overall non-smoking mean."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#a-1",
+    "href": "posts/HW1_DarronBunt.html#a-1",
+    "title": "Homework - 1",
+    "section": "A",
+    "text": "A\nWhat is the probability that a randomly selected inmate has exactly 2 prior convictions?\nTo answer this question, we are going to need to know the total number of inmates.\n\n\nCode\n#Find total number of inmates\nsum(PriorConvictions$Inmates)\n\n\n[1] 810\n\n\nTo calculate this probability we are going calculate the binomial distribution. For this, we require three main arguments: x - the number specifying the outcomes you’re trying to calculate (for this question, x=1) size - the size of the experiment (for this question, size=1) prob - the probability of success for any one trial in the experiment (for this question, prob = the total number of inmates with two convictions / the total number of inmates, or 160/810)\n\n\nCode\n# Calculate probability of randomly selecting an inmate with two prior convictions\ndbinom(x=1, size=1, prob=(160/810))\n\n\n[1] 0.1975309\n\n\nThe probability of randomly selecting an inmate with two prior convictions is roughly 19.8%."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#b-1",
+    "href": "posts/HW1_DarronBunt.html#b-1",
+    "title": "Homework - 1",
+    "section": "B",
+    "text": "B\nWhat is the probability that a randomly selected inmate has fewer than 2 prior convictions?\nHaving fewer than two prior convictions would mean that the inmate could either have zero or one prior convictions.\nx = 1 size = 1 prob = ((the total number of inmates with no prior convictions + inmates with 1 conviction) / the total number of inmates, or ((128 + 434)/810), or 562/810.\n\n\nCode\n# Calculate probability of randomly selecting an inmate with less than two prior convictions\ndbinom(x=1, size=1, prob=(562/810))\n\n\n[1] 0.6938272\n\n\nThe probability of randomly selecting an inmate with fewer than two prior convictions is roughly 69.4%."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#c-1",
+    "href": "posts/HW1_DarronBunt.html#c-1",
+    "title": "Homework - 1",
+    "section": "C",
+    "text": "C\nWhat is the probability that a randomly selected inmate has 2 or fewer prior convictions?\nHaving two or fewer prior convictions would mean that the inmate could either have zero, one, or two prior convictions.\nx = 1 size = 1 prob = ((the total number of inmates with no prior convictions + inmates with 1 conviction + inmates with 2 convictions) / the total number of inmates, or ((128 + 434 + 160)/810), or 722/810.\n\n\nCode\n# Calculate probability of randomly selecting an inmate with two or fewer prior convictions\ndbinom(x=1, size=1, prob=(722/810))\n\n\n[1] 0.891358\n\n\nThe probability of randomly selecting an inmate with two or fewer prior convictions is roughly 89.1%."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#d-1",
+    "href": "posts/HW1_DarronBunt.html#d-1",
+    "title": "Homework - 1",
+    "section": "D",
+    "text": "D\nWhat is the probability that a randomly selected inmate has more than 2 prior convictions?\nHaving more than two prior convictions would mean that the inmate could either have three or four prior convictions.\nx = 1 size = 1 prob = ((the total number of inmates with 3 convictions + inmates with 4 convictions) / the total number of inmates, or ((64+24)/810), or 88/810.\n\n\nCode\n# Calculate probability of randomly selecting an inmate with more than two prior convictions\ndbinom(x=1, size=1, prob=(88/810))\n\n\n[1] 0.108642\n\n\nThe probability of randomly selecting an inmate with more than two prior convictions is roughly 10.9%."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#e-1",
+    "href": "posts/HW1_DarronBunt.html#e-1",
+    "title": "Homework - 1",
+    "section": "E",
+    "text": "E\nWhat is the expected value for the number of prior convictions? (The expected value of a discrete random variable X, symbolized as E(X), is often referred to as the long-term average or mean)\nIn order to calculate the expected value for the number of prior convictions, we will need to use the proportional breakdown of the number of inmates with each number of convictions.\n\n\nCode\n# Calculate proportion of inmates with 0,1,2,3,4 convictions\nPriorConvictionsProp <- PriorConvictions %>%\n  mutate(Proportion = Inmates/810)\nPriorConvictionsProp\n\n\n  PriorConv Inmates Proportion\n1         0     128 0.15802469\n2         1     434 0.53580247\n3         2     160 0.19753086\n4         3      64 0.07901235\n5         4      24 0.02962963\n\n\n\n\nCode\n# Calculate the expected value for prior number of convictions\nExpValue <- sum(PriorConvictionsProp$PriorConv*PriorConvictionsProp$Proportion)\nExpValue\n\n\n[1] 1.28642\n\n\nThe expected value is 1.29 prior convictions."
+  },
+  {
+    "objectID": "posts/HW1_DarronBunt.html#f",
+    "href": "posts/HW1_DarronBunt.html#f",
+    "title": "Homework - 1",
+    "section": "F",
+    "text": "F\nCalculate the variance and the standard deviation for the Prior Convictions.\n\n\nCode\n# Calculate the variance for prior convictions\nPriorConvVar <- sum((PriorConvictionsProp$PriorConv - ExpValue) ^ 2 * PriorConvictionsProp$Proportion)\nPriorConvVar\n\n\n[1] 0.8562353\n\n\n\n\nCode\n# Calculate the standard deviation for prior convictions\nPriorConvSTD <- sqrt(PriorConvVar)\nPriorConvSTD\n\n\n[1] 0.9253298"
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html",
+    "href": "posts/HW1_solution_Pang.html",
+    "title": "Homework 1 Solution",
+    "section": "",
+    "text": "First, let’s read in the data from the Excel file:\n\n\nCode\nlibrary(readxl)\nlibrary(dplyr, warn.conflicts = F)\nlibrary(magrittr)\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n\n\nCode\nhist(df$LungCap, xlab = 'Lung Capacity', main = '', freq = F)\n\n\n\n\n\nThe histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).\n\n\n\n\n\nCode\nboxplot(LungCap ~ Gender, data = df)\n\n\n\n\n\nThe shape of the distribution is similar for males and females. The median, first quartile, third quartile lung capacity values all seem to be somewhat higher for males.\n\n\n\n\n\nCode\ndf %>%\n  group_by(Smoke) %>%\n  summarize(LungCap = mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke LungCap\n  <chr>   <dbl>\n1 no       7.77\n2 yes      8.65\n\n\nThe lung capacity for smokers seems to be higher than non-smokers. It goes against the common idea that smoking would hurt lung capacity.\n\n\n\n\nLess than or equal to 13\n\n\n\nCode\ndf %>%\n  filter(Age <= 13) %>%\n  group_by(Smoke) %>%\n  summarize(LungCap = mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke LungCap\n  <chr>   <dbl>\n1 no       6.36\n2 yes      7.20\n\n\n\n14 to 15\n\n\n\nCode\ndf %>%\n  filter(Age == 14 | Age == 15) %>%\n  group_by(Smoke) %>%\n  summarize(LungCap = mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke LungCap\n  <chr>   <dbl>\n1 no       9.14\n2 yes      8.39\n\n\n\n16 to 17\n\n\n\nCode\ndf %>%\n  filter(Age == 16 | Age == 17) %>%\n  group_by(Smoke) %>%\n  summarize(LungCap = mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke LungCap\n  <chr>   <dbl>\n1 no      10.5 \n2 yes      9.38\n\n\n\nGreater than or equal to 18\n\n\n\nCode\ndf %>%\n  filter(Age >= 18) %>%\n  group_by(Smoke) %>%\n  summarize(LungCap = mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke LungCap\n  <chr>   <dbl>\n1 no       11.1\n2 yes      10.5\n\n\n\n\n\nFor three out of the four groups, lung capacity if smaller for smokers. This makes another explanation plausible. Smoking is inversely related to lung capacity, but older people both smoke more and have more lung capacity. Thus, considering the relationship between smoking and lung capacity without looking at age makes the relationship look the opposite of what it is."
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html#a-1",
+    "href": "posts/HW1_solution_Pang.html#a-1",
+    "title": "Homework 1 Solution",
+    "section": "a",
+    "text": "a\n\n\nCode\ntb %>%\n  filter(X == 2) %>%\n  pull(Frequency) %>%\n  divide_by(n)\n\n\n[1] 0.1975309"
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html#b-1",
+    "href": "posts/HW1_solution_Pang.html#b-1",
+    "title": "Homework 1 Solution",
+    "section": "b",
+    "text": "b\n\n\nCode\ntb %>%\n  filter(X < 2) %>%\n  pull(Frequency) %>%\n  sum() %>%\n  divide_by(n)\n\n\n[1] 0.6938272"
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html#c-1",
+    "href": "posts/HW1_solution_Pang.html#c-1",
+    "title": "Homework 1 Solution",
+    "section": "c",
+    "text": "c\n\n\nCode\ntb %>%\n  filter(X <= 2) %>%\n  pull(Frequency) %>%\n  sum() %>%\n  divide_by(n)\n\n\n[1] 0.891358"
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html#d-1",
+    "href": "posts/HW1_solution_Pang.html#d-1",
+    "title": "Homework 1 Solution",
+    "section": "d",
+    "text": "d\n\n\nCode\ntb %>%\n  filter(X > 2) %>%\n  pull(Frequency) %>%\n  sum() %>%\n  divide_by(n)\n\n\n[1] 0.108642"
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html#e-1",
+    "href": "posts/HW1_solution_Pang.html#e-1",
+    "title": "Homework 1 Solution",
+    "section": "e",
+    "text": "e\nExpected number of prior convictions is just a weighted average of the number of prior convictions.\n\nMethod 1: Multiply every value with their frequency, then divide by total frequency i.e. (0 * 128 + 1 * 434 + 2 * 160 ……) / 810.\n\n\n\nCode\nsum(tb$X * tb$Frequency) / n\n\n\n[1] 1.28642\n\n\n\nMethod 2: Multiply every value with their probility, sum them up.\n\n\n\nCode\ntb %>%\n  mutate(probability = Frequency / n) -> tb\n\nprint(tb)\n\n\n# A tibble: 5 × 3\n      X Frequency probability\n  <dbl>     <dbl>       <dbl>\n1     0       128      0.158 \n2     1       434      0.536 \n3     2       160      0.198 \n4     3        64      0.0790\n5     4        24      0.0296\n\n\n\n\nCode\nsum(tb$X * tb$probability)\n\n\n[1] 1.28642\n\n\n\nMethod 3: Recreate the whole sample (a vector that has 128 zeroes, 434 ones, 160 twos, ….) with a total length/size of 810. Take the mean.\n\n\n\nCode\nsample <- c(rep(0, 128), rep(1, 434), rep(2, 160), rep(3, 64), rep(4, 24))\nmean(sample)\n\n\n[1] 1.28642"
+  },
+  {
+    "objectID": "posts/HW1_solution_Pang.html#f",
+    "href": "posts/HW1_solution_Pang.html#f",
+    "title": "Homework 1 Solution",
+    "section": "f",
+    "text": "f\n\nMethod 1: Let’s start from the end: we have the sample, just call var() and sd()\n\n\n\nCode\ncat('Variance:', var(sample))\n\n\nVariance: 0.8572937\n\n\nCode\ncat('\\nStandard Deviation:', sd(sample))\n\n\n\nStandard Deviation: 0.9259016\n\n\nMethod 2: Manually apply the formula using weights.\nStandard deviation is square root of variance. So let’s calculate variance first. For that we need the mean. Let’s pull the expected value from the previous section:\n\n\nCode\nm <- sum(tb$X * tb$Frequency) / n\n\n\nFor every observation, we’ll need the squared difference from mean (squared deviation from mean).\n\n\nCode\ntb %>%\n  mutate(sq_deviation = (X - m)^2) -> tb \nprint(tb)\n\n\n# A tibble: 5 × 4\n      X Frequency probability sq_deviation\n  <dbl>     <dbl>       <dbl>        <dbl>\n1     0       128      0.158        1.65  \n2     1       434      0.536        0.0820\n3     2       160      0.198        0.509 \n4     3        64      0.0790       2.94  \n5     4        24      0.0296       7.36  \n\n\nThen, we can now multiply them with probability.\n\n\nCode\nsum(tb$sq_deviation * tb$probability)\n\n\n[1] 0.8562353\n\n\nThis gives us the ‘population’ variance. If we wanted the ‘sample’ variance, what the var() function does, we could manually apply the Bessel’s correction:\n\n\nCode\nvariance <- sum(tb$sq_deviation * tb$probability) * (n / (n-1))\nprint(variance)\n\n\n[1] 0.8572937\n\n\nStandard deviation is then just the square root:\n\n\nCode\nsqrt(variance)\n\n\n[1] 0.9259016\n\n\nThis replicated what we found directly using the sample."
+  },
+  {
     "objectID": "posts/HW1_RahulSomu.html",
     "href": "posts/HW1_RahulSomu.html",
     "title": "Homework1",
@@ -431,7 +557,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\nhomework1\n\n\nabigailbalint\n\n\nlungcap\n\n\nprisoner\n\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAbigail Balint\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1 Solution\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThe first homework on descriptive statistics and probability\n\n\n\n\n\n\nMar 1, 2023\n\n\nRosemary Pang\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework - 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework assignment 1 - Darron Bunt\n\n\n\n\n\n\nFeb 28, 2023\n\n\nDarron Bunt\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\nhomework1\n\n\nabigailbalint\n\n\nlungcap\n\n\nprisoner\n\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAbigail Balint\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/about_abbybalint603.html",
