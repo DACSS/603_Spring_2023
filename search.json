@@ -301,6 +301,195 @@
     "text": "First, let’s read in the data from the Excel file:\n\n\nCode\nlibrary(readxl)\nlibrary(dplyr)\n\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\n\nCode\nlibrary(ggplot2)\ngetwd()\n\n\n[1] \"/Users/rahulsomu/Documents/DACSS_601/603_repo/posts\"\n\n\nCode\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n1a) The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).\n\n\nCode\nhist(df$LungCap)\n\n\n\n\n\n1b) Median lung capacity of male is greater than that of female.\n\n\nCode\nboxplot(LungCap ~ Gender, data = df, xlab = \"Gender\", ylab = \"Lung Capacity\",\n        main = \"Distribution of Lung Capacity by Gender\")\n\n\n\n\n\n1c) Logically mean lung capacity of non-smokers should be more than of smokers but with the data, it’s other way round\n\n\nCode\n# Calculate the mean lung capacity for smokers and non-smokers\nmean_lungcap_smokers <- mean(df$LungCap[df$Smoke == \"yes\"])\nmean_lungcap_non_smokers <- mean(df$LungCap[df$Smoke == \"no\"])\n\n# Print the mean lung capacities\ncat(\"Mean lung capacity for smokers:\", round(mean_lungcap_smokers, 2), \"\\n\")\n\n\nMean lung capacity for smokers: 8.65 \n\n\nCode\ncat(\"Mean lung capacity for non-smokers:\", round(mean_lungcap_non_smokers, 2), \"\\n\")\n\n\nMean lung capacity for non-smokers: 7.77 \n\n\n1d) The average lung capacity growth for the non-smokers is more that of the smokers. The lung capacity has been gradually increasing with age 1e) The discrepancy in 1c is due the data for the 13 or younger age where the average lung capacity for the non-smokers is less that of the smokers. Also there have been more data points for 13 or younger age group non-smokers which is affecting the mean of entire distribution.\n\n\nCode\n# Define the age groups\ndf <- df %>%\n  mutate(age_groups = cut(Age, c(0, 13, 15, 17, Inf), labels = c(\"<= 13\", \"14-15\", \"16-17\", \">= 18\")))\n\n# Compare the probability distribution of lung capacity by gender\ndf %>%\n  ggplot(aes(x = Gender, y = LungCap)) +\n  geom_boxplot() +\n  labs(x = \"Gender\", y = \"Lung Capacity\", \n       title = \"Lung Capacity by Gender\")\n\n\n\n\n\nCode\n# Compare the mean lung capacities for smokers and non-smokers\ndf %>%\n  group_by(Smoke) %>%\n  summarize(mean_lungcap = mean(LungCap)) %>%\n  print()\n\n\n# A tibble: 2 × 2\n  Smoke mean_lungcap\n  <chr>        <dbl>\n1 no            7.77\n2 yes           8.65\n\n\nCode\n# Examine the relationship between smoking and lung capacity within age groups\ndf %>%\n  filter(Smoke %in% c(\"yes\", \"no\")) %>%\n  group_by(age_groups, Smoke) %>%\n  summarize(mean_lungcap = mean(LungCap)) %>%\n  print()\n\n\n`summarise()` has grouped output by 'age_groups'. You can override using the\n`.groups` argument.\n\n\n# A tibble: 8 × 3\n# Groups:   age_groups [4]\n  age_groups Smoke mean_lungcap\n  <fct>      <chr>        <dbl>\n1 <= 13      no            6.36\n2 <= 13      yes           7.20\n3 14-15      no            9.14\n4 14-15      yes           8.39\n5 16-17      no           10.5 \n6 16-17      yes           9.38\n7 >= 18      no           11.1 \n8 >= 18      yes          10.5 \n\n\nCode\n# Compare the lung capacities for smokers and non-smokers within each age group\ndf %>%\n  filter(Smoke %in% c(\"yes\", \"no\")) %>%\n  ggplot(aes(x = age_groups, y = LungCap, fill = Smoke)) +\n  geom_boxplot() +\n  labs(x = \"Age Group\", y = \"Lung Capacity\", \n       title = \"Lung Capacity by Smoking Status and Age Group\")\n\n\n\n\n\n#Challange2"
   },
   {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "",
+    "text": "Code\nlibrary(tidyverse)\nlibrary(readxl)\nlibrary(ggplot2)\nlibrary(stats)\nlibrary(viridis)\n\nknitr::opts_chunk$set(echo = TRUE, warning = FALSE)"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#reading-data",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#reading-data",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "Reading Data",
+    "text": "Reading Data\nFirst, let’s read in the data from the Excel file:\n\n\nCode\nlibrary(readxl)\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\nThe LungCap dataset contains 725 observations and six variables, namely LungCap, Age, Height, Smoke, Gender, and Cesarean. LungCap is the primary variable of interest, measuring the lung capacity of participants. Age and Height provide demographic information, indicating the age and height of each participant.\nEach row in the dataset corresponds to a unique participant and provides their values for the six variables. Smoke is a categorical variable that denotes whether the participant smokes or not. Gender is another categorical variable that identifies the gender of each participant. Cesarean is a binary variable indicating whether the participant was born via cesarean section or not.\nThe LungCap dataset may be useful in exploring the relationships between lung capacity, demographic variables, and smoking status."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#a-what-does-the-distribution-of-lungcap-look-like",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#a-what-does-the-distribution-of-lungcap-look-like",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "1a: What does the distribution of LungCap look like?",
+    "text": "1a: What does the distribution of LungCap look like?\nThe following plot displays the distribution of LungCap:\n\n\nCode\nlibrary(tidyverse)\nlibrary(ggplot2)\n\ndf %>%\n  ggplot(aes(LungCap, ..density..)) +\n  geom_histogram(bins = 25, color = \"black\", fill = \"orange\") +\n  geom_density(color = \"darkblue\", linewidth = 1.25) +\n  theme_classic() + \n  theme(plot.title = element_text(hjust = 0.65, color = \"darkblue\")) +\n  theme(axis.text = element_text(face = \"bold\", color=\"darkblue\"), axis.title = element_text(face = \"bold\", size=12, color=\"darkblue\")) +\n  xlab(\"Lung Capacity\") +\n  ylab(\"Probability Density\") +\n  labs(title = \"Probability Distribution of LungCap\")\n\n\n\n\n\nThe plot displays the distribution of lung capacity measurements in a sample of individuals. The histogram and density plots indicate that the data is approximately normally distributed, with the majority of observations clustered near the mean. Specifically, the histogram shows a bell-shaped curve, with the highest frequency of observations centered around the mean value.\nThe density plot shows a smooth, symmetric curve, which closely follows the histogram and suggests that the data follows a normal distribution. These results are consistent with what we might expect, given that lung capacity is a physiological measure that is likely to vary around a central tendency. Taken together, these findings suggest that the sample data is well-behaved and that the majority of individuals in the sample have lung capacities that are close to the average value."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#b-compare-the-probability-distribution-of-the-lungcap-with-respect-to-males-and-females",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#b-compare-the-probability-distribution-of-the-lungcap-with-respect-to-males-and-females",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "1b: Compare the probability distribution of the LungCap with respect to Males and Females?",
+    "text": "1b: Compare the probability distribution of the LungCap with respect to Males and Females?\n\n\nCode\ndf %>%\n  ggplot(aes(y = dnorm(LungCap), x = Gender, color = Gender)) +\n  geom_boxplot(alpha = 0.5) +\n  scale_fill_manual(values = c(\"green\", \"orange\")) +\n  theme_classic() + \n  theme(plot.title = element_text(hjust = 0.5, color = \"darkblue\", face = \"bold\", size = 14),\n        axis.text = element_text(face = \"bold\", color=\"darkblue\"), \n        axis.title = element_text(face = \"bold\", size=12, color=\"darkblue\")) +\n  labs(title = \"LungCap Probability Distribution based on Gender\", y = \"Probability density\")\n\n\n\n\n\nThe probability density of LungCap for females is higher than for males, as evidenced by the higher median value and larger range of data in the female group compared to the male group. This suggests that gender may be a significant factor in determining LungCap values."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#c-compare-the-mean-lung-capacities-for-smokers-and-non-smokers.-does-it-make-sense",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#c-compare-the-mean-lung-capacities-for-smokers-and-non-smokers.-does-it-make-sense",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "1c: Compare the mean lung capacities for smokers and non-smokers. Does it make sense?",
+    "text": "1c: Compare the mean lung capacities for smokers and non-smokers. Does it make sense?\n\n\nCode\nlibrary(knitr)\n\nMean_Lung_Capacity <- df %>%\n  group_by(Smoke) %>%\n  summarise(mean = mean(LungCap))\n\n\nMean_Lung_Capacity\n\n\n\n\n  \n\n\n\nThe above table shows the lung capacity of individuals who smoke versus those who do not smoke. The table suggests that the mean lung capacity of those who smoke is greater than that of those who do not smoke. However, the statement argues that this result does not make sense and cannot be conclusively interpreted as a difference between smokers and non-smokers.\nThe output suggests that the lung capacity of an individual who smokes may be influenced by various biological factors unique to each person. Therefore, while smoking can be a contributing factor to reduced lung capacity, it cannot be the sole factor responsible for differences in lung capacity between smokers and non-smokers.\nThe output emphasizes that the difference in mean lung capacity between smokers and non-smokers is not a conclusive indicator of the effects of smoking on lung capacity. Other factors, such as age, gender and overall health, may also play a role in lung capacity. Therefore, it is important to consider these factors when drawing conclusions about the impact of smoking on lung capacity or other health outcomes."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#d-examine-the-relationship-between-smoking-and-lung-capacity-within-age-groups-less-than-or-equal-to-13-14-to-15-16-to-17-and-greater-than-or-equal-to-18.",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#d-examine-the-relationship-between-smoking-and-lung-capacity-within-age-groups-less-than-or-equal-to-13-14-to-15-16-to-17-and-greater-than-or-equal-to-18.",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "1d: Examine the relationship between Smoking and Lung Capacity within age groups: “less than or equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.",
+    "text": "1d: Examine the relationship between Smoking and Lung Capacity within age groups: “less than or equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.\n\n\nCode\nLc <- mutate(Lc, AgeGrp = case_when(\n    Age <= 13 ~ \"less than or equal to 13\",\n    Age == 14 | Age == 15 ~ \"14 to 15\",\n    Age == 16 | Age == 17 ~ \"16 to 17\",\n    Age >= 18 ~ \"greater than or equal to 18\"\n))\n\n\nError in mutate(Lc, AgeGrp = case_when(Age <= 13 ~ \"less than or equal to 13\", : object 'Lc' not found\n\n\nCode\nLc %>%\n  ggplot(aes(x = LungCap, fill = Smoke)) +\n  geom_histogram(bins = 25, color = \"black\") +\n  facet_wrap(vars(AgeGrp)) +\n  scale_fill_manual(values = c(\"darkgreen\", \"darkblue\")) +\n  theme_classic() + \n  labs(title = \"Relationship of LungCap and Smoke based on age categories\", y = \"Frequency\", x = \"Lung Capacity\")\n\n\nError in ggplot(., aes(x = LungCap, fill = Smoke)): object 'Lc' not found\n\n\nThe graph shows the frequency of lung capacity for non-smokers and smokers in different age categories, namely:\n\n“less than or equal to 13”,\n“14 to 15”,\n“16 to 17”, and\n“greater than or equal to 18”\n\nFrom the above plot, we can derive two important observations. Firstly, we observe that non-smokers generally have a higher lung capacity compared to smokers. This is indicated by the fact that the bars for non-smokers are consistently taller than the bars for smokers across all age groups. This observation is consistent with the known negative impact of smoking on lung function.\nSecondly, we observe that the number of smokers is relatively lower in the age group “less than or equal to 13”. This is shown by the relatively shorter bars for smokers in this age group. This observation could be due to several factors, such as lower access to cigarettes or lower rates of smoking initiation in younger age groups.\nAdditionally, we can also observe that there is a general trend of decreasing lung capacity as age increases, regardless of smoking status. This is indicated by the fact that the bars for all age groups are shorter compared to the bars for the previous age group. This trend is consistent with the natural decline in lung function that occurs with aging.\nIn summary, the above graph shows that non-smokers generally have a higher lung capacity compared to smokers, and that smoking rates are relatively lower in younger age groups. The graph also highlights the general trend of decreasing lung capacity as age increases, regardless of smoking status. These observations provide important insights into the relationship between lung capacity, smoking, and age, and can be useful for informing public health interventions and promoting healthy lifestyles."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#e-compare-the-lung-capacities-for-smokers-and-non-smokers-within-each-age-group.-is-your-answer-different-from-the-one-in-part-c.-what-could-possibly-be-going-on-here",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#e-compare-the-lung-capacities-for-smokers-and-non-smokers-within-each-age-group.-is-your-answer-different-from-the-one-in-part-c.-what-could-possibly-be-going-on-here",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "1e: Compare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c. What could possibly be going on here?",
+    "text": "1e: Compare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c. What could possibly be going on here?\n\n\nCode\nLc %>%\n  ggplot(aes(x = Age, y = LungCap, color = Smoke)) +\n  geom_line(linewidth = 1.25) +\n  scale_color_manual(values = c(\"darkgreen\", \"darkred\")) +\n  theme_classic() + \n  facet_wrap(vars(Smoke)) +\n  labs(title = \"Relationship of Lung Capacity and Smoking Status by Age\", y = \"Lung Capacity\", x = \"Age\") +\n  theme(plot.title = element_text(face = \"bold\", size = 14, hjust = 0.5),\n        axis.title.x = element_text(face = \"bold\", size = 12),\n        axis.title.y = element_text(face = \"bold\", size = 12),\n        axis.text.x = element_text(size = 10),\n        axis.text.y = element_text(size = 10),\n        legend.title = element_blank(),\n        legend.text = element_text(face = \"bold\", size = 10),\n        panel.grid.major = element_blank(),\n        panel.grid.minor = element_blank(),\n        panel.background = element_blank())\n\n\nError in ggplot(., aes(x = Age, y = LungCap, color = Smoke)): object 'Lc' not found\n\n\n1c presents a the mean lung capacity of individuals who smoke versus those who do not smoke. The statement argues that this result cannot be conclusively interpreted as a difference between smokers and non-smokers, as other biological factors unique to each individual may also influence lung capacity.\nOn the other hand, 1e presents a line graph that compares lung capacity with age for smokers and non-smokers. The graph suggests that non-smokers generally have higher lung capacity compared to smokers, and that the difference in lung capacity between the two groups increases with age.\nIn summary, 1c presents a summary statistic that may be influenced by other factors, while 1e presents a visual representation of the relationship between smoking and lung capacity over time, which provides a more nuanced understanding of the impact of smoking on lung capacity."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#question-2",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#question-2",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "Question 2",
+    "text": "Question 2"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#reading-the-table",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#reading-the-table",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "Reading the table",
+    "text": "Reading the table\n\n\nCode\nPrior_convictions <- c(0:4)\nInmate_count <- c(128, 434, 160, 64, 24)\nPc <- tibble(Prior_convictions, Inmate_count)\nPc\n\n\n\n\n  \n\n\n\n\n\nCode\nPc <- mutate(Pc, Probability = Inmate_count/sum(Inmate_count))\nPc"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#a-what-is-the-probability-that-a-randomly-selected-inmate-has-exactly-2-prior-convictions",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#a-what-is-the-probability-that-a-randomly-selected-inmate-has-exactly-2-prior-convictions",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "2a: What is the probability that a randomly selected inmate has exactly 2 prior convictions?",
+    "text": "2a: What is the probability that a randomly selected inmate has exactly 2 prior convictions?\n\n\nCode\nPc %>%\n  filter(Prior_convitions == 2) %>%\n  select(Probability)\n\n\nError in `filter()`:\n! Problem while computing `..1 = Prior_convitions == 2`.\nCaused by error in `mask$eval_all_filter()`:\n! object 'Prior_convitions' not found\n\n\nProbability that a randomly selected inmate has exactly 2 prior convictions is 0.1975309."
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#b-what-is-the-probability-that-a-randomly-selected-inmate-has-fewer-than-2-prior-convictions",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#b-what-is-the-probability-that-a-randomly-selected-inmate-has-fewer-than-2-prior-convictions",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "2b: What is the probability that a randomly selected inmate has fewer than 2 prior convictions?",
+    "text": "2b: What is the probability that a randomly selected inmate has fewer than 2 prior convictions?\n\n\nCode\ntemp <- Pc %>%\n  filter(Prior_convitions < 2)\n\n\nError in `filter()`:\n! Problem while computing `..1 = Prior_convitions < 2`.\nCaused by error in `mask$eval_all_filter()`:\n! object 'Prior_convitions' not found\n\n\nCode\nsum(temp$Probability)\n\n\nError in eval(expr, envir, enclos): object 'temp' not found\n\n\nProbability that a randomly selected inmate has fewer than 2 convictions is 0.6938272"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#c-what-is-the-probability-that-a-randomly-selected-inmate-has-2-or-fewer-prior-convictions",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#c-what-is-the-probability-that-a-randomly-selected-inmate-has-2-or-fewer-prior-convictions",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "2c: What is the probability that a randomly selected inmate has 2 or fewer prior convictions?",
+    "text": "2c: What is the probability that a randomly selected inmate has 2 or fewer prior convictions?\n\n\nCode\ntemp <- Pc %>%\n  filter(Prior_convitions <= 2)\n\n\nError in `filter()`:\n! Problem while computing `..1 = Prior_convitions <= 2`.\nCaused by error in `mask$eval_all_filter()`:\n! object 'Prior_convitions' not found\n\n\nCode\nsum(temp$Probability)\n\n\nError in eval(expr, envir, enclos): object 'temp' not found\n\n\nProbability that a randomly selected inmate has 2 or fewer prior convictions: 0.891358"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#d-what-is-the-probability-that-a-randomly-selected-inmate-has-more-than-2-prior-convictions",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#d-what-is-the-probability-that-a-randomly-selected-inmate-has-more-than-2-prior-convictions",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "2d: What is the probability that a randomly selected inmate has more than 2 prior convictions?",
+    "text": "2d: What is the probability that a randomly selected inmate has more than 2 prior convictions?\n\n\nCode\ntemp <- Pc %>%\n  filter(Prior_convitions > 2)\n\n\nError in `filter()`:\n! Problem while computing `..1 = Prior_convitions > 2`.\nCaused by error in `mask$eval_all_filter()`:\n! object 'Prior_convitions' not found\n\n\nCode\nsum(temp$Probability)\n\n\nError in eval(expr, envir, enclos): object 'temp' not found\n\n\nProbability that a randomly selected inmate has more than 2 prior convictions is 0.108642"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#e-what-is-the-expected-value-for-the-number-of-prior-convictions",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#e-what-is-the-expected-value-for-the-number-of-prior-convictions",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "2e: What is the expected value for the number of prior convictions?",
+    "text": "2e: What is the expected value for the number of prior convictions?\n\n\nCode\nPc <- mutate(Pc, Wm = Prior_convitions*Probability)\n\n\nError in `mutate()`:\n! Problem while computing `Wm = Prior_convitions * Probability`.\nCaused by error in `mask$eval_all_mutate()`:\n! object 'Prior_convitions' not found\n\n\nCode\ne <- sum(Pc$Wm)\ne\n\n\n[1] 0\n\n\nExpected value for the number of prior convictions: 1.28642"
+  },
+  {
+    "objectID": "posts/HW1_AkhileshKumarMeghwal.html#f-calculate-the-variance-and-the-standard-deviation-for-the-prior-convictions.",
+    "href": "posts/HW1_AkhileshKumarMeghwal.html#f-calculate-the-variance-and-the-standard-deviation-for-the-prior-convictions.",
+    "title": "Homework 1 - Akhilesh Kumar",
+    "section": "2f: Calculate the variance and the standard deviation for the Prior Convictions.",
+    "text": "2f: Calculate the variance and the standard deviation for the Prior Convictions.\nVariance for the Prior Convictions:\n\n\nCode\nv <-sum(((Pc$Prior_convictions-e)^2)*Pc$Probability)\nv\n\n\n[1] 2.511111\n\n\nStandard Deviation for the Prior Convictions:\n\n\nCode\nsqrt(v)\n\n\n[1] 1.584649\n\n\nVariance and Standard Deviation for the Prior Convictions are 0.8562353 and 0.9253298 respectively."
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html",
+    "href": "posts/AlexisGamez_HW1.html",
+    "title": "Blog Post #1",
+    "section": "",
+    "text": "Code\nlibrary(tidyverse)\nlibrary(readxl)\n\nknitr::opts_chunk$set(echo = TRUE)"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#a",
+    "href": "posts/AlexisGamez_HW1.html#a",
+    "title": "Blog Post #1",
+    "section": "a)",
+    "text": "a)\nFirst, let’s read in the data from the Excel file:\n\n\nCode\ngetwd()\n\n\n[1] \"C:/Users/Leshiii/Desktop/DACSS Master's/DACSS 603/603_Spring_2023/posts\"\n\n\nCode\ndf <- read_excel(\"_data/LungCapData.xls\")\n\n\nThe distribution of LungCap looks as follows:\n\n\nCode\nhist(df$LungCap, main = \"Lung Capacity Distribution\", xlab = \"Lung Capacity\", ylab = \"Probability Density\", prob = TRUE)\n\n\n\n\n\nThe histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15)."
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#b",
+    "href": "posts/AlexisGamez_HW1.html#b",
+    "title": "Blog Post #1",
+    "section": "b)",
+    "text": "b)\nProvided below is a box plot of the probability distributions of the Lung Capacity data for the male and female genders.\n\n\nCode\nboxplot(df$LungCap ~ df$Gender, \n        ylab = \"Gender\",\n        xlab = \"Lung Capacity\",\n        horizontal = TRUE,\n        col = \"maroon\")"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#c",
+    "href": "posts/AlexisGamez_HW1.html#c",
+    "title": "Blog Post #1",
+    "section": "c)",
+    "text": "c)\nI don’t believe the data provided below make much sense. I would argue that it is much more likely for smokers to have a smaller lung capacity than those that do not smoke. I suspect that something could be going on with our sample.\n\n\nCode\nboxplot(df$LungCap ~ df$Smoke, \n        ylab = \"Smoking Preference\",\n        xlab = \"Lung Capacity\",\n        horizontal = TRUE,\n        col = \"bisque\")\n\n\n\n\n\nCode\nno_smoke <- subset(df, Smoke == \"no\")\nyes_smoke <- subset(df, Smoke == \"yes\")\nmean(no_smoke$LungCap)\n\n\n[1] 7.770188\n\n\nCode\nmean(yes_smoke$LungCap)\n\n\n[1] 8.645455"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#d",
+    "href": "posts/AlexisGamez_HW1.html#d",
+    "title": "Blog Post #1",
+    "section": "d)",
+    "text": "d)\nComparing the charts below, we can see that as the participant ages, the mean and ranges of Lung Capacity increases. This could be due to natural maturation, with Lungs growing as children grow to adolescents, stalling circa 18 years old. However, I suspect there might be more to it, particularly our sample of smokers being so small compared to that of non-smokers.\n\n\nCode\nno_smoke_mean <- mean(no_smoke$LungCap)\n`13_under` <- subset(yes_smoke, Age <= 13)\n\n`14_to_15` <- subset(yes_smoke, subset = Age == 14 | Age == 15)\n\n`16_to_17` <- subset(yes_smoke, subset = Age == 16 | Age == 17)\n\n`18_over` <- subset(yes_smoke, Age >= 18)\n\nhist(`13_under`$LungCap, main = \"Smoker Lung Capacity Distribution by Age\", xlab = \"Lung Capacity\", ylab = \"Probability Density\", prob = TRUE)\nlegend(\"topright\", legend=c(\"13 & Under\",\"14 to 15\", \"16 to 17\", \"18 & Over\"), col=c(\"gray\", rgb(0,0,1,0.5), \n     rgb(0,1,0,0.5), rgb(1,0,0,0.5)), pt.cex=2, pch=15)\n\n\n\n\n\nCode\nhist(`14_to_15`$LungCap, prob = TRUE, col = rgb(0,0,1,0.5), main = \"Smoker Lung Capacity Distribution by Age\", xlab = \"Lung Capacity\", ylab = \"Probability Density\")\nlegend(\"topright\", legend=c(\"13 & Under\",\"14 to 15\", \"16 to 17\", \"18 & Over\"), col=c(\"gray\", rgb(0,0,1,0.5), \n     rgb(0,1,0,0.5), rgb(1,0,0,0.5)), pt.cex=2, pch=15)\n\n\n\n\n\nCode\nhist(`16_to_17`$LungCap, prob = TRUE, col = rgb(0,1,0,0.5), main = \"Smoker Lung Capacity Distribution by Age\", xlab = \"Lung Capacity\", ylab = \"Probability Density\")\nlegend(\"topright\", legend=c(\"13 & Under\",\"14 to 15\", \"16 to 17\", \"18 & Over\"), col=c(\"gray\", rgb(0,0,1,0.5), \n     rgb(0,1,0,0.5), rgb(1,0,0,0.5)), pt.cex=2, pch=15)\n\n\n\n\n\nCode\nhist(`18_over`$LungCap, prob = TRUE, col = rgb(1,0,0,0.5), main = \"Smoker Lung Capacity Distribution by Age\", xlab = \"Lung Capacity\", ylab = \"Probability Density\")\nlegend(\"topright\", legend=c(\"13 & Under\",\"14 to 15\", \"16 to 17\", \"18 & Over\"), col=c(\"gray\", rgb(0,0,1,0.5), \n     rgb(0,1,0,0.5), rgb(1,0,0,0.5)), pt.cex=2, pch=15)"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#e",
+    "href": "posts/AlexisGamez_HW1.html#e",
+    "title": "Blog Post #1",
+    "section": "e)",
+    "text": "e)\n\n\nCode\ndf_Agegroup <- df %>% \n  mutate(\nAge_group = dplyr::case_when(\n      Age <= 13            ~ \"0-13\",\n      Age > 13 & Age <= 15 ~ \"14-15\",\n      Age > 15 & Age <= 17 ~ \"16-17\",\n      Age >= 18             ~ \"18+\"))\n\nggplot(data = df_Agegroup, aes(x=Age_group, y=LungCap)) + \n  geom_boxplot(aes(fill=Smoke)) +\n  labs(x=\"Age Group\",y=\"Lung Capacity\",title=\"Lung Capacity of Smokers vs Non Smokers by Age Group\")\n\n\n\n\n\nLooking at the box plot above, its seems as though the ranges of data for the latter 3 age group divisions are naturally larger for non-smokers than for smokers. Additionally, the means for said divisions under non-smokers are also higher! What seems to be skewing the data is the large quantity of participants equal to 13 years of age or younger. I believe this is why our data hasn’t made much sense until now. There might be other factors in play here, like respondent bias, but I believe the sample size here is the main influence."
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#a-1",
+    "href": "posts/AlexisGamez_HW1.html#a-1",
+    "title": "Blog Post #1",
+    "section": "a)",
+    "text": "a)\nReading in our data.\n\n\nCode\nConvictions <- seq(0,4)\nFreq <- c(128, 434, 160, 64, 24)/810\n\n\nThe probability of that a randomly selected inmate has exactly 2 prior convictions is:\n\n\nCode\ndbinom(x=1, size = 1, prob = 160/810)\n\n\n[1] 0.1975309"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#b-1",
+    "href": "posts/AlexisGamez_HW1.html#b-1",
+    "title": "Blog Post #1",
+    "section": "b)",
+    "text": "b)\nThe probability that a randomly selected inmate has fewer than 2 prior convictions is:\n\n\nCode\ndbinom(x = 1, size = 1, prob = (128+434)/810)\n\n\n[1] 0.6938272"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#c-1",
+    "href": "posts/AlexisGamez_HW1.html#c-1",
+    "title": "Blog Post #1",
+    "section": "c)",
+    "text": "c)\nThe probability that a randomly selected inmate has 2 or fewer prior convictions is:\n\n\nCode\ndbinom(x = 1, size = 1, prob = (128+434+160)/810)\n\n\n[1] 0.891358"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#d-1",
+    "href": "posts/AlexisGamez_HW1.html#d-1",
+    "title": "Blog Post #1",
+    "section": "d)",
+    "text": "d)\nThe probability that a randomly selected inmate has more than 2 prior convictions is:\n\n\nCode\ndbinom(x = 1, size = 1, prob = (64+24)/810)\n\n\n[1] 0.108642"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#e-1",
+    "href": "posts/AlexisGamez_HW1.html#e-1",
+    "title": "Blog Post #1",
+    "section": "e)",
+    "text": "e)\nThe expected value for the number of prior convictions is:\n\n\nCode\nExpected_v <- sum(Freq*Convictions)\nExpected_v\n\n\n[1] 1.28642"
+  },
+  {
+    "objectID": "posts/AlexisGamez_HW1.html#f",
+    "href": "posts/AlexisGamez_HW1.html#f",
+    "title": "Blog Post #1",
+    "section": "f)",
+    "text": "f)\nThe variance for prior convictions is:\n\n\nCode\nVariance <- sum((Convictions-Expected_v)^2*Freq)\nVariance\n\n\n[1] 0.8562353\n\n\nThe standard deviation for prior convictions is:\n\n\nCode\nSD <- sqrt(Variance)\nSD\n\n\n[1] 0.9253298\n\n\nPlotting our data further validates our calculations as all values we’ve presented seem to coincide with their respective points on the plot.\n\n\nCode\nConv_data <- tibble(\n  x= Convictions,\n  y= Freq)\n\nggplot(Conv_data, aes(x,y))+\n  geom_line()+\n  geom_vline(xintercept = 2, col=\"red\",size=1)+\n  geom_text(x=2.15,y=.245,label=\"c = 2\")+\n  labs(x=\"# of Prior Convictions\",y=\"Probability\",title=\"Probability Distribution of Prisoner # of Prior Convictions\")\n\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead."
+  },
+  {
     "objectID": "posts/HW1_LTucksmith.html",
     "href": "posts/HW1_LTucksmith.html",
     "title": "HW1",
@@ -557,7 +746,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1 Solution\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThe first homework on descriptive statistics and probability\n\n\n\n\n\n\nMar 1, 2023\n\n\nRosemary Pang\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework - 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework assignment 1 - Darron Bunt\n\n\n\n\n\n\nFeb 28, 2023\n\n\nDarron Bunt\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\nhomework1\n\n\nabigailbalint\n\n\nlungcap\n\n\nprisoner\n\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAbigail Balint\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1 Solution\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThe first homework on descriptive statistics and probability\n\n\n\n\n\n\nMar 1, 2023\n\n\nRosemary Pang\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework - 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework assignment 1 - Darron Bunt\n\n\n\n\n\n\nFeb 28, 2023\n\n\nDarron Bunt\n\n\n\n\n\n\n\n\nHomework 1 - Akhilesh Kumar\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 28, 2023\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\nhomework1\n\n\nabigailbalint\n\n\nlungcap\n\n\nprisoner\n\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAbigail Balint\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nBlog Post #1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603 HW#1\n\n\n\n\n\n\nFeb 20, 2023\n\n\nAlexis Gamez\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/about_abbybalint603.html",
