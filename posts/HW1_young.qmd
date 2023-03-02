@@ -1,0 +1,265 @@
+---
+title: "Homework 1"
+author: "Young Soo Choi"
+description: "hw1"
+date: "02/27/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# prepare
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(readxl)
+df <- read_excel("C:/Users/rotte/Documents/R/603_Spring_2023/posts/_data/LungCapData.xls")
+```
+
+
+# Question 1
+
+## a
+
+```{r}
+# descriptive statistics
+summary(df$LungCap)
+sd(df$LungCap)
+```
+
+
+```{r}
+# making histogram
+hist(df$LungCap)
+```
+
+Range is 0.507~14.675. Median is 8.00. And it's distribution is looks like normal distribution that mean is 7.863 and sd is 2.662.
+
+## b
+
+```{r}
+# descriptive statistics
+df %>%
+  group_by(Gender) %>%
+  summarise(mean(LungCap), sd(LungCap))
+```
+
+
+```{r}
+# making boxplot
+boxplot(LungCap~Gender, df)
+```
+
+Mean and sd of female's LungCap are 7.406 and 2.564, respectively. And Mean and sd of male's LungCap are 8.309 and 2.683, respectively. Male's LungCap is bigger than female's. We can also check this through boxplot.
+
+## c
+
+```{r}
+# finding lungcap for smokers and non-smokers
+df %>% group_by(Smoke) %>%
+  summarise(mean(LungCap))
+```
+
+Smokers have bigger Lung cap. It's a different result from common sense. Through the t-test, I will find out whether this result is statistically significant.
+
+
+```{r}
+t.test(LungCap~Smoke, df, alternative="less")
+```
+As a result of the one-sided t-test, it was found to be statistically significant at the 95% level of significance.
+
+##d
+
+First, a new variable cAge is created and a new value is given for each age. For those under the age of 13, "Child", 14, 15 years of age "Middle", 16, 17 years of age "High", and 18 years of age or older, "Adult" will be assigned.
+
+```{r}
+df<-mutate(df, cAge = ifelse(Age<=13, "Child", ifelse(Age %in% 14:15, "Middle", ifelse(Age %in% 16:17, "High", "Adult"))))
+```
+
+```{r}
+df %>% group_by(cAge) %>%
+  summarise(mean(LungCap))
+```
+
+```{r}
+ggplot(df, aes(x=Age, y=LungCap)) +
+  geom_point()
+```
+
+Looking at each group's lung caps, child is 6.41, middle is 9.05, high is 10.25, and adult is 10.96. That is, the lung caps grow with age. Here, it is possible to infer why the lung caps of smokers and non-smokers presented in this data are different from our common sense. The more adults there are, the more smokers there will be, and that may have led to a larger lung cap for smokers.
+
+##e
+
+First, let's look at the children's group.
+
+```{r}
+childdf<-filter(df, cAge=="Child")
+table(childdf$Smoke)
+childdf%>%group_by(Smoke) %>%
+  summarise(mean(LungCap))
+```
+
+Smokers have bigger lung cap.
+Let's look at the picture in more detail.
+
+```{r}
+ggplot(childdf, aes(x=Age, y=LungCap)) +
+  geom_point(aes(col=factor(Smoke)))
+```
+
+From the plot, the older the age, the larger the lung cap for non-smokers. In other words, when looking at the entire child group, the growth of natural lung caps with growth is not well revealed, so smokers' lung caps seem to be larger.
+
+Next, let's look at the middle group.
+
+```{r}
+middf<-filter(df, cAge=="Middle")
+table(middf$Smoke)
+middf%>%group_by(Smoke) %>%
+  summarise(mean(LungCap))
+
+```
+
+```{r}
+boxplot(LungCap~Smoke, middf)
+```
+
+Non-smokers of middle group seem to have bigger lung caps.
+
+Then, let's look at the high group.
+
+```{r}
+highdf<-filter(df, cAge=="High")
+table(highdf$Smoke)
+highdf%>%group_by(Smoke) %>%
+  summarise(mean(LungCap))
+```
+```{r}
+boxplot(LungCap~Smoke, highdf)
+```
+Non-smokers of high group also have bigger lung caps.
+
+Lastly, let me check the adult group.
+
+```{r}
+adultdf<-filter(df, cAge=="Adult")
+table(adultdf$Smoke)
+adultdf%>%group_by(Smoke) %>%
+  summarise(mean(LungCap))
+
+```
+```{r}
+boxplot(LungCap~Smoke, adultdf)
+```
+Even in the adult group, non-smokers have a bigger lung cap.
+
+Finally, I took a look at the overall plot.
+
+```{r}
+ggplot(df, aes(x=Age, y=LungCap)) +
+  geom_point(aes(col=factor(Smoke)))
+```
+
+Overall, it seems that the lung cap of non-smokers (red) is higher than that of smokers (blue).
+
+# Question 2
+
+```{r}
+x<-c(0, 1, 2, 3, 4)
+freq<-c(128, 434, 160, 64, 24)
+p_df<-data.frame(x, freq)
+p_df
+```
+
+## a
+
+The probability of selecting inmate has exact 2 priority convictions is the number of inmates with 2 priority convictions divided by the total number of inmates.
+
+```{r}
+160/sum(p_df$freq)
+```
+
+The answer is 0.1975.
+
+## b
+
+In the same way, the frequency of 0 priority convictions and 1 priority convictions can be combined and divided into the total number of prisoners.
+
+```{r}
+(128+434)/sum(p_df$freq)
+```
+
+The answer is 0.6938.
+
+## c
+
+Add the probabilities obtained from problems a and b to get the answer.
+
+```{r}
+(160/sum(p_df$freq))+((128+434)/sum(p_df$freq))
+```
+
+The answer is 0.8914.
+
+## d
+
+This time, we can get the answer using the probability obtained from c. The total sum of the probabilities is 1, so you can get the answer by subtracting the value obtained from 1 and c.
+
+```{r}
+1-((160/sum(p_df$freq))+((128+434)/sum(p_df$freq)))
+```
+
+The answer is 0.1086.
+
+## e
+
+To obtain the expected value, we divide the sum of priority convictions(x) times frequency (freq) by the total number of prisoners.
+
+```{r}
+sum(p_df$x*p_df$freq)/810
+```
+In another way, the probability of priority conversions can be obtained and the expected value can be obtained by summing each frequency multiplied by this value.
+
+```{r}
+p_df<-mutate(p_df, pro=freq/810)
+p_df
+```
+```{r}
+sum(p_df$x*p_df$pro)
+```
+
+The answer is the same.
+
+## f
+
+```{r}
+mean<-sum(p_df$x*p_df$pro)
+```
+
+First, to obtain the variance, get the sum of the squared difference between the x-value and the average value (expected value) and divided by the total number of prisoners.
+
+The standard deviation is the square root of the variance.
+
+```{r}
+sum((x-mean)^2*p_df$freq)/810
+sqrt(sum((x-mean)^2*p_df$freq)/810)
+```
+
+Variance is 0.8562 and standard deviation is 0.925.
+
+Alternatively, the variance can be obtained by multiplying the square of the difference between the x-value and the average value by each probability.
+
+```{r}
+sum((x-mean)^2*p_df$pro)
+sqrt(sum((x-mean)^2*p_df$pro))
+```
+
+As expected, the answer is the same.
+
