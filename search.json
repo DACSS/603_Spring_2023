@@ -735,6 +735,76 @@
     "text": "f\nThe variance for prior convictions is as follows:\n\n\nCode\nvar <- sum((convictions$number - ev) ^ 2 * convictions$prop)\n\nprint(var)\n\n\n[1] 0.8562353\n\n\nThe standard deviation for prior convictions is as follows:\n\n\nCode\nsd <- sqrt(var)\n\nprint(sd)\n\n\n[1] 0.9253298"
   },
   {
+    "objectID": "posts/HW1_young.html",
+    "href": "posts/HW1_young.html",
+    "title": "Homework 1",
+    "section": "",
+    "text": "Code\nlibrary(tidyverse)\n\n\n── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──\n✔ ggplot2 3.4.1     ✔ purrr   1.0.1\n✔ tibble  3.1.8     ✔ dplyr   1.1.0\n✔ tidyr   1.3.0     ✔ stringr 1.5.0\n✔ readr   2.1.4     ✔ forcats 1.0.0\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\n\n\nCode\nlibrary(dplyr)\nlibrary(readxl)\ndf <- read_excel(\"C:/Users/rotte/Documents/R/603_Spring_2023/posts/_data/LungCapData.xls\")"
+  },
+  {
+    "objectID": "posts/HW1_young.html#a",
+    "href": "posts/HW1_young.html#a",
+    "title": "Homework 1",
+    "section": "a",
+    "text": "a\n\n\nCode\n# descriptive statistics\nsummary(df$LungCap)\n\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.507   6.150   8.000   7.863   9.800  14.675 \n\n\nCode\nsd(df$LungCap)\n\n\n[1] 2.662008\n\n\n\n\nCode\n# making histogram\nhist(df$LungCap)\n\n\n\n\n\nRange is 0.507~14.675. Median is 8.00. And it’s distribution is looks like normal distribution that mean is 7.863 and sd is 2.662."
+  },
+  {
+    "objectID": "posts/HW1_young.html#b",
+    "href": "posts/HW1_young.html#b",
+    "title": "Homework 1",
+    "section": "b",
+    "text": "b\n\n\nCode\n# descriptive statistics\ndf %>%\n  group_by(Gender) %>%\n  summarise(mean(LungCap), sd(LungCap))\n\n\n# A tibble: 2 × 3\n  Gender `mean(LungCap)` `sd(LungCap)`\n  <chr>            <dbl>         <dbl>\n1 female            7.41          2.56\n2 male              8.31          2.68\n\n\n\n\nCode\n# making boxplot\nboxplot(LungCap~Gender, df)\n\n\n\n\n\nMean and sd of female’s LungCap are 7.406 and 2.564, respectively. And Mean and sd of male’s LungCap are 8.309 and 2.683, respectively. Male’s LungCap is bigger than female’s. We can also check this through boxplot."
+  },
+  {
+    "objectID": "posts/HW1_young.html#c",
+    "href": "posts/HW1_young.html#c",
+    "title": "Homework 1",
+    "section": "c",
+    "text": "c\n\n\nCode\n# finding lungcap for smokers and non-smokers\ndf %>% group_by(Smoke) %>%\n  summarise(mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke `mean(LungCap)`\n  <chr>           <dbl>\n1 no               7.77\n2 yes              8.65\n\n\nSmokers have bigger Lung cap. It’s a different result from common sense. Through the t-test, I will find out whether this result is statistically significant.\n\n\nCode\nt.test(LungCap~Smoke, df, alternative=\"less\")\n\n\n\n    Welch Two Sample t-test\n\ndata:  LungCap by Smoke\nt = -3.6498, df = 117.72, p-value = 0.0001964\nalternative hypothesis: true difference in means between group no and group yes is less than 0\n95 percent confidence interval:\n       -Inf -0.4776762\nsample estimates:\n mean in group no mean in group yes \n         7.770188          8.645455 \n\n\nAs a result of the one-sided t-test, it was found to be statistically significant at the 95% level of significance.\n##d\nFirst, a new variable cAge is created and a new value is given for each age. For those under the age of 13, “Child”, 14, 15 years of age “Middle”, 16, 17 years of age “High”, and 18 years of age or older, “Adult” will be assigned.\n\n\nCode\ndf<-mutate(df, cAge = ifelse(Age<=13, \"Child\", ifelse(Age %in% 14:15, \"Middle\", ifelse(Age %in% 16:17, \"High\", \"Adult\"))))\n\n\n\n\nCode\ndf %>% group_by(cAge) %>%\n  summarise(mean(LungCap))\n\n\n# A tibble: 4 × 2\n  cAge   `mean(LungCap)`\n  <chr>            <dbl>\n1 Adult            11.0 \n2 Child             6.41\n3 High             10.2 \n4 Middle            9.05\n\n\n\n\nCode\nggplot(df, aes(x=Age, y=LungCap)) +\n  geom_point()\n\n\n\n\n\nLooking at each group’s lung caps, child is 6.41, middle is 9.05, high is 10.25, and adult is 10.96. That is, the lung caps grow with age. Here, it is possible to infer why the lung caps of smokers and non-smokers presented in this data are different from our common sense. The more adults there are, the more smokers there will be, and that may have led to a larger lung cap for smokers.\n##e\nFirst, let’s look at the children’s group.\n\n\nCode\nchilddf<-filter(df, cAge==\"Child\")\ntable(childdf$Smoke)\n\n\n\n no yes \n401  27 \n\n\nCode\nchilddf%>%group_by(Smoke) %>%\n  summarise(mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke `mean(LungCap)`\n  <chr>           <dbl>\n1 no               6.36\n2 yes              7.20\n\n\nSmokers have bigger lung cap. Let’s look at the picture in more detail.\n\n\nCode\nggplot(childdf, aes(x=Age, y=LungCap)) +\n  geom_point(aes(col=factor(Smoke)))\n\n\n\n\n\nFrom the plot, the older the age, the larger the lung cap for non-smokers. In other words, when looking at the entire child group, the growth of natural lung caps with growth is not well revealed, so smokers’ lung caps seem to be larger.\nNext, let’s look at the middle group.\n\n\nCode\nmiddf<-filter(df, cAge==\"Middle\")\ntable(middf$Smoke)\n\n\n\n no yes \n105  15 \n\n\nCode\nmiddf%>%group_by(Smoke) %>%\n  summarise(mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke `mean(LungCap)`\n  <chr>           <dbl>\n1 no               9.14\n2 yes              8.39\n\n\n\n\nCode\nboxplot(LungCap~Smoke, middf)\n\n\n\n\n\nNon-smokers of middle group seem to have bigger lung caps.\nThen, let’s look at the high group.\n\n\nCode\nhighdf<-filter(df, cAge==\"High\")\ntable(highdf$Smoke)\n\n\n\n no yes \n 77  20 \n\n\nCode\nhighdf%>%group_by(Smoke) %>%\n  summarise(mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke `mean(LungCap)`\n  <chr>           <dbl>\n1 no              10.5 \n2 yes              9.38\n\n\n\n\nCode\nboxplot(LungCap~Smoke, highdf)\n\n\n\n\n\nNon-smokers of high group also have bigger lung caps.\nLastly, let me check the adult group.\n\n\nCode\nadultdf<-filter(df, cAge==\"Adult\")\ntable(adultdf$Smoke)\n\n\n\n no yes \n 65  15 \n\n\nCode\nadultdf%>%group_by(Smoke) %>%\n  summarise(mean(LungCap))\n\n\n# A tibble: 2 × 2\n  Smoke `mean(LungCap)`\n  <chr>           <dbl>\n1 no               11.1\n2 yes              10.5\n\n\n\n\nCode\nboxplot(LungCap~Smoke, adultdf)\n\n\n\n\n\nEven in the adult group, non-smokers have a bigger lung cap.\nFinally, I took a look at the overall plot.\n\n\nCode\nggplot(df, aes(x=Age, y=LungCap)) +\n  geom_point(aes(col=factor(Smoke)))\n\n\n\n\n\nOverall, it seems that the lung cap of non-smokers (red) is higher than that of smokers (blue)."
+  },
+  {
+    "objectID": "posts/HW1_young.html#a-1",
+    "href": "posts/HW1_young.html#a-1",
+    "title": "Homework 1",
+    "section": "a",
+    "text": "a\nThe probability of selecting inmate has exact 2 priority convictions is the number of inmates with 2 priority convictions divided by the total number of inmates.\n\n\nCode\n160/sum(p_df$freq)\n\n\n[1] 0.1975309\n\n\nThe answer is 0.1975."
+  },
+  {
+    "objectID": "posts/HW1_young.html#b-1",
+    "href": "posts/HW1_young.html#b-1",
+    "title": "Homework 1",
+    "section": "b",
+    "text": "b\nIn the same way, the frequency of 0 priority convictions and 1 priority convictions can be combined and divided into the total number of prisoners.\n\n\nCode\n(128+434)/sum(p_df$freq)\n\n\n[1] 0.6938272\n\n\nThe answer is 0.6938."
+  },
+  {
+    "objectID": "posts/HW1_young.html#c-1",
+    "href": "posts/HW1_young.html#c-1",
+    "title": "Homework 1",
+    "section": "c",
+    "text": "c\nAdd the probabilities obtained from problems a and b to get the answer.\n\n\nCode\n(160/sum(p_df$freq))+((128+434)/sum(p_df$freq))\n\n\n[1] 0.891358\n\n\nThe answer is 0.8914."
+  },
+  {
+    "objectID": "posts/HW1_young.html#d",
+    "href": "posts/HW1_young.html#d",
+    "title": "Homework 1",
+    "section": "d",
+    "text": "d\nThis time, we can get the answer using the probability obtained from c. The total sum of the probabilities is 1, so you can get the answer by subtracting the value obtained from 1 and c.\n\n\nCode\n1-((160/sum(p_df$freq))+((128+434)/sum(p_df$freq)))\n\n\n[1] 0.108642\n\n\nThe answer is 0.1086."
+  },
+  {
+    "objectID": "posts/HW1_young.html#e",
+    "href": "posts/HW1_young.html#e",
+    "title": "Homework 1",
+    "section": "e",
+    "text": "e\nTo obtain the expected value, we divide the sum of priority convictions(x) times frequency (freq) by the total number of prisoners.\n\n\nCode\nsum(p_df$x*p_df$freq)/810\n\n\n[1] 1.28642\n\n\nIn another way, the probability of priority conversions can be obtained and the expected value can be obtained by summing each frequency multiplied by this value.\n\n\nCode\np_df<-mutate(p_df, pro=freq/810)\np_df\n\n\n  x freq        pro\n1 0  128 0.15802469\n2 1  434 0.53580247\n3 2  160 0.19753086\n4 3   64 0.07901235\n5 4   24 0.02962963\n\n\n\n\nCode\nsum(p_df$x*p_df$pro)\n\n\n[1] 1.28642\n\n\nThe answer is the same."
+  },
+  {
+    "objectID": "posts/HW1_young.html#f",
+    "href": "posts/HW1_young.html#f",
+    "title": "Homework 1",
+    "section": "f",
+    "text": "f\n\n\nCode\nmean<-sum(p_df$x*p_df$pro)\n\n\nFirst, to obtain the variance, get the sum of the squared difference between the x-value and the average value (expected value) and divided by the total number of prisoners.\nThe standard deviation is the square root of the variance.\n\n\nCode\nsum((x-mean)^2*p_df$freq)/810\n\n\n[1] 0.8562353\n\n\nCode\nsqrt(sum((x-mean)^2*p_df$freq)/810)\n\n\n[1] 0.9253298\n\n\nVariance is 0.8562 and standard deviation is 0.925.\nAlternatively, the variance can be obtained by multiplying the square of the difference between the x-value and the average value by each probability.\n\n\nCode\nsum((x-mean)^2*p_df$pro)\n\n\n[1] 0.8562353\n\n\nCode\nsqrt(sum((x-mean)^2*p_df$pro))\n\n\n[1] 0.9253298\n\n\nAs expected, the answer is the same."
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "Contributors",
@@ -746,7 +816,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1 Solution\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThe first homework on descriptive statistics and probability\n\n\n\n\n\n\nMar 1, 2023\n\n\nRosemary Pang\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework - 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework assignment 1 - Darron Bunt\n\n\n\n\n\n\nFeb 28, 2023\n\n\nDarron Bunt\n\n\n\n\n\n\n\n\nHomework 1 - Akhilesh Kumar\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 28, 2023\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\nhomework1\n\n\nabigailbalint\n\n\nlungcap\n\n\nprisoner\n\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAbigail Balint\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nBlog Post #1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603 HW#1\n\n\n\n\n\n\nFeb 20, 2023\n\n\nAlexis Gamez\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n\n\n\n\nHomework 1 Solution\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThe first homework on descriptive statistics and probability\n\n\n\n\n\n\nMar 1, 2023\n\n\nRosemary Pang\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 Submission\n\n\n\n\n\n\nFeb 28, 2023\n\n\nChristine Brydges\n\n\n\n\n\n\n\n\nHomework - 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHomework assignment 1 - Darron Bunt\n\n\n\n\n\n\nFeb 28, 2023\n\n\nDarron Bunt\n\n\n\n\n\n\n\n\nHomework 1 - Akhilesh Kumar\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 28, 2023\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS_603_Homework 1 on Descriptive Statistics and Probability\n\n\n\n\n\n\nFeb 27, 2023\n\n\nSaisrinivas Ambatipudi\n\n\n\n\n\n\n\n\nHomework1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nHW1 course blog qmd file\n\n\n\n\n\n\nFeb 27, 2023\n\n\nRahul Somu\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nhw1\n\n\n\n\n\n\nFeb 27, 2023\n\n\nYoung Soo Choi\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndescriptive statistics\n\n\nprobability\n\n\n\n\nHomework 1 for DACSS 603\n\n\n\n\n\n\nFeb 26, 2023\n\n\nJustine Shakespeare\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603\n\n\n\n\n\n\nFeb 25, 2023\n\n\nAlexa Potter\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\nhomework1\n\n\nabigailbalint\n\n\nlungcap\n\n\nprisoner\n\n\nggplot2\n\n\n\n\n\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAbigail Balint\n\n\n\n\n\n\n\n\nHomework1 - EDA of LungCap Data\n\n\n\n\n\n\n\nhw1\n\n\nAdithya Parupudi\n\n\n\n\nHW1 submission\n\n\n\n\n\n\nFeb 23, 2023\n\n\nAdithya Parpudi\n\n\n\n\n\n\n\n\nBlog Post #1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nDACSS 603 HW#1\n\n\n\n\n\n\nFeb 20, 2023\n\n\nAlexis Gamez\n\n\n\n\n\n\n\n\nHW1\n\n\n\n\n\n\n\nhw1\n\n\nLiam Tucksmith\n\n\nLungCapData\n\n\ntidyverse\n\n\nreadxl\n\n\nggplot2\n\n\ndplyr\n\n\ntidyr\n\n\n\n\n\n\n\n\n\n\n\nFeb 20, 2023\n\n\nLiam Tucksmith\n\n\n\n\n\n\n\n\nHomework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nProbability and descriptive statistics homework for DACSS 603.\n\n\n\n\n\n\nFeb 20, 2023\n\n\nMiguel Curiel\n\n\n\n\n\n\n\n\nDACSS 603 Homework 1\n\n\n\n\n\n\n\nhw1\n\n\ndesriptive statistics\n\n\nprobability\n\n\n\n\nThis is Homework 1 for DASS 603.\n\n\n\n\n\n\nFeb 19, 2023\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/about_abbybalint603.html",
