@@ -1,0 +1,140 @@
+---
+title: "Homework 1"
+author: "Ollie Murphy"
+description: "Intro to Quantitative Analysis"
+date: "02/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1: Use the LungCapData to answer the following questions.
+
+Require packages and import data
+
+```{r, echo=T}
+library(here)
+library(readxl)
+library(dplyr)
+df <- read_excel(here("posts/_data/LungCapData.xls"))
+```
+
+### a) What does the distributuion of LungCap look like?
+
+```{r, echo=T}
+hist(df$LungCap, main = "Histogram of Lung Capacity", xlab = "Lung Capacity")
+```
+
+Based on the histogram, lung capacity appears to be distributed normally with a mean around 7 to 8, a minimum of 0, and a maximum of 15
+
+### b) Compare the probability distribution of the LungCap with responst to Males and Females.
+
+```{r}
+boxplot(LungCap ~ Gender, data = df)
+```
+
+The distributions are of a similar size, but male capacity is higher in mean as well as quartiles and min/max.
+
+### c) Compare the mean lung capacities for smokers and non-smokers. Does it make sense?
+
+```{r}
+df %>%
+  group_by(Smoke) %>%
+  summarise(LungCap = (mean(LungCap,na.rm = TRUE)))
+```
+
+The mean lung capacities likely don't make sense, as you might expect for smoking to diminish lung capacity. However, it could be that people with better lung capacity are better at smoking and therefore do it more, or the inclusion of children, who are less likely to smoke and also have smaller lung capacities.
+
+### d) Examine the relationship between Smoking and Lung Capacity within age groups: "Less than or equal to 13", "14 to 15", "16 to 17", and "greater than or equal to 18".
+
+```{r}
+smoke_df = df%>%
+  mutate(
+   AgeRange = case_when(
+    Age < 14 ~ "13 and Under",
+    Age == 14 ~ "14 to 15",
+    Age == 15 ~ "14 to 15",
+    Age == 16 ~ "16 to 17",
+    Age == 17 ~ "16 to 17",
+    Age > 17 ~ "18 and Over"
+  )) %>%
+  filter(Smoke == "yes")%>%
+  group_by(AgeRange)%>%
+    summarize(mean(LungCap, na.rm = TRUE))
+
+nosmoke_df  = df%>%
+  mutate(
+   AgeRange = case_when(
+    Age < 14 ~ "13 and Under",
+    Age == 14 ~ "14 to 15",
+    Age == 15 ~ "14 to 15",
+    Age == 16 ~ "16 to 17",
+    Age == 17 ~ "16 to 17",
+    Age > 17 ~ "18 and Over"
+  )) %>%
+  filter(Smoke == "no")%>%
+  group_by(AgeRange)%>%
+    summarize(mean(LungCap, na.rm = TRUE))
+
+smokeByAge = left_join(smoke_df, nosmoke_df, by = ("AgeRange"))
+names(smokeByAge) = c("AgeRange", "Smoker", "NonSmoker")
+
+smokeByAge
+
+```
+
+### e) Compare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c? What could possibly be going on here?
+
+While the youngest age group follows the same trend observed in part c (smokers with higher lung capacity than non-smokers), the inverse is true for all older groups. I suspect that, as I mentioned above, the data is skewed by virture of the fact that older groups are more likely to smoke as well as have a larger lung capacity. When compared within their age range (therefore at similar states of development), the results reflect that smoking likely diminishes lung capacity.
+
+# Question 2: Let X = number of prior convictions for prisoners at a state prison at which there are 810 prisoners
+
+```{r}
+convictionsfreq = data.frame(convictions = c(0,1,2,3,4), frequency = c(128,434,160,64,24))
+convictionsfreq
+```
+
+### a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+
+```{r}
+160/(128+434+160+64+24)
+```
+
+### b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+
+```{r}
+(128+434)/(128+434+160+64+24)
+```
+
+### c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
+
+```{r}
+(128+434+160)/(128+434+160+64+24)
+```
+
+### d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
+
+```{r}
+(64+24)/(128+434+160+64+24)
+```
+
+### e) What is the expected value1 for the number of prior convictions?
+
+```{r}
+(0*(128/(128+434+160+64+24)))+(1*(434/(128+434+160+64+24)))+(2*(160/(128+434+160+64+24)))+(3*(64/(128+434+160+64+24)))+(4*(24/(128+434+160+64+24)))
+```
+
+### f) Calculate the variance and the standard deviation for the Prior Convictions.
+
+```{r}
+var(convictionsfreq$convictions)
+sd(convictionsfreq$convictions)
+```
+
