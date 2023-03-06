@@ -1,0 +1,930 @@
+---
+title: "DACSS 603 Final Project"
+author: "Laura"
+desription: "Something to describe what I did"
+date: "08/02/2022"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - final_project
+  - LauraCollazo
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(lsr)
+library(psych)
+library(lattice)
+library(FSA)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions
+
+This document provides yaml header inforamtion you will need to replicate each week to submit your homework or other blog posts. Please observe the following conventions:
+
+-   Save your own copy of this template as a blog post in the `posts` folder, naming it `FirstLast_hwX.qmd`
+-   Edit the yaml header to change your author name - use the same name each week
+-   include a *description* that is reader friendly
+-   update the *category* list to indicate the type of submission, the data used, the main packages or techniques, your name, or any thing else to make your document easy to find
+-   edit as a normal qmd/rmd file
+
+
+```{r}
+x <- c(2,3,4,5)
+mean(x)
+```
+
+## Rendering your post
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. 
+
+:::{.callout-warning}
+Be sure that you have moved your `*.qmd` file into the `posts` folder **BEFORE** you render it, so that all files are stored in the correct location.
+:::
+
+:::{.callout-important}
+Only render a single file - don't try to render the whole website!
+:::
+
+:::{.callout-note}
+## Pilot Student Blogs
+
+We are piloting a workflow including individual student websites with direted and limited pull requests back to course blogs. Please let us know if you would like to participate.
+:::
+
+## Reading in data files
+
+The easiest data source to use - at least initially - is to choose something easily accessible, either from our `_data` folder provided, or from an online source that is publicly available.
+
+:::{.callout-tip}
+## Using Other Data
+If you would like to use a source that you have access to and it is small enough and you don't mind making it public, you can copy it into the `_data` file and include in your *commit* and *pull request*.
+
+```{r}
+
+belonging_data <- read_csv("_data/belonging_survey_2022-07-08.csv")
+
+# tidy data
+data <- belonging_data %>%
+  
+  # filter one set of student belonging responses
+  filter(example_num == 1) %>%
+  
+  # select relevant columns
+  select(year, gender, race, bel_1, bel_2, bel_2_r, bel_3, bel_4, bel_4_r, bel_5, bel_5_r, bel_6) %>%
+  
+  
+  # sum belonging for total score
+  mutate(bel_sum = rowSums(across(c(bel_1, bel_2_r, bel_3, bel_4_r, bel_5_r, bel_6)))) %>% 
+  
+  # code
+  
+  mutate(uc_year = recode(year,
+                          `1` = "Freshman",
+                          `2` = "Sophomore",
+                          `3` = "Junior",
+                          `4` = "Senior")) %>%
+  mutate(uc_gender = recode(gender,
+                            `1` = "Female",
+                            `2` = "Male")) %>%
+  mutate(uc_race = recode(race,
+                          `1` = "Asian",
+                          `2` = "Black",
+                          `3` = "Hispanic",
+                          `4` = "White",
+                          `5` = "Other")) %>%
+  mutate(uc_bel_1 = recode(bel_1,
+                           `1` = "Not at all true",
+                           `2` = "Slightly true",
+                           `3` = "Moderately true",
+                           `4` = "Mostly true",
+                           `5` = "Completely true")) %>%
+  mutate(uc_bel_2 = recode(bel_2,
+                             `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true")) %>% 
+  mutate(uc_bel_2_r = recode(bel_2_r,
+                             `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true")) %>%
+  mutate(uc_bel_3 = recode(bel_3,
+                           `1` = "Not at all true",
+                           `2` = "Slightly true",
+                           `3` = "Moderately true",
+                           `4` = "Mostly true",
+                           `5` = "Completely true")) %>%
+   mutate(uc_bel_4 = recode(bel_4,
+                             `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true")) %>%
+  mutate(uc_bel_4_r = recode(bel_4_r,
+                             `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true")) %>%
+    mutate(uc_bel_5 = recode(bel_5,
+                             `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true")) %>%
+  mutate(uc_bel_5_r = recode(bel_5_r,
+                             `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true")) %>%
+  mutate(uc_bel_6 = recode(bel_6,
+                           `1` = "Not at all true",
+                           `2` = "Slightly true",
+                           `3` = "Moderately true",
+                           `4` = "Mostly true",
+                           `5` = "Completely true"))
+
+### Create a new variable which is the Likert scores as an ordered factor
+
+data$f_bel_1 = factor(data$bel_1,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4", "5")
+                       )
+
+data$f_bel_2 = factor(data$bel_2,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4", "5")
+                       )
+
+data$f_bel_3 = factor(data$bel_3,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4", "5")
+                       )
+
+data$f_bel_4 = factor(data$bel_4,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4", "5")
+                       )
+
+data$f_bel_5 = factor(data$bel_5,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4", "5")
+                       )
+
+data$f_bel_6 = factor(data$bel_6,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4", "5")
+                       )
+
+# order year variable
+
+data$f_year = factor(data$year,
+                       ordered = TRUE,
+                       levels = c("1", "2", "3", "4"))
+
+
+
+
+view(data)
+```
+
+```{r}
+
+# examine data
+
+summary(data)
+
+describe(x=data)
+
+headTail(data)
+
+str(data)
+
+```
+
+```{r}
+
+# create xtabs and bar plot for individual variables
+
+# f_bel_1
+
+xt_1 <- xtabs(~f_bel_1, data = data)
+
+xt_1
+
+barplot(xt_1, 
+        xlab = "I feel like a real part of this class",
+        ylab = "Frequency")
+
+# f_bel_2
+
+xt_2 <- xtabs(~f_bel_2, data = data)
+
+xt_2
+
+barplot(xt_2, 
+        xlab = "Sometimes I feel as if I don’t belong in this class",
+        ylab = "Frequency")
+
+# f_bel_3
+
+xt_3 <- xtabs(~f_bel_3, data = data)
+
+xt_3
+
+barplot(xt_3, 
+        xlab = "I am included in lots of activities in this class",
+        ylab = "Frequency")
+
+# f_bel_4
+
+xt_4 <- xtabs(~f_bel_4, data = data)
+
+xt_4
+
+barplot(xt_4, 
+        xlab = "I feel very different from most other students in this class",
+        ylab = "Frequency")
+
+# f_bel_5
+
+xt_5 <- xtabs(~f_bel_5, data = data)
+
+xt_5
+
+barplot(xt_5, 
+        xlab = "I wish I were in a different class",
+        ylab = "Frequency")
+
+# f_bel_6
+
+xt_6 <- xtabs(~f_bel_6, data = data)
+
+xt_6
+
+barplot(xt_6, 
+        xlab = "I feel proud of belonging to this class",
+        ylab = "Frequency")
+
+# f_year
+
+xt_year <- xtabs(~f_year, data = data)
+
+xt_year
+
+barplot(xt_year, 
+        xlab = "Year in school",
+        ylab = "Frequency")
+
+# f_race
+
+xt_race <- xtabs(~uc_race, data = data)
+
+xt_race
+
+barplot(xt_race, 
+        xlab = "Race",
+        ylab = "Frequency")
+
+# f_gender
+
+xt_gender <- xtabs(~uc_gender, data = data)
+
+xt_gender
+
+barplot(xt_gender, 
+        xlab = "Gender",
+        ylab = "Frequency")
+
+```
+```{r}
+
+# create box plots
+
+boxplot(data$bel_1,
+        ylab="I feel like a real part of this class")
+
+boxplot(data$bel_2_r,
+        ylab="REVERSE: Sometimes I feel as if I don’t belong in this class")
+
+boxplot(data$bel_3,
+        ylab="I am included in lots of activities in this class")
+
+boxplot(data$bel_4_r,
+        ylab= "REVERSE: I feel very different from most other students in this class")
+
+boxplot(data$bel_5_r,
+        ylab= "REVERSE: I wish I were in a different class")
+
+boxplot(data$bel_6,
+        ylab= "I feel proud of belonging to this class")
+
+```
+
+```{r}
+
+# xtabs and bar plots by race
+
+# bel_1
+
+xt_race_1 = xtabs(~ uc_race + f_bel_1, data=data)
+
+xt_race_1
+
+barplot(xt_race_1,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="I feel like a real part of this class",
+        ylab="Frequency")
+
+# bel_2
+
+xt_race_2 = xtabs(~ uc_race + f_bel_2, data=data)
+
+xt_race_2
+
+barplot(xt_race_2,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="Sometimes I feel as if I don’t belong in this class",
+        ylab="Frequency")
+
+# bel_3
+
+xt_race_3 = xtabs(~ uc_race + f_bel_3, data=data)
+
+xt_race_3
+
+barplot(xt_race_3,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="I am included in lots of activities in this class",
+        ylab="Frequency")
+
+# bel_4
+
+xt_race_4 = xtabs(~ uc_race + f_bel_4, data=data)
+
+xt_race_4
+
+barplot(xt_race_4,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I feel very different from most other students in this class",
+        ylab="Frequency")
+
+# bel_5
+
+xt_race_5 = xtabs(~ uc_race + f_bel_5, data=data)
+
+xt_race_5
+
+barplot(xt_race_5,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I wish I were in a different class",
+        ylab="Frequency")
+
+# bel_6
+
+xt_race_6 = xtabs(~ uc_race + f_bel_6, data=data)
+
+xt_race_6
+
+barplot(xt_race_6,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I feel proud of belonging to this class",
+        ylab="Frequency")
+
+
+```
+
+```{r}
+
+# xtabs and bar plots by year
+
+# bel_1
+
+xt_year_1 = xtabs(~ f_year + f_bel_1, data=data)
+
+xt_year_1
+
+barplot(xt_year_1,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="I feel like a real part of this class",
+        ylab="Frequency")
+
+# bel_2
+
+xt_year_2 = xtabs(~ f_year + f_bel_2, data=data)
+
+xt_year_2
+
+barplot(xt_year_2,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="Sometimes I feel as if I don’t belong in this class",
+        ylab="Frequency")
+
+# bel_3
+
+xt_year_3 = xtabs(~ f_year + f_bel_3, data=data)
+
+xt_year_3
+
+barplot(xt_year_3,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="I am included in lots of activities in this class",
+        ylab="Frequency")
+
+# bel_4
+
+xt_year_4 = xtabs(~ f_year + f_bel_4, data=data)
+
+xt_year_4
+
+barplot(xt_year_4,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I feel very different from most other students in this class",
+        ylab="Frequency")
+
+# bel_5
+
+xt_year_5 = xtabs(~ f_year + f_bel_5, data=data)
+
+xt_year_5
+
+barplot(xt_year_5,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I wish I were in a different class",
+        ylab="Frequency")
+
+# bel_6
+
+xt_year_6 = xtabs(~ f_year + f_bel_6, data=data)
+
+xt_year_6
+
+barplot(xt_year_6,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I feel proud of belonging to this class",
+        ylab="Frequency")
+
+
+```
+
+```{r}
+
+# xtabs and bar plots by gender
+
+# bel_1
+
+xt_gender_1 = xtabs(~ uc_gender + f_bel_1, data=data)
+
+xt_gender_1
+
+barplot(xt_gender_1,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="I feel like a real part of this class",
+        ylab="Frequency")
+
+# bel_2
+
+xt_gender_2 = xtabs(~ uc_gender + f_bel_2, data=data)
+
+xt_gender_2
+
+barplot(xt_gender_2,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="Sometimes I feel as if I don’t belong in this class",
+        ylab="Frequency")
+
+# bel_3
+
+xt_gender_3 = xtabs(~ uc_gender + f_bel_3, data=data)
+
+xt_gender_3
+
+barplot(xt_gender_3,
+        beside=TRUE,
+        legend=TRUE,
+        xlab="I am included in lots of activities in this class",
+        ylab="Frequency")
+
+# bel_4
+
+xt_gender_4 = xtabs(~ uc_gender + f_bel_4, data=data)
+
+xt_gender_4
+
+barplot(xt_gender_4,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I feel very different from most other students in this class",
+        ylab="Frequency")
+
+# bel_5
+
+xt_gender_5 = xtabs(~ uc_gender + f_bel_5, data=data)
+
+xt_gender_5
+
+barplot(xt_gender_5,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I wish I were in a different class",
+        ylab="Frequency")
+
+# bel_6
+
+xt_gender_6 = xtabs(~ uc_gender + f_bel_6, data=data)
+
+xt_gender_6
+
+barplot(xt_gender_6,
+        beside=TRUE,
+        legend=TRUE,
+        xlab= "I feel proud of belonging to this class",
+        ylab="Frequency")
+
+
+```
+```{r}
+
+# histograms
+
+histogram(~ f_bel_1 | uc_gender,
+          data=data,
+          layout=c(1,2))
+
+histogram(~ f_bel_1 | uc_gender + uc_race,
+          data=data,
+          layout=c(2,5))
+
+```
+```{r}
+
+# boxplots
+
+boxplot(bel_1 ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab="I feel like a real part of this class")
+
+boxplot(f_bel_1 ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab="I feel like a real part of this class")
+
+boxplot(bel_2_r ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab="REVERSE:Sometimes I feel as if I don’t belong in this class")
+
+boxplot(bel_3 ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab="I am included in lots of activities in this class")
+
+boxplot(bel_4_r ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab= "REVERSE: I feel very different from most other students in this class")
+
+boxplot(bel_5_r ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab= "REVERSE: I wish I were in a different class")
+
+boxplot(bel_6 ~ uc_gender + uc_race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab= "I feel proud of belonging to this class")
+
+```
+
+
+```{r}
+# plots with median and quartile
+
+# bel_1
+
+sum_bel_1 = Summarize(bel_1 ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_1
+
+ggplot(sum_bel_1, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: I feel like a real part of this class") +
+    xlab("Race")
+
+ggplot(sum_bel_1, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("mean: I feel like a real part of this class") +
+    xlab("Race")
+
+# bel_2
+
+sum_bel_2 = Summarize(bel_2_r ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_2
+
+ggplot(sum_bel_2, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: Reverse-Sometimes I feel as if I don't belong in this class") +
+    xlab("Race")
+
+ggplot(sum_bel_2, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: Reverse-Sometimes I feel as if I don't belong in this class") +
+    xlab("Race")
+
+# bel_3
+
+sum_bel_3 = Summarize(bel_3 ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_3
+
+ggplot(sum_bel_3, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: I am included in lots of activities in this class") +
+    xlab("Race")
+
+ggplot(sum_bel_3, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: I am included in lots of activities in this class") +
+    xlab("Race")
+
+# bel_4
+
+sum_bel_4 = Summarize(bel_4_r ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_4
+
+ggplot(sum_bel_4, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: Reverse-I feel very different from most other students in this class") +
+    xlab("Race")
+
+ggplot(sum_bel_4, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: Reverse-I feel very different from most other students in this class") +
+    xlab("Race")
+
+# bel_5
+
+sum_bel_5 = Summarize(bel_5_r ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_5
+
+ggplot(sum_bel_5, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: Reverse-I wish I were in a different class") +
+    xlab("Race")
+
+ggplot(sum_bel_5, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: Reverse-I wish I were in a different class") +
+    xlab("Race")
+
+# bel_6
+
+sum_bel_6 = Summarize(bel_6 ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_6
+
+ggplot(sum_bel_6, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: I feel proud of belonging to this class") +
+    xlab("Race")
+
+ggplot(sum_bel_6, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: I feel proud of belonging to this class") +
+    xlab("Race")
+
+# sum of bel
+
+sum_bel_sum = Summarize(bel_sum ~ uc_race + uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_sum
+
+ggplot(sum_bel_sum, aes(x = uc_race,
+                y = median,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: Total Belonging Score") +
+    xlab("Race")
+
+ggplot(sum_bel_sum, aes(x = uc_race,
+                y = mean,
+                color = uc_gender)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: Total Belonging Score") +
+    xlab("Race")
+
+```
+
+```{r}
+
+# sum of bel
+
+sum_bel_sum_race = Summarize(bel_sum ~ uc_race,
+                data=data,
+                digits=3)
+
+sum_bel_sum_race
+
+ggplot(sum_bel_sum_race, aes(x = uc_race,
+                y = median)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: Total Belonging Score") +
+    xlab("Race")
+
+ggplot(sum_bel_sum_race, aes(x = uc_race,
+                y = mean)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: Total Belonging Score") +
+    xlab("Race")
+
+sum_bel_sum_gender = Summarize(bel_sum ~ uc_gender,
+                data=data,
+                digits=3)
+
+sum_bel_sum_gender
+
+ggplot(sum_bel_sum_gender, aes(x = uc_gender,
+                y = median)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Median: Total Belonging Score") +
+    xlab("Race")
+
+ggplot(sum_bel_sum_gender, aes(x = uc_gender,
+                y = mean)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Mean: Total Belonging Score") +
+    xlab("Race")
+
+```
+
+
+
+
+
+
