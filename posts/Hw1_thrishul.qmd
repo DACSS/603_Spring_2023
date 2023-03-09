@@ -1,0 +1,191 @@
+---
+title: "Homework - 1"
+author: "Thrishul"
+description: "Homework 1"
+date: "02/05/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1
+
+## a
+
+First, let's read in the data from the Excel file:
+
+```{r, echo=T}
+library(readxl)
+library(tidyverse)
+df <- read_excel("_data/LungCapData.xls")
+head(df)
+```
+
+
+The distribution of LungCap looks as follows:
+
+```{r, echo=T}
+hist(df$LungCap)
+```
+
+The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
+
+update and comit check
+```{r, echo=T}
+# Subset the data frame by gender
+male_df <- df[df$Gender == "male", ]
+female_df <- df[df$Gender == "female", ]
+
+# Create separate boxplots for males and females
+boxplot(male_df$LungCap, female_df$LungCap, 
+        names = c("Male", "Female"),
+        xlab = "Gender", ylab = "Lung Capacity",
+        main = "Lung Capacity by Gender")
+
+```
+```{r}
+no_smoke <- df[df$Smoke == "no",]
+yes_smoke <- df[df$Smoke == "yes",]
+mean(no_smoke$LungCap)
+mean(yes_smoke$LungCap)
+```
+
+
+```{r}
+```
+
+
+```{r}
+age_group_1 <- df[df$Age <= 13, ]
+age_group_2 <- df[df$Age >= 14 & df$Age <= 15, ]
+age_group_3 <- df[df$Age >= 16 & df$Age <= 17, ]
+age_group_4 <- df[df$Age >= 18, ]
+par(mfrow=c(2,2)) # Set up a 2x2 grid of plots
+
+boxplot(LungCap ~ Smoke, data = age_group_1, 
+        names = c("Non-Smoker", "Smoker"),
+        main = "Age Group <= 13")
+
+boxplot(LungCap ~ Smoke, data = age_group_2, 
+        names = c("Non-Smoker", "Smoker"),
+        main = "Age Group 14-15")
+
+boxplot(LungCap ~ Smoke, data = age_group_3, 
+        names = c("Non-Smoker", "Smoker"),
+        main = "Age Group 16-17")
+
+boxplot(LungCap ~ Smoke, data = age_group_4, 
+        names = c("Non-Smoker", "Smoker"),
+        main = "Age Group >= 18")
+```
+
+
+```{r}
+# Calculate the mean and standard deviation of Lung Capacity for each age group and smoking status
+agg_data <- aggregate(LungCap ~ Age + Smoke, data = df, 
+                      FUN = function(x) c(mean = mean(x), sd = sd(x)))
+
+agg_data
+
+```
+#Question 2
+# Let X = number of prior convictions for prisoners at a state prison at which there are 810 prisoners.
+
+# X 0 1 2 3 4
+# Frequency 128 434 160 64 24
+
+# a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+```{r}
+# P(x=2)= 160/810
+# P(x) = 0.1975
+# p(x) = 19.75%
+```
+# b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+```{r}
+# Frequency of X=0 + Frequency of X=1 = 128 + 434 = 562
+# p(x) = 562/810
+# P(x) = 0.6938 or 69.38%
+# Probability = 69.38%
+```
+# c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
+```{r}
+# Frequency of X=0 + Frequency of X=1 + Frequency of X=2 = 128 + 434 + 160 = 722
+# P(X ≤ 2) = frequency of X≤2 / total number of inmates
+#  722/810 = 0.8914
+# probability = 0.8914 or 89.14%
+```
+# d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
+```{r}
+# Frequency of X=3 + Frequency of X=4 = 64 + 24 = 88
+# P(X > 2) = frequency of X>2 / total number of inmates
+
+# 88/810 = 0.1086
+# Probability = 0.1086 or 10.86%
+```
+# e) What is the expected value1 for the number of prior convictions?
+```{r}
+# E(X) = Σ(xi * pi)
+# (0 * 128/810) + (1 * 434/810) + (2 * 160/810) + (3 * 64/810) + (4 * 24/810)
+# 1.283
+
+# Expected value for the number of prior convictions is 1.283.
+```
+# f) Calculate the variance and the standard deviation for the Prior Convictions
+```{r}
+# Var(X) = E(X^2) - [E(X)]^2
+# E(X^2) = Σ(xi^2 * pi)
+# P(X=x) 128/810 434/810 160/810 64/810 24/810
+# E(X^2) = Σ(xi^2 * pi)
+# = (0^2 * 128/810) + (1^2 * 434/810) + (2^2 * 160/810) + (3^2 * 64/810) + (4^2 * 24/810)
+# = 2.105
+
+# VARIANCE
+# Var(X) = E(X^2) - [E(X)]^2
+# = 2.105 - (1.283)^2
+# variance for the number of prior convictions is = 0.921
+
+# STANDARD DEVIATION
+# SD(X) = sqrt(Var(X))
+# = sqrt(0.921)
+# = 0.960
+# 
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
