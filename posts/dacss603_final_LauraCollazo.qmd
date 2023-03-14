@@ -1,8 +1,8 @@
 ---
-title: "DACSS 603 Final Project"
-author: "Laura"
-desription: "Something to describe what I did"
-date: "08/02/2022"
+title: "Proposal for DACSS 603 Final Project"
+author: "Laura Collazo"
+desription: ""
+date: "`r Sys.Date()`"
 format:
   html:
     toc: true
@@ -10,154 +10,139 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - final_project
-  - LauraCollazo
+  - finalpart1
 ---
 
-```{r}
-#| label: setup
-#| warning: false
+```{r setup, warning=FALSE, message=FALSE}
 
 library(tidyverse)
-library(lsr)
 library(psych)
 library(lattice)
 library(FSA)
+library(kableExtra)
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Research Question
 
-## Instructions
+Many studies exist on how belonging influences in-person students yet there is an absence of literature related to this topic for online learners. This is surprising given that even before the COVID-19 pandemic students studying exclusively online experienced year-over-year growth since at least 2016 (National Center for Educational Statistics, n.d.). High levels of social belonging have repeatedly being found to influence the persistence of in-person students (Fleming et al., 2017; Johnson et al., 2007; Sriram, 2017). With this in mind, the role belonging plays among online students should not be overlooked.
 
-This document provides yaml header inforamtion you will need to replicate each week to submit your homework or other blog posts. Please observe the following conventions:
+There is no universal definition of belonging, but one way to think about it is a "students' sense of being accepted, valued, included, and encouraged by others (teacher and peers) in the academic classroom setting and of feeling oneself to be an important part of the life and activity of the class" (Goodenow, 1993). In studies of in-person students, it has been found that not all students experience belonging equally. Some of the student populations that report lower levels of belonging include:
 
--   Save your own copy of this template as a blog post in the `posts` folder, naming it `FirstLast_hwX.qmd`
--   Edit the yaml header to change your author name - use the same name each week
--   include a *description* that is reader friendly
--   update the *category* list to indicate the type of submission, the data used, the main packages or techniques, your name, or any thing else to make your document easy to find
--   edit as a normal qmd/rmd file
+* students of color compared to their White peers (Johnson et al., 2007)
+* women and students of color studying in STEM (Thacker et al., 2022)
+* first-generation students (Longwell-Grice et al., 2016)
+* students with disabilities (Fleming et al., 2017).
 
+Experiencing a lack of belonging is not innate to these students, though, but rather a reflection of social structural inequalities present in educational systems (Brock, 2019). This reality makes belonging important to explore among students not just generally, but specifically, and is why this study will ask:
+
+**How do gender and race influence social belonging of online students?**
+
+# Hypothesis
+
+Literature on how demographics influence the social belonging of online students is elusive making it difficult to develop a hypothesis rooted in previous literature. Therefore, since the data for this study comes from online statistics students, the hypotheses for this study will be based on the notion that underrepresented minorities in STEM experience a lower sense of belonging (Thacker et al., 2022). 
+
+According to data from the 2017-2019 American Community survey, fifty percent of employees in STEM jobs were women, yet they are highly concentrated in health-related fields making them underrepresented in many other STEM fields (Fry et al., 2021).
+
+**Hypothesis One:**
+
+* Male students will report higher levels of social belonging that female students.
+
+To understand representation in STEM jobs by race it is helpful to examine this table which shows the breakdown of workers in all jobs compared to all STEM jobs (Fry et al., 2021).
 
 ```{r}
-x <- c(2,3,4,5)
-mean(x)
+
+race <- c("Black", "Hispanic", "Asian", "Other", "White")
+
+all_jobs <- c("11%", "17%", "6%", "3%", "63%")
+
+all_stem_jobs <- c("9%", "8%", "13%", "3%", "67%")
+
+jobs <- data.frame(race, all_jobs, all_stem_jobs)
+
+kable(jobs, caption = "Employed adults age 25+ in the 2017-19 American Community Survey") %>% 
+  kable_styling("striped")
+
 ```
 
-## Rendering your post
+Employees who are White make up the majority of workers in STEM, yet employees who are Asian hold more than double the percentage of STEM jobs compared to the percentage of all jobs held by workers who are Asian (Fry et al., 2021). For this reason, it's hypothesized that students who are Asian are not an underrepresented minority group in STEM and that they will actually report higher levels of belonging than White students. 
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. 
+**Hypothesis two:**
 
-:::{.callout-warning}
-Be sure that you have moved your `*.qmd` file into the `posts` folder **BEFORE** you render it, so that all files are stored in the correct location.
-:::
+* Students who are Asian will report the highest levels of social belonging, followed by students who are White, Black, Hispanic, and other. 
 
-:::{.callout-important}
-Only render a single file - don't try to render the whole website!
-:::
+# Descriptive Statistics
 
-:::{.callout-note}
-## Pilot Student Blogs
+## Dataset
 
-We are piloting a workflow including individual student websites with direted and limited pull requests back to course blogs. Please let us know if you would like to participate.
-:::
+The data for this study was collected during the last month of the Fall 2021 semester at a large public university in the mid-west of the United States (Jeng et al., 2023). Students were recruited through voluntary response sampling in an online introduction to statistics course and received extra credit for participating in the study. The instructor of this course was not a member of the research team. A total of 240 students completed the survey and responses from 17 students were removed due to either missing demographics, the same rating for every example, or identical response made to more than 50% of open-ended questions. In total, responses from 223 students are included.
 
-## Reading in data files
+The full dataset can be found [here](https://databank.illinois.edu/datasets/IDB-2872989).
 
-The easiest data source to use - at least initially - is to choose something easily accessible, either from our `_data` folder provided, or from an online source that is publicly available.
+### Variables
 
-:::{.callout-tip}
-## Using Other Data
-If you would like to use a source that you have access to and it is small enough and you don't mind making it public, you can copy it into the `_data` file and include in your *commit* and *pull request*.
+To answer the research question for the present study, the following variables have been selected. Details on these variables are included in following sections.
 
-```{r}
+* `gender`
+* `race`
+* `bel_1`
+* `bel_2`
+* `bel_2_r`
+* `bel_3`
+* `bel_4`
+* `bel_4_r`
+* `bel_5`
+* `bel_5_r`
+* `bel_6`
 
-belonging_data <- read_csv("_data/belonging_survey_2022-07-08.csv")
+Using the above variables, additional variables were created to aid in analysis. These included 6 belonging variables with the data un-coded to show the actual response options and 6 more belonging variables as order factors. The variable `bel_sum` was also created to create an overall belonging score for each participant. 
+
+#### Gender
+
+The responses for `gender` include "Man" (2) and "Woman or non-binary" (1). The researchers who collected this data explain that their were so few students who identified as non-binary that the sample was too small for a separate analysis (Jeng et al., 2023). What they did do was run all analysis twice, once with non-binary students excluded and once with this group combine with respondents who identified as women. They found their findings to be the same in both instances and therefore choose to combine these two groups. For the purpose of this study, this variable will be coded as "Male" and "Female."
+
+#### Race/Ethnicity
+
+The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5).
+
+#### Belonging
+
+A total of 6 Likert questions were asked to measure social belonging which were adapted from Goodenow's (1993) Psychological Sense of School Membership (PSSM) scale. Five response options ("Not at all true", "Slightly true", "Moderately true", "Mostly true", and "Completely true") were provided to students to answer the below questions. Questions 2, 4, and 5 were reversed scored which is why 2 variables exist for each of these questions.
+
+1. I feel like a real part of this class
+2. Sometimes I feel as if I don’t belong in this class
+3. I am included in lots of activities in this class
+4. I feel very different from most other students in this class
+5. I wish I were in a different class
+6. I feel proud of belonging to this class
+
+#### Explore Data
+
+##### Prepare Data
+
+```{r tidy data, echo=TRUE}
+
+# read in data
+
+belonging_data <- read_csv("_data/belonging_survey_2022-07-08.csv", show_col_types = FALSE)
 
 # tidy data
+
 data <- belonging_data %>%
   
-  # filter one set of student belonging responses
-  filter(example_num == 1) %>%
+# filter to include only 1 set of student belonging responses
   
-  # select relevant columns
-  select(year, gender, race, bel_1, bel_2, bel_2_r, bel_3, bel_4, bel_4_r, bel_5, bel_5_r, bel_6) %>%
+  filter(example_num == 1) %>% 
   
+# select needed columns
   
-  # sum belonging for total score
-  mutate(bel_sum = rowSums(across(c(bel_1, bel_2_r, bel_3, bel_4_r, bel_5_r, bel_6)))) %>% 
-  
-  # code
-  
-  mutate(uc_year = recode(year,
-                          `1` = "Freshman",
-                          `2` = "Sophomore",
-                          `3` = "Junior",
-                          `4` = "Senior")) %>%
-  mutate(uc_gender = recode(gender,
-                            `1` = "Female",
-                            `2` = "Male")) %>%
-  mutate(uc_race = recode(race,
-                          `1` = "Asian",
-                          `2` = "Black",
-                          `3` = "Hispanic",
-                          `4` = "White",
-                          `5` = "Other")) %>%
-  mutate(uc_bel_1 = recode(bel_1,
-                           `1` = "Not at all true",
-                           `2` = "Slightly true",
-                           `3` = "Moderately true",
-                           `4` = "Mostly true",
-                           `5` = "Completely true")) %>%
-  mutate(uc_bel_2 = recode(bel_2,
-                             `1` = "Not at all true",
-                             `2` = "Slightly true",
-                             `3` = "Moderately true",
-                             `4` = "Mostly true",
-                             `5` = "Completely true")) %>% 
-  mutate(uc_bel_2_r = recode(bel_2_r,
-                             `1` = "Not at all true",
-                             `2` = "Slightly true",
-                             `3` = "Moderately true",
-                             `4` = "Mostly true",
-                             `5` = "Completely true")) %>%
-  mutate(uc_bel_3 = recode(bel_3,
-                           `1` = "Not at all true",
-                           `2` = "Slightly true",
-                           `3` = "Moderately true",
-                           `4` = "Mostly true",
-                           `5` = "Completely true")) %>%
-   mutate(uc_bel_4 = recode(bel_4,
-                             `1` = "Not at all true",
-                             `2` = "Slightly true",
-                             `3` = "Moderately true",
-                             `4` = "Mostly true",
-                             `5` = "Completely true")) %>%
-  mutate(uc_bel_4_r = recode(bel_4_r,
-                             `1` = "Not at all true",
-                             `2` = "Slightly true",
-                             `3` = "Moderately true",
-                             `4` = "Mostly true",
-                             `5` = "Completely true")) %>%
-    mutate(uc_bel_5 = recode(bel_5,
-                             `1` = "Not at all true",
-                             `2` = "Slightly true",
-                             `3` = "Moderately true",
-                             `4` = "Mostly true",
-                             `5` = "Completely true")) %>%
-  mutate(uc_bel_5_r = recode(bel_5_r,
-                             `1` = "Not at all true",
-                             `2` = "Slightly true",
-                             `3` = "Moderately true",
-                             `4` = "Mostly true",
-                             `5` = "Completely true")) %>%
-  mutate(uc_bel_6 = recode(bel_6,
-                           `1` = "Not at all true",
-                           `2` = "Slightly true",
-                           `3` = "Moderately true",
-                           `4` = "Mostly true",
-                           `5` = "Completely true"))
+  select(gender, race, bel_1, bel_2, bel_2_r, bel_3, bel_4, bel_4_r, bel_5, bel_5_r, bel_6) %>%
 
-### Create a new variable which is the Likert scores as an ordered factor
+# create variable bel_sum which sums all belonging responses
+  
+  mutate(bel_sum = rowSums(across(c(bel_1, bel_2_r, bel_3, bel_4_r, bel_5_r, bel_6))))
+
+### Create new variables with Likert scores as an ordered factor
 
 data$f_bel_1 = factor(data$bel_1,
                        ordered = TRUE,
@@ -188,42 +173,86 @@ data$f_bel_6 = factor(data$bel_6,
                        ordered = TRUE,
                        levels = c("1", "2", "3", "4", "5")
                        )
+  
+# recode data
+  
+data <- data %>% 
+  mutate(gender = recode(gender,
+                            `1` = "Female",
+                            `2` = "Male")) %>%
+  mutate(race = recode(race,
+                            `1` = "Asian",
+                            `2` = "Black",
+                            `3` = "Hispanic",
+                            `4` = "White",
+                            `5` = "Other")) %>%
+  mutate(across(bel_1:bel_6, 
+                ~ recode(.x, `1` = "Not at all true",
+                             `2` = "Slightly true",
+                             `3` = "Moderately true",
+                             `4` = "Mostly true",
+                             `5` = "Completely true"))) 
 
-# order year variable
-
-data$f_year = factor(data$year,
-                       ordered = TRUE,
-                       levels = c("1", "2", "3", "4"))
-
-
-
-
-view(data)
 ```
-
-```{r}
+##### Examine Data
+```{r examine data, echo=TRUE}
 
 # examine data
 
-summary(data)
+describe_data <- describe(x=data) %>% 
+  select(c(vars, n, mean, sd, median, min, max, range))
 
-describe(x=data)
-
-headTail(data)
+kable(describe_data) %>% 
+  kable_styling("striped")
 
 str(data)
 
 ```
+##### Examine Variables
 
-```{r}
+```{r visualizing variables}
 
-# create xtabs and bar plot for individual variables
+# create xtabs and bar plot to visualize variables
+
+# gender
+
+xt_gender <- xtabs(~gender, data = data)
+
+kable(xt_gender) %>% 
+  kable_styling("striped")
+
+barplot(xt_gender, 
+        xlab = "Gender",
+        ylab = "Frequency")
+
+# race
+
+xt_race <- xtabs(~race, data = data)
+
+kable(xt_race) %>% 
+  kable_styling("striped")
+
+barplot(xt_race, 
+        xlab = "Race",
+        ylab = "Frequency")
+
+# bel_sum
+
+xt_sum <- xtabs(~bel_sum, data = data)
+
+kable(xt_sum) %>% 
+  kable_styling("striped")
+
+barplot(xt_sum, 
+        xlab = "Belonging",
+        ylab = "Frequency")
 
 # f_bel_1
 
 xt_1 <- xtabs(~f_bel_1, data = data)
 
-xt_1
+kable(xt_1) %>% 
+  kable_styling("striped")
 
 barplot(xt_1, 
         xlab = "I feel like a real part of this class",
@@ -233,7 +262,8 @@ barplot(xt_1,
 
 xt_2 <- xtabs(~f_bel_2, data = data)
 
-xt_2
+kable(xt_2) %>% 
+  kable_styling("striped")
 
 barplot(xt_2, 
         xlab = "Sometimes I feel as if I don’t belong in this class",
@@ -243,7 +273,8 @@ barplot(xt_2,
 
 xt_3 <- xtabs(~f_bel_3, data = data)
 
-xt_3
+kable(xt_3) %>% 
+  kable_styling("striped")
 
 barplot(xt_3, 
         xlab = "I am included in lots of activities in this class",
@@ -253,7 +284,8 @@ barplot(xt_3,
 
 xt_4 <- xtabs(~f_bel_4, data = data)
 
-xt_4
+kable(xt_4) %>% 
+  kable_styling("striped")
 
 barplot(xt_4, 
         xlab = "I feel very different from most other students in this class",
@@ -263,7 +295,8 @@ barplot(xt_4,
 
 xt_5 <- xtabs(~f_bel_5, data = data)
 
-xt_5
+kable(xt_5) %>% 
+  kable_styling("striped")
 
 barplot(xt_5, 
         xlab = "I wish I were in a different class",
@@ -273,616 +306,77 @@ barplot(xt_5,
 
 xt_6 <- xtabs(~f_bel_6, data = data)
 
-xt_6
+kable(xt_6) %>% 
+  kable_styling("striped")
 
 barplot(xt_6, 
         xlab = "I feel proud of belonging to this class",
         ylab = "Frequency")
 
-# f_year
-
-xt_year <- xtabs(~f_year, data = data)
-
-xt_year
-
-barplot(xt_year, 
-        xlab = "Year in school",
-        ylab = "Frequency")
-
-# f_race
-
-xt_race <- xtabs(~uc_race, data = data)
-
-xt_race
-
-barplot(xt_race, 
-        xlab = "Race",
-        ylab = "Frequency")
-
-# f_gender
-
-xt_gender <- xtabs(~uc_gender, data = data)
-
-xt_gender
-
-barplot(xt_gender, 
-        xlab = "Gender",
-        ylab = "Frequency")
-
-```
-```{r}
-
-# create box plots
-
-boxplot(data$bel_1,
-        ylab="I feel like a real part of this class")
-
-boxplot(data$bel_2_r,
-        ylab="REVERSE: Sometimes I feel as if I don’t belong in this class")
-
-boxplot(data$bel_3,
-        ylab="I am included in lots of activities in this class")
-
-boxplot(data$bel_4_r,
-        ylab= "REVERSE: I feel very different from most other students in this class")
-
-boxplot(data$bel_5_r,
-        ylab= "REVERSE: I wish I were in a different class")
-
-boxplot(data$bel_6,
-        ylab= "I feel proud of belonging to this class")
-
 ```
 
-```{r}
+# Analysis
 
-# xtabs and bar plots by race
+Below are some preliminary visualizations for analysis. This section will be modified in the coming weeks before check-in two.
 
-# bel_1
+##### Histograms
 
-xt_race_1 = xtabs(~ uc_race + f_bel_1, data=data)
-
-xt_race_1
-
-barplot(xt_race_1,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="I feel like a real part of this class",
-        ylab="Frequency")
-
-# bel_2
-
-xt_race_2 = xtabs(~ uc_race + f_bel_2, data=data)
-
-xt_race_2
-
-barplot(xt_race_2,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="Sometimes I feel as if I don’t belong in this class",
-        ylab="Frequency")
-
-# bel_3
-
-xt_race_3 = xtabs(~ uc_race + f_bel_3, data=data)
-
-xt_race_3
-
-barplot(xt_race_3,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="I am included in lots of activities in this class",
-        ylab="Frequency")
-
-# bel_4
-
-xt_race_4 = xtabs(~ uc_race + f_bel_4, data=data)
-
-xt_race_4
-
-barplot(xt_race_4,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I feel very different from most other students in this class",
-        ylab="Frequency")
-
-# bel_5
-
-xt_race_5 = xtabs(~ uc_race + f_bel_5, data=data)
-
-xt_race_5
-
-barplot(xt_race_5,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I wish I were in a different class",
-        ylab="Frequency")
-
-# bel_6
-
-xt_race_6 = xtabs(~ uc_race + f_bel_6, data=data)
-
-xt_race_6
-
-barplot(xt_race_6,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I feel proud of belonging to this class",
-        ylab="Frequency")
-
-
-```
-
-```{r}
-
-# xtabs and bar plots by year
-
-# bel_1
-
-xt_year_1 = xtabs(~ f_year + f_bel_1, data=data)
-
-xt_year_1
-
-barplot(xt_year_1,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="I feel like a real part of this class",
-        ylab="Frequency")
-
-# bel_2
-
-xt_year_2 = xtabs(~ f_year + f_bel_2, data=data)
-
-xt_year_2
-
-barplot(xt_year_2,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="Sometimes I feel as if I don’t belong in this class",
-        ylab="Frequency")
-
-# bel_3
-
-xt_year_3 = xtabs(~ f_year + f_bel_3, data=data)
-
-xt_year_3
-
-barplot(xt_year_3,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="I am included in lots of activities in this class",
-        ylab="Frequency")
-
-# bel_4
-
-xt_year_4 = xtabs(~ f_year + f_bel_4, data=data)
-
-xt_year_4
-
-barplot(xt_year_4,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I feel very different from most other students in this class",
-        ylab="Frequency")
-
-# bel_5
-
-xt_year_5 = xtabs(~ f_year + f_bel_5, data=data)
-
-xt_year_5
-
-barplot(xt_year_5,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I wish I were in a different class",
-        ylab="Frequency")
-
-# bel_6
-
-xt_year_6 = xtabs(~ f_year + f_bel_6, data=data)
-
-xt_year_6
-
-barplot(xt_year_6,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I feel proud of belonging to this class",
-        ylab="Frequency")
-
-
-```
-
-```{r}
-
-# xtabs and bar plots by gender
-
-# bel_1
-
-xt_gender_1 = xtabs(~ uc_gender + f_bel_1, data=data)
-
-xt_gender_1
-
-barplot(xt_gender_1,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="I feel like a real part of this class",
-        ylab="Frequency")
-
-# bel_2
-
-xt_gender_2 = xtabs(~ uc_gender + f_bel_2, data=data)
-
-xt_gender_2
-
-barplot(xt_gender_2,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="Sometimes I feel as if I don’t belong in this class",
-        ylab="Frequency")
-
-# bel_3
-
-xt_gender_3 = xtabs(~ uc_gender + f_bel_3, data=data)
-
-xt_gender_3
-
-barplot(xt_gender_3,
-        beside=TRUE,
-        legend=TRUE,
-        xlab="I am included in lots of activities in this class",
-        ylab="Frequency")
-
-# bel_4
-
-xt_gender_4 = xtabs(~ uc_gender + f_bel_4, data=data)
-
-xt_gender_4
-
-barplot(xt_gender_4,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I feel very different from most other students in this class",
-        ylab="Frequency")
-
-# bel_5
-
-xt_gender_5 = xtabs(~ uc_gender + f_bel_5, data=data)
-
-xt_gender_5
-
-barplot(xt_gender_5,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I wish I were in a different class",
-        ylab="Frequency")
-
-# bel_6
-
-xt_gender_6 = xtabs(~ uc_gender + f_bel_6, data=data)
-
-xt_gender_6
-
-barplot(xt_gender_6,
-        beside=TRUE,
-        legend=TRUE,
-        xlab= "I feel proud of belonging to this class",
-        ylab="Frequency")
-
-
-```
-```{r}
+```{r histograms}
 
 # histograms
 
-histogram(~ f_bel_1 | uc_gender,
+histogram(~ bel_sum | gender,
           data=data,
           layout=c(1,2))
 
-histogram(~ f_bel_1 | uc_gender + uc_race,
+histogram(~ bel_sum | race,
           data=data,
           layout=c(2,5))
 
 ```
-```{r}
 
-# boxplots
+##### Boxplots
 
-boxplot(bel_1 ~ uc_gender + uc_race,
+```{r  echo=TRUE, warning=FALSE}
+
+# plots with mean and quartile
+
+# race
+
+sum_bel_race <- Summarize(bel_sum ~ race,
+                data=data,
+                digits=3)
+
+kable(sum_bel_race) %>% 
+  kable_styling("striped")
+
+ggplot(sum_bel_race, aes(x = race,
+                y = mean)) +
+    geom_errorbar(aes(ymin = Q1,
+                      ymax = Q3),
+                   width=.2, size=.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold")) +
+    ylab("Belonging") +
+    xlab("Race")
+
+boxplot(bel_sum ~ race,
         data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        names=c("Asian", "Black", "Hispanic", "Other", "White"),
         ylab="Value",
-        xlab="I feel like a real part of this class")
+        xlab= "Belonging")
 
-boxplot(f_bel_1 ~ uc_gender + uc_race,
-        data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
-        ylab="Value",
-        xlab="I feel like a real part of this class")
+# gender
 
-boxplot(bel_2_r ~ uc_gender + uc_race,
-        data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
-        ylab="Value",
-        xlab="REVERSE:Sometimes I feel as if I don’t belong in this class")
-
-boxplot(bel_3 ~ uc_gender + uc_race,
-        data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
-        ylab="Value",
-        xlab="I am included in lots of activities in this class")
-
-boxplot(bel_4_r ~ uc_gender + uc_race,
-        data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
-        ylab="Value",
-        xlab= "REVERSE: I feel very different from most other students in this class")
-
-boxplot(bel_5_r ~ uc_gender + uc_race,
-        data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
-        ylab="Value",
-        xlab= "REVERSE: I wish I were in a different class")
-
-boxplot(bel_6 ~ uc_gender + uc_race,
-        data=data,
-        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
-        ylab="Value",
-        xlab= "I feel proud of belonging to this class")
-
-```
-
-
-```{r}
-# plots with median and quartile
-
-# bel_1
-
-sum_bel_1 = Summarize(bel_1 ~ uc_race + uc_gender,
+sum_bel_gender <- Summarize(bel_sum ~ gender,
                 data=data,
                 digits=3)
 
-sum_bel_1
+kable(sum_bel_gender) %>% 
+  kable_styling("striped")
 
-ggplot(sum_bel_1, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: I feel like a real part of this class") +
-    xlab("Race")
-
-ggplot(sum_bel_1, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("mean: I feel like a real part of this class") +
-    xlab("Race")
-
-# bel_2
-
-sum_bel_2 = Summarize(bel_2_r ~ uc_race + uc_gender,
-                data=data,
-                digits=3)
-
-sum_bel_2
-
-ggplot(sum_bel_2, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: Reverse-Sometimes I feel as if I don't belong in this class") +
-    xlab("Race")
-
-ggplot(sum_bel_2, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: Reverse-Sometimes I feel as if I don't belong in this class") +
-    xlab("Race")
-
-# bel_3
-
-sum_bel_3 = Summarize(bel_3 ~ uc_race + uc_gender,
-                data=data,
-                digits=3)
-
-sum_bel_3
-
-ggplot(sum_bel_3, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: I am included in lots of activities in this class") +
-    xlab("Race")
-
-ggplot(sum_bel_3, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: I am included in lots of activities in this class") +
-    xlab("Race")
-
-# bel_4
-
-sum_bel_4 = Summarize(bel_4_r ~ uc_race + uc_gender,
-                data=data,
-                digits=3)
-
-sum_bel_4
-
-ggplot(sum_bel_4, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: Reverse-I feel very different from most other students in this class") +
-    xlab("Race")
-
-ggplot(sum_bel_4, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: Reverse-I feel very different from most other students in this class") +
-    xlab("Race")
-
-# bel_5
-
-sum_bel_5 = Summarize(bel_5_r ~ uc_race + uc_gender,
-                data=data,
-                digits=3)
-
-sum_bel_5
-
-ggplot(sum_bel_5, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: Reverse-I wish I were in a different class") +
-    xlab("Race")
-
-ggplot(sum_bel_5, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: Reverse-I wish I were in a different class") +
-    xlab("Race")
-
-# bel_6
-
-sum_bel_6 = Summarize(bel_6 ~ uc_race + uc_gender,
-                data=data,
-                digits=3)
-
-sum_bel_6
-
-ggplot(sum_bel_6, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: I feel proud of belonging to this class") +
-    xlab("Race")
-
-ggplot(sum_bel_6, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: I feel proud of belonging to this class") +
-    xlab("Race")
-
-# sum of bel
-
-sum_bel_sum = Summarize(bel_sum ~ uc_race + uc_gender,
-                data=data,
-                digits=3)
-
-sum_bel_sum
-
-ggplot(sum_bel_sum, aes(x = uc_race,
-                y = median,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: Total Belonging Score") +
-    xlab("Race")
-
-ggplot(sum_bel_sum, aes(x = uc_race,
-                y = mean,
-                color = uc_gender)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: Total Belonging Score") +
-    xlab("Race")
-
-```
-
-```{r}
-
-# sum of bel
-
-sum_bel_sum_race = Summarize(bel_sum ~ uc_race,
-                data=data,
-                digits=3)
-
-sum_bel_sum_race
-
-ggplot(sum_bel_sum_race, aes(x = uc_race,
-                y = median)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: Total Belonging Score") +
-    xlab("Race")
-
-ggplot(sum_bel_sum_race, aes(x = uc_race,
+ggplot(sum_bel_gender, aes(x = gender,
                 y = mean)) +
     geom_errorbar(aes(ymin = Q1,
                       ymax = Q3),
@@ -890,38 +384,70 @@ ggplot(sum_bel_sum_race, aes(x = uc_race,
     geom_point(shape=15, size=4, position = (position_dodge(.2))) +
     theme_bw() +
     theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: Total Belonging Score") +
-    xlab("Race")
+    ylab("Belonging") +
+    xlab("Gender")
 
-sum_bel_sum_gender = Summarize(bel_sum ~ uc_gender,
+boxplot(bel_sum ~ gender,
+        data=data,
+        ylab="Value",
+        xlab= "Belonging")
+
+# sum of bel
+
+sum_bel <- Summarize(bel_sum ~ race + gender,
                 data=data,
                 digits=3)
 
-sum_bel_sum_gender
+kable(sum_bel) %>% 
+  kable_styling("striped")
 
-ggplot(sum_bel_sum_gender, aes(x = uc_gender,
-                y = median)) +
+
+ggplot(sum_bel, aes(x = race,
+                y = mean,
+                color = gender)) +
     geom_errorbar(aes(ymin = Q1,
                       ymax = Q3),
                    width=.2, size=0.7, position = (position_dodge(.2))) +
     geom_point(shape=15, size=4, position = (position_dodge(.2))) +
     theme_bw() +
     theme(axis.title = element_text(face = "bold")) +
-    ylab("Median: Total Belonging Score") +
-    xlab("Race")
+    ylab("Belonging") +
+    xlab("Race") +
+    labs(color = "Gender")
 
-ggplot(sum_bel_sum_gender, aes(x = uc_gender,
-                y = mean)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Mean: Total Belonging Score") +
-    xlab("Race")
+boxplot(bel_sum ~ gender + race,
+        data=data,
+        names=c("a.f", "a.m", "b.f", "b.m", "h.f", "h.m", "o.f", "o.m", "w.f", "w.m"),
+        ylab="Value",
+        xlab= "Belonging")
 
 ```
+
+# References
+
+Borck, C.R. (2020). “I belong here.”: Culturally sustaining pedagogical praxes from an alternative high school in Brooklyn. The Urban Review, 52(2), 376-391. [https://doi.org/10.1007/s11256-019-00536-z](https://doi.org/10.1007/s11256-019-00536-z)
+
+Fleming, A.R., Oertle, K.M., Plotner, A.J., & Hakun, J.G. (2017). Influence of social factors on student satisfaction among college students with disabilities. Journal of College Student Development, 58(2), 215-228. [https://doi.org/10.1353/csd.2017.0016](https://doi.org/10.1353/csd.2017.0016)
+
+Fry, R., Kennedy, B., & Funk, C. (2021, April 1). STEM jobs see uneven progress in increasing gender, racial and ethnic diversity. Pew Research Center. [https://www.pewresearch.org/science/2021/04/01/stem-jobs-see-uneven-progress-in-increasing-gender-racial-and-ethnic-diversity](https://www.pewresearch.org/science/2021/04/01/stem-jobs-see-uneven-progress-in-increasing-gender-racial-and-ethnic-diversity) 
+
+Goodenow. (1993). Classroom belonging among early adolescent students: relationships to
+motivation and achievement. The Journal of Early Adolescence, 13(1), 21–43.
+[https://doi.org/10.1177/0272431693013001002](https://doi.org/10.1177/0272431693013001002)
+
+Jeng, A., Bosch, N., & Perry, M. (2023). Sense of belonging predicts perceived helpfulness in online peer help-giving interactions. The Internet and Higher Education, 57, 100901. [https://doi.org/10.1016/j.iheduc.2022.100901](https://doi.org/10.1016/j.iheduc.2022.100901) 
+
+Johnson, D.R., Soldner, M., Leonard, J. B., Alvarez, P., Inkelas, K. K., Rowan-Kenyon, H., & Longerbeam, S. (2007). Examining sense of belonging among first-year undergraduates from different racial/ethnic groups. Journal of College Student Development, 48(5), 525–542. [https://doi.org/10.1353/csd.2007.0054](https://doi.org/10.1353/csd.2007.0054)
+
+Longwell-Grice, R., Adsitt, N.Z., Mullins, K., & Serrata, W. (2016). The first ones: Three studies
+on first-generation college students. NACADA Journal, 36(2), 34-46.
+
+National Center for Educational Statistics. (n.d.). IPEDS Data Explorer.
+[https://nces.ed.gov/ipeds/search/ViewTable?tableId=29450](https://nces.ed.gov/ipeds/search/ViewTable?tableId=29450) 
+
+Sriram, R. (2017). Student affairs by the numbers: Quantitative research and statistics for professionals. Stylus Publishing, LLC.
+
+Thacker, I., Seyranian, V., Madva, A., Duong, N.T., & Beardsley, P. (2022). Social connectedness in physical isolation: Online teaching practices that support under-represented undergraduate students’ feelings of belonging and engagement in STEM. Education Sciences, 12(2), 61-83. [https://doi.org/10.3390/educsci12020061](https://doi.org/10.3390/educsci12020061)
 
 
 
