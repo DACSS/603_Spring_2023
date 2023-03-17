@@ -1,0 +1,159 @@
+---
+title: "Hw 1 by Kristin Abijaoude"
+author: "Kristin Abijaoude"
+description: "LungCap and Prison data HW1"
+date: "02/27/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Hw1
+  - kristin abijaoude
+  - desriptive statistics 
+  - probability
+---
+
+```{r}
+library(ggplot2)
+library(readxl)
+library(dplyr)
+library(summarytools)
+library(stats)
+```
+
+# Lung Capacity
+
+```{r}
+LungCapData <- read_excel("~/Documents/GitHub/Github Help/603_Spring_2023/posts/_data/LungCapData.xls")
+LungCapData
+```
+
+```{r}
+print(dfSummary(LungCapData,
+                        varnumbers = FALSE,
+                        plain.ascii  = FALSE, 
+                        style        = "grid", 
+                        graph.magnif = 0.70, 
+                        valid.col    = FALSE),
+      method = 'render',
+      table.classes = 'table-condensed')
+```
+
+```{r}
+colnames(LungCapData)
+dim(LungCapData)
+```
+
+```{r}
+hist(LungCapData$LungCap)
+```
+1a. The distribution looks pretty normal to me, with capacity between 6 and 9 being the most frequent. 
+
+```{r}
+boxplot(LungCap ~ Gender, data=LungCapData)
+```
+1b. Separating the two genders, it looks like men have a higher lung capacity rate in comparison to women.
+
+```{r}
+LungCapData %>%
+  group_by(Smoke) %>%
+  summarise(mean = mean(LungCap), n = n())
+```
+1c. The average lung capacity for a non-smoker is around 7.78, while for smokers it's 8.65. In other words, on average, the smokers have a higher lung capacity rate than non-smokers... this doesn't make sense because smoking is supposed to be bad for your lungs.
+
+```{r}
+agegroup <- LungCapData %>%
+  mutate(agegroup = case_when(Age <= 13 ~ "Less than 13 years old",
+                              Age == 14| Age == 15 ~ "14 to 15 years old",
+                              Age == 16 | Age == 17 ~ "16 to 17 years old",
+                              Age >= 18 ~ "18 years old and older"))
+agegroup %>%
+  ggplot(aes(x=LungCap, fill=Smoke)) +
+  geom_histogram() +
+  facet_wrap(~agegroup)
+```
+1d. Obviously, older teens are more likely to be smokers, as well as have higher lung capacity, than younger teens. The vast majority of teens 13 years and younger are non-smoker (I would be horrified at the sight of a kid smoking).
+
+```{r}
+agegroup <- agegroup %>%
+  mutate(AgeGroup = factor(agegroup, level= c("Less than 13 years old", 
+                                              "14 to 15 years old",
+                                              "16 to 17 years old",
+                                              "18 years old and older")))
+
+boxplot(LungCap ~ AgeGroup, data=agegroup)
+```
+
+1e. There is a correlation between age and lung capacity. The lung capacity rate increases as the person gets older.
+
+# Prior Convictions
+
+Another dataset I created here deals with prison convictions. The sample size is 810 prisoners in a state prison, some of the prisoners are there for the first time, while others have been imprison as many as 4 times, or have 4 prior convictions in other words. `prior` means numbers of prior convictions. `freq` means how many prisoners have a set of convictions (434 prisoners have 1 prior convictions, 160 prisoners have 2 prior convictions etc.). Finally, I created a new variable called `probability`, where I divided the `freq` variable by the total number of prisoners, to denote the probability that a prisoner had a certain number of prior convictions.
+
+```{r}
+df <- data.frame(prior = c(0:4), 
+                 freq = c(128, 434, 160, 64, 24)
+                 )
+
+df <- df %>%
+  mutate(probability = freq/810)
+df
+```
+
+```{r}
+# alternatively
+(dbinom(x = 1, size = 1, prob = 160/810))*100
+```
+
+2a. There is a less than 20% probability that a randomly selected inmate has exactly 2 prior convictions.
+
+```{r}
+128 + 434
+(dbinom(x = 1, size = 1, prob = 562/810))*100
+```
+
+2b. There is a 69% probability that a randomly selected inmate has fewer than 2 prior convictions.
+
+```{r}
+128 + 434 + 160
+(dbinom(x = 1, size = 1, prob = 722/810))*100
+```
+
+2c. There is a 89% probability that a randomly selected inmate has 2 or fewer prior convictions.
+
+```{r}
+64 + 24
+(dbinom(x = 1, size = 1, prob = 88/810))*100
+```
+
+2d. There is a 10% probability that a randomly selected inmate has more than 2 prior convictions.
+
+```{r}
+prior <- df$prior
+prob <- df$probability
+freq <- df$freq
+
+exval <- sum(prior*prob)
+exval
+```
+
+2e. The expected value `exval`, or long term mean, is 1.28642. I separated the variables into its own set and multiplied `prior` (# of prior convictions) and `prob` (the probability a given prisoner has a certain number of prior convictions).
+
+```{r}
+# variance
+var(rep(df$prior, df$freq))
+
+# standard deviation
+sd(rep(df$prior, df$freq))
+```
+The variance is 0.86, which mean the data is close to one another.
+
+The standard deviation is 0.93, which means the data is more clustered around the mean.
+
+```{r}
+render("Kristin_Abijaoude_HW1.qmd", output_format = "pdf_document", output_file = "Kristin_Abijaoude_HW1.pdf")
+```
+
