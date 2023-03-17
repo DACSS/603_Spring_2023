@@ -1,0 +1,53 @@
+---
+title: "Final Project Checkin-1"
+author: "Xiaoyan"
+description: "Template of course blog qmd file"
+date: "03/17/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+---
+```{r}
+library(tidyr)
+library(dplyr)
+library(readxl)
+library(ggplot2)
+
+```
+# {.tabset}
+
+## Introduction and background
+
+ The Chinese government implemented the one-child policy in 1979, which resulted in the increasing proportion of one-child families and the "four-two-one" family structure consisting of four grandparents, two parents, and one child. Despite being blessed with relatively more family and social resources, only children may face physical and socio-psychological problems during development, including an elevated risk for overweight and obesity and negative psychosocial consequences. Previous studies have shown that only children had a higher likelihood of overweight or obesity, compared with children who had one or more siblings. Over obesity, mental healthy is also interesting to explore that how it is related to overweight/obesity, as well as sib-size, in young adolescents affects mental health.
+ 
+
+## research questions
+1. Does obesity positively related to mental health?
+2. what are factors that affects mental healthy?
+3. does sibling or obeisty directily related to mental health?
+
+## key predictors
+1. mental health
+2. sibling number
+3. obisity rate
+4. gender
+
+## hypothesis
+1. Higher obesity rate increase the risk of depression
+2. higher family income increase the rate of obesity
+3. More sibling reduce the risk of both depression and anxiety. 
+
+## data description
+```{r}
+data<-read_excel("/Users/cassie199/Desktop/23spring/603_Spring_2023-1/posts/_data/Finaldata.xlsx")
+head(data)
+glimpse(data)
+sum(is.na(data))
+plot(data$T0depression~data$BMI)
+```
+This dataset including 1348 variables and 29 columns. there are 728 NA in this data set. all variables was presented as numberic data. descriptive data was also presented as degrees such as education level, family financial situation and depression rate. By pre-plotting depression rate vs BMI, we can see that some ouliers may need to deal with and there is no siginifcant disrtibution on graph. More data processing is needed in future process. 
