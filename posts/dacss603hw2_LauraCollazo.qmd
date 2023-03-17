@@ -19,12 +19,14 @@ categories:
 
 ```{r, echo=T, message=FALSE}
 
-library(readxl)
 library(tidyverse)
+library(kableExtra)
 
 ```
 
 # Question 1
+
+The data for the first question is shown below.
 
 ```{r, echo=T}
 
@@ -35,17 +37,96 @@ standard_deviation <- c(10, 9)
 
 data <- data.frame(surgical_procedure, sample_size, mean_wait_time, standard_deviation)
 
-data
+kable(data) %>% 
+  kable_styling()
 
-t.test(data$mean_wait_time, conf.level = 0.9)
+confidence_level <- 0.90
 
 ```
 
-# Question 2
+The 90% confidence interval for the actual mean wait time for patients receiving a bypass is:
+
+```{r, echo=T}
+# calculate confidence interval for "Bypass"
+
+bypass_se <- 10 / sqrt(539)
+
+bypass_tail <- (1-confidence_level)/2
+
+bypass_t <- qt(p = 1 - bypass_tail, df = 539 -1)
+
+bypass_ci <- c(19 - bypass_t * bypass_se,
+        19 + bypass_t * bypass_se)
+
+bypass_ci
+
+```
+
+The 90% confidence interval for the actual mean wait time for patients receiving an angiography is:
 
 ```{r, echo=T}
 
+# calculate confidence interval for "Angiography"
+
+angi_se <- 9 / sqrt(847)
+
+angi_tail <- (1-confidence_level)/2
+
+angi_t <- qt(p = 1 - angi_tail, df = 847 -1)
+
+angi_ci <- c(18 - angi_t * angi_se,
+        18 + angi_t * angi_se)
+
+angi_ci
+
 ```
+
+The confidence interval is narrower for the angiography.
+
+# Question 2
+
+The data for question two is shown below.
+
+```{r, echo=T}
+
+sample_size2 <- 1031
+voted_yes <- 567
+voted_no <- (sample_size2 - voted_yes)
+
+data2 <- data.frame(sample_size2, voted_yes, voted_no)
+
+kable(data2) %>% 
+  kable_styling()
+
+```
+
+The point estimate, p, for the proportion of all adult Americans who believe a college education is essential for success is:
+
+```{r, echo=T}
+
+p <- voted_yes/sample_size2
+
+p
+
+```
+
+A 95% confidence interval for p is:
+
+```{r, echo=T}
+
+margin_of_error <- qnorm(0.975) * sqrt(p*(1-p)/sample_size2)
+
+low <- p - margin_of_error
+
+low
+
+high <- p + margin_of_error
+
+high
+
+```
+What this tells us is at the 95% confidence interval between 51.95839% and 58.03191% of the population of adult Americans would believe a college education is essential for success.
+
 
 # Question 3
 
@@ -68,6 +149,8 @@ t.test(data$mean_wait_time, conf.level = 0.9)
 # Question 6
 
 ```{r, echo=T}
+
+
 
 ```
 
