@@ -21,6 +21,7 @@ categories:
 
 library(tidyverse)
 library(kableExtra)
+library(readxl)
 
 ```
 
@@ -148,14 +149,61 @@ What this tells us is at the 95% confidence interval between 51.95839% and 58.03
 
 # Question 6
 
+The data for question 6 is shown below. A response of yes indicates a healthy snack was chosen after school.
+
 ```{r, echo=T}
 
+data6 <- read_xlsx("homework_2_data.xlsx")
 
+table(data6$healthy_snack, data6$grade)
+
+```
+
+The null hypothesis for question 6 is that middle school students choosing a healthy snack is independent of grade level. The test that should be used to determine if we can reject the null hypothesis is a chi-square test. This test has been chosen as it's used to determine when there's an association between two categorical values. The results of the test are below.
+
+```{r, echo=T}
+
+chisq.test(data6$healthy_snack, data6$grade, correct = FALSE)
+
+table <- data.frame((with(data6, table(healthy_snack, grade))))
+
+ggplot(table, aes(x=healthy_snack,y=Freq, fill=grade))+
+  geom_bar(stat="identity",position="dodge")
+
+```
+We can reject the null hypothesis because the p-value is below 0.05. Furthermore, the X-squared value, as seen below, is higher than the critical value so the null hypothesis can be rejected. 
+
+```{r, echo=T}
+
+qchisq(.05, 2, lower.tail = FALSE)
 
 ```
 
 # Question 7
 
+The data for question 7 is shown below. Each tuition value is the per-pupil cost in thousands of dollars for cyber charter school tuition.
+
 ```{r, echo=T}
 
+data7 <- read_xlsx("homework_2_data.xlsx", sheet = "Question 7")
+
+kable(data7) %>% 
+  kable_styling()
 ```
+
+
+The null hypothesis for question 7 is that the mean cyber charter school tuition cost per-pupil is the same in all areas. The test that should be used to determine if we can reject the null hypothesis is an ANOVA. This test has been chosen as it's used to compare the means of two or more independent groups. The results of the test are shown below.
+
+```{r, echo=T}
+
+ANOVA <- aov(tuition ~ area, data = data7)
+
+summary(ANOVA)
+
+ggplot(data7, aes(x = area, y = tuition, color=area))+
+    geom_boxplot()+
+    ylab("tuition")+xlab("area")
+
+```
+
+We can reject the null hypothesis because the p-value, Pr(>F), is less than .05. This tells us that at least one area has a tuition mean that is different from the others. 
