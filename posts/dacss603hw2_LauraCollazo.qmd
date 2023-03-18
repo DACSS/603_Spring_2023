@@ -22,6 +22,7 @@ categories:
 library(tidyverse)
 library(kableExtra)
 library(readxl)
+library(lsr)
 
 ```
 
@@ -41,13 +42,14 @@ data <- data.frame(surgical_procedure, sample_size, mean_wait_time, standard_dev
 kable(data) %>% 
   kable_styling()
 
-confidence_level <- 0.90
+confidence_level <- .90
 
 ```
 
 The 90% confidence interval for the actual mean wait time for patients receiving a bypass is:
 
 ```{r, echo=T}
+
 # calculate confidence interval for "Bypass"
 
 bypass_se <- 10 / sqrt(539)
@@ -128,7 +130,6 @@ high
 ```
 What this tells us is at the 95% confidence interval between 51.95839% and 58.03191% of the population of adult Americans would believe a college education is essential for success.
 
-
 # Question 3
 
 ```{r, echo=T}
@@ -137,11 +138,67 @@ What this tells us is at the 95% confidence interval between 51.95839% and 58.03
 
 # Question 4
 
+## A
+
+The below shows the results of a one-sample t-test which tests whether the mean income of female employees ($410) differs from the mean income of all senior-level workers ($500).
+
+One-sample t-tests assume that the population distribution is normal and also that the observations in the sample are generated independently of one another.
+
+```{r, echo=T}
+
+set.seed(27)
+
+rnorm_fixed <- function(n, mean, sd) {
+  as.vector(mean + sd * scale(rnorm(n)))
+}
+
+data4 <- rnorm_fixed(9, 410, 90)
+
+oneSampleTTest(x=data4, mu=500)
+
+```
+
+The results of this T-test is statistically significant as the p-value is below .05. This means we can reject the null hypothesis.
+
+## B
+
+The p-value when the mean is less than 500 is below.
+
+```{r, echo=T}
+
+t.test(data4, mu = 500, alternative = "less")
+
+```
+
+The results of this t-test are significant as the p-value is below .05. This means we can reject the null hypothesis that the true mean is not less than 500.
+
+## C
+
+The p-value when the mean is greater than 500 is below.
+
+```{r, echo=T}
+
+t.test(data4, mu = 500, alternative = "greater")
+
+```
+
+The results of this test are not significant as the p-value is greater than .05. This means we cannot reject the null hypothesis that the true mean is not greater than 500.
+
+# Question 5
+
+## A
+
 ```{r, echo=T}
 
 ```
 
-# Question 5
+## B
+
+```{r, echo=T}
+
+```
+
+## C
 
 ```{r, echo=T}
 
@@ -171,7 +228,10 @@ ggplot(table, aes(x=healthy_snack,y=Freq, fill=grade))+
   geom_bar(stat="identity",position="dodge")
 
 ```
-We can reject the null hypothesis because the p-value is below 0.05. Furthermore, the X-squared value, as seen below, is higher than the critical value so the null hypothesis can be rejected. 
+
+We can reject the null hypothesis because the p-value is below 0.05. This tells us that choosing a healthy snack is not independent of grade level.
+
+Furthermore, the X-squared value, as seen below, is higher than the critical value so the null hypothesis can be rejected. 
 
 ```{r, echo=T}
 
@@ -189,8 +249,8 @@ data7 <- read_xlsx("homework_2_data.xlsx", sheet = "Question 7")
 
 kable(data7) %>% 
   kable_styling()
-```
 
+```
 
 The null hypothesis for question 7 is that the mean cyber charter school tuition cost per-pupil is the same in all areas. The test that should be used to determine if we can reject the null hypothesis is an ANOVA. This test has been chosen as it's used to compare the means of two or more independent groups. The results of the test are shown below.
 
@@ -201,8 +261,9 @@ ANOVA <- aov(tuition ~ area, data = data7)
 summary(ANOVA)
 
 ggplot(data7, aes(x = area, y = tuition, color=area))+
-    geom_boxplot()+
-    ylab("tuition")+xlab("area")
+  geom_boxplot() +
+  ylab("tuition") +
+  xlab("area")
 
 ```
 
