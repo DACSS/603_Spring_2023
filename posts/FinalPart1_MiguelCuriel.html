@@ -247,22 +247,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Evidently, Google is one-in-a-million high-tech company, but there are certainly commonalities shared with smaller new tech (startup) companies. Culture Amp, a company focused on surveying employees in startups, elaborated an analysis based on their results from 2015-2020 surveys<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> and mention that elements such as an open and honest two-way communication, workplace flexibility, and fair division of workload, are what make new tech companies valued.</p>
 <p>However, the previous data omits the downsides of such cultures. Besides the multiple blog posts and news articles one can find talking about burnout<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, the darker side of tech also includes (but is not limited to) ageism<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, gender inequality<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> <a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>, and even migration issues<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>.</p>
 <p>Further, layoffs by the thousands, plummeting stock prices, and generalized revaluation of an entire industry’s value, are just few words that can describe what has happened to tech in 2022 and 2023. An industry that once employed over 5 million people in the US alone<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> and had nearly 700 billion dollars in funding worldwide<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> has now laid off over 300 thousand people<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> and nearly halved in funding.</p>
-<table class="table">
-<colgroup>
-<col style="width: 44%">
-<col style="width: 55%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><em>Figure 1. Tech layoffs worldwide since COVID-19.</em></td>
-<td><em>Figure 2. Funding in the tech industry from 2013 through 2022.</em></td>
-</tr>
-<tr class="even">
-<td><img src="images/image-1529229520.png" class="img-fluid" width="386"></td>
-<td><img src="images/image-1835681984.png" class="img-fluid" width="304"></td>
-</tr>
-</tbody>
-</table>
 <p>In its heights, being a highly competitive industry, it is reasonable to state that mental health was at risk to begin with, but with the recent events unfolding: has the mental health of people working in the tech industry gotten worse? Specifically, the proposed research question is:</p>
 <ul>
 <li><strong>What is the impact of the COVID-19 pandemic on the mental health of workers in the technology industry as measured by pre- and post-pandemic surveys, and what are the factors associated with any observed changes?</strong></li>
@@ -272,7 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="hypothesis" class="level1">
 <h1>Hypothesis</h1>
 <p>A survey lead by Blind in 2021<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> found that, out of 2400 workers in tech, 64% said their mental health is worse after the pandemic. However, this is an after-the-fact study (i.e., it does not have a baseline to compare with), therefore the present analysis aims to further expand on this idea and use an evidence-based approach to determine whether there is a significant change or not.</p>
-<p>Based on the previous statement, and on the research question, these are the hypotheses that come to mind:</p>
+<p>Based on the present research question and on previous studies, these are the hypotheses that come to mind:</p>
 <ul>
 <li><p>H1: The COVID-19 pandemic has had a negative impact on the mental health of workers in the technology industry, as measured by pre- and post-pandemic surveys.</p></li>
 <li><p>H2: The magnitude of this impact will by moderated by demographic factors such as age, gender, as well as past experiences with mental illness such as family history and previous treatments. These will act as gatekeepers for this impact.</p></li>
@@ -284,12 +268,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Descriptive Statistics</h1>
 <p>To prove whether the COVID pandemic has significantly impacted the mental health of workers in tech, I will rely on data provided by the Open Sourcing Mental Health (OSMH), specifically using their Mental Health in Tech Survey.</p>
 <p>OSMH<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> is a non-profit dedicated to raising awareness, educating, and providing resources to support mental wellness in the tech and open source communities. It began operations in 2013 and since 2014 it has conducted and published an annual or bi-annual survey analyzing several mental health indicators.</p>
-<p>As of March 18, 2023, the 2022 survey has not yet been published. Therefore, this analysis compares the 2019 Mental Health in Tech Survey against the 2021 edition. Both are publicly available on Kaggle under a Creative Commons-ShareAlike 4.0 International license:</p>
+<p>As of March 20, 2023, the 2022 survey has not yet been published. Therefore, this analysis compares the 2019 Mental Health in Tech Survey against the 2021 edition. Both are publicly available on Kaggle under a Creative Commons-ShareAlike 4.0 International license:</p>
 <ul>
 <li><p><a href="https://www.kaggle.com/datasets/osmihelp/osmi-mental-health-in-tech-survey-2019" class="uri">https://www.kaggle.com/datasets/osmihelp/osmi-mental-health-in-tech-survey-2019</a></p></li>
 <li><p><a href="https://www.kaggle.com/datasets/osmihelp/osmh-2021-mental-health-in-tech-survey-results" class="uri">https://www.kaggle.com/datasets/osmihelp/osmh-2021-mental-health-in-tech-survey-results</a></p></li>
 </ul>
-<p>Given the size of the data, both files were appended using Microsoft Excel and were then exported to a CSV file. Also, there was not a 100% match between columns in both files, and some re-coding had to be implemented so data can be properly processed. These are the actions made to consolidate the data files:</p>
+<p>Given the size of the data, both files were appended using Microsoft Excel and were then exported to a CSV file. Also, there was not a 100% match between columns in both files, and some re-coding had to be implemented before importing into R. The steps taken to consolidate both files offline are noted in the section below.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <ul>
 <li><p>A “year” column was added to differentiate between both files.</p></li>
 <li><p>Data pertaining to insurance information (e.g., “Does you company provide a mental health insurance plan?”) was removed because in the 2019 it was optional and was, therefore, almost entirely blank.</p></li>
@@ -297,42 +293,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>The raw data files followed a title case naming convention (e.g., “Does your employer provide mental health resources?”). All column names were changed to a snake_case format (e.g., “employer_provides_mental_health_resources”).</p></li>
 <li><p>The rest of the columns and data therein contained is left as is.</p></li>
 </ul>
-<p>With the above changes implemented in the consolidation, the data will look as follows:</p>
-<div class="cell">
+</div>
+</div>
+</div>
+<div class="cell" data-paged.print="true">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load neccesary packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># used for elementary data wrangling and visualization</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar) <span class="co"># used for missing values visualization</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(summarytools) <span class="co"># used for summary visualization</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dataMaid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># temporarily set working directory to read in data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/Users/macuriels/Documents/Umass/umass_dacss_quantitativeanalysis/posts/_data"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2019 and 2021 data</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"mhit.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(df[<span class="fu">sample</span>(<span class="fu">nrow</span>(df), <span class="dv">5</span>), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(summarytools) <span class="co"># used for table summarizing descriptive statistics</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># temporarily set working directory to read in data</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/Users/macuriels/Documents/Umass/umass_dacss_quantitativeanalysis/posts/_data"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># read in consolidated file with 2019 and 2021 data</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"mhit.csv"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># preview of raw consolidated file</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(df[<span class="fu">sample</span>(<span class="fu">nrow</span>(df), <span class="dv">10</span>), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["self_employed"],"name":[2],"type":["chr"],"align":["left"]},{"label":["number_of_employees"],"name":[3],"type":["chr"],"align":["left"]},{"label":["is_tech_company"],"name":[4],"type":["chr"],"align":["left"]},{"label":["is_tech_role"],"name":[5],"type":["chr"],"align":["left"]},{"label":["company_provides_mhcare"],"name":[6],"type":["chr"],"align":["left"]},{"label":["knows_mh_benefits_offered"],"name":[7],"type":["chr"],"align":["left"]},{"label":["employer_discussed_mh"],"name":[8],"type":["chr"],"align":["left"]},{"label":["employer_offers_mhresources"],"name":[9],"type":["chr"],"align":["left"]},{"label":["anonymity_protected_if_use_resources"],"name":[10],"type":["chr"],"align":["left"]},{"label":["easy_to_leave_for_mhcare"],"name":[11],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_to_coworkers_about_phmh"],"name":[12],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_to_supervisor"],"name":[13],"type":["chr"],"align":["left"]},{"label":["discussed_mh_with_employer"],"name":[14],"type":["chr"],"align":["left"]},{"label":["conversation_with_employer"],"name":[15],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_to_coworkers_about_mh"],"name":[16],"type":["chr"],"align":["left"]},{"label":["discussed_mh_with_coworkers"],"name":[17],"type":["chr"],"align":["left"]},{"label":["conversation_with_coworkers...18"],"name":[18],"type":["chr"],"align":["left"]},{"label":["coworker_discussed_own_mh"],"name":[19],"type":["chr"],"align":["left"]},{"label":["conversation_with_coworkers...20"],"name":[20],"type":["chr"],"align":["left"]},{"label":["employer_ph_importance"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["employer_mh_importance"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["has_previous_employer"],"name":[23],"type":["chr"],"align":["left"]},{"label":["was_previous_employer_tech"],"name":[24],"type":["chr"],"align":["left"]},{"label":["previous_employers_provided_mhbenefits"],"name":[25],"type":["chr"],"align":["left"]},{"label":["awareness_mhbenefits_provided_by_previous_employers"],"name":[26],"type":["chr"],"align":["left"]},{"label":["previous_employer_discussed_mh"],"name":[27],"type":["chr"],"align":["left"]},{"label":["previous_employers_provided_mhresources"],"name":[28],"type":["chr"],"align":["left"]},{"label":["anonymity_protected_with_previous_employers"],"name":[29],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_mh_with_previous_employers"],"name":[30],"type":["chr"],"align":["left"]},{"label":["willingness_discuss_mh_previous_supervisor"],"name":[31],"type":["chr"],"align":["left"]},{"label":["discussed_mh_with_previous_employer"],"name":[32],"type":["chr"],"align":["left"]},{"label":["conversation_with_previous_employer"],"name":[33],"type":["chr"],"align":["left"]},{"label":["willingness_discuss_mh_previous_coworkers"],"name":[34],"type":["chr"],"align":["left"]},{"label":["discussed_mh_previous_coworkers"],"name":[35],"type":["chr"],"align":["left"]},{"label":["conversation_previous_coworkers"],"name":[36],"type":["chr"],"align":["left"]},{"label":["previous_coworkers_discussed_own_mh"],"name":[37],"type":["chr"],"align":["left"]},{"label":["conversation_about_coworkers_mh"],"name":[38],"type":["chr"],"align":["left"]},{"label":["previous_employer_ph_importance"],"name":[39],"type":["dbl"],"align":["right"]},{"label":["previous_employer_mh_importance"],"name":[40],"type":["dbl"],"align":["right"]},{"label":["has_mental_disorder"],"name":[41],"type":["chr"],"align":["left"]},{"label":["diagnosed_with_mental_disorder"],"name":[42],"type":["chr"],"align":["left"]},{"label":["had_mental_disorder"],"name":[43],"type":["chr"],"align":["left"]},{"label":["sought_treatment"],"name":[44],"type":["chr"],"align":["left"]},{"label":["family_history_mental_illness"],"name":[45],"type":["chr"],"align":["left"]},{"label":["mental_disorder_treated_effectively_interferes_work"],"name":[46],"type":["chr"],"align":["left"]},{"label":["mental_disorder_not_treated_effectively_interferes_work"],"name":[47],"type":["chr"],"align":["left"]},{"label":["other_people_influence_not_revealing_own_situation"],"name":[48],"type":["chr"],"align":["left"]},{"label":["willingness_to_share_with_friends"],"name":[49],"type":["dbl"],"align":["right"]},{"label":["mention_ph_issue_potential_employer"],"name":[50],"type":["chr"],"align":["left"]},{"label":["why_ph_issue_potential_employer"],"name":[51],"type":["chr"],"align":["left"]},{"label":["mention_mh_issue_potential_employer"],"name":[52],"type":["chr"],"align":["left"]},{"label":["why_mh_issue_potential_employer"],"name":[53],"type":["chr"],"align":["left"]},{"label":["identify_as_person_with_mh_issue"],"name":[54],"type":["chr"],"align":["left"]},{"label":["identify_as_person_with_mh_issue_affect_career"],"name":[55],"type":["chr"],"align":["left"]},{"label":["identifying_with_mh_issue_affected_career"],"name":[56],"type":["dbl"],"align":["right"]},{"label":["if_coworkers_know_about_mhissue_how_affects"],"name":[57],"type":["dbl"],"align":["right"]},{"label":["current_or_previous_employer_unsupportive"],"name":[58],"type":["chr"],"align":["left"]},{"label":["unsupportive_description"],"name":[59],"type":["chr"],"align":["left"]},{"label":["current_or_previous_employer_supportive"],"name":[60],"type":["chr"],"align":["left"]},{"label":["supportive_description"],"name":[61],"type":["lgl"],"align":["right"]},{"label":["tech_industry_supports_mh"],"name":[62],"type":["dbl"],"align":["right"]},{"label":["how_industry_can_improve_mhcare"],"name":[63],"type":["chr"],"align":["left"]},{"label":["additional_questions_to_ask"],"name":[64],"type":["chr"],"align":["left"]},{"label":["willingness_to_talk_to_survey"],"name":[65],"type":["chr"],"align":["left"]},{"label":["age"],"name":[66],"type":["dbl"],"align":["right"]},{"label":["gender"],"name":[67],"type":["chr"],"align":["left"]},{"label":["country_live"],"name":[68],"type":["chr"],"align":["left"]},{"label":["us_territory_live"],"name":[69],"type":["chr"],"align":["left"]},{"label":["race"],"name":[70],"type":["chr"],"align":["left"]},{"label":["country_work"],"name":[71],"type":["chr"],"align":["left"]},{"label":["us_territory_work"],"name":[72],"type":["chr"],"align":["left"]}],"data":[{"1":"2019","2":"FALSE","3":"26-100","4":"TRUE","5":"TRUE","6":"I don't know","7":"No","8":"I don't know","9":"I don't know","10":"I don't know","11":"I don't know","12":"Physical health","13":"No","14":"FALSE","15":"NA","16":"No","17":"FALSE","18":"NA","19":"FALSE","20":"NA","21":"4","22":"4","23":"TRUE","24":"TRUE","25":"I don't know","26":"N/A (was not aware)","27":"None did","28":"None did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"FALSE","33":"NA","34":"No, at none of my previous employers","35":"FALSE","36":"NA","37":"FALSE","38":"NA","39":"4","40":"4","41":"No","42":"NA","43":"No","44":"FALSE","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"N/A","49":"1","50":"No","51":"NA","52":"No","53":"NA","54":"FALSE","55":"NA","56":"NA","57":"5","58":"No","59":"NA","60":"No","61":"NA","62":"3","63":"NA","64":"NA","65":"FALSE","66":"46","67":"m","68":"United States of America","69":"Nebraska","70":"White","71":"United States of America","72":"Nebraska"},{"1":"2021","2":"0","3":"More than 1000","4":"1","5":"1","6":"I don't know","7":"No","8":"Yes","9":"I don't know","10":"I don't know","11":"Very easy","12":"Same level of comfort for each","13":"Maybe","14":"0","15":"NA","16":"Maybe","17":"0","18":"NA","19":"0","20":"NA","21":"10","22":"8","23":"0","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"No","42":"NA","43":"No","44":"0","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"Yes","49":"2","50":"Maybe","51":"It\\xd5s just awkward. I don\\xd5t think they will understand.","52":"No","53":"I wouldn\\xd5t want the interviewer to have to worry about that","54":"0","55":"NA","56":"NA","57":"10","58":"No","59":"NA","60":"No","61":"NA","62":"4","63":"Probably have a positive outlook for the future of the individual","64":"NA","65":"0","66":"21","67":"Female","68":"India","69":"NA","70":"NA","71":"India","72":"NA"},{"1":"2019","2":"TRUE","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"TRUE","24":"TRUE","25":"Some did","26":"No, I only became aware later","27":"None did","28":"Some did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"TRUE","33":"Tough to explain in writing, they offered me some support and ultimately made me redundant then sent me on a course\\xca","34":"At some of my previous employers","35":"TRUE","36":"Would take too long in writing\\xca","37":"TRUE","38":"Again too long to write\\xca","39":"5","40":"1","41":"Possibly","42":"NA","43":"Yes","44":"TRUE","45":"I don't know","46":"Not applicable to me","47":"Often","48":"Maybe","49":"6","50":"No","51":"If it interfered with a job, I wouldn\\xd5t apply for it. Also, I\\xd5m happy being self-employed\\xca","52":"No","53":"I\\xd5m self-employed and wouldn\\xd5t go for an interview and maybe it\\xd5s one of the reasons why I\\xd5m self-employed. I don\\xd5t want to have to explain any issues\\xca","54":"FALSE","55":"NA","56":"NA","57":"6","58":"Yes, I experienced","59":"Terminal illness and subsequent death of my ex husband and son\\xd5s father and death of my father. Lost my job, twice\\xca","60":"Maybe/Not sure","61":"NA","62":"1","63":"That it\\xd5s human to have mental health issues throughout our lifetime and there are certain circumstances where it\\xd5s likely to happen and so they should have an easy way to take up support\\xca","64":"A lot of the questions in this survey are for employees even when you answer that you\\xd5re self-employed\\xca","65":"TRUE","66":"59","67":"Female\\xca","68":"United Kingdom","69":"NA","70":"NA","71":"United Kingdom","72":"NA"},{"1":"2019","2":"FALSE","3":"100-500","4":"TRUE","5":"TRUE","6":"Yes","7":"Yes","8":"No","9":"I don't know","10":"I don't know","11":"Somewhat easy","12":"Physical health","13":"No","14":"FALSE","15":"NA","16":"Maybe","17":"FALSE","18":"NA","19":"FALSE","20":"NA","21":"9","22":"7","23":"TRUE","24":"FALSE","25":"No, none did","26":"No, I only became aware later","27":"None did","28":"Some did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"FALSE","33":"NA","34":"No, at none of my previous employers","35":"FALSE","36":"NA","37":"FALSE","38":"NA","39":"5","40":"3","41":"Possibly","42":"NA","43":"Possibly","44":"TRUE","45":"I don't know","46":"Not applicable to me","47":"Not applicable to me","48":"Maybe","49":"5","50":"Maybe","51":"I would not bring it up if I thought it would affect my chances of getting the job.","52":"No","53":"Would introduce bias against me.","54":"FALSE","55":"NA","56":"NA","57":"4","58":"Maybe/Not sure","59":"NA","60":"Yes, I observed","61":"NA","62":"3","63":"Not sure.","64":"Nothing.","65":"TRUE","66":"31","67":"Male","68":"United States of America","69":"New York","70":"White","71":"United States of America","72":"New York"},{"1":"2019","2":"TRUE","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"TRUE","24":"TRUE","25":"Some did","26":"No, I only became aware later","27":"Some did","28":"Some did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"FALSE","33":"NA","34":"At some of my previous employers","35":"FALSE","36":"NA","37":"TRUE","38":"Coworker talked to me about depression. He thought his depression was impacting his work and wanted me to know.","39":"7","40":"3","41":"No","42":"NA","43":"No","44":"FALSE","45":"I don't know","46":"Not applicable to me","47":"Not applicable to me","48":"N/A","49":"6","50":"Maybe","51":"Not all physical health issues need to be discussed. Also, I\\xd5m not convinced it wouldn\\xd5t be used against me.","52":"No","53":"Again, could be used against me","54":"FALSE","55":"NA","56":"NA","57":"3","58":"No","59":"NA","60":"Yes, I observed","61":"NA","62":"3","63":"I\\xd5ve seen too many burn out cases. This should be easily indentifiable by supervisors, and they should provide support.","64":"NA","65":"FALSE","66":"54","67":"Female","68":"Canada","69":"NA","70":"NA","71":"Canada","72":"NA"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["self_employed"],"name":[2],"type":["chr"],"align":["left"]},{"label":["number_of_employees"],"name":[3],"type":["chr"],"align":["left"]},{"label":["is_tech_company"],"name":[4],"type":["chr"],"align":["left"]},{"label":["is_tech_role"],"name":[5],"type":["chr"],"align":["left"]},{"label":["company_provides_mhcare"],"name":[6],"type":["chr"],"align":["left"]},{"label":["knows_mh_benefits_offered"],"name":[7],"type":["chr"],"align":["left"]},{"label":["employer_discussed_mh"],"name":[8],"type":["chr"],"align":["left"]},{"label":["employer_offers_mhresources"],"name":[9],"type":["chr"],"align":["left"]},{"label":["anonymity_protected_if_use_resources"],"name":[10],"type":["chr"],"align":["left"]},{"label":["easy_to_leave_for_mhcare"],"name":[11],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_to_coworkers_about_phmh"],"name":[12],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_to_supervisor"],"name":[13],"type":["chr"],"align":["left"]},{"label":["discussed_mh_with_employer"],"name":[14],"type":["chr"],"align":["left"]},{"label":["conversation_with_employer"],"name":[15],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_to_coworkers_about_mh"],"name":[16],"type":["chr"],"align":["left"]},{"label":["discussed_mh_with_coworkers"],"name":[17],"type":["chr"],"align":["left"]},{"label":["conversation_with_coworkers...18"],"name":[18],"type":["chr"],"align":["left"]},{"label":["coworker_discussed_own_mh"],"name":[19],"type":["chr"],"align":["left"]},{"label":["conversation_with_coworkers...20"],"name":[20],"type":["chr"],"align":["left"]},{"label":["employer_ph_importance"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["employer_mh_importance"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["has_previous_employer"],"name":[23],"type":["chr"],"align":["left"]},{"label":["was_previous_employer_tech"],"name":[24],"type":["chr"],"align":["left"]},{"label":["previous_employers_provided_mhbenefits"],"name":[25],"type":["chr"],"align":["left"]},{"label":["awareness_mhbenefits_provided_by_previous_employers"],"name":[26],"type":["chr"],"align":["left"]},{"label":["previous_employer_discussed_mh"],"name":[27],"type":["chr"],"align":["left"]},{"label":["previous_employers_provided_mhresources"],"name":[28],"type":["chr"],"align":["left"]},{"label":["anonymity_protected_with_previous_employers"],"name":[29],"type":["chr"],"align":["left"]},{"label":["comfortable_talking_mh_with_previous_employers"],"name":[30],"type":["chr"],"align":["left"]},{"label":["willingness_discuss_mh_previous_supervisor"],"name":[31],"type":["chr"],"align":["left"]},{"label":["discussed_mh_with_previous_employer"],"name":[32],"type":["chr"],"align":["left"]},{"label":["conversation_with_previous_employer"],"name":[33],"type":["chr"],"align":["left"]},{"label":["willingness_discuss_mh_previous_coworkers"],"name":[34],"type":["chr"],"align":["left"]},{"label":["discussed_mh_previous_coworkers"],"name":[35],"type":["chr"],"align":["left"]},{"label":["conversation_previous_coworkers"],"name":[36],"type":["chr"],"align":["left"]},{"label":["previous_coworkers_discussed_own_mh"],"name":[37],"type":["chr"],"align":["left"]},{"label":["conversation_about_coworkers_mh"],"name":[38],"type":["chr"],"align":["left"]},{"label":["previous_employer_ph_importance"],"name":[39],"type":["dbl"],"align":["right"]},{"label":["previous_employer_mh_importance"],"name":[40],"type":["dbl"],"align":["right"]},{"label":["has_mental_disorder"],"name":[41],"type":["chr"],"align":["left"]},{"label":["diagnosed_with_mental_disorder"],"name":[42],"type":["chr"],"align":["left"]},{"label":["had_mental_disorder"],"name":[43],"type":["chr"],"align":["left"]},{"label":["sought_treatment"],"name":[44],"type":["chr"],"align":["left"]},{"label":["family_history_mental_illness"],"name":[45],"type":["chr"],"align":["left"]},{"label":["mental_disorder_treated_effectively_interferes_work"],"name":[46],"type":["chr"],"align":["left"]},{"label":["mental_disorder_not_treated_effectively_interferes_work"],"name":[47],"type":["chr"],"align":["left"]},{"label":["other_people_influence_not_revealing_own_situation"],"name":[48],"type":["chr"],"align":["left"]},{"label":["willingness_to_share_with_friends"],"name":[49],"type":["dbl"],"align":["right"]},{"label":["mention_ph_issue_potential_employer"],"name":[50],"type":["chr"],"align":["left"]},{"label":["why_ph_issue_potential_employer"],"name":[51],"type":["chr"],"align":["left"]},{"label":["mention_mh_issue_potential_employer"],"name":[52],"type":["chr"],"align":["left"]},{"label":["why_mh_issue_potential_employer"],"name":[53],"type":["chr"],"align":["left"]},{"label":["identify_as_person_with_mh_issue"],"name":[54],"type":["chr"],"align":["left"]},{"label":["identify_as_person_with_mh_issue_affect_career"],"name":[55],"type":["chr"],"align":["left"]},{"label":["identifying_with_mh_issue_affected_career"],"name":[56],"type":["dbl"],"align":["right"]},{"label":["if_coworkers_know_about_mhissue_how_affects"],"name":[57],"type":["dbl"],"align":["right"]},{"label":["current_or_previous_employer_unsupportive"],"name":[58],"type":["chr"],"align":["left"]},{"label":["unsupportive_description"],"name":[59],"type":["chr"],"align":["left"]},{"label":["current_or_previous_employer_supportive"],"name":[60],"type":["chr"],"align":["left"]},{"label":["supportive_description"],"name":[61],"type":["lgl"],"align":["right"]},{"label":["tech_industry_supports_mh"],"name":[62],"type":["dbl"],"align":["right"]},{"label":["how_industry_can_improve_mhcare"],"name":[63],"type":["chr"],"align":["left"]},{"label":["additional_questions_to_ask"],"name":[64],"type":["chr"],"align":["left"]},{"label":["willingness_to_talk_to_survey"],"name":[65],"type":["chr"],"align":["left"]},{"label":["age"],"name":[66],"type":["dbl"],"align":["right"]},{"label":["gender"],"name":[67],"type":["chr"],"align":["left"]},{"label":["country_live"],"name":[68],"type":["chr"],"align":["left"]},{"label":["us_territory_live"],"name":[69],"type":["chr"],"align":["left"]},{"label":["race"],"name":[70],"type":["chr"],"align":["left"]},{"label":["country_work"],"name":[71],"type":["chr"],"align":["left"]},{"label":["us_territory_work"],"name":[72],"type":["chr"],"align":["left"]}],"data":[{"1":"2019","2":"FALSE","3":"6-25","4":"FALSE","5":"TRUE","6":"Yes","7":"Yes","8":"Yes","9":"Yes","10":"Yes","11":"Very easy","12":"Same level of comfort for each","13":"Yes","14":"TRUE","15":"I have discussed both anxiety and ADHD with my boss in some detail. He is very supportive.\\xca","16":"Yes","17":"TRUE","18":"I have discussed anxiety and ADHD issues with my coworkers. As a mental health / substance use disorder treatment practice, we tend to be relatively open on the subject.\\xca","19":"TRUE","20":"Several coworkers have discussed anxiety and depression issues.\\xca","21":"10","22":"10","23":"TRUE","24":"FALSE","25":"Yes, they all did","26":"Yes, I was aware of all of them","27":"None did","28":"None did","29":"Sometimes","30":"Physical health","31":"No, none of my previous supervisors","32":"FALSE","33":"NA","34":"No, at none of my previous employers","35":"FALSE","36":"NA","37":"FALSE","38":"NA","39":"5","40":"0","41":"Possibly","42":"NA","43":"Yes","44":"TRUE","45":"No","46":"Rarely","47":"Often","48":"No","49":"10","50":"Yes","51":"My eyesight, in particular, is extremely relevant to my workflow. Treatment of that has been a top priority.\\xca","52":"No","53":"I wod want to see how it is handled within the organization first.\\xca","54":"TRUE","55":"FALSE","56":"NA","57":"5","58":"Yes, I experienced","59":"I was illegally terminated from employment over anxiety issues","60":"Yes, I experienced","61":"NA","62":"1","63":"End the \"Bro\" culture.\\xca","64":"No\\xca","65":"TRUE","66":"52","67":"Male","68":"United States of America","69":"Tennessee","70":"White","71":"United States of America","72":"Tennessee"},{"1":"2019","2":"FALSE","3":"100-500","4":"TRUE","5":"TRUE","6":"I don't know","7":"No","8":"No","9":"No","10":"I don't know","11":"Somewhat easy","12":"Physical health","13":"Yes","14":"FALSE","15":"NA","16":"Maybe","17":"FALSE","18":"NA","19":"FALSE","20":"NA","21":"4","22":"0","23":"TRUE","24":"TRUE","25":"No, none did","26":"N/A (none offered)","27":"None did","28":"None did","29":"I don't know","30":"Physical health","31":"I don't know","32":"FALSE","33":"NA","34":"At some of my previous employers","35":"FALSE","36":"NA","37":"FALSE","38":"NA","39":"1","40":"0","41":"Don't Know","42":"NA","43":"No","44":"FALSE","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"N/A","49":"3","50":"Yes","51":"NA","52":"No","53":"NA","54":"FALSE","55":"NA","56":"NA","57":"4","58":"Yes, I observed","59":"NA","60":"Maybe/Not sure","61":"NA","62":"3","63":"Talk more opening and remove some of the stigma behind it.","64":"NA","65":"FALSE","66":"27","67":"Male","68":"United States of America","69":"Illinois","70":"White","71":"United States of America","72":"Illinois"},{"1":"2021","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"NA","24":"NA","25":"NA","26":"NA","27":"NA","28":"NA","29":"NA","30":"NA","31":"NA","32":"NA","33":"NA","34":"NA","35":"NA","36":"NA","37":"NA","38":"NA","39":"NA","40":"NA","41":"NA","42":"NA","43":"NA","44":"NA","45":"NA","46":"NA","47":"NA","48":"NA","49":"NA","50":"NA","51":"NA","52":"NA","53":"NA","54":"NA","55":"NA","56":"NA","57":"NA","58":"NA","59":"NA","60":"NA","61":"NA","62":"NA","63":"4. Provide/ link to resources to manage mental health","64":"NA","65":"NA","66":"NA","67":"NA","68":"NA","69":"NA","70":"NA","71":"NA","72":"NA"},{"1":"2019","2":"TRUE","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"TRUE","24":"TRUE","25":"Some did","26":"No, I only became aware later","27":"Some did","28":"Some did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"FALSE","33":"NA","34":"At some of my previous employers","35":"FALSE","36":"NA","37":"TRUE","38":"Coworker talked to me about depression. He thought his depression was impacting his work and wanted me to know.","39":"7","40":"3","41":"No","42":"NA","43":"No","44":"FALSE","45":"I don't know","46":"Not applicable to me","47":"Not applicable to me","48":"N/A","49":"6","50":"Maybe","51":"Not all physical health issues need to be discussed. Also, I\\xd5m not convinced it wouldn\\xd5t be used against me.","52":"No","53":"Again, could be used against me","54":"FALSE","55":"NA","56":"NA","57":"3","58":"No","59":"NA","60":"Yes, I observed","61":"NA","62":"3","63":"I\\xd5ve seen too many burn out cases. This should be easily indentifiable by supervisors, and they should provide support.","64":"NA","65":"FALSE","66":"54","67":"Female","68":"Canada","69":"NA","70":"NA","71":"Canada","72":"NA"},{"1":"2021","2":"0","3":"6-25","4":"1","5":"1","6":"No","7":"N/A","8":"No","9":"No","10":"I don't know","11":"Very easy","12":"Same level of comfort for each","13":"Yes","14":"1","15":"I talked about the strees I was undergoing\\xca and that sometime I fear that the pressure would prevail. They were very concerned and asked me what was the cause and the situation was improved.","16":"Yes","17":"1","18":"NA","19":"0","20":"NA","21":"9","22":"9","23":"1","24":"1","25":"No, none did","26":"N/A (none offered)","27":"None did","28":"None did","29":"No","30":"Physical health","31":"Some of my previous supervisors","32":"1","33":"I was undergoing a lot of pressure from the emolyers to complete a poc. When confronted about the stress it provoked they didn't react and did nothing. I quit the job.","34":"No, at none of my previous employers","35":"0","36":"NA","37":"0","38":"NA","39":"8","40":"3","41":"Don't Know","42":"NA","43":"No","44":"0","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"No","49":"9","50":"Maybe","51":"It's important to be clear and show my stand","52":"Yes","53":"Mental helath is as important as physical health. If I'm not ok with mind neither would be my work.","54":"0","55":"NA","56":"NA","57":"6","58":"Yes, I experienced","59":"In my previous job the employer was not affected when confronted with facts supporting that indeed there was too much pressure","60":"Maybe/Not sure","61":"NA","62":"3","63":"It would be nice to have meters or a way to mesure the serenity and tranquillity. Also days reserved for the mental health breifing and self care workshops.","64":"NA","65":"0","66":"28","67":"male","68":"Italy","69":"NA","70":"NA","71":"Italy","72":"NA"},{"1":"2019","2":"TRUE","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"TRUE","24":"TRUE","25":"Some did","26":"No, I only became aware later","27":"None did","28":"None did","29":"Sometimes","30":"Physical health","31":"Some of my previous supervisors","32":"FALSE","33":"NA","34":"At some of my previous employers","35":"TRUE","36":"I told my coworker that I was going through depression and that he was very supportive of the medication that I was undertaking at that time.","37":"TRUE","38":"Did not speak of it clearly but left slight hints in the conversations we would have during lunch or short breaks","39":"2","40":"2","41":"No","42":"NA","43":"Yes","44":"TRUE","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"Yes","49":"6","50":"Maybe","51":"They may not take it positively and my chances of getting the job mey be hampered","52":"No","53":"Chances of getting the job may be hampered","54":"FALSE","55":"NA","56":"NA","57":"1","58":"Yes, I observed","59":"The person was layed off the company stating rubbish reasons","60":"No","61":"NA","62":"1","63":"Make sure that the person is not burdened with too much work and the expectations are set real while helping him grow in the desired field","64":"None","65":"FALSE","66":"25","67":"Female","68":"South Africa","69":"NA","70":"NA","71":"South Africa","72":"NA"},{"1":"2019","2":"TRUE","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"TRUE","24":"TRUE","25":"No, none did","26":"N/A (none offered)","27":"Some did","28":"Some did","29":"No","30":"Physical health","31":"Some of my previous supervisors","32":"TRUE","33":"not a formal conversation. more a 'how are you' with a colleague who happens to be in management position.","34":"At some of my previous employers","35":"FALSE","36":"NA","37":"TRUE","38":"can't remember in detail","39":"7","40":"5","41":"No","42":"NA","43":"No","44":"FALSE","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"No","49":"4","50":"Yes","51":"usually relatively simple to adjust to physical limitations with some tools.","52":"No","53":"most employers don't know how to handle such issues and mostly see obstacles and expect more sick time","54":"FALSE","55":"NA","56":"NA","57":"6","58":"No","59":"NA","60":"Yes, I observed","61":"NA","62":"2","63":"teach people how to recognise issues, how to respond and/or how to find the right person to help.","64":"NA","65":"TRUE","66":"37","67":"male","68":"Netherlands","69":"NA","70":"NA","71":"Netherlands","72":"NA"},{"1":"2019","2":"TRUE","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA","9":"NA","10":"NA","11":"NA","12":"NA","13":"NA","14":"NA","15":"NA","16":"NA","17":"NA","18":"NA","19":"NA","20":"NA","21":"NA","22":"NA","23":"TRUE","24":"TRUE","25":"I don't know","26":"N/A (was not aware)","27":"None did","28":"None did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"FALSE","33":"NA","34":"No, at none of my previous employers","35":"FALSE","36":"NA","37":"FALSE","38":"NA","39":"6","40":"6","41":"Don't Know","42":"NA","43":"No","44":"FALSE","45":"No","46":"Not applicable to me","47":"Not applicable to me","48":"No","49":"7","50":"No","51":"NA","52":"No","53":"NA","54":"FALSE","55":"NA","56":"NA","57":"2","58":"No","59":"NA","60":"No","61":"NA","62":"1","63":"NA","64":"NA","65":"FALSE","66":"38","67":"Male","68":"United Kingdom","69":"NA","70":"NA","71":"United Kingdom","72":"NA"},{"1":"2019","2":"FALSE","3":"More than 1000","4":"TRUE","5":"TRUE","6":"I don't know","7":"No","8":"Yes","9":"Yes","10":"I don't know","11":"I don't know","12":"Physical health","13":"No","14":"FALSE","15":"NA","16":"Yes","17":"TRUE","18":"I explained my issue to relate to them and help them not feel alone after they had brought up their issue.\\xca I feel it helped.","19":"TRUE","20":"They were struggling with anxiety and depression and expressed the difficulty they were having at work.","21":"8","22":"6","23":"TRUE","24":"FALSE","25":"Yes, they all did","26":"Yes, I was aware of all of them","27":"Some did","28":"Some did","29":"I don't know","30":"Physical health","31":"No, none of my previous supervisors","32":"TRUE","33":"I mentioned that I was struggling with depression.\\xca My boss changed the way he acted towards me and seemed to question my performance and effectiveness after that.\\xca That was the first and last time I brought that up at work.","34":"No, at none of my previous employers","35":"FALSE","36":"NA","37":"FALSE","38":"NA","39":"8","40":"5","41":"Yes","42":"Yes","43":"Yes","44":"TRUE","45":"I don't know","46":"Never","47":"Often","48":"No","49":"9","50":"No","51":"I would not want them to question my ability to do the job.\\xca I would not be interviewing for a job that I did not have the physical capability for, and beyond that, I don't feel it is relevant.","52":"No","53":"Same reason as not discussing physical issues.\\xca It's not relevant.\\xca I suppose it might be different if I needed special accommodations but with treatment, my issues are few and do not interfere with my work.","54":"FALSE","55":"NA","56":"NA","57":"7","58":"Yes, I experienced","59":"A previous boss had a terrible reaction.\\xca He started treating me so badly that I quit.","60":"No","61":"NA","62":"2","63":"Talk about it more.\\xca Have leadership share their issues to help de-stigmatize it.","64":"NA","65":"FALSE","66":"47","67":"Female","68":"United States of America","69":"North Carolina","70":"White","71":"United States of America","72":"North Carolina"},{"1":"2021","2":"0","3":"100-500","4":"1","5":"1","6":"Yes","7":"Yes","8":"No","9":"No","10":"I don't know","11":"Very easy","12":"Mental health","13":"Yes","14":"0","15":"NA","16":"Yes","17":"1","18":"Discussion of our individual diagnoses and experiences. Everyone I spoke with was open about their own struggles and respectful of mine","19":"1","20":"A coworker shared their experience with bipolar disorder","21":"8","22":"9","23":"1","24":"1","25":"Yes, they all did","26":"Yes, I was aware of all of them","27":"None did","28":"None did","29":"Sometimes","30":"Physical health","31":"No, none of my previous supervisors","32":"0","33":"NA","34":"No, at none of my previous employers","35":"0","36":"NA","37":"1","38":"discussed mental health after returning from maternity leave","39":"2","40":"0","41":"Yes","42":"Yes","43":"Yes","44":"1","45":"Yes","46":"Rarely","47":"Often","48":"Yes","49":"10","50":"No","51":"I don't consider it relevant","52":"No","53":"I don't consider it relevant","54":"0","55":"NA","56":"NA","57":"8","58":"Yes, I experienced","59":"I was told I did not have mental health issues","60":"Yes, I experienced","61":"NA","62":"1","63":"Acknowledge that mental health has to be a priority, make time and space for employees to seek treatment. Choose health plans that cover mental health and the less common prescriptions","64":"NA","65":"1","66":"42","67":"afab non-binary","68":"United States of America","69":"Texas","70":"White","71":"United States of America","72":"Texas"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
 </div>
-<p>As seen from the above table, there are 76 columns. After exploration, and based on my research question, these are the columns of interest:</p>
+<p>The raw consolidated file contains over 70 columns. After reviewing findings from past research and taking the present research question into consideration, the following are the variables of interest:</p>
 <ul>
 <li><p><strong>VARIABLE DIFFERENTIATING BETWEEN GROUPS</strong></p>
 <ul>
@@ -362,209 +352,157 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><strong>current_or_previous_employer_supportive:</strong> Have you observed or experienced a supportive or well handled response to a mental health issue in your current or previous workplace?</p></li>
 </ul></li>
 </ul>
-<p>Having stated the variables of interest, I will create a new dataframe containing only these variables.</p>
+<p>If it was not clear from the preview of the consolidated file, it still requires some additional preprocessing. These changes are easier to implement in R, can be found in the code chunk below and include steps such as treating inconsistent categorical columns. Once these changes are made, a summary of the resulting dataframe is created:</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new dataframe with columns of interest</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    year</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ,has_mental_disorder</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ,age</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    ,gender</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ,race</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ,family_history_mental_illness</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ,had_mental_disorder</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    ,sought_treatment</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    ,willingness_to_share_with_friends</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    ,tech_industry_supports_mh</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    ,number_of_employees</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    ,company_provides_mhcare</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    ,anonymity_protected_if_use_resources</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    ,easy_to_leave_for_mhcare</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_supervisor</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_coworkers_about_mh</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    ,employer_mh_importance</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    ,current_or_previous_employer_supportive</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>There are some columns with binary categories, however the format is not consistent. This is because the 2019 survey employed false/true responses, whereas the 2021 edition utilized 0/1. Therefore, this analysis will harmonize this column so that all such responses are numerical.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># converting columns of interest with inconsist binary code (false/true to 0/1)</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>sought_treatment <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>sought_treatment <span class="sc">==</span> <span class="st">"TRUE"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Then, we will start a first check of completeness of the data (i.e., how many missing values are there?).</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualize missing values</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_fct</span>(<span class="at">x =</span> df, <span class="at">fct =</span> year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="FinalPart1_MiguelCuriel_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>As we can see, there is quite some degree of incompleteness. For the sake of simplicity, I will simply drop any rows and any columns with missing values.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># subset the data frame to remove rows with missing values</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">complete.cases</span>(df),]</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># subset the data frame to remove columns with missing values</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[,<span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">==</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Now I will generate a visualization to assess whether the previous code worked or not.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#visualize missing values</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_fct</span>(<span class="at">x =</span> df, <span class="at">fct =</span> year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="FinalPart1_MiguelCuriel_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>As seen from the graphic above, there are no longer null values. This leaves the following data points for each year:</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-2019 2021 
- 181   45 </code></pre>
-</div>
-</div>
-<p>From exploring the variables of interest, I found that gender was an open-text field, meaning that respondents could answer whichever gender they desired. Again, for the sake of simplicity, I will re-code it so that we only have the categories: “male”, “female”, and “other”.</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"female"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Female"</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    ,<span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"male"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Male"</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                           ,<span class="st">"Other"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Lastly, this is a summary of the resulting dataframe:</p>
-<div class="cell">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dfSummary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># treating inconsistent binary code in column(s) of interest</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>sought_treatment <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>sought_treatment <span class="sc">==</span> <span class="st">"TRUE"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># treating inconsistent gender naming conventions</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"female"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Female"</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                    ,<span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"male"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Male"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                           ,<span class="st">"Other"</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># create new dataframe with columns of interest</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    year</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    ,has_mental_disorder</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    ,age</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    ,gender</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    ,race</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    ,family_history_mental_illness</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    ,had_mental_disorder</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    ,sought_treatment</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    ,willingness_to_share_with_friends</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    ,tech_industry_supports_mh</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    ,number_of_employees</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    ,company_provides_mhcare</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    ,anonymity_protected_if_use_resources</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    ,easy_to_leave_for_mhcare</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_supervisor</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_coworkers_about_mh</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ,employer_mh_importance</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    ,current_or_previous_employer_supportive</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># remove rows with missing values</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">complete.cases</span>(df),]</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns with missing values</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[,<span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">==</span> <span class="dv">0</span>]</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize resulting dataframe</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dfSummary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Data Frame Summary  
 df  
-Dimensions: 226 x 18  
+Dimensions: 228 x 18  
 Duplicates: 0  
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 No   Variable                                    Stats / Values                 Freqs (% of Valid)   Graph                 Valid      Missing  
 ---- ------------------------------------------- ------------------------------ -------------------- --------------------- ---------- ---------
-1    year                                        Min  : 2019                    2019 : 181 (80.1%)   IIIIIIIIIIIIIIII      226        0        
-     [numeric]                                   Mean : 2019.4                  2021 :  45 (19.9%)   III                   (100.0%)   (0.0%)   
+1    year                                        Min  : 2019                    2019 : 182 (79.8%)   IIIIIIIIIIIIIII       228        0        
+     [numeric]                                   Mean : 2019.4                  2021 :  46 (20.2%)   IIII                  (100.0%)   (0.0%)   
                                                  Max  : 2021                                                                                   
 
-2    has_mental_disorder                         1. Don't Know                   12 ( 5.3%)          I                     226        0        
-     [character]                                 2. No                           50 (22.1%)          IIII                  (100.0%)   (0.0%)   
-                                                 3. Possibly                     41 (18.1%)          III                                       
-                                                 4. Yes                         123 (54.4%)          IIIIIIIIII                                
+2    has_mental_disorder                         1. Don't Know                   12 ( 5.3%)          I                     228        0        
+     [character]                                 2. No                           50 (21.9%)          IIII                  (100.0%)   (0.0%)   
+                                                 3. Possibly                     41 (18.0%)          III                                       
+                                                 4. Yes                         125 (54.8%)          IIIIIIIIII                                
 
-3    age                                         Mean (sd) : 34.9 (8.7)         39 distinct values           : .           226        0        
-     [numeric]                                   min &lt; med &lt; max:                                            : : .         (100.0%)   (0.0%)   
-                                                 0 &lt; 34 &lt; 63                                                 : : :                             
-                                                 IQR (CV) : 12 (0.2)                                       : : : : .                           
-                                                                                                           : : : : : :                         
+3    age                                         Mean (sd) : 35.8 (15.2)        40 distinct values     :                   228        0        
+     [numeric]                                   min &lt; med &lt; max:                                      :                   (100.0%)   (0.0%)   
+                                                 0 &lt; 34 &lt; 223                                          :                                       
+                                                 IQR (CV) : 12 (0.4)                                   :                                       
+                                                                                                     . : :                                     
 
-4    gender                                      1. Female                       68 (30.1%)          IIIIII                226        0        
-     [character]                                 2. Male                        121 (53.5%)          IIIIIIIIII            (100.0%)   (0.0%)   
-                                                 3. Other                        37 (16.4%)          III                                       
+4    gender                                      1. Female                       68 (29.8%)          IIIII                 228        0        
+     [character]                                 2. Male                        121 (53.1%)          IIIIIIIIII            (100.0%)   (0.0%)   
+                                                 3. Other                        39 (17.1%)          III                                       
 
-5    race                                        1. Asian                        18 ( 8.0%)          I                     226        0        
+5    race                                        1. Asian                        18 ( 7.9%)          I                     228        0        
      [character]                                 2. Black or African American     4 ( 1.8%)                                (100.0%)   (0.0%)   
                                                  3. Caucasian                     1 ( 0.4%)                                                    
                                                  4. Hispanic                      1 ( 0.4%)                                                    
                                                  5. I prefer not to answer        5 ( 2.2%)                                                    
-                                                 6. More than one of the abov     9 ( 4.0%)                                                    
-                                                 7. White                       187 (82.7%)          IIIIIIIIIIIIIIII                          
+                                                 6. More than one of the abov     9 ( 3.9%)                                                    
+                                                 7. White                       189 (82.9%)          IIIIIIIIIIIIIIII                          
                                                  8. White Hispanic                1 ( 0.4%)                                                    
 
-6    family_history_mental_illness               1. I don't know                 51 (22.6%)          IIII                  226        0        
-     [character]                                 2. No                           44 (19.5%)          III                   (100.0%)   (0.0%)   
-                                                 3. Yes                         131 (58.0%)          IIIIIIIIIII                               
+6    family_history_mental_illness               1. I don't know                 51 (22.4%)          IIII                  228        0        
+     [character]                                 2. No                           44 (19.3%)          III                   (100.0%)   (0.0%)   
+                                                 3. Yes                         133 (58.3%)          IIIIIIIIIII                               
 
-7    had_mental_disorder                         1. Don't Know                   13 ( 5.8%)          I                     226        0        
-     [character]                                 2. No                           54 (23.9%)          IIII                  (100.0%)   (0.0%)   
-                                                 3. Possibly                     36 (15.9%)          III                                       
-                                                 4. Yes                         123 (54.4%)          IIIIIIIIII                                
+7    had_mental_disorder                         1. Don't Know                   13 ( 5.7%)          I                     228        0        
+     [character]                                 2. No                           54 (23.7%)          IIII                  (100.0%)   (0.0%)   
+                                                 3. Possibly                     36 (15.8%)          III                                       
+                                                 4. Yes                         125 (54.8%)          IIIIIIIIII                                
 
-8    sought_treatment                            Min  : 0                       0 :  96 (42.5%)      IIIIIIII              226        0        
-     [numeric]                                   Mean : 0.6                     1 : 130 (57.5%)      IIIIIIIIIII           (100.0%)   (0.0%)   
+8    sought_treatment                            Min  : 0                       0 :  97 (42.5%)      IIIIIIII              228        0        
+     [numeric]                                   Mean : 0.6                     1 : 131 (57.5%)      IIIIIIIIIII           (100.0%)   (0.0%)   
                                                  Max  : 1                                                                                      
 
-9    willingness_to_share_with_friends           Mean (sd) : 6.7 (2.8)          11 distinct values                     :   226        0        
+9    willingness_to_share_with_friends           Mean (sd) : 6.6 (2.8)          11 distinct values                     :   228        0        
      [numeric]                                   min &lt; med &lt; max:                                                . .   :   (100.0%)   (0.0%)   
                                                  0 &lt; 7 &lt; 10                                                  :   : : . :                       
                                                  IQR (CV) : 4 (0.4)                                  . .     : : : : : :                       
                                                                                                      : : : : : : : : : :                       
 
-10   tech_industry_supports_mh                   Mean (sd) : 2.6 (0.9)          1 : 31 (13.7%)       II                    226        0        
-     [numeric]                                   min &lt; med &lt; max:               2 : 63 (27.9%)       IIIII                 (100.0%)   (0.0%)   
-                                                 1 &lt; 3 &lt; 5                      3 : 92 (40.7%)       IIIIIIII                                  
-                                                 IQR (CV) : 1 (0.4)             4 : 38 (16.8%)       III                                       
+10   tech_industry_supports_mh                   Mean (sd) : 2.6 (1)            1 : 32 (14.0%)       II                    228        0        
+     [numeric]                                   min &lt; med &lt; max:               2 : 63 (27.6%)       IIIII                 (100.0%)   (0.0%)   
+                                                 1 &lt; 3 &lt; 5                      3 : 93 (40.8%)       IIIIIIII                                  
+                                                 IQR (CV) : 1 (0.4)             4 : 38 (16.7%)       III                                       
                                                                                 5 :  2 ( 0.9%)                                                 
 
-11   number_of_employees                         1. 1-5                          4 ( 1.8%)                                 226        0        
-     [character]                                 2. 100-500                     51 (22.6%)           IIII                  (100.0%)   (0.0%)   
-                                                 3. 26-100                      37 (16.4%)           III                                       
-                                                 4. 500-1000                    19 ( 8.4%)           I                                         
-                                                 5. 6-25                        25 (11.1%)           II                                        
-                                                 6. More than 1000              90 (39.8%)           IIIIIII                                   
+11   number_of_employees                         1. 1-5                          5 ( 2.2%)                                 228        0        
+     [character]                                 2. 100-500                     51 (22.4%)           IIII                  (100.0%)   (0.0%)   
+                                                 3. 26-100                      37 (16.2%)           III                                       
+                                                 4. 500-1000                    19 ( 8.3%)           I                                         
+                                                 5. 6-25                        25 (11.0%)           II                                        
+                                                 6. More than 1000              91 (39.9%)           IIIIIII                                   
 
-12   company_provides_mhcare                     1. I don't know                 63 (27.9%)          IIIII                 226        0        
-     [character]                                 2. No                           11 ( 4.9%)                                (100.0%)   (0.0%)   
+12   company_provides_mhcare                     1. I don't know                 63 (27.6%)          IIIII                 228        0        
+     [character]                                 2. No                           11 ( 4.8%)                                (100.0%)   (0.0%)   
                                                  3. Not eligible for coverage     7 ( 3.1%)                                                    
-                                                 4. Yes                         145 (64.2%)          IIIIIIIIIIII                              
+                                                 4. Yes                         147 (64.5%)          IIIIIIIIIIII                              
 
-13   anonymity_protected_if_use_resources        1. I don't know                135 (59.7%)          IIIIIIIIIII           226        0        
+13   anonymity_protected_if_use_resources        1. I don't know                135 (59.2%)          IIIIIIIIIII           228        0        
      [character]                                 2. No                            5 ( 2.2%)                                (100.0%)   (0.0%)   
-                                                 3. Yes                          86 (38.1%)          IIIIIII                                   
+                                                 3. Yes                          88 (38.6%)          IIIIIII                                   
 
-14   easy_to_leave_for_mhcare                    1. Difficult                   19 ( 8.4%)           I                     226        0        
-     [character]                                 2. I don't know                43 (19.0%)           III                   (100.0%)   (0.0%)   
-                                                 3. Neither easy nor difficul   24 (10.6%)           II                                        
-                                                 4. Somewhat difficult          35 (15.5%)           III                                       
-                                                 5. Somewhat easy               57 (25.2%)           IIIII                                     
-                                                 6. Very easy                   48 (21.2%)           IIII                                      
+14   easy_to_leave_for_mhcare                    1. Difficult                   19 ( 8.3%)           I                     228        0        
+     [character]                                 2. I don't know                43 (18.9%)           III                   (100.0%)   (0.0%)   
+                                                 3. Neither easy nor difficul   24 (10.5%)           II                                        
+                                                 4. Somewhat difficult          35 (15.4%)           III                                       
+                                                 5. Somewhat easy               58 (25.4%)           IIIII                                     
+                                                 6. Very easy                   49 (21.5%)           IIII                                      
 
-15   comfortable_talking_to_supervisor           1. Maybe                       75 (33.2%)           IIIIII                226        0        
-     [character]                                 2. No                          64 (28.3%)           IIIII                 (100.0%)   (0.0%)   
-                                                 3. Yes                         87 (38.5%)           IIIIIII                                   
+15   comfortable_talking_to_supervisor           1. Maybe                       75 (32.9%)           IIIIII                228        0        
+     [character]                                 2. No                          64 (28.1%)           IIIII                 (100.0%)   (0.0%)   
+                                                 3. Yes                         89 (39.0%)           IIIIIII                                   
 
-16   comfortable_talking_to_coworkers_about_mh   1. Maybe                       97 (42.9%)           IIIIIIII              226        0        
-     [character]                                 2. No                          60 (26.5%)           IIIII                 (100.0%)   (0.0%)   
-                                                 3. Yes                         69 (30.5%)           IIIIII                                    
+16   comfortable_talking_to_coworkers_about_mh   1. Maybe                       97 (42.5%)           IIIIIIII              228        0        
+     [character]                                 2. No                          60 (26.3%)           IIIII                 (100.0%)   (0.0%)   
+                                                 3. Yes                         71 (31.1%)           IIIIII                                    
 
-17   employer_mh_importance                      Mean (sd) : 5 (2.6)            11 distinct values           :             226        0        
+17   employer_mh_importance                      Mean (sd) : 5 (2.6)            11 distinct values           :             228        0        
      [numeric]                                   min &lt; med &lt; max:                                            :             (100.0%)   (0.0%)   
-                                                 0 &lt; 5 &lt; 10                                          .   .   :   . .                           
+                                                 0 &lt; 5 &lt; 10                                          .       :   .                             
                                                  IQR (CV) : 4 (0.5)                                  : . : . : : : :                           
-                                                                                                     : : : : : : : : : :                       
+                                                                                                     : : : : : : : : . :                       
 
-18   current_or_previous_employer_supportive     1. Maybe/Not sure              54 (23.9%)           IIII                  226        0        
-     [character]                                 2. No                          85 (37.6%)           IIIIIII               (100.0%)   (0.0%)   
-                                                 3. Yes, I experienced          59 (26.1%)           IIIII                                     
-                                                 4. Yes, I observed             28 (12.4%)           II                                        
+18   current_or_previous_employer_supportive     1. Maybe/Not sure              54 (23.7%)           IIII                  228        0        
+     [character]                                 2. No                          86 (37.7%)           IIIIIII               (100.0%)   (0.0%)   
+                                                 3. Yes, I experienced          60 (26.3%)           IIIII                                     
+                                                 4. Yes, I observed             28 (12.3%)           II                                        
 -----------------------------------------------------------------------------------------------------------------------------------------------</code></pre>
 </div>
 </div>
-<p>At this point, it is worth noting that there are no null values, categories have been properly treated so there are no typos nor significant outliers, therefore the data should be ready for further analysis and visualizations.</p>
+<p>At this point, the dataset has no null values and categorical variables have been harmonized, therefore the data should be ready for further analysis and visualizations.</p>
 
 
 <!-- -->
@@ -893,265 +831,222 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "The Pandemic's Toll on Mental Health: A Look at the Tech Sector"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Miguel Curiel"</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final Project Check In 1"</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/21/2023"</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - mental health</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - tech industry</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">  - covid-19</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">  - layoffs</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Question</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>The technology industry - aka tech - has been one of the highest employers in the twenty-first century. Not only that, but it has been praised for having some of the happiest workers<span class="ot">[^1]</span> <span class="ot">[^2]</span>.</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>Fox, M. (2016, November 11). *Why Are Tech Workers So Satisfied With Their Jobs?* Retrieved March 17, 2023, from https://www.forbes.com/sites/meimeifox/2016/11/11/why-are-tech-workers-so-satisfied-with-their-jobs/?sh=4eac1918a059</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="ot">[^2]: </span>Wronski, L., &amp; Cohen, J. (2019, November 4). *This is the industry sector that has some of the happiest workers in America*. Retrieved March 17, 2023, from https://www.cnbc.com/2019/11/04/this-is-the-industry-that-has-some-of-the-happiness-workers-in-america.html</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>But, what has made this industry so appealing? A case study on Google published in the International Journal of Corporate Social Responsibility in 2017<span class="ot">[^3]</span> points to several elements that make high-tech unique, such as having a distinct culture proposition, aligning individual behaviors to company-wide goals, having managers be coaches rather than bosses, and being able to interact with people from other cultures.</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3]: </span>Kim, K. T. (2017). GOOGLE: A reflection of culture, leader, and management. *International Journal of Corporate Social Responsibility*, *2*(10). https://doi.org/10.1186/s40991-017-0021-0</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>Evidently, Google is one-in-a-million high-tech company, but there are certainly commonalities shared with smaller new tech (startup) companies. Culture Amp, a company focused on surveying employees in startups, elaborated an analysis based on their results from 2015-2020 surveys<span class="ot">[^4]</span> and mention that elements such as an open and honest two-way communication, workplace flexibility, and fair division of workload, are what make new tech companies valued.</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="ot">[^4]: </span>McPherson, J. (n.d.). *Tech company cultures are not all the same*. Culture Amp. Retrieved March 17, 2023, from https://www.cultureamp.com/blog/tech-company-culture</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>However, the previous data omits the downsides of such cultures. Besides the multiple blog posts and news articles one can find talking about burnout<span class="ot">[^5]</span>, the darker side of tech also includes (but is not limited to) ageism<span class="ot">[^6]</span>, gender inequality<span class="ot">[^7]</span> <span class="ot">[^8]</span>, and even migration issues<span class="ot">[^9]</span> <span class="ot">[^10]</span>.</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="ot">[^5]: </span>Goncharov, A. (2023, March 13). *How I burnt out in FAANG, but my job was not the problem*. Blog.Goncharov.ai. Retrieved March 17, 2023, from https://blog.goncharov.ai/how-i-burnt-out-in-faang-but-my-job-was-not-the-problem</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="ot">[^6]: </span>Rosales, A., &amp; Jakob, S. (2021). Perceptions of age in contemporary tech. *Sciendo*, *42*(1), 79-91. https://doi.org/10.2478/nor-2021-0021</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="ot">[^7]: </span>Mickey, E. L. (2021). The Organization of Networking and Gender Inequality in the New Economy: Evidence from the Tech Industry. *Work &amp; Occupations*, *49*(4), 383-420. https://doi.org/10.1177/07308884221102134</span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="ot">[^8]: </span>Hardey, M. (2020). *The Culture of Women in Tech : An Unsuitable Job for a Woman* (1st ed.). Emerald Publishing.</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="ot">[^9]: </span>Banerjee, P., &amp; Rincón, L. (2019). Trouble in Tech Paradise. *Journal of Water Resources Planning &amp; Management*, *145*(4), 24-29. https://doi.org/10.1177/1536504219854714</span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="ot">[^10]: </span>Matloff, N. (2013). Immigration and the tech industry: As a labour shortage remedy, for innovation, or for cost savings? *Migration Letters*, *10*(2), 210-227. ISSN: 1741-8984 Online ISSN: 1741-8992</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>Further, layoffs by the thousands, plummeting stock prices, and generalized revaluation of an entire industry's value, are just few words that can describe what has happened to tech in 2022 and 2023. An industry that once employed over 5 million people in the US alone<span class="ot">[^11]</span> and had nearly 700 billion dollars in funding worldwide<span class="ot">[^12]</span> has now laid off over 300 thousand people<span class="ot">[^13]</span> and nearly halved in funding.</span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11]: </span>The United States Bureau of Labor and Statistics via CompTIA (2023, March 3). *Cyberstates 2021: The Definitive Guide to the Tech Industry and Workforce*. Retrieved March 17, 2023, from https://www.comptia.org/content/tech-jobs-report</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="ot">[^12]: </span>Crunchbase News. (2023, January 5). *Global VC Funding on a Slide since Q4 2022*. Retrieved March 17, 2023, from https://news.crunchbase.com/venture/global-vc-funding-slide-q4-2022</span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="ot">[^13]: </span>Layoffs.fyi. (n.d.). *Layoffs.fyi - Tracking all tech startup layoffs since COVID-19*. https://layoffs.fyi</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>|                                                    |                                                                  |</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>|--------------------------------|----------------------------------------|</span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>| *Figure 1. Tech layoffs worldwide since COVID-19.* | *Figure 2. Funding in the tech industry from 2013 through 2022.* |</span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>| <span class="al">![](images/image-1529229520.png)</span>{width="386"}      | <span class="al">![](images/image-1835681984.png)</span>{width="304"}                    |</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>In its heights, being a highly competitive industry, it is reasonable to state that mental health was at risk to begin with, but with the recent events unfolding: has the mental health of people working in the tech industry gotten worse? Specifically, the proposed research question is:</span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**What is the impact of the COVID-19 pandemic on the mental health of workers in the technology industry as measured by pre- and post-pandemic surveys, and what are the factors associated with any observed changes?**</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hypothesis</span></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>A survey lead by Blind in 2021<span class="ot">[^14]</span> found that, out of 2400 workers in tech, 64% said their mental health is worse after the pandemic. However, this is an after-the-fact study (i.e., it does not have a baseline to compare with), therefore the present analysis aims to further expand on this idea and use an evidence-based approach to determine whether there is a significant change or not.</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="ot">[^14]: </span>Blind (2021, January 29). *Deteriorating Mental Health In The Workplace*. Retrieved March 17, 2023, from https://www.teamblind.com/blog/index.php/2021/01/29/deteriorating-mental-health-in-the-workplace/</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>Based on the previous statement, and on the research question, these are the hypotheses that come to mind:</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>H1: The COVID-19 pandemic has had a negative impact on the mental health of workers in the technology industry, as measured by pre- and post-pandemic surveys.</span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>H2: The magnitude of this impact will by moderated by demographic factors such as age, gender, as well as past experiences with mental illness such as family history and previous treatments. These will act as gatekeepers for this impact.</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>H3: Company information such as number of employees and policies with regards to mental health care will act as mediators. These will buffer or amplify the effects of the pandemic and layoffs on mental health.</span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a><span class="fu"># Descriptive Statistics</span></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>To prove whether the COVID pandemic has significantly impacted the mental health of workers in tech, I will rely on data provided by the Open Sourcing Mental Health (OSMH), specifically using their Mental Health in Tech Survey.</span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>OSMH<span class="ot">[^15]</span> is a non-profit dedicated to raising awareness, educating, and providing resources to support mental wellness in the tech and open source communities. It began operations in 2013 and since 2014 it has conducted and published an annual or bi-annual survey analyzing several mental health indicators.</span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="ot">[^15]: </span>Open Sourcing Mental Health (n.d.). *About OSMH*. Retrieved March 18, 2023, from https://osmhhelp.org/about/about-osmi.html</span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>As of March 18, 2023, the 2022 survey has not yet been published. Therefore, this analysis compares the 2019 Mental Health in Tech Survey against the 2021 edition. Both are publicly available on Kaggle under a Creative Commons-ShareAlike 4.0 International license:</span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="ot">&lt;https://www.kaggle.com/datasets/osmihelp/osmi-mental-health-in-tech-survey-2019&gt;</span></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="ot">&lt;https://www.kaggle.com/datasets/osmihelp/osmh-2021-mental-health-in-tech-survey-results&gt;</span></span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>Given the size of the data, both files were appended using Microsoft Excel and were then exported to a CSV file. Also, there was not a 100% match between columns in both files, and some re-coding had to be implemented so data can be properly processed. These are the actions made to consolidate the data files:</span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>A "year" column was added to differentiate between both files.</span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Data pertaining to insurance information (e.g., "Does you company provide a mental health insurance plan?") was removed because in the 2019 it was optional and was, therefore, almost entirely blank.</span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Both files contained columns pertaining to the mental disorder each respondent may or may not have. However, these columns were inconsistent and could not be interpreted without making assumptions which may lead to an incorrect interpretation of the data. For that reason, these columns were removed.</span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The raw data files followed a title case naming convention (e.g., "Does your employer provide mental health resources?"). All column names were changed to a snake_case format (e.g., "employer_provides_mental_health_resources").</span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The rest of the columns and data therein contained is left as is.</span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>With the above changes implemented in the consolidation, the data will look as follows:</span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a><span class="co"># load neccesary packages</span></span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># used for elementary data wrangling and visualization</span></span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar) <span class="co"># used for missing values visualization</span></span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(summarytools) <span class="co"># used for summary visualization</span></span>
-<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dataMaid)</span>
-<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a><span class="co"># temporarily set working directory to read in data</span></span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/Users/macuriels/Documents/Umass/umass_dacss_quantitativeanalysis/posts/_data"</span>)</span>
-<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a><span class="co"># 2019 and 2021 data</span></span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"mhit.csv"</span>)</span>
-<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(df[<span class="fu">sample</span>(<span class="fu">nrow</span>(df), <span class="dv">5</span>), ])</span>
-<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>As seen from the above table, there are 76 columns. After exploration, and based on my research question, these are the columns of interest:</span>
-<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**VARIABLE DIFFERENTIATING BETWEEN GROUPS**</span>
-<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**year:** Column added to differentiate between the year of the survey (2019 or 2021).</span>
-<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**DEPENDENT VARIABLE**</span>
-<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**has_mental_disorder:** Do you currently have a mental health disorder?</span>
-<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-147"><a href="#cb14-147" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**INDEPENDENT VARIABLES**</span>
-<span id="cb14-148"><a href="#cb14-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-149"><a href="#cb14-149" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**age:** What is your age?</span>
-<span id="cb14-150"><a href="#cb14-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-151"><a href="#cb14-151" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**gender:** What is your gender?</span>
-<span id="cb14-152"><a href="#cb14-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-153"><a href="#cb14-153" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**race:** What is your race?</span>
-<span id="cb14-154"><a href="#cb14-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-155"><a href="#cb14-155" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**family_history_mental_illness:** Do you have a family history of mental illness?</span>
-<span id="cb14-156"><a href="#cb14-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-157"><a href="#cb14-157" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**had_mental_disorder:** Have you had a mental health disorder in the past?</span>
-<span id="cb14-158"><a href="#cb14-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-159"><a href="#cb14-159" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**sought_treatment:** Have you ever sought treatment for a mental health disorder from a mental health professional?</span>
-<span id="cb14-160"><a href="#cb14-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-161"><a href="#cb14-161" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**willingness_to_share_with_friends:** How willing would you be to share with friends and family that you have a mental illness?</span>
-<span id="cb14-162"><a href="#cb14-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-163"><a href="#cb14-163" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**tech_industry_supports_mh:** Overall, how well do you think the tech industry supports employees with mental health issues?</span>
-<span id="cb14-164"><a href="#cb14-164" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-165"><a href="#cb14-165" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**number_of_employees:** How many employees does your company or organization have?</span>
-<span id="cb14-166"><a href="#cb14-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-167"><a href="#cb14-167" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**company_provides_mhcare:** Does your employer provide mental health benefits as part of healthcare coverage?</span>
-<span id="cb14-168"><a href="#cb14-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-169"><a href="#cb14-169" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**anonymity_protected_if_use_resources:** Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?</span>
-<span id="cb14-170"><a href="#cb14-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-171"><a href="#cb14-171" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**easy_to_leave_for_mhcare:** If a mental health issue prompted you to request a medical leave from work, how easy or difficult would it be to ask for that leave?</span>
-<span id="cb14-172"><a href="#cb14-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-173"><a href="#cb14-173" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**comfortable_talking_to_supervisor:** Would you feel comfortable discussing a mental health issue with your direct supervisor(s)?</span>
-<span id="cb14-174"><a href="#cb14-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-175"><a href="#cb14-175" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**comfortable_talking_to_coworkers_about_mh:** Would you feel comfortable discussing a mental health issue with your coworkers?</span>
-<span id="cb14-176"><a href="#cb14-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-177"><a href="#cb14-177" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**employer_mh_importance:** Overall, how much importance does your employer place on mental health?</span>
-<span id="cb14-178"><a href="#cb14-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-179"><a href="#cb14-179" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**current_or_previous_employer_supportive:** Have you observed or experienced a supportive or well handled response to a mental health issue in your current or previous workplace?</span>
-<span id="cb14-180"><a href="#cb14-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-181"><a href="#cb14-181" aria-hidden="true" tabindex="-1"></a>Having stated the variables of interest, I will create a new dataframe containing only these variables.</span>
-<span id="cb14-182"><a href="#cb14-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-183"><a href="#cb14-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-184"><a href="#cb14-184" aria-hidden="true" tabindex="-1"></a><span class="co"># create new dataframe with columns of interest</span></span>
-<span id="cb14-185"><a href="#cb14-185" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
-<span id="cb14-186"><a href="#cb14-186" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
-<span id="cb14-187"><a href="#cb14-187" aria-hidden="true" tabindex="-1"></a>    year</span>
-<span id="cb14-188"><a href="#cb14-188" aria-hidden="true" tabindex="-1"></a>    ,has_mental_disorder</span>
-<span id="cb14-189"><a href="#cb14-189" aria-hidden="true" tabindex="-1"></a>    ,age</span>
-<span id="cb14-190"><a href="#cb14-190" aria-hidden="true" tabindex="-1"></a>    ,gender</span>
-<span id="cb14-191"><a href="#cb14-191" aria-hidden="true" tabindex="-1"></a>    ,race</span>
-<span id="cb14-192"><a href="#cb14-192" aria-hidden="true" tabindex="-1"></a>    ,family_history_mental_illness</span>
-<span id="cb14-193"><a href="#cb14-193" aria-hidden="true" tabindex="-1"></a>    ,had_mental_disorder</span>
-<span id="cb14-194"><a href="#cb14-194" aria-hidden="true" tabindex="-1"></a>    ,sought_treatment</span>
-<span id="cb14-195"><a href="#cb14-195" aria-hidden="true" tabindex="-1"></a>    ,willingness_to_share_with_friends</span>
-<span id="cb14-196"><a href="#cb14-196" aria-hidden="true" tabindex="-1"></a>    ,tech_industry_supports_mh</span>
-<span id="cb14-197"><a href="#cb14-197" aria-hidden="true" tabindex="-1"></a>    ,number_of_employees</span>
-<span id="cb14-198"><a href="#cb14-198" aria-hidden="true" tabindex="-1"></a>    ,company_provides_mhcare</span>
-<span id="cb14-199"><a href="#cb14-199" aria-hidden="true" tabindex="-1"></a>    ,anonymity_protected_if_use_resources</span>
-<span id="cb14-200"><a href="#cb14-200" aria-hidden="true" tabindex="-1"></a>    ,easy_to_leave_for_mhcare</span>
-<span id="cb14-201"><a href="#cb14-201" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_supervisor</span>
-<span id="cb14-202"><a href="#cb14-202" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_coworkers_about_mh</span>
-<span id="cb14-203"><a href="#cb14-203" aria-hidden="true" tabindex="-1"></a>    ,employer_mh_importance</span>
-<span id="cb14-204"><a href="#cb14-204" aria-hidden="true" tabindex="-1"></a>    ,current_or_previous_employer_supportive</span>
-<span id="cb14-205"><a href="#cb14-205" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-206"><a href="#cb14-206" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-207"><a href="#cb14-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-208"><a href="#cb14-208" aria-hidden="true" tabindex="-1"></a>There are some columns with binary categories, however the format is not consistent. This is because the 2019 survey employed false/true responses, whereas the 2021 edition utilized 0/1. Therefore, this analysis will harmonize this column so that all such responses are numerical.</span>
-<span id="cb14-209"><a href="#cb14-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-210"><a href="#cb14-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-211"><a href="#cb14-211" aria-hidden="true" tabindex="-1"></a><span class="co"># converting columns of interest with inconsist binary code (false/true to 0/1)</span></span>
-<span id="cb14-212"><a href="#cb14-212" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>sought_treatment <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>sought_treatment <span class="sc">==</span> <span class="st">"TRUE"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb14-213"><a href="#cb14-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-214"><a href="#cb14-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-215"><a href="#cb14-215" aria-hidden="true" tabindex="-1"></a>Then, we will start a first check of completeness of the data (i.e., how many missing values are there?).</span>
-<span id="cb14-216"><a href="#cb14-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-217"><a href="#cb14-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-218"><a href="#cb14-218" aria-hidden="true" tabindex="-1"></a><span class="co">#visualize missing values</span></span>
-<span id="cb14-219"><a href="#cb14-219" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_fct</span>(<span class="at">x =</span> df, <span class="at">fct =</span> year)</span>
-<span id="cb14-220"><a href="#cb14-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-221"><a href="#cb14-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-222"><a href="#cb14-222" aria-hidden="true" tabindex="-1"></a>As we can see, there is quite some degree of incompleteness. For the sake of simplicity, I will simply drop any rows and any columns with missing values.</span>
-<span id="cb14-223"><a href="#cb14-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-224"><a href="#cb14-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-225"><a href="#cb14-225" aria-hidden="true" tabindex="-1"></a><span class="co"># subset the data frame to remove rows with missing values</span></span>
-<span id="cb14-226"><a href="#cb14-226" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">complete.cases</span>(df),]</span>
-<span id="cb14-227"><a href="#cb14-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-228"><a href="#cb14-228" aria-hidden="true" tabindex="-1"></a><span class="co"># subset the data frame to remove columns with missing values</span></span>
-<span id="cb14-229"><a href="#cb14-229" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[,<span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">==</span> <span class="dv">0</span>]</span>
-<span id="cb14-230"><a href="#cb14-230" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-231"><a href="#cb14-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-232"><a href="#cb14-232" aria-hidden="true" tabindex="-1"></a>Now I will generate a visualization to assess whether the previous code worked or not.</span>
-<span id="cb14-233"><a href="#cb14-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-234"><a href="#cb14-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-235"><a href="#cb14-235" aria-hidden="true" tabindex="-1"></a><span class="co">#visualize missing values</span></span>
-<span id="cb14-236"><a href="#cb14-236" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_fct</span>(<span class="at">x =</span> df, <span class="at">fct =</span> year)</span>
-<span id="cb14-237"><a href="#cb14-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-238"><a href="#cb14-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-239"><a href="#cb14-239" aria-hidden="true" tabindex="-1"></a>As seen from the graphic above, there are no longer null values. This leaves the following data points for each year:</span>
-<span id="cb14-240"><a href="#cb14-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-241"><a href="#cb14-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-242"><a href="#cb14-242" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>year)</span>
-<span id="cb14-243"><a href="#cb14-243" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-244"><a href="#cb14-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-245"><a href="#cb14-245" aria-hidden="true" tabindex="-1"></a>From exploring the variables of interest, I found that gender was an open-text field, meaning that respondents could answer whichever gender they desired. Again, for the sake of simplicity, I will re-code it so that we only have the categories: "male", "female", and "other".</span>
-<span id="cb14-246"><a href="#cb14-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-247"><a href="#cb14-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-248"><a href="#cb14-248" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"female"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Female"</span> </span>
-<span id="cb14-249"><a href="#cb14-249" aria-hidden="true" tabindex="-1"></a>                    ,<span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"male"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Male"</span></span>
-<span id="cb14-250"><a href="#cb14-250" aria-hidden="true" tabindex="-1"></a>                           ,<span class="st">"Other"</span>))</span>
-<span id="cb14-251"><a href="#cb14-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-252"><a href="#cb14-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-253"><a href="#cb14-253" aria-hidden="true" tabindex="-1"></a>Lastly, this is a summary of the resulting dataframe:</span>
-<span id="cb14-254"><a href="#cb14-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-255"><a href="#cb14-255" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
-<span id="cb14-256"><a href="#cb14-256" aria-hidden="true" tabindex="-1"></a><span class="fu">dfSummary</span>(df)</span>
-<span id="cb14-257"><a href="#cb14-257" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-258"><a href="#cb14-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-259"><a href="#cb14-259" aria-hidden="true" tabindex="-1"></a>At this point, it is worth noting that there are no null values, categories have been properly treated so there are no typos nor significant outliers, therefore the data should be ready for further analysis and visualizations.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "The Pandemic's Toll on Mental Health: A Look at the Tech Sector"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Miguel Curiel"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final Project Check In 1"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/21/2023"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - mental health</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - tech industry</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">  - covid-19</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">  - layoffs</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Question</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>The technology industry - aka tech - has been one of the highest employers in the twenty-first century. Not only that, but it has been praised for having some of the happiest workers<span class="ot">[^1]</span> <span class="ot">[^2]</span>.</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>Fox, M. (2016, November 11). *Why Are Tech Workers So Satisfied With Their Jobs?* Retrieved March 17, 2023, from https://www.forbes.com/sites/meimeifox/2016/11/11/why-are-tech-workers-so-satisfied-with-their-jobs/?sh=4eac1918a059</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="ot">[^2]: </span>Wronski, L., &amp; Cohen, J. (2019, November 4). *This is the industry sector that has some of the happiest workers in America*. Retrieved March 17, 2023, from https://www.cnbc.com/2019/11/04/this-is-the-industry-that-has-some-of-the-happiness-workers-in-america.html</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>But, what has made this industry so appealing? A case study on Google published in the International Journal of Corporate Social Responsibility in 2017<span class="ot">[^3]</span> points to several elements that make high-tech unique, such as having a distinct culture proposition, aligning individual behaviors to company-wide goals, having managers be coaches rather than bosses, and being able to interact with people from other cultures.</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="ot">[^3]: </span>Kim, K. T. (2017). GOOGLE: A reflection of culture, leader, and management. *International Journal of Corporate Social Responsibility*, *2*(10). https://doi.org/10.1186/s40991-017-0021-0</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>Evidently, Google is one-in-a-million high-tech company, but there are certainly commonalities shared with smaller new tech (startup) companies. Culture Amp, a company focused on surveying employees in startups, elaborated an analysis based on their results from 2015-2020 surveys<span class="ot">[^4]</span> and mention that elements such as an open and honest two-way communication, workplace flexibility, and fair division of workload, are what make new tech companies valued.</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="ot">[^4]: </span>McPherson, J. (n.d.). *Tech company cultures are not all the same*. Culture Amp. Retrieved March 17, 2023, from https://www.cultureamp.com/blog/tech-company-culture</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>However, the previous data omits the downsides of such cultures. Besides the multiple blog posts and news articles one can find talking about burnout<span class="ot">[^5]</span>, the darker side of tech also includes (but is not limited to) ageism<span class="ot">[^6]</span>, gender inequality<span class="ot">[^7]</span> <span class="ot">[^8]</span>, and even migration issues<span class="ot">[^9]</span> <span class="ot">[^10]</span>.</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="ot">[^5]: </span>Goncharov, A. (2023, March 13). *How I burnt out in FAANG, but my job was not the problem*. Blog.Goncharov.ai. Retrieved March 17, 2023, from https://blog.goncharov.ai/how-i-burnt-out-in-faang-but-my-job-was-not-the-problem</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="ot">[^6]: </span>Rosales, A., &amp; Jakob, S. (2021). Perceptions of age in contemporary tech. *Sciendo*, *42*(1), 79-91. https://doi.org/10.2478/nor-2021-0021</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="ot">[^7]: </span>Mickey, E. L. (2021). The Organization of Networking and Gender Inequality in the New Economy: Evidence from the Tech Industry. *Work &amp; Occupations*, *49*(4), 383-420. https://doi.org/10.1177/07308884221102134</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="ot">[^8]: </span>Hardey, M. (2020). *The Culture of Women in Tech : An Unsuitable Job for a Woman* (1st ed.). Emerald Publishing.</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="ot">[^9]: </span>Banerjee, P., &amp; Rincón, L. (2019). Trouble in Tech Paradise. *Journal of Water Resources Planning &amp; Management*, *145*(4), 24-29. https://doi.org/10.1177/1536504219854714</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="ot">[^10]: </span>Matloff, N. (2013). Immigration and the tech industry: As a labour shortage remedy, for innovation, or for cost savings? *Migration Letters*, *10*(2), 210-227. ISSN: 1741-8984 Online ISSN: 1741-8992</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>Further, layoffs by the thousands, plummeting stock prices, and generalized revaluation of an entire industry's value, are just few words that can describe what has happened to tech in 2022 and 2023. An industry that once employed over 5 million people in the US alone<span class="ot">[^11]</span> and had nearly 700 billion dollars in funding worldwide<span class="ot">[^12]</span> has now laid off over 300 thousand people<span class="ot">[^13]</span> and nearly halved in funding.</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="ot">[^11]: </span>The United States Bureau of Labor and Statistics via CompTIA (2023, March 3). *Cyberstates 2021: The Definitive Guide to the Tech Industry and Workforce*. Retrieved March 17, 2023, from https://www.comptia.org/content/tech-jobs-report</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="ot">[^12]: </span>Crunchbase News. (2023, January 5). *Global VC Funding on a Slide since Q4 2022*. Retrieved March 17, 2023, from https://news.crunchbase.com/venture/global-vc-funding-slide-q4-2022</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="ot">[^13]: </span>Layoffs.fyi. (n.d.). *Layoffs.fyi - Tracking all tech startup layoffs since COVID-19*. https://layoffs.fyi</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>In its heights, being a highly competitive industry, it is reasonable to state that mental health was at risk to begin with, but with the recent events unfolding: has the mental health of people working in the tech industry gotten worse? Specifically, the proposed research question is:</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**What is the impact of the COVID-19 pandemic on the mental health of workers in the technology industry as measured by pre- and post-pandemic surveys, and what are the factors associated with any observed changes?**</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hypothesis</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>A survey lead by Blind in 2021<span class="ot">[^14]</span> found that, out of 2400 workers in tech, 64% said their mental health is worse after the pandemic. However, this is an after-the-fact study (i.e., it does not have a baseline to compare with), therefore the present analysis aims to further expand on this idea and use an evidence-based approach to determine whether there is a significant change or not.</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="ot">[^14]: </span>Blind (2021, January 29). *Deteriorating Mental Health In The Workplace*. Retrieved March 17, 2023, from https://www.teamblind.com/blog/index.php/2021/01/29/deteriorating-mental-health-in-the-workplace/</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>Based on the present research question and on previous studies, these are the hypotheses that come to mind:</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>H1: The COVID-19 pandemic has had a negative impact on the mental health of workers in the technology industry, as measured by pre- and post-pandemic surveys.</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>H2: The magnitude of this impact will by moderated by demographic factors such as age, gender, as well as past experiences with mental illness such as family history and previous treatments. These will act as gatekeepers for this impact.</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>H3: Company information such as number of employees and policies with regards to mental health care will act as mediators. These will buffer or amplify the effects of the pandemic and layoffs on mental health.</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="fu"># Descriptive Statistics</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>To prove whether the COVID pandemic has significantly impacted the mental health of workers in tech, I will rely on data provided by the Open Sourcing Mental Health (OSMH), specifically using their Mental Health in Tech Survey.</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>OSMH<span class="ot">[^15]</span> is a non-profit dedicated to raising awareness, educating, and providing resources to support mental wellness in the tech and open source communities. It began operations in 2013 and since 2014 it has conducted and published an annual or bi-annual survey analyzing several mental health indicators.</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="ot">[^15]: </span>Open Sourcing Mental Health (n.d.). *About OSMH*. Retrieved March 18, 2023, from https://osmhhelp.org/about/about-osmi.html</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>As of March 20, 2023, the 2022 survey has not yet been published. Therefore, this analysis compares the 2019 Mental Health in Tech Survey against the 2021 edition. Both are publicly available on Kaggle under a Creative Commons-ShareAlike 4.0 International license:</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="ot">&lt;https://www.kaggle.com/datasets/osmihelp/osmi-mental-health-in-tech-survey-2019&gt;</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="ot">&lt;https://www.kaggle.com/datasets/osmihelp/osmh-2021-mental-health-in-tech-survey-results&gt;</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>Given the size of the data, both files were appended using Microsoft Excel and were then exported to a CSV file. Also, there was not a 100% match between columns in both files, and some re-coding had to be implemented before importing into R. The steps taken to consolidate both files offline are noted in the section below.</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>A "year" column was added to differentiate between both files.</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Data pertaining to insurance information (e.g., "Does you company provide a mental health insurance plan?") was removed because in the 2019 it was optional and was, therefore, almost entirely blank.</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Both files contained columns pertaining to the mental disorder each respondent may or may not have. However, these columns were inconsistent and could not be interpreted without making assumptions which may lead to an incorrect interpretation of the data. For that reason, these columns were removed.</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The raw data files followed a title case naming convention (e.g., "Does your employer provide mental health resources?"). All column names were changed to a snake_case format (e.g., "employer_provides_mental_health_resources").</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The rest of the columns and data therein contained is left as is.</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE, paged.print=TRUE}</span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a><span class="co"># load neccesary packages</span></span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># used for elementary data wrangling and visualization</span></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar) <span class="co"># used for missing values visualization</span></span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(summarytools) <span class="co"># used for table summarizing descriptive statistics</span></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a><span class="co"># temporarily set working directory to read in data</span></span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/Users/macuriels/Documents/Umass/umass_dacss_quantitativeanalysis/posts/_data"</span>)</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="co"># read in consolidated file with 2019 and 2021 data</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"mhit.csv"</span>)</span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a><span class="co"># preview of raw consolidated file</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>(df[<span class="fu">sample</span>(<span class="fu">nrow</span>(df), <span class="dv">10</span>), ])</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>The raw consolidated file contains over 70 columns. After reviewing findings from past research and taking the present research question into consideration, the following are the variables of interest:</span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**VARIABLE DIFFERENTIATING BETWEEN GROUPS**</span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**year:** Column added to differentiate between the year of the survey (2019 or 2021).</span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**DEPENDENT VARIABLE**</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**has_mental_disorder:** Do you currently have a mental health disorder?</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**INDEPENDENT VARIABLES**</span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**age:** What is your age?</span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**gender:** What is your gender?</span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**race:** What is your race?</span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**family_history_mental_illness:** Do you have a family history of mental illness?</span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**had_mental_disorder:** Have you had a mental health disorder in the past?</span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**sought_treatment:** Have you ever sought treatment for a mental health disorder from a mental health professional?</span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**willingness_to_share_with_friends:** How willing would you be to share with friends and family that you have a mental illness?</span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**tech_industry_supports_mh:** Overall, how well do you think the tech industry supports employees with mental health issues?</span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**number_of_employees:** How many employees does your company or organization have?</span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**company_provides_mhcare:** Does your employer provide mental health benefits as part of healthcare coverage?</span>
+<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**anonymity_protected_if_use_resources:** Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?</span>
+<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**easy_to_leave_for_mhcare:** If a mental health issue prompted you to request a medical leave from work, how easy or difficult would it be to ask for that leave?</span>
+<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**comfortable_talking_to_supervisor:** Would you feel comfortable discussing a mental health issue with your direct supervisor(s)?</span>
+<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**comfortable_talking_to_coworkers_about_mh:** Would you feel comfortable discussing a mental health issue with your coworkers?</span>
+<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**employer_mh_importance:** Overall, how much importance does your employer place on mental health?</span>
+<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>**current_or_previous_employer_supportive:** Have you observed or experienced a supportive or well handled response to a mental health issue in your current or previous workplace?</span>
+<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a>If it was not clear from the preview of the consolidated file, it still requires some additional preprocessing. These changes are easier to implement in R, can be found in the code chunk below and include steps such as treating inconsistent categorical columns. Once these changes are made, a summary of the resulting dataframe is created:</span>
+<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=TRUE}</span></span>
+<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a><span class="co"># treating inconsistent binary code in column(s) of interest</span></span>
+<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>sought_treatment <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>sought_treatment <span class="sc">==</span> <span class="st">"TRUE"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a><span class="co"># treating inconsistent gender naming conventions</span></span>
+<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>gender <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"female"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Female"</span> </span>
+<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>                    ,<span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"male"</span>, df<span class="sc">$</span>gender, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>), <span class="st">"Male"</span></span>
+<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a>                           ,<span class="st">"Other"</span>))</span>
+<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a><span class="co"># create new dataframe with columns of interest</span></span>
+<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a>    year</span>
+<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a>    ,has_mental_disorder</span>
+<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a>    ,age</span>
+<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a>    ,gender</span>
+<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a>    ,race</span>
+<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a>    ,family_history_mental_illness</span>
+<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a>    ,had_mental_disorder</span>
+<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a>    ,sought_treatment</span>
+<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a>    ,willingness_to_share_with_friends</span>
+<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a>    ,tech_industry_supports_mh</span>
+<span id="cb4-196"><a href="#cb4-196" aria-hidden="true" tabindex="-1"></a>    ,number_of_employees</span>
+<span id="cb4-197"><a href="#cb4-197" aria-hidden="true" tabindex="-1"></a>    ,company_provides_mhcare</span>
+<span id="cb4-198"><a href="#cb4-198" aria-hidden="true" tabindex="-1"></a>    ,anonymity_protected_if_use_resources</span>
+<span id="cb4-199"><a href="#cb4-199" aria-hidden="true" tabindex="-1"></a>    ,easy_to_leave_for_mhcare</span>
+<span id="cb4-200"><a href="#cb4-200" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_supervisor</span>
+<span id="cb4-201"><a href="#cb4-201" aria-hidden="true" tabindex="-1"></a>    ,comfortable_talking_to_coworkers_about_mh</span>
+<span id="cb4-202"><a href="#cb4-202" aria-hidden="true" tabindex="-1"></a>    ,employer_mh_importance</span>
+<span id="cb4-203"><a href="#cb4-203" aria-hidden="true" tabindex="-1"></a>    ,current_or_previous_employer_supportive</span>
+<span id="cb4-204"><a href="#cb4-204" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-205"><a href="#cb4-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-206"><a href="#cb4-206" aria-hidden="true" tabindex="-1"></a><span class="co"># remove rows with missing values</span></span>
+<span id="cb4-207"><a href="#cb4-207" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">complete.cases</span>(df),]</span>
+<span id="cb4-208"><a href="#cb4-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-209"><a href="#cb4-209" aria-hidden="true" tabindex="-1"></a><span class="co"># remove columns with missing values</span></span>
+<span id="cb4-210"><a href="#cb4-210" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[,<span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">==</span> <span class="dv">0</span>]</span>
+<span id="cb4-211"><a href="#cb4-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-212"><a href="#cb4-212" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize resulting dataframe</span></span>
+<span id="cb4-213"><a href="#cb4-213" aria-hidden="true" tabindex="-1"></a><span class="fu">dfSummary</span>(df)</span>
+<span id="cb4-214"><a href="#cb4-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-215"><a href="#cb4-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-216"><a href="#cb4-216" aria-hidden="true" tabindex="-1"></a>At this point, the dataset has no null values and categorical variables have been harmonized, therefore the data should be ready for further analysis and visualizations.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
