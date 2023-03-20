@@ -17,6 +17,10 @@ categories:
   - layoffs
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
 # Research Question
 
 The technology industry - aka tech - has been one of the highest employers in the twenty-first century. Not only that, but it has been praised for having some of the happiest workers[^1] [^2].
@@ -55,11 +59,6 @@ Further, layoffs by the thousands, plummeting stock prices, and generalized reva
 
 [^13]: Layoffs.fyi. (n.d.). *Layoffs.fyi - Tracking all tech startup layoffs since COVID-19*. https://layoffs.fyi
 
-|                                                    |                                                                  |
-|--------------------------------|----------------------------------------|
-| *Figure 1. Tech layoffs worldwide since COVID-19.* | *Figure 2. Funding in the tech industry from 2013 through 2022.* |
-| ![](images/image-1529229520.png){width="386"}      | ![](images/image-1835681984.png){width="304"}                    |
-
 In its heights, being a highly competitive industry, it is reasonable to state that mental health was at risk to begin with, but with the recent events unfolding: has the mental health of people working in the tech industry gotten worse? Specifically, the proposed research question is:
 
 -   **What is the impact of the COVID-19 pandemic on the mental health of workers in the technology industry as measured by pre- and post-pandemic surveys, and what are the factors associated with any observed changes?**
@@ -72,7 +71,7 @@ A survey lead by Blind in 2021[^14] found that, out of 2400 workers in tech, 64%
 
 [^14]: Blind (2021, January 29). *Deteriorating Mental Health In The Workplace*. Retrieved March 17, 2023, from https://www.teamblind.com/blog/index.php/2021/01/29/deteriorating-mental-health-in-the-workplace/
 
-Based on the previous statement, and on the research question, these are the hypotheses that come to mind:
+Based on the present research question and on previous studies, these are the hypotheses that come to mind:
 
 -   H1: The COVID-19 pandemic has had a negative impact on the mental health of workers in the technology industry, as measured by pre- and post-pandemic surveys.
 
@@ -90,14 +89,15 @@ OSMH[^15] is a non-profit dedicated to raising awareness, educating, and providi
 
 [^15]: Open Sourcing Mental Health (n.d.). *About OSMH*. Retrieved March 18, 2023, from https://osmhhelp.org/about/about-osmi.html
 
-As of March 18, 2023, the 2022 survey has not yet been published. Therefore, this analysis compares the 2019 Mental Health in Tech Survey against the 2021 edition. Both are publicly available on Kaggle under a Creative Commons-ShareAlike 4.0 International license:
+As of March 20, 2023, the 2022 survey has not yet been published. Therefore, this analysis compares the 2019 Mental Health in Tech Survey against the 2021 edition. Both are publicly available on Kaggle under a Creative Commons-ShareAlike 4.0 International license:
 
 -   <https://www.kaggle.com/datasets/osmihelp/osmi-mental-health-in-tech-survey-2019>
 
 -   <https://www.kaggle.com/datasets/osmihelp/osmh-2021-mental-health-in-tech-survey-results>
 
-Given the size of the data, both files were appended using Microsoft Excel and were then exported to a CSV file. Also, there was not a 100% match between columns in both files, and some re-coding had to be implemented so data can be properly processed. These are the actions made to consolidate the data files:
+Given the size of the data, both files were appended using Microsoft Excel and were then exported to a CSV file. Also, there was not a 100% match between columns in both files, and some re-coding had to be implemented before importing into R. The steps taken to consolidate both files offline are noted in the section below.
 
+::: {.callout-note collapse="true"}
 -   A "year" column was added to differentiate between both files.
 
 -   Data pertaining to insurance information (e.g., "Does you company provide a mental health insurance plan?") was removed because in the 2019 it was optional and was, therefore, almost entirely blank.
@@ -107,34 +107,25 @@ Given the size of the data, both files were appended using Microsoft Excel and w
 -   The raw data files followed a title case naming convention (e.g., "Does your employer provide mental health resources?"). All column names were changed to a snake_case format (e.g., "employer_provides_mental_health_resources").
 
 -   The rest of the columns and data therein contained is left as is.
+:::
 
-With the above changes implemented in the consolidation, the data will look as follows:
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
-```
-
-```{r, eval=TRUE}
+```{r, eval=TRUE, paged.print=TRUE}
 # load neccesary packages
 library(tidyverse) # used for elementary data wrangling and visualization
 library(naniar) # used for missing values visualization
-library(summarytools) # used for summary visualization
-library(dataMaid)
-```
+library(summarytools) # used for table summarizing descriptive statistics
 
-```{r, eval=TRUE}
 # temporarily set working directory to read in data
 setwd("/Users/macuriels/Documents/Umass/umass_dacss_quantitativeanalysis/posts/_data")
 
-# 2019 and 2021 data
+# read in consolidated file with 2019 and 2021 data
 df <- read_csv("mhit.csv")
+
+# preview of raw consolidated file
+rmarkdown::paged_table(df[sample(nrow(df), 10), ])
 ```
 
-```{r, eval=TRUE}
-rmarkdown::paged_table(df[sample(nrow(df), 5), ])
-```
-
-As seen from the above table, there are 76 columns. After exploration, and based on my research question, these are the columns of interest:
+The raw consolidated file contains over 70 columns. After reviewing findings from past research and taking the present research question into consideration, the following are the variables of interest:
 
 -   **VARIABLE DIFFERENTIATING BETWEEN GROUPS**
 
@@ -178,9 +169,17 @@ As seen from the above table, there are 76 columns. After exploration, and based
 
     -   **current_or_previous_employer_supportive:** Have you observed or experienced a supportive or well handled response to a mental health issue in your current or previous workplace?
 
-Having stated the variables of interest, I will create a new dataframe containing only these variables.
+If it was not clear from the preview of the consolidated file, it still requires some additional preprocessing. These changes are easier to implement in R, can be found in the code chunk below and include steps such as treating inconsistent categorical columns. Once these changes are made, a summary of the resulting dataframe is created:
 
 ```{r, eval=TRUE}
+# treating inconsistent binary code in column(s) of interest
+df$sought_treatment <- ifelse(df$sought_treatment == "TRUE", 1, 0)
+
+# treating inconsistent gender naming conventions
+df$gender <- ifelse(grepl("female", df$gender, ignore.case = TRUE), "Female" 
+                    ,ifelse(grepl("male", df$gender, ignore.case = TRUE), "Male"
+                           ,"Other"))
+
 # create new dataframe with columns of interest
 df <- df |>
   select(
@@ -203,57 +202,15 @@ df <- df |>
     ,employer_mh_importance
     ,current_or_previous_employer_supportive
   )
-```
 
-There are some columns with binary categories, however the format is not consistent. This is because the 2019 survey employed false/true responses, whereas the 2021 edition utilized 0/1. Therefore, this analysis will harmonize this column so that all such responses are numerical.
-
-```{r, eval=TRUE}
-# converting columns of interest with inconsist binary code (false/true to 0/1)
-df$sought_treatment <- ifelse(df$sought_treatment == "TRUE", 1, 0)
-```
-
-Then, we will start a first check of completeness of the data (i.e., how many missing values are there?).
-
-```{r, eval=TRUE}
-#visualize missing values
-gg_miss_fct(x = df, fct = year)
-```
-
-As we can see, there is quite some degree of incompleteness. For the sake of simplicity, I will simply drop any rows and any columns with missing values.
-
-```{r, eval=TRUE}
-# subset the data frame to remove rows with missing values
+# remove rows with missing values
 df <- df[complete.cases(df),]
 
-# subset the data frame to remove columns with missing values
+# remove columns with missing values
 df <- df[,colSums(is.na(df)) == 0]
-```
 
-Now I will generate a visualization to assess whether the previous code worked or not.
-
-```{r, eval=TRUE}
-#visualize missing values
-gg_miss_fct(x = df, fct = year)
-```
-
-As seen from the graphic above, there are no longer null values. This leaves the following data points for each year:
-
-```{r, eval=TRUE}
-table(df$year)
-```
-
-From exploring the variables of interest, I found that gender was an open-text field, meaning that respondents could answer whichever gender they desired. Again, for the sake of simplicity, I will re-code it so that we only have the categories: "male", "female", and "other".
-
-```{r, eval=TRUE}
-df$gender <- ifelse(grepl("female", df$gender, ignore.case = TRUE), "Female" 
-                    ,ifelse(grepl("male", df$gender, ignore.case = TRUE), "Male"
-                           ,"Other"))
-```
-
-Lastly, this is a summary of the resulting dataframe:
-
-```{r, eval=TRUE}
+# summarize resulting dataframe
 dfSummary(df)
 ```
 
-At this point, it is worth noting that there are no null values, categories have been properly treated so there are no typos nor significant outliers, therefore the data should be ready for further analysis and visualizations.
+At this point, the dataset has no null values and categorical variables have been harmonized, therefore the data should be ready for further analysis and visualizations.
