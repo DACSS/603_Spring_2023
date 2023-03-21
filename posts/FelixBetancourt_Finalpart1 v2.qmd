@@ -1,0 +1,122 @@
+---
+title: "Final Project - Check point 1"
+author: "Felix Betanourt"
+desription: "DACSS 603 Final Project"
+date: "03/18/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - final project
+  - burnout
+  - employee burnout
+  - descriptives
+  - Research question
+  - hyphoteses
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+
+### **Burnout in the workplace**.
+
+DACSS 603, Spring 2023
+
+Burnout is a pervasive issue in many professions, and its consequences can be significant for individuals and organizations alike. According to Maslach and Leiter (2016), burnout is characterized by emotional exhaustion, despersonalization, and reduced personal accomplishment. It is prevalent in a variety of fields, including healthcare (West et al., 2016), among other professions. Burnout can have serious consequences, including decreased job satisfaction, increased absenteeism, and turnover (West et al., 2016).
+
+There is a growing body of research exploring the causes and consequences of burnout, as well as potential solutions. Some scholars have identified factors such as job demands, lack of control, and social support as contributing to burnout (Bakker & Demerouti, 2017).
+
+Lee & Eissenstat (2017), for instance, affirm that psychological job demands and work-to-family conflict, as well as control over working hours/schedule, decision-making authority, and role clarity, have significant effects on burnout.
+
+The aim of this research paper is to provide a comprehensive understanding of how type of business, and seniority level explain the level of burnout.
+
+**Null hypothesis**: The type of business, and seniority does not affect the burnout rate.
+
+**Alternative hypotheses**:
+
+1.  Working in Services (vs product type of business) predict significantly higher burnout rate, especially in Female workers.
+
+2.  Less years of experience (lower seniority) is significantly related to higher burnout rate.
+
+3.  The numbers of work hours allocated affect the burnout rate significantly in WFH setup (vs on site).
+
+
+### **About the Data**
+
+```{r}
+# Loading packages
+
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyverse))
+
+# Reading the data.
+
+burn <- read.csv("_data/burnout.csv")
+
+```
+
+The dataset was obtained from:
+
+https://www.kaggle.com/datasets/blurredmachine/are-your-employees-burning-out
+
+Let's check the strucutre of the dataset:
+
+```{r}
+#Structure
+str(burn)
+```
+The dataset contain 9 variables and 22750 observations.
+
+Four of the variables are categorical and five are numeric (including one as date)
+
+Let's see a Summary for each variable.
+
+```{r}
+summary(burn)
+
+```
+
+According to the source of the data, here is an explanation of each variable:
+
+Employee ID: The unique ID allocated for each employee.
+
+Date of Joining: The date-time when the employee has joined the organization.
+
+Gender: The gender of the employee
+
+Company Type: The type of company where the employee is working
+
+WFH Setup Available: Is the work from home facility available for the employee
+
+Designation: The designation of the employee of work in the organization. In the range of \[0.0, 5.0\] bigger is higher designation.
+
+Resource Allocation: The amount of resource allocated to the employee to work, ie. number of working hours.In the range of \[1.0, 10.0\] (higher means more resource)
+
+Mental Fatigue Score: The level of fatigue mentally the employee is facing.In the range of \[0.0, 10.0\] where 0.0 means no fatigue and 10.0 means completely fatigue.
+
+Burn Rate: The value we need to predict for each employee telling the rate of Bur out while working.In the range of \[0.0, 1.0\] where the higher the value is more is the burn out.
+
+
+### **References**:
+
+Bakker, A. B., & Demerouti, E. (2017). Job demands-resources theory: Taking stock and looking forward. Journal of Occupational Health Psychology, 22(3), 273--285.
+
+Lee, Y., Eissenstat, S. (2017). A longitudinal examination of the causes and effects of burnout based on the job demands-resources model. International Journal for Educational and Vocational Guidance, 18(3), 337--354.
+
+Maslach, C., & Leiter, M. P. (2016). Understanding the burnout experience: Recent research and its implications for psychiatry. World Psychiatry, 15(2), 103--111.
+
+West, C. P., Dyrbye, L. N., Erwin, P., Shanafelt, T. D., (2016). Interventions to promote physician well-being and mitigate burnout: A systematic review and meta-analysis. The Lancet, 388(10057), 2272--228
+
+
+
+
+
