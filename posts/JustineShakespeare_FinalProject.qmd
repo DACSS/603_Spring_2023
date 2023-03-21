@@ -1,0 +1,161 @@
+---
+title: "Maternal Mortality and Women’s Empowerment: Exploring Non-Medical Factors Associated with Better Outcomes for Mothers Across the Globe"
+author: "Justine Shakespeare"
+desription: "Final project proposal for DACSS 603"
+date: "03/21/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - Justine Shakespeare
+  - maternal mortality
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(summarytools)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Research Question
+
+Despite advancements in health and technology, maternal mortality remains a significant public health challenge around the world. According to the World Health Organization, approximately 287,000 women died from complications related to pregnancy or childbirth in 2020.[^1] Recently it was reported that global declines in maternal mortality have stalled,[^2] even increased in the United States,[^3] and data from 2020 has shown the pandemic brought a sharp uptick in maternal deaths.[^4] The World Health Organization has stated that the majority of maternal deaths are preventable.[^5]
+
+[^1]: Maternal mortality, World Health Organization (2023) https://www.who.int/news-room/fact-sheets/detail/maternal-mortality
+
+[^2]: Global Declines in Maternal Mortality Have Stalled, New York Times (2023) https://www.nytimes.com/2023/02/22/health/pregnancy-complications-death-who.html
+
+[^3]: Singh GK. Trends and Social Inequalities in Maternal Mortality in the United States, 1969-2018. Int J MCH AIDS. 2021;10(1):29-42. doi: 10.21106/ijma.444. Epub 2020 Dec 30. PMID: 33442490; PMCID: PMC7792749. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7792749/
+
+[^4]: Maternal Deaths Rose During the First Year of the Pandemic, New York Times (2022) https://www.nytimes.com/2022/02/23/health/maternal-deaths-pandemic.html
+
+[^5]: Maternal mortality, World Health Organization (2023) https://www.who.int/news-room/fact-sheets/detail/maternal-mortality
+
+::: callout-tip
+## Definitions
+
+According to the **World Health Organization**, the **maternal mortality ratio (MMR)** is defined as: "the number of maternal deaths during a given time period per 100,000 live births during the same time period."
+
+**Maternal deaths** are defined as: "deaths from any cause related to or aggravated by pregnancy or its management (excluding accidental or incidental causes) during pregnancy and childbirth or within 42 days of termination of pregnancy..."[^6]
+:::
+
+[^6]: Indicator Metadata Registry List, https://www.who.int/data/gho/indicator-metadata-registry/imr-details/26
+
+Past research has investigated variables that correlate with higher rates of maternal mortality, both at the level of the individual and country. Many studies have found, unsurprisingly, that medical and health-related factors are strongly associated with maternal mortality.[^7] [^8] In developing countries in particular, where the majority of maternal deaths are taking place,[^9] factors related to development, including income levels, adult literacy, access to water and sanitation, as well as health-related factors were also found to be associated with maternal mortality.[^10]
+
+[^7]: Diana S, Wahyuni CU, Prasetyo B. Maternal complications and risk factors for mortality. J Public Health Res. 2020 Jul 3;9(2):1842. doi: 10.4081/jphr.2020.1842. PMID: 32728581; PMCID: PMC7376486. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7376486/
+
+[^8]: Betrán, A.P., Wojdyla, D., Posner, S.F. et al. National estimates for maternal mortality: an analysis based on the WHO systematic review of maternal mortality and morbidity. BMC Public Health 5, 131 (2005). https://doi.org/10.1186/1471-2458-5-131 https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-5-131
+
+[^9]: Maternal mortality, World Health Organization (2023) https://www.who.int/news-room/fact-sheets/detail/maternal-mortality
+
+[^10]: Girum T, Wasie A. Correlates of maternal mortality in developing countries: an ecological study in 82 countries. Matern Health Neonatol Perinatol. 2017 Nov 7;3:19. doi: 10.1186/s40748-017-0059-8. PMID: 29142757; PMCID: PMC5674830. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5674830/
+
+This research will explore further the relationship between non-health related variables and maternal mortality. In particular, variables related to women's political and legal rights and economic empowerment will be explored, as well as those related to family development and early childhood support. In short, this analysis seeks to answer the question: How do factors related to women's empowerment and family development impact maternal mortality?
+
+This research will utilize several datasets made available by UNICEF as part of the *"The State of the World's Children 2021"* set of statistical tables.[^11] Specifically, I will create a new dataset by pulling variables from the following tables:
+
+[^11]: The State of the World's Children 2021: Statistical tables, UNICEF (2021) https://data.unicef.org/resources/dataset/the-state-of-the-worlds-children-2021-statistical-tables/
+
+-   Table 1 - Demographics
+
+-   Table 2 - Child mortality
+
+-   Table 3 - Maternal and newborn health
+
+-   Table 16 - Economic indicators
+
+-   Table 17 - Women's economic empowerment
+
+The dependent variable for this research will be the **Maternal Mortality Ratio (MMR)** from the *Maternal and newborn health* table. The independent variables that will be explored are:
+
+1.  Social Institutions and Gender Index (SIGI)
+
+2.  Legal frameworks on gender equality in employment
+
+3.  Women's educational attainment
+
+4.  Women's labour force participation rate
+
+5.  Women's financial inclusion
+
+6.  Maternity leave benefits
+
+7.  Paternity leave benefits
+
+Also under consideration are a few additional variables related to family development and early childhood support such as whether or not the country has ratified ILO convention 156 on workers with family responsibilities.
+
+## Hypothesis
+
+**Hypothesis 1:** Indicators of women's economic and political empowerment, including the SIGI, legal frameworks on gender equality in employment, financial inclusion of women, women's educational attainment and labor force participation rate correlate with a lower maternal mortality rate.
+
+**Hypothesis 2:** Indicators that relate to family development and support, including maternity leave and paternity leave correlate with lower rates of maternal mortality.
+
+## Descriptive Statistics
+
+I spent quite a bit of time loading, cleaning, and joining the original tables from UNICEF, and I have already isolated the variables of interest for this research. I saved this revised dataframe as a csv file that we can load now to take a look at the data we'll be using.
+
+```{r}
+UNICEF_MMR <- read_csv("/Users/justineshakespeare/603-Spring-2023/posts/UNICEF_MMR.csv")
+
+glimpse(UNICEF_MMR)
+```
+
+This dataset has 184 observations and 29 variables. Each observation represents a country. The majority of variables are numeric, those that are not were transformed into numeric variables (see the last three variables: SIGI_num, Mat_Leave, Pat_Leave).
+
+Note that right now I have included a larger set of variables that I'd like to explore at this point in the project timeline. For the final project I will likely present a truncated list of just the variables that will be featured in the analysis.
+
+Let's take a closer look at our response variable, the Maternal Mortality Ratio. We can check out the mean, standard deviation, the full range (the lowest and highest values), values in the 25th, and 75th quantiles, as well as the median. This will give us a sense of the full spread of this variable.
+
+```{r}
+MMR_spread <- UNICEF_MMR %>% 
+  summarize("Mean" = mean(Maternal_Mortality_Ratio_2017, na.rm = TRUE),
+            "Standard_Deviation" = sd(Maternal_Mortality_Ratio_2017, na.rm = TRUE),
+            "Lowest" = min(Maternal_Mortality_Ratio_2017, na.rm = TRUE), 
+            "25th quantile" = quantile(x = Maternal_Mortality_Ratio_2017, probs = .25),
+            "Median" = median(Maternal_Mortality_Ratio_2017, na.rm = TRUE),
+            "75th quantile" = quantile(x = Maternal_Mortality_Ratio_2017, probs = .75),
+            "Highest" = max(Maternal_Mortality_Ratio_2017, na.rm = TRUE))
+MMR_spread
+```
+
+We can see that there is quite a range, from 2 to 1,150. The relatively large standard deviation indicates there is a fair amount of variability as well. We can see from the median and 75th quantile numbers that most of the countries in this data have MMRs lower than about 190. But the highest value here shows us that some countries have an MMR over 5 times that amount. 
+
+Let's take a look at which countries have the highest MMRs (the most deaths per 100,000 live births).
+
+```{r}
+MMR_high <- UNICEF_MMR %>% 
+  select("Countries_and_areas", "Maternal_Mortality_Ratio_2017") %>% 
+  arrange(desc(as.numeric(Maternal_Mortality_Ratio_2017)))
+
+print(MMR_high, limit = 10)
+```
+
+Let's see which countries have the lowest MMRs.
+
+```{r}
+MMR_low <- UNICEF_MMR %>% 
+  select("Countries_and_areas", "Maternal_Mortality_Ratio_2017") %>% 
+  arrange(as.numeric(Maternal_Mortality_Ratio_2017))
+
+print(MMR_low, limit = 10)
+```
+
+Finally, we'll take a look at some of the explanatory variables we're interested in exploring.
+
+```{r}
+summary(UNICEF_MMR[, c("SIGI_num", "LegalFramework_gender_equal_employment", 
+                       "Edu_Attain_Up_Secondary_Female", "LF_partic_rate_Female_Total", 
+                       "Financial_Inclusion_Female", "Mat_Leave", "Pat_Leave")])
+```
+
+There is a fair amount of variability between the ranges for each of these variables - some are a binary (such as maternity or paternity leave), with values of either 0 or 1 and nothing in between. Other variables (such as financial inclusion) range from 0 to 100. We also see that some of the variables have more NAs than others, we will need to be conscious of those when performing the analysis. 
