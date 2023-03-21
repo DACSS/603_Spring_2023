@@ -1,0 +1,94 @@
+---
+title: "FinalPart1"
+author: "Liam Tucksmith"
+desription: "FinalPart1"
+date: "03/12/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - Liam Tucksmith
+  - tidyverse
+  - readxl
+  - ggplot2
+  - dplyr
+  - tidyr
+  - janitor
+---
+
+```{r, echo=T}
+#| label: setup
+#| warning: false
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(janitor)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The most profitable sports league in the world, the National Football League, generated $18 billion in revenue in 2021 according to sportico.com. This total represents national media rights, league sponsorships with gambling companies, news outlets, and other companies, and shared revenue and royalties from the league’s various affiliates and subsidiaries, such as NFL Enterprises, NFL Properties, and NFL International. While the 32 teams which make up the NFL have separate revenue streams stemming from merchandise and ticketing sales and various other endeavors, each team also receives a slice of shared revenue from the NFL from the games' national and local broadcasts and sponsorships. As money is what keeps the NFL afloat and allows teams to competitively pay for top players and coaches, NFL teams benefit from working with media outlets and appearing in media and news. What I plan to analyze is how the relationship between the NFL and media plays out in games, if it does at all. Can the relationship between media and game outcome be measured? Does a team's weekly media attention share affect their weekly game outcome? My analysis will attempt to measure this relationship by comparing Google Trends generated News Interest Over Time scores for the 2020-21 and 2021-22 for each match up that occurred in those two seasons. 
+
+My hypothesis is that the highest scored weeks for each team will generate the highest probability of winning that same or next given week. In addition, I plan to analyze how the relationship between the media and game scores changes given the media score of the opposition team, and if the relationship between the media scores and the sports betting data differs from that of the media scores and game outcome. I hypothesize that the team with the higher media score will be favored and that the spread will widen if the individual media score is above a to be determined .
+
+The first dataset is a collection of all the matchups and scores that occurred in the NFL since 1966. The matchup information includes the names of the two teams competing, home/away team status, the match site, the weather on game day, and the final score for each team. Sports betting data for each game since 1977 is also included, and includes who was favored, the point spread, and the over/under line. The dataset is from https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data and was created from a variety of sources including games and scores from public websites such as ESPN, NFL.com, and Pro Football Reference. Weather information is from NOAA data, cross-referenced with NFLweather.com. Betting data reflects lines available at sportsline.com and aussportsbetting.com. For the analysis, I will limit the data to the data collected from the 2020-21 and 2021-22 seasons. 
+```{r}
+game_scores <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv")
+colnames(game_scores)
+game_scores <- game_scores[game_scores$schedule_season == 2021 | game_scores$schedule_season == 2022, ]
+summary(game_scores)
+glimpse(game_scores)
+```
+The second dataset I will use is a combination of data from Google Trends. To collect this data I pulled weekly "News Search" scores for each of the 32 NFL teams over the 2020-21 and 2021-22 season. To populate these scores, Google determines the week with the highest volume of News Searches within the time frame for each team and assigns it a score of 100. From there, the other weeks of the time frame get assigned their score to be the percentage of news search volume in proportion to the week scored as 100. For example, if week 7 was scored at 100 and week 3 had 30% of the news search volume that week 7 did, week 3's score would be 30.  
+
+```{r}
+#import csv for each NFL team
+df1 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline.csv")
+df2 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (1).csv")
+df3 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (2).csv")
+df4 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (3).csv")
+df5 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (4).csv")
+df6 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (5).csv")
+df7 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (6).csv")
+df8 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (7).csv")
+df9 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (8).csv")
+df10 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (9).csv")
+df11 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (10).csv")
+df12 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (11).csv")
+df13 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (12).csv")
+df14 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (13).csv")
+df15 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (14).csv")
+df16 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (15).csv")
+df17 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (16).csv")
+df18 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (17).csv")
+df19 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (18).csv")
+df20 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (19).csv")
+df21 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (20).csv")
+df22 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (21).csv")
+df23 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (22).csv")
+df24 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (23).csv")
+df25 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (24).csv")
+df26 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (25).csv")
+df27 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (26).csv")
+df28 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (27).csv")
+df29 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (28).csv")
+df30 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (29).csv")
+df31 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (30).csv")
+df32 <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (31).csv")
+
+#bind columns to create one data frame that holds all the scores for each team
+trend_scores <- bind_cols(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12,df13,df14,df15,
+                          df16,df17,df18,df19,df20,df21,df22,df23,df24,df25,df26,df27,df28,df29,df30,df31,df32)
+#create new column that holds the dates for each week, which R stored as the row names
+trend_scores <- rownames_to_column(trend_scores, "Week")
+#rename column names to be row one values so that each column is the team name
+trend_scores <- trend_scores %>% 
+  row_to_names(row_number = 1)
+summary(trend_scores)
+glimpse(trend_scores)
+```
