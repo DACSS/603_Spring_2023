@@ -1,0 +1,121 @@
+---
+title: "Final Project Initial Research"
+author: "Abigail Balint"
+desription: "Exploring the data for final project"
+date: "03/20/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description of data 
+
+The dataset I am using comes from Kaggle https://www.kaggle.com/datasets/kaggle/kaggle-survey-2018 and is a survey titled "2018 Kaggle Machine Learning & Data Science Survey" conducted by Kaggle to capture the current state of machine learning and data science usage, mainly at the enterprise and academic level. The dataset contains survey responses from almost 24,000 respondents from varying backgrounds. The survey contains 50 questions, including 9 demographic questions and 41 questions around machine learning and data science. The questions range from platforms and products used, and tools and methodology, barriers to entry, and more. It also asks respondents about their employee experience working in these fields. I believe that the wide array of types of questions used make this dataset a good fit for research, as there are binary and categorical variables to explore but also some that ask for explicit numeric values like what percentage of their work falls to different tasks. Having several different types of questions provide opportunities for multiple types of models to be performed.
+
+This survey was also run in 2017, 2019, and 2020 on Kaggle as part of an annual competition where users could submit code and analysis using this public data. However, I decided to use the 2018 dataset as my focus because certain questions that I think would be really interesting to analyze were omitted in later years/the survey was shortened overall. This survey was hosted by Kaggle, open to anyone in the industry, for one week in October 2018.
+
+
+Reading in the dataset --
+
+```{r, echo=T}
+
+final <- read_csv("_data/final_project_data.csv")
+final2 <- read_csv("_data/final_project_data2.csv")
+head(final2,10)
+```
+```{r}
+
+```
+
+## Research Question 
+
+Upon doing a cursory search around this data, I see some high level executive-summary style research published about this data set, but I wasn't able to find anything focused on more specific research questions. It was more demographic data of the state of ML and Data Science. I think there is the opportunity to speak more specifically about the state of machine learning and data science, and look deeper at what tools students and employees are using versus what their time is devoted to.
+
+Therefore, my main research question is "What is the state of machine learning and data science? What tools are being used in the context of individuals school and work, and how does an individual's background (age, career, education, etc.) impact how they navigate this tech world? What barriers do users face and are those barriers the same for all users?"
+
+I plan to use questions like "During a typical data science project at work or school, approximately what proportion of your time is devoted to the following?" or "What percentage of your current machine learning/data science training falls under each category?" to get exact numbers that I can correlate against demos and more general usage of tools and platforms to see if there is any connection between the work one does and the tools they use.
+
+I am interested in this dataset because a lot of research in my career is in the machine learning space, so I am always interested in contextualizing the employee experience in these areas so that I can better understand the subject of some of my survey research. I also do more general employee engagement research in my career and I think this final is a great opportunity to try my hand at some of the correlations I would like to run at my job now but have never been able to because I don't have any prior stats knowledge.
+
+## Hypothesis
+
+I would like to test a few different hypotheses that I have. Some of the initial ideas I have currently are:
+
+-Students are more likely to use free, long-standing coding and ML platforms as opposed to employees using more paid tools with user-friendly features.
+
+-For the question "How do you perceive the importance of the following topics? - Fairness and bias in ML algorithms, Being able to explain ML model outputs and/or predictions, Reproducibility in data science", students will perceive this as more important than full-time workers, and younger generations will perceive this as more important than older generations.
+
+-For the question "During a typical data science project at work or school, approximately what proportion of your time is devoted to the following?" time spent on the analysis end of the process will be reported as a higher percentage of time the older or more experienced the data scientist is.
+
+These are just a few ideas of the direction I am thinking, all of course cut by the demographics in this dataset like age, education, industry, years of experience, etc.
+
+
+## Descriptive Statistics
+
+I described my dataset at the top of this as well as discussed variables of interest in the Research Question section, but here is a little bit of exploratory code:
+ 
+I can see the data contains mostly younger males, but because of the sample size can really work with lots of demographic combinations.
+
+```{r}
+ggplot(final, aes(x = Q1)) +
+  geom_bar() +
+   labs(x="Gender")
+```
+
+```{r}
+ggplot(final, aes(x = Q2)) +
+  geom_bar() +
+  labs(x="Age") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+
+There is also a range of coding experience in the dataset.
+```{r}
+ggplot(final, aes(x = Q24)) +
+  geom_bar() +
+   labs(x="Years of coding experience") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+The data is split between students, tech industry employees, and other industry employees.
+```{r}
+ggplot(final, aes(x = Q7)) +
+  geom_bar() +
+   labs(x="Industry") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+This is just a quick example of the types of thinking I want to do for my final poster. Here, I made a scatterplot showing where the amount of training from work meets the amount of time spent finding insights instead of cleaning data, coding, etc. I expected this to be much higher for those who received most or all of their training from work, but that isn't the case. I'm interested to see once I define a few more specific hypotheses if they end up being true or false.
+
+```{r}
+ggplot(final, aes(x = Q35_Part_3, y=Q34_Part_6)) +
+  geom_point() +
+   labs(x="Percentage of machine learning training from work", y="Percentage of project time spent finding insights")
+```
+Here is the glimpse function to show essentially the questionaiire in text form. I'm working with the variable codes in my coding and using a key as the codes are much shorter.
+```{r}
+glimpse(final2)
+```
+
+
+## Bibliography
+
+
+Kaggle, (2018). “2018 Kaggle Machine Learning & Data Science Survey”, Retrieved 21 March 2023 from https://www.kaggle.com/datasets/kaggle/kaggle-survey-2018.
+
+CC BY-SA 4.0 : https://creativecommons.org/licenses/by-sa/4.0/
+:::
