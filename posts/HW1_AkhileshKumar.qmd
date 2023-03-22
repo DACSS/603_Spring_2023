@@ -1,0 +1,227 @@
+---
+title: "Homework 1 - Akhilesh Kumar"
+author: "Akhilesh Kumar Meghwal"
+description: "DACSS_603_Homework 1 on Descriptive Statistics and Probability"
+date: "02/28/2023"
+format:
+   html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(stats)
+# library(html)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+## Reading data
+
+```{r}
+df <- read_excel("_data/LungCapData.xls")
+dim(df)
+summary(df)
+```
+The distribution of LungCap looks as follows:
+
+The LungCap dataset contains 725 observations and six variables, namely LungCap, Age, Height, Smoke, Gender, and Cesarean. LungCap is the primary variable of interest, measuring the lung capacity of participants. Age and Height provide demographic information, indicating the age and height of each participant.
+
+Each row in the dataset corresponds to a unique participant and provides their values for the six variables. Smoke is a categorical variable that denotes whether the participant smokes or not. Gender is another categorical variable that identifies the gender of each participant. Cesarean is a binary variable indicating whether the participant was born via cesarean section or not.
+
+The LungCap dataset may be useful in exploring the relationships between lung capacity, demographic variables, and smoking status.
+
+## 1a
+
+The following plot displays the distribution of LungCap:
+
+```{r}
+df %>%
+  ggplot(aes(LungCap, ..density..)) +
+  geom_histogram(bins = 25, color = "black", fill = "orange") +
+  geom_density(color = "darkblue", size = 1.25) +
+  theme_classic() + 
+  theme(plot.title = element_text(hjust = 0.65, color = "darkblue")) +
+  theme(axis.text = element_text(face = "bold", color="darkblue"), axis.title = element_text(face = "bold", size=12, color="darkblue")) +
+  xlab("Lung Capacity") +
+  ylab("Probability Density") +
+  labs(title = "Probability Distribution of LungCap")
+
+```
+
+The histogram and density plots show that it is pretty close to a normal distribution. Most of the observations are close to the mean.
+
+## 1b
+
+The distribution of LungCap on basis of gender looks as follows:
+
+```{r}
+Lc %>%
+  ggplot(aes(y = dnorm(LungCap), color = Gender)) +
+  geom_boxplot() +
+  theme_classic() + 
+  labs(title = "Probability distribution of LungCap based on gender", y = "Probability density")
+```
+
+The box plot shows that the probability density of the male is lesser than the female.
+
+## 1c
+
+Comparison of mean lung capacities between smokers and non-smokers:
+
+```{r}
+Mean_smoke <- Lc %>%
+  group_by(Smoke) %>%
+  summarise(mean = mean(LungCap))
+Mean_smoke
+```
+
+From the above table, we see that the mean lung capacity of those who smoke is greater than those who don't smoke, but it doesn't make sense. It also depends on the biological factors of the person who smoke, so we can't conclude it.
+
+## 1d
+
+Relationship between Smoke and Lung capacity on basis of  given age categories:
+
+```{r}
+Lc <- mutate(Lc, AgeGrp = case_when(Age <= 13 ~ "less than or equal to 13",
+                                    Age == 14 | Age == 15 ~ "14 to 15",
+                                    Age == 16 | Age == 17 ~ "16 to 17",
+                                    Age >= 18 ~ "greater than or equal to 18"))
+
+Lc %>%
+  ggplot(aes(y = LungCap, color = Smoke)) +
+  geom_histogram(bins = 25) +
+  facet_wrap(vars(AgeGrp)) +
+  theme_classic() + 
+  labs(title = "Relationship of LungCap and Smoke based on age categories", y = "Lung Capacity", x = "Frequency")
+  
+```
+                                    
+From the above plot, we can derive two important observations:
+1. The lung capacity of non smokers is more than smokers.
+2. The people who smoke are less in age group of "less than or equal to 13".
+So as the result as age increases the lung capacity decreases.
+
+## 1e
+
+Relationship between Smoke and Lung capacity on basis of age:
+
+```{r}
+Lc %>%
+  ggplot(aes(x = Age, y = LungCap, color = Smoke)) +
+  geom_line() +
+  theme_classic() + 
+  facet_wrap(vars(Smoke)) +
+  labs(title = "Relationship of LungCap and Smoke based on age", y = "Lung Capacity", x = "Age")
+```
+
+Form the above data we can compare 1d and 1e and can say the results are pretty similar. Only 10 and above age group smoke.
+
+## 1f
+
+Calculating the correlation and covariance between Lung Capacity and Age:
+
+```{r}
+Covariance <- cov(Lc$LungCap, Lc$Age)
+Correlation <- cor(Lc$LungCap, Lc$Age)
+Covariance
+Correlation
+```
+
+We can observe from the comparison that the covariance is positive and it indicates that there is a direct relationship between age and lung capacity. And the correlation is also positive, so they move in same direction. We can say from these results that as the age increases, the lung capacity also increases that is they are directly proportional to each other.
+
+## Question 2
+
+## Reading the table
+
+```{r}
+Prior_convitions <- c(0:4)
+Inmate_count <- c(128, 434, 160, 64, 24)
+Pc <- data_frame(Prior_convitions, Inmate_count)
+Pc
+```
+
+```{r}
+Pc <- mutate(Pc, Probability = Inmate_count/sum(Inmate_count))
+Pc
+```
+
+
+## 2a
+
+Probability that a randomly selected inmate has exactly 2 prior convictions:
+
+```{r}
+Pc %>%
+  filter(Prior_convitions == 2) %>%
+  select(Probability)
+```
+
+## 2b
+
+Probability that a randomly selected inmate has fewer than 2 convictions:
+
+```{r}
+temp <- Pc %>%
+  filter(Prior_convitions < 2)
+sum(temp$Probability)
+```
+
+## 2c
+
+Probability that a randomly selected inmate has 2 or fewer prior convictions:
+
+```{r}
+temp <- Pc %>%
+  filter(Prior_convitions <= 2)
+sum(temp$Probability)
+```
+
+## 2d
+
+Probability that a randomly selected inmate has more than 2 prior convictions:
+
+```{r}
+temp <- Pc %>%
+  filter(Prior_convitions > 2)
+sum(temp$Probability)
+```
+
+## 2e
+
+Expected value for the number of prior convictions:
+
+```{r}
+Pc <- mutate(Pc, Wm = Prior_convitions*Probability)
+e <- sum(Pc$Wm)
+e
+```
+
+## 2f
+
+Variance for the Prior Convictions:
+
+```{r}
+v <-sum(((Pc$Prior_convitions-e)^2)*Pc$Probability)
+v
+```
+
+standard deviation for the Prior Convictions:
+
+```{r}
+sqrt(v)
+```
