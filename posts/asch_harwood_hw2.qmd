@@ -1,7 +1,7 @@
 ---
-title: "Homework - Template"
-author: "Rosemary Pang"
-description: "Template of course blog qmd file"
+title: "Homework 2"
+author: "Asch Harwood"
+description: "He"
 date: "02/05/2023"
 format:
   html:
@@ -15,22 +15,34 @@ categories:
   - probability
 ---
 
-# Question 1
+# Q1
 
-## a
+1. The time between the date a patient was recommended for heart surgery and the surgery date
+for cardiac patients in Ontario was collected by the Cardiac Care Network (“Wait Times Data
+Guide,” Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean
+and sample standard deviation for wait times (in days) of patients for two cardiac procedures
+are given in the accompanying table. Assume that the sample is representative of the Ontario
+population
 
-First, let's read in the data from the Excel file:
 
-```{r, echo=T}
-library(readxl)
-df <- read_excel("_data/LungCapData.xls")
+Construct the 90% confidence interval to estimate the actual mean wait time for each of the two
+procedures. Is the confidence interval narrower for angiography or bypass surgery?
+
+```{r}
+# create data frame
+df <- data.frame(
+  "Surgical Procedure" = c("Bypass", "Angiography"),
+  "Sample Size" = c(539, 847),
+  "Mean Wait Time" = c(19, 18),
+  "Standard Deviation" = c(10, 9)
+)
+
+# print data frame
+df
+
+```
+```{r}
+?t.test
+t.test(x = 19, n = 539, sd = 10)
 ```
 
-
-The distribution of LungCap looks as follows:
-
-```{r, echo=T}
-hist(df$LungCap)
-```
-
-The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
