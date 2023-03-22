@@ -1,0 +1,134 @@
+---
+title: "Final Project Part 1"
+author: "Alexa Potter"
+description: "Proposal"
+date: "03/21/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - nyctreecensus
+---
+
+
+# Research Question  
+
+
+Greenery is widely recognized as a vital element to any public space. Plants and natural elements of all kinds can add immense benefits to urban areas, not only to the environment but to the humans who inhabit the space as well. Studies have shown that urban greening, specifically the planting of trees, can "combat challenges such as pollution, urban heat, and flooding, as well as to improve social cohesion, human health, and well-being."^[Cavender, N., & Donnelly, G. (2019). Intersecting Urban Forestry and botanical gardens to address big challenges for healthier trees, people, and cities. *PLANTS, PEOPLE, PLANET, 1*(4), 315–322. https://doi.org/10.1002/ppp3.38] The understanding and implementation of this information can lead cities, developers, and anyone with a stake in their community to consciously consider what elements they can incorporate into their own public spaces. The work does not end here though, greenery in public spaces requires maintenance and year-round management to make these efforts last long enough to see the benefits.
+
+
+New York City, with a population of about 8.4 billion people and 300 square miles, is one of the largest urban spaces in the United States.^[U.S. Census Bureau . (n.d.). *U.S. Census Bureau quickfacts: New York City, New York*. Retrieved March 20, 2023, from https://www.census.gov/quickfacts/newyorkcitynewyork] In 1995, the New York City Department of Parks and Recreation conducted a city wide census of all the trees. They again conducted this survey in 2005 and 2015 to tackle their goal of enhancing and restoring urban forests.^[Merriman, D. (2017) *Volunteers count every street tree in New York City*. US Forest Service. Retrieved March 20, 2023, from https://www.fs.usda.gov/features/volunteers-count-every-street-tree-new-york-city-0] The information this survey collected has been used to create an interactive map of tree species around New York City. The Parks department then uses this data to calculate the related impacts and needs associated with the trees and tree maintenance.^[Cochran, C., & Greer, B. (2016, June 29). *Treescount! 2015: NYC's Third Street-Tree Census*. New York State Urban Forestry Council. Retrieved March 20, 2023, from https://nysufc.org/treescount/2016/04/26/]
+
+While there is a large amount of data related to the tree census published, there is a gap in information on the relation between tree data to specific neighborhoods.  Critically analyzing this tree data on a neighborhood level can lead to further community involvement within and stemming from neighborhoods themselves.^[Ma, Q., Lin, J., Ju, Y. et al. Individual structure mapping over six million trees for New York City USA. *Sci Data 10*, 102 (2023). https://doi.org/10.1038/s41597-023-02000-w] Firsthand involvement can be used to develop connections between community members and foster ownership among members with the environment they inhabit.  
+
+This informs my research question: 
+
+#### How does the average tree diameter differ across neighborhoods in New York City?
+
+
+# Hypothesis  
+
+New York City itself is a diverse landscape with features both conducive and preventive to tree growth and sustainability. Neighborhoods across the city can see significant changes in income, traffic, infrastructure, natural resources such water or sunlight, and attitudes towards the environment.^[Neckerman, K., Lovasi, G., Davies, S. et al. Disparities in Urban Neighborhood Conditions: Evidence from GIS Measures and Field Observation in New York City. *Public Health Pol 30* (Suppl 1), S264–S285 (2009). https://doi.org/10.1057/jphp.2008.47] Tree size can relay information to researchers on the development and sustainability of their goal to promote urban greening.^[Colleen E. Reid, Laura D. Kubzansky, Jiayue Li, Jessie L. Shmool, Jane E. Clougherty. It's not easy assessing greenness: A comparison of NDVI datasets and neighborhood types and their associations with self-rated health in New York City. *Health & Place 54*, 92-101 (2018).https://doi.org/10.1016/j.healthplace.2018.09.005.] This information can then be used to inform and direct spending and efforts. 
+
+With these factors, I can test the hypothesis:  
+
+H1: There is a difference among tree size (diameter) based on the neighborhood where the tree is located.  
+
+H_0: There is no difference in average tree size (diameter) across all neighborhoods
+H_1: There is a difference in average tree size (diameter) in at least one neighborhood
+ 
+I am also interested in tree health as a modifier to this relationship. 
+
+# Descriptive Statistics  
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(formattable)
+library(dbplyr)
+library(summarytools)
+```
+
+```{r}
+library(readxl)
+treecensus <- read_excel("C:/Users/aep05/Documents/UMASS_GRAD_SCHOOL/DACSS 603/603_Spring_2023/posts/finalproject/2015_Street_Tree_Census.xls")
+print(treecensus)
+```
+This data set is obtained from the 2015 tree census through NYC Open Data provided by the New York City Department of Parks and Recreation.^[https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh]
+
+
+There are 45 variables and 16,383 observations. 
+
+```{r}
+summary(treecensus)
+```
+
+
+Full list of variables:
+
+```{r}
+colnames(treecensus)
+```
+The columns I am interested in are:
+
+tree_id	- Unique identification number for each tree point.  
+tree_dbh	- Diameter of the tree, measured at approximately 54" / 137cm above the ground. Data was collected for both living and dead trees; for stumps, use stump_diam  
+status	- Indicates whether the tree is alive, standing dead, or a stump.  
+health	- Indicates the user's perception of tree health.  
+spc_latin	- Scientific name for species, e.g. "Acer rubrum"  
+spc_common	- Common name for species, e.g. "red maple"     
+postcode	- Five-digit zipcode in which tree is located  
+zip_city	- City as derived from zipcode. This is often (but not always) the same as borough.  
+borocode	- Code for borough in which tree point is located: 1 (Manhattan), 2 (Bronx), 3 (Brooklyn), 4 (Queens), 5 (Staten Island)  
+borough	- Name of borough in which tree point is located  
+nta	- This is the NTA Code corresponding to the neighborhood tabulation area from the 2010 US Census that the tree point falls into.  
+nta_name	- This is the NTA name corresponding to the neighborhood tabulation area from the 2010 US Census that the tree point falls into.  
+boro_ct	- This is the boro_ct identifyer for the census tract that the tree point falls into.  
+
+```{r}
+treecensus_clean <- select(treecensus, 
+                    tree_id, 
+                    tree_dbh, 
+                    status, 
+                    health, 
+                    spc_latin,
+                    spc_common,
+                    postcode,
+                    zip_city,
+                    borocode,
+                    borough,
+                    nta,
+                    nta_name,
+                    boro_ct,
+                    )
+```
+
+
+
+```{r}
+group_by(treecensus_clean, status, health)%>%
+ summarize()
+```
+Because I am only interested in trees with the status "Alive", I'll also need to clean the data set to exclude trees labeled as "Dead" or "Stump". 
+
+
+```{r}
+treecensus_clean <- treecensus_clean[treecensus_clean$status != "Dead" & treecensus_clean$status != "Stump",]
+group_by(treecensus_clean, status, health)%>%
+ summarize()
+```
+
+Now we return to the summary function to view the cleaned data frame. 
+
+```{r}
+summary(treecensus_clean)
+```
+```{r}
+dfSummary(treecensus_clean)
+```
+
+
