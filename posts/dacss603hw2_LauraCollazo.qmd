@@ -2,7 +2,7 @@
 title: "DACSS 603 Homework 2"
 author: "Laura Collazo"
 description: "Homework 2 for DASS 603."
-date: "`r Sys.Date()`"
+date: "03/23/2023"
 format:
   html:
     toc: true
@@ -13,6 +13,7 @@ categories:
   - hw2
   - desriptive statistics 
   - probability
+  - Laura Collazo
 ---
 
 # Libraries
@@ -132,7 +133,19 @@ What this tells us is at the 95% confidence interval between 51.95839% and 58.03
 
 # Question 3
 
+The size of sample the financial aid office should have to be able to estimate the mean cost of textbooks per semester for students is shown below. It is found using a confidence level of 95%, a range of $170, and knowing they want to be within $5 of the true population mean.  
+
 ```{r, echo=T}
+
+z <- 1.96
+
+range <- 200-30
+
+sd <- range/4
+
+n <- round((z * sd/ 5) ^ 2)
+
+n
 
 ```
 
@@ -188,21 +201,57 @@ The results of this test are not significant as the p-value is greater than .05.
 
 ## A
 
+Th first step for this question is to find the standard deviation. It is shown below.
+
 ```{r, echo=T}
+
+# find the standard deviation (se = sd/sqrt(n))
+
+n <- 1000
+
+se <- 10
+
+sd <- se * sqrt(n)
+
+sd
+
+```
+
+The below shows the t and p-value for Jones.
+
+```{r, echo=T}
+
+rnorm_fixed <- function(n, mean, sd) {
+  as.vector(mean + sd * scale(rnorm(n)))
+}
+
+data5_j <- rnorm_fixed(1000, 519.5, sd)
+
+t_test_j <- oneSampleTTest(x=data5_j, mu=500)
+
+t_test_j
+
+```
+The below shows the t and p-value for Smith.
+
+```{r, echo=T}
+
+data5_s <- rnorm_fixed(1000, 519.7, sd)
+
+t_test_s <- oneSampleTTest(x=data5_s, mu=500)
+
+t_test_s
 
 ```
 
 ## B
 
-```{r, echo=T}
-
-```
+The above indicates the results of Jones' study (p = .051) are not statistically significant and the results of Smith's study are statistically significant (p = .049) when α = 0.05.
 
 ## C
 
-```{r, echo=T}
+I am not yet certain of how to describe the misleading aspects of reporting the result of a test as "P is < or = to 0.05" versus "P is > 0." Perhaps this has to do with the importance of saying that the null hypothesis is rejected if p is statistically significant rather than saying we accept the null hypothesis as true if p is not statistically significant as we should always assume the null hypothesis is true. I think this question is asking for something different than this, though. I look forward to seeing the answer to this question so I can learn from it!   
 
-```
 
 # Question 6
 
@@ -256,9 +305,9 @@ The null hypothesis for question 7 is that the mean cyber charter school tuition
 
 ```{r, echo=T}
 
-ANOVA <- aov(tuition ~ area, data = data7)
+ANOVA7 <- aov(tuition ~ area, data = data7)
 
-summary(ANOVA)
+summary(ANOVA7)
 
 ggplot(data7, aes(x = area, y = tuition, color=area))+
   geom_boxplot() +
