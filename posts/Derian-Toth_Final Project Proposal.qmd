@@ -1,0 +1,290 @@
+---
+title: "Final Project Proposal Check-in1"
+author: "Meredith Derian-Toth"
+description: "Initial draft of research proposal for Final Project"
+date: "03/10/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+---
+
+```{r reading in data}
+
+#reading in data
+jobs_gender <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/jobs_gender.csv")
+earnings_female <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/earnings_female.csv") 
+employed_gender <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/employed_gender.csv") 
+
+#View(employed_gender)
+#View(jobs_gender)
+#View(earnings_female)
+
+#bringing in libraries
+library(dplyr)
+library(vtable)
+library(ggplot2)
+library(readr)
+library(tidyverse)
+library(stringr)
+library(lubridate)
+```
+
+## Introduction
+
+
+
+This research exploration takes a close look at the gender wage gap over the years. While the wage gap has decreased, women are still making on average, about 82 cents for every dollar men make (Aragao, 2023). Women are entering the workforce at a higher rate than in the past, yet are still not making the same salary as men who work the same jobs. 
+
+From the two line graphs below we can see that women 16 years and older, working full time, are increasingly entering the workforce (Graph 1: Percent of Men and Women Working Full Time by Year); yet women are still not making 100% of the wage that men make (Graph 2: Female Salary Percent of Male Salary).
+
+```{r wage gap over time}
+#percent of women working full time compared to men
+#Still would like to add a legend to this graphs
+ggplot(data = employed_gender, aes(x = year)) +
+  geom_line(aes(y = full_time_female), colour = "red") +
+  geom_point(aes(y = full_time_female), colour = "red") +
+  geom_line(aes(y = full_time_male), colour = "blue") +
+  geom_point(aes(y = full_time_male), colour = "blue") +
+  labs(title = "Percent of Men and Women Working Full Time by Year", 
+       x="Year", 
+       y="Percent Working") +
+  ylim(0,100)
+
+#wage gap by year
+#Would also like to add a legend and labels to the this graphs
+earnings_female%>%
+  filter(str_detect(group,"Total, 16 years and older")) %>%
+  ggplot(aes(x = Year)) +
+  geom_line(aes(y = percent)) +
+  geom_point(aes(y = percent)) +
+  labs(title = "Female Salary Percent of Male Salary", 
+       x="Year", 
+       y="Percent of Salary") +
+  ylim(0,100)
+
+```
+
+### The Data set
+  
+
+The data used in this exploration and analysis come from the Bureau of Labor Statistics and the Census Bureau. These data describe different variables about women in the workforce across time. The three data frames are: (1) historical data, providing the percent of earnings women make compared to men, broken down by age group and ranging from 1979 - 2011, (2) Another historical dataset providing the workforce information (percent of women and men working full time and part time), by year, ranging from 1968 - 2016, (3) and lastly, detailed data regarding occupation (including two levels of categorization for the occupation), earnings for those occupations by gender, and percent of earnings women make compared to men, ranging from 2013 - 2016.
+
+
+The tables below provide the descriptive statistics for the dependent variable, womens' wage percent of male wage. The first table is the dependent variable across occupations and year (from 2013 to 2016). The second table below show the dependent variable for women who are 16 years or older, across many years (1979 - 2011).
+
+```{r Descriptive Statistic}
+#Descriptive Statistics for the dependent variable: wage percent of male 
+SumWage<-data_frame(jobs_gender$year, jobs_gender$wage_percent_of_male)
+
+SumWage<- SumWage%>%
+  rename('Year'='jobs_gender$year',
+         'wage_percent_of_male' = 'jobs_gender$wage_percent_of_male')
+sumtable(SumWage)  
+
+#Descriptive Statistics for the historical data of the Dependent variable: wage percent of male
+earnings_female %>%
+  group_by(group) %>%
+  filter(str_detect(group,"Total, 16 years and older")) %>%
+  sumtable()
+```
+
+### Research Question
+
+The purpose of the following exploration and analysis is to answer the question: *What are the contributing factors that lead to the gender wage gap to be greater or smaller?* The factors explored in this particular analysis are age and occupation. Occupation is categorized into broad and detailed categories, and will be explored by comparing female dominated fields compared to male dominated fields.
+
+These factors have been explored in the literature, though the question regarding age (Aragao, 2023; Blau & Kahn, 2016; Kochhar, 2023) has been more thoroughly explored than occupation (Wrohlich 2017). Wrohlick, 2017 found that there is less of a wage gap in the public sector when compared to the private sector. The intention of this analysis is to go beyond comparing occupation by private versus public and into male dominated versus female dominated. This analysis has been done considerably less and is an important piece of knowing where to target closing the wage gap. 
+
+
+### Hypothesis  
+
+According to the research, the wage gap for a woman widens as she gets older (Aragao, 2023; Blau & Kahn, 2016; Kochhar, 2023), and the wage gap is wider for women in the private sector compared to the public sector (Wrohlich 2017). Based on this literature, we hypothesize that younger woman and women working in traditionally female-dominated fields will experience a smaller wage gap than older women and those working in traditionally male-dominated fields.
+
+
+#### Wage Gap by Age
+
+The graph below shows the average wage gap across age groups. These data show that as women age, the wage gap widens, it takes a particular dip around 35 - 44 years old.
+
+```{r wage gap by age}
+#wage gap by age
+earnings_female %>%
+  group_by(group) %>%
+  filter(!str_detect(group,"Total, 16 years and older")) %>%
+  summarize(Mean_Percent_salary = mean(percent))%>%
+  ggplot(aes(group,Mean_Percent_salary)) +
+  geom_col(aes(fill = group)) +
+  labs(title = "Female Salary Percent of Male Salary",
+       x="Age Group", 
+       y="Average Percent of Salary") +
+  geom_text(aes(y=Mean_Percent_salary, 
+                label=sprintf("%0.2f", round(Mean_Percent_salary, digits = 2)))) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+
+```
+
+One hypothesis for this is that the younger generation is experiencing a more narrow wage gap. And in that case, we would expect to the see wage gap decrease across time.
+
+
+The graph and table below shows the the wage gap across time using the same data. From these visualizations we can conclude that the wage gap did not decrease, and that as women age, the wage gap widens.
+
+```{r wage by year}
+#wage gap by year
+SummaryYear <- jobs_gender %>%
+  group_by(year)%>%
+  drop_na(wage_percent_of_male)%>%
+  summarise(Average_Percent_of_Salary = mean(wage_percent_of_male))
+
+kable(SummaryYear)
+
+
+jobs_gender %>%
+  group_by(year)%>%
+  drop_na(wage_percent_of_male)%>%
+  summarise(Mean_wage_percent_of_males = mean(wage_percent_of_male))%>%
+  ggplot(aes(fill = year, y = `Mean_wage_percent_of_males`, x=year)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(title = "Female Salary Percent of Male Salary by Year",
+       x="Year", 
+       y="Average Percent of Salary") +
+  geom_text(aes(y=Mean_wage_percent_of_males, 
+                label=sprintf("%0.2f", round(Mean_wage_percent_of_males, digits = 2)))) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+
+```
+
+#### Wage Gap by Occupation   
+
+
+The visualization below shows the average number of total female workers versus total male workers averaged across 3 year (2013- 2016), by minor job category. The table is sorted in order to see the categories of which women tend to work at the top.
+
+```{r occupation by gender workers}
+
+#creating a table of just total workers by gender and category
+JobsCategoryGen<- data_frame(jobs_gender$year, jobs_gender$minor_category, jobs_gender$workers_male, jobs_gender$workers_female)
+JobsCategoryGen<- JobsCategoryGen%>%
+  rename('Year'='jobs_gender$year',
+         'Occupation Category (Minor)' = 'jobs_gender$minor_category',
+         'Total Male Worker' = 'jobs_gender$workers_male',
+         'Total Female Workers' = 'jobs_gender$workers_female')
+
+SummaryJobsCatGen <- JobsCategoryGen%>%
+  group_by(`Occupation Category (Minor)`)%>%
+  summarise(AverageMaleWorkers = mean(`Total Male Worker`), 
+            AverageFemaleWorkers = mean(`Total Female Workers`))
+
+kable(SummaryJobsCatGen[order(SummaryJobsCatGen$AverageFemaleWorkers, decreasing=TRUE),])
+```
+
+From this visualization, we can see the following are the top 10 occupation categories that are on average more dominated by women:
+
+
+\(1\) Education, Training, and Library 
+
+\(2\) Sales and Related 
+
+\(3\) Building and Grounds Cleaning and Maintenance 
+
+\(4\) Office and Administrative Support 
+
+\(5\) Healthcare Support 
+
+\(6\) Management 
+
+\(7\) Community and Social Service 
+
+\(8\) Healthcare Practitioners and Technical 
+
+\(9\) Legal 
+
+\(10\) Food Preparation and Serving Related
+
+
+The following four visualizations below shows the average percent of salary women make compared to men across occupation categories. The first set of categories in more broad than the second, these are the "Major Categories", while the more detailed categories are referred to as "Minor Categories". These categories were created in order to compare the wage gap across occupations in a more digestible way than job title alone. 
+
+Below we can see that there is a higher wage gap for women working in "Management, Business, and Financial" with women making 80.5% of what men make, and those in"Production, Transportation, and Material Moving" with women making 79% of what men make.
+
+```{r wage gap by occupation_major category}
+#wage gap by major occupation category
+ 
+SummaryMajorCat <- jobs_gender%>%
+  group_by(major_category)%>%
+  drop_na(wage_percent_of_male) %>%
+  summarise(Average_Percent_of_Salary = mean(wage_percent_of_male))
+
+#I would like to round these numbers by 2 digits past the decimal, as well as title the table and rename the variables.
+kable(SummaryMajorCat[order(SummaryMajorCat$Average_Percent_of_Salary, SummaryMajorCat$major_category, decreasing=TRUE),])
+
+#This graph still needs to be reformatted so the title of the graph and the title of legand do not overlap. 
+jobs_gender %>%
+  group_by(major_category)%>%
+  drop_na(wage_percent_of_male)%>%
+  summarise(Mean_wage_percent_of_males = mean(wage_percent_of_male))%>%
+  ggplot(aes(fill = major_category, y = `Mean_wage_percent_of_males`, x=major_category)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(title = "Female Salary Percent of Male Salary by Major Occupation Category",
+       x="Occupation Cateogry", 
+       y="Average Percent of Salary") +
+  geom_text(aes(y=Mean_wage_percent_of_males, 
+                label=sprintf("%0.2f", round(Mean_wage_percent_of_males, digits = 1)))) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+
+```
+
+
+
+When we break these categories down into more detail, we can see more instances of a wider wage gap. Women who work in occupations that fall into the "Community and Social Services" category make, on average, 91% of every dollar a man in their field makes. Whereas a woman working in Production" makes, on average, 77% of every dollar a man in their field makes. There seems to be a bigger increase in wage gap for the following occupational categories: "Management", "Business and Financial Operations", "Transportation", "Farming, Fishing, and Forestry", "Building and Grounds Cleaning and Maintenance", "Sales and Related", "Legal", and "Production".
+
+```{r wage gap by occupation_minor category}
+#wagegap by minor occupation category
+SummaryMinorCat <- jobs_gender%>%
+  group_by(minor_category)%>%
+  drop_na(wage_percent_of_male) %>%
+  summarise(Mean_wage_percent_of_males = mean(wage_percent_of_male))
+
+kable(SummaryMinorCat[order(SummaryMinorCat$Mean_wage_percent_of_males, SummaryMinorCat$minor_category, decreasing=FALSE),])
+
+#The visualization below is in VERY draft form, and cannot provide helpful information until it is reformatted. 
+#jobs_gender %>%
+  #group_by(minor_category)%>%
+  #drop_na(wage_percent_of_male)%>%
+  #summarise(Mean_wage_percent_of_males = mean(wage_percent_of_male))%>%
+  #ggplot(aes(fill = minor_category, y = `Mean_wage_percent_of_males`, x=minor_category)) +
+  #geom_bar(position = "dodge", stat = "identity") +
+  #labs(title = "Female Salary Percent of Male Salary by Minor Occupation Category",
+       #x="Occupation Cateogry", 
+       #y="Average Percent of Salary") +
+  #theme(axis.text.x = element_text(angle = 45, vjust = 0.5))
+```
+
+When comparing the top 10 minor occupation categories that are on average more dominated by women ("Occupation Categories Dominated by Women") with the list of occupation categories with the smallest wage gap ("Occupation Categories with the Smallest Wage Gap"), we can see some overlap. 
+
+
+**Occupation Categories Dominated by Women**
+
+(1) Education, Training, and Library
+(2) *Sales and Related*
+(3) *Building and Grounds Cleaning and Maintenance*
+(4) Office and Administrative Support
+(5) Healthcare Support
+(6) *Management*
+(7) Community and Social Service
+(8) Healthcare Practitioners and Technical
+(9) *Legal*
+(10) Food Preparation and Serving Related
+
+**Occupation Categories with the Smallest Wage Gap**
+
+(1) Production
+(2) *Legal*
+(3) *Sales and Related*
+(4) *Building and Grounds Cleaning and Maintenance*
+(5) Farming, Fishing, and Forestry
+(6) Transportation
+(7) Business and Financial Operations
+(8) *Management*
+(9) Arts, Design, Entertainment, Sports, and Media
+(10) Life, Physical, and Social Science
+
+Further analysis is necessary to know if female dominated occupation categories is a statistically significant factor that contributes to the wage gap.
