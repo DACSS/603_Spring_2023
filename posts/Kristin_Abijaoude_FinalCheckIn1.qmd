@@ -1,0 +1,81 @@
+---
+title: "Final Project Check in 1"
+author: "Kristin Abijaoude"
+editor: visual
+date: "03/21/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - kristinabijaoude
+  - bullying
+---
+
+```{r}
+# load packages
+packages <- c("readr", "readxl", "summarytools", "tidyverse", "dplyr")
+lapply(packages, require, character.only = TRUE)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+
+Bullying continues to be a persistent problem in schools.
+
+Types of bullying faced by those affected include physical fights, exclusion, rumors, snarky "jokes", and name-calling. Every bullied student dreads going to school because they have to face their bullies, who would find any reason, or no reason at all, to target them. Bullying can happen outside of school, especially with today's advanced technology and near-universal access to the Internet. While students are always encouraged to tell a trusted adult, such as a teacher, trusted adults in authority have a spotty record when it comes to tackling this epidemic.
+
+In the US alone, one of every five students report being bullied on school grounds, including name-calling (`13%` among those who reported bullying), being pushed or shoved (`5%`), or have property destroyed on purpose (`1%`). `15%` of students who reported bullying were cyberbullied [^1]. Globally, one in three students report bullying, from as low as 7% in the Central Asian country of Tajikistan to as high as 74% in Samoa.[^2]
+
+[^1]: https://www.stopbullying.gov/resources/facts
+
+[^2]: http://uis.unesco.org/en/news/new-sdg-4-data-bullying
+
+The negative effects on bullying include low self-esteem, feeling angry or isolated, and distress, as well as physical effects like loss of sleep, headaches, and disordered eating. Bullying can be so detrimental to the victim that they take their own life to escape the pain.[^3]
+
+[^3]: https://www.ncbi.nlm.nih.gov/books/NBK390414/
+
+When discussing ways to combat bullying, it's too simplistic to say that "kids are just cruel". My purpose is to find why some students are more vulnerable to being targets of bullying, and how we can use those parameters to create solutions to end bullying once and for all.
+
+## Hypotheses and Proposed Model
+
+I will use multiple regression to test out my hypotheses, given the multiple independent variables such as body size, age, and gender. Multiple regression is a good model to measure the effects that multiple factors have on an given outcome. In this project, I will use these variables to explore a relationship between those variables and bullying.
+
+-   H~a~: Students who report loneliness and fewer friends are more vulnerable of being targets or bullying.
+
+-   H~a~: Male students are more likely to face physical abuse by bullies, while female students are more likely to face verbal abuse.
+
+-   H~a~: More female students who report bullying are targeted for being underweight, while male students who report bullying are targeted for being overweight.
+
+## Data Summary
+
+```{r}
+bully <- read_xlsx("_data/Bullying.xlsx",
+                   range = cell_rows(2:56982))
+bully
+```
+
+This 2018 study was conducted by Global School-Based Student Health Survey (GSHS), where 56,981 students from Argentina participated by filling out the questionnaire in regards to their mental health and behavior.[^4]
+
+[^4]: https://www.kaggle.com/datasets/leomartinelli/bullying-in-schools?datasetId=2952457
+
+```{r}
+colnames(bully)
+dim(bully) # 56980 rows and 18 columns
+```
+
+```{r}
+print(dfSummary(bully,
+                        varnumbers = FALSE,
+                        plain.ascii  = FALSE, 
+                        style        = "grid", 
+                        graph.magnif = 0.70, 
+                        valid.col    = FALSE),
+      method = 'render',
+      table.classes = 'table-condensed')
+```
+
