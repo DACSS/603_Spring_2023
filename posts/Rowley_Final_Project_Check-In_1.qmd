@@ -1,0 +1,115 @@
+---
+title: "Final Project - Check-In 1"
+author: "Caitlin Rowley"
+description: "This project provides a high-level overview of the data set I will be using for my final project. The data set, titled 'Income and Democracy,' was published by the American Economic Consortium in 2008."
+date: "03/21/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+---
+
+### Backgroun and Research Question:
+
+My research question will focus on the cross-country correlation between income and democracy. A 2008 study titled "Income and Democracy," published in the American Economic Review, argues that existing studies that establish a strong cross-country correlation between income and democracy do not control for factors that simultaneously affect both variables. Accordingly, this study controls for certain country-fixed effects---such as date of independence, constraints on the executive, and religious affiliation---which thereby removes the statistical association between income per capita and various measures of democracy. This study is the source for my data set.
+
+In contrast, a 1999 study written by Robert J. Barro asserted that improvements in the standard of living predict increase in democracy. However, similar to the argument in "Income and Democracy," this study found that the allowance of certain economic variables weakens the interplay specifically between democracy and religious affiliation. Nevertheless, Barro claimed that the negative effects from Muslim and non‐religious affiliations remain regardless of control factors.
+
+This incongruity led me to wonder whether we would see a correlation between income and democracy if the economic variables used in the two studies were both updated and more aligned. Specifically, I would like to examine how this would affect both studies' claims on the role of religious affiliation; in other words, will adding control variables such as education shift the correlation between religious affiliation---though only for Islam and non-religious affiliations---and democracy?
+
+**Research question**: How will adding education and non-religious affliation as a control variables impact the correlation between religious affiliation and democracy?
+
+### Hypothesis:
+
+After reviewing "Income and Democracy," it does not appear that non-religious affiliation was integrated into the report. Additionally, the authors indicated that education was determined to be statistically insignificant as an independent country-fixed effect within the context of its causal effect on democracy. However, I am curious about how the inclusion of these two variables would affect Barro's conclusion relative to the correlation between religious affiliation and democracy. As such, by adding these variables and updating existing variables with new data, I will be revisiting a previously-tested hypothesis.
+
+Despite my curiosity, I hypothesize that adding education and non-religious affiliation as control variables will not uncover any statistical significance between religious affiliation and democracy, even when narrowing the scope of religious affiliation to focus solely on Islam and non-religious affiliation.
+
+### Descriptive Statistics:
+
+Data for this study was collected from the Freedom House Political Rights Index, the Polity Composite Democracy Index, and data from other studies conducted by Barro and Kenneth A. Bollen.
+
+Variables I will be focusing on include:
+
+-   Country;
+-   Constraint on the executive;
+-   Year of independence;
+-   Settler mortality;
+-   Population density;
+-   Catholic population;
+-   Muslim population;
+-   Protestant population;
+-   Education;
+-   Shift in per capita income; and
+-   Shift in democracy.
+
+```{r}
+# load libraries:
+
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+# read in data file:
+
+data_file <- read_excel("C:/Users/caitr/OneDrive/Documents/DACSS/DACSS 603/603_Spring_2023/posts/Final Project/Income-Democracy.xls", sheet = "500 Year Panel") 
+head(data_file)
+```
+
+```{r}
+# remove dummy/unnecessary variables (as identified in study's variable key):
+
+data_cln = subset(data_file, select = -c(code, world, colony, indcent, madid))
+head(data_cln)
+```
+
+```{r}
+# remove duplicates:
+
+duplicates <- duplicated(data_cln)
+duplicates["TRUE"]
+```
+
+```{r}
+# remove blank observations (observations with some NAs are not removed):
+
+data_blank <- data_cln[rowSums(is.na(data_cln)) != ncol(data_cln), ]
+head(data_blank)
+```
+
+```{r}
+# remove some NAs for description but not analysis:
+
+data_NA <- data_cln[rowSums(is.na(data_cln)) == 0, ]
+dim(data_NA)
+```
+
+```{r}
+# confirm data frame size of clean data set:
+
+dim(data_cln)
+```
+
+We can see that this data set has 10 variables and 173 observations (though there will be 12 variables once I collect and add data related to education and non-religious affiliation). There are no duplicate observations, nor are there any blank observations. However, in the case that we remove observations with any missing values, the data set would only have 76 observations. Nonetheless, because the study's authors elected to utilize incomplete observations, I will do the same.
+
+```{r}
+# summary of data (remove categorical variables):
+
+library(summarytools)
+
+summary <- subset(data_cln, select = -c(country))
+dfSummary(summary)
+```
+
+We can see here a data frame containing summary statistics for the 9 variables with numeric data, as the categorical variable simply indicates the country name. These statistics will be more meaningful upon following the addition of data related to education and non-religious affiliation.
+
+### Sources:
+
+1.  URL for data: https://www.openicpsr.org/openicpsr/project/113251/version/V1/view?path=/openicpsr/113251/fcr:versions/V1/Income-and-Democracy-Data-AER-adjustment.xls&type=file
+2.  URL for study: http://homepage.ntu.edu.tw/\~kslin/macro2009/Acemoglu%20et%20al%202008.pdf
+3.  URL for external references: https://www.jstor.org/stable/10.1086/250107
