@@ -1,0 +1,72 @@
+---
+title: "Final Project Check-in 1"
+author: "Rahul Somu"
+desription: "Quantitative Analysis of the Relationship between COVID-19 Mortality Rate and Socioeconomic Factors"
+date: "03/24/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - FinalProject
+  - checkin1
+  - Rahul Somu
+  - dataset
+  - ggplot2
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+
+The disastrous effects that a highly contagious disease can have on the world have been strongly illustrated by the COVID-19 pandemic. Millions of people have passed away as a consequence of the pandemic and also impacted the lives of billions of people around the world. Current state of affairs has brought to light the necessity for research on factor and tactics to effectively combat pandemics in the future.
+
+It's critical to comprehend the variables affecting COVID-19 mortality as the pandemic spreads further. The goal of this study is to look at the correlations between a nation's COVID-19 mortality rate and its population density, median age, GDP per-capita, prevalence of diabetes, hospital beds per 1,000 people, and human development index.
+
+In this project I'm aiming to research To what extent do these socioeconomic factors contribute to the variation in COVID-19 mortality rate across the world and derive the relationship of COVID-19 mortality rate with population density,median age, GDP per capita, diabetes prevalence, hospital beds per thousand people and human development index.
+
+#DataSet
+
+The data set contains time series data of around 193 countries around the world. There are around 84,000 records of the countries over the period of time.
+
+Datasource: https://www.kaggle.com/datasets/fedesoriano/coronavirus-covid19-vaccinations-data
+
+```{r}
+df <- read_excel("_data/COVID_Data.xlsx")
+df_selected <- df[,c("iso_code","continent","location","date","total_cases_per_million","population_density","median_age",
+"gdp_per_capita","diabetes_prevalence","hospital_beds_per_thousand","human_development_index")]
+dataset_dim <- (dim(df_selected))
+dataset_dim
+
+countries_count <- (length(unique(df_selected$location)))
+countries_count
+
+countries_list <- (unique(df_selected$location))
+
+head(df_selected)
+
+summary(df_selected)
+
+```
+Methodology:
+
+Multiple linear regression models will be used to carry out the analysis. The socioeconomic determinants will be the independent variables, where as the COVID-19 mortality rate will be the dependent variable.
+
+Expected Results:
+
+The findings of this investigation will aid in understanding the variables affecting the COVID-19 mortality rate. Population density, median age, diabetes prevalence, and hospital beds per thousand people are anticipated to have a positive correlation with the COVID-19 mortality rate, whereas GDP per capita and the human development index are anticipated to have a negative correlation. Planning public health policies and actions to lessen the effects of COVID-19 will benefit from the findings.
+
+Conclusion:
+
+The goal of this study is to understand the relationship between socioeconomic factors and the COVID-19 mortality rate. The results will be helpful in planning public health policy and initiatives and will shed light on the factors that affect the COVID-19 death rate.
