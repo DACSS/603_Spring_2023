@@ -1,0 +1,418 @@
+---
+title: "Homework 2"
+author: "Justine Shakespeare"
+description: "Homework 2 for DACSS 603"
+date: "03/27/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - hypothesis testing
+  - confidence intervals
+---
+
+## Question 1
+
+*The time between the date a patient was recommended for heart surgery
+and the surgery date for cardiac patients in Ontario was collected by
+the Cardiac Care Network ("Wait Times Data Guide," Ministry of Health
+and Long-Term Care, Ontario, Canada, 2006). The sample mean and sample
+standard deviation for wait times (in days) of patients for two cardiac
+procedures are given in the accompanying table. Assume that the sample
+is representative of the Ontario population.*
+
+*Construct the 90% confidence interval to estimate the actual mean wait
+time for each of the two procedures. Is the confidence interval narrower
+for angiography or bypass surgery?*
+
+First we'll calculate the confidence interval manually with the formula:
+CI = (X bar) ± (t × s/sqrt(n))
+
+We'll create objects in R to plug into this formula. We'll start with
+the Bypass data.
+
+```{r, echo=T}
+library(tidyverse)
+
+# Bypass data
+BypassSample <- 539
+BypassMean <- 19
+BypassSD <- 10
+
+# standard error
+BypassSEM <- BypassSD/sqrt(BypassSample)
+
+# t-value
+ConfidenceLevel <- .90
+BYPtail <- (1-ConfidenceLevel)/2
+Bypass_t_score <- qt(1-BYPtail, df=BypassSample-1)
+
+# plug everything back into the CI formula:
+CIBypass <- c(BypassMean-Bypass_t_score*BypassSEM, 
+              BypassMean+Bypass_t_score*BypassSEM)
+
+print(CIBypass)
+```
+
+Now let's do the same for the Angiography data.
+
+```{r}
+AngioSample <- 847
+AngioMean <- 18
+AngioSD <- 9
+
+# standard error
+AngioSEM <- AngioSD/sqrt(AngioSample)
+
+# t-value
+ConfidenceLevel <- .90
+Angtail <- (1-ConfidenceLevel)/2
+Angio_t_score <- qt(1-Angtail, df=AngioSample-1)
+
+# plug everything back in
+
+CIAngio <- c(AngioMean-Angio_t_score*AngioSEM, 
+             AngioMean+Angio_t_score*AngioSEM)
+
+print(CIAngio)
+```
+
+Now we can compare the confidence intervals.
+
+```{r}
+abs(diff(CIAngio)) 
+
+abs(diff(CIBypass))
+```
+
+The confidence interval for Angiography is narrower than for Bypass.
+
+## Question 2
+
+*A survey of 1031 adult Americans was carried out by the National Center
+for Public Policy. Assume that the sample is representative of adult
+Americans. Among those surveyed, 567 believed that college education is
+essential for success. Find the point estimate, p, of the proportion of
+all adult Americans who believe that a college education is essential
+for success. Construct and interpret a 95% confidence interval for p.*
+
+We can use the prop.test() function to find the point estimate and the
+confidence interval:
+
+```{r}
+prop.test(x=567, n=1031, conf.level = .95)
+
+```
+
+## Question 3
+
+*Suppose that the financial aid office of UMass Amherst seeks to
+estimate the mean cost of textbooks per semester for students. The
+estimate will be useful if it is within \$5 of the true population mean
+(i.e. they want the confidence interval to have a length of \$10 or
+less). The financial aid office is pretty sure that the amount spent on
+books varies widely, with most values between \$30 and \$200. They think
+that the population standard deviation is about a quarter of this range
+(in other words, you can assume they know the population standard
+deviation). Assuming the significance level to be 5%, what should be the
+size of the sample.*
+
+We have to solve for n here. Because we have the standard deviation,
+we'll use the CI formula that uses the z-score: CI = (X bar) ± (z ×
+s/sqrt(n))
+
+This can be rewritten: n=((s\*z)/5)\^2
+
+Using the data we have:
+
+```{r}
+Q3_s = (200-30)/4
+Q3_z = qnorm(.975)
+
+((Q3_s*Q3_z)/5)^2
+```
+
+## Question 4
+
+*According to a union agreement, the mean income for all senior-level
+workers in a large service company equals 500 per week. A representative
+of a women's group decides to analyze whether the mean income μ for
+female employees matches this norm. For a random sample of nine female
+employees, ȳ = \$410 and s = 90*
+
+### 4.A
+
+*Test whether the mean income of female employees differs from \$500 per
+week. Include assumptions, hypotheses, test statistic, and P-value.
+Interpret the result.*
+
+To solve this problem I followed the steps of hypothesis testing:
+
+1\. Specify the null hypothesis and alternative hypothesis
+
+2\. Set the significance level (alpha)
+
+3\. Calculate the test statistic
+
+4\. Compare test statistics to the critical value determined by alpha,
+or check if p-value is smaller than alpha
+
+5\. Draw a conclusion
+
+1.  Our null hypothesis is that the population mean is 500 dollars, our
+    alternative hypothesis is that the population mean is NOT \$500
+
+2.  The significance level (alpha) is .05, or 5%
+
+3.  Calculate the test statistic:
+
+```{r}
+Q4_SD <- 90
+Q4_ymean <- 410
+Q4_umean <- 500
+Q4_s_size <- 9
+Q4_SEM <- Q4_SD/sqrt(Q4_s_size)
+
+Q4_T_Statistic <- (Q4_ymean - Q4_umean)/(Q4_SEM)
+Q4_T_Statistic
+```
+
+4.  Calculate the critical value so that we can compare it with the test
+    statistic.
+
+```{r}
+Q4_Crit_Value <- qt(0.025, df=(Q4_s_size-1))
+Q4_Crit_Value
+```
+
+The critical value (on the lower tail end) is -2.3060. Because the test
+statistic is smaller than the critical value (and larger in absolute
+terms), we can conclude that we should reject the null hypothesis.
+
+4.  (continued) calculate the p-value to check to see if it is smaller
+    than alpha.
+
+```{r}
+Q4_p_value <- pt(Q4_T_Statistic, df = (Q4_s_size-1), lower.tail = TRUE)*2
+Q4_p_value
+```
+
+The p-value is 0.01707, which is smaller than our alpha (.05). 0.01707
+\< 0.05 This again means that we can reject the null hypothesis.
+
+5.  Draw a conclusion
+
+Because the test statistic (-3) is in absolute terms larger than the
+critical values (2.30) AND because the p-value (0.01707) is less than
+the alpha levelof .05, we can reject the null hypothesis
+
+Note that when we calculate the confidence interval of these values we
+can also see that the estimated population mean here is outside of a 95%
+CI.
+
+To calculate the confidence level we'll first create some objects we'll
+need in our formulas:
+
+```{r}
+ConfLevel <- 0.95
+Q4_tail_area <- (1-ConfLevel)/2
+Q4_tscore <- qt(p=1-Q4_tail_area, df = Q4_s_size-1)
+
+# Then, using this and some of the objects we created earlier we'll plug everything in: 
+Q4_CI <- c(Q4_ymean - (Q4_tscore * Q4_SEM), Q4_ymean + (Q4_tscore * Q4_SEM))
+
+print(Q4_CI)
+```
+
+We can see here that \$500 is not within the 95% confidence interval,
+which is another reason we can reject the null hypothesis.
+
+### 4.B
+
+*Report the P-value for Ha: μ \< 500. Interpret.*
+
+To calculate a one sided P-value you do not need to multiply the formula
+by 2 and you need to specify that we're only looking at one side. An
+alternative hypothesis of μ \< 500 means the null hypothesis is μ \>=
+500. We need to specify that we are looking at the lower tail.
+
+```{r}
+Q4_p_value1 <- pt(Q4_T_Statistic, df = (Q4_s_size-1), lower.tail = TRUE)
+Q4_p_value1
+```
+
+The p-value here is even lower than it was for the two sided test, it is
+0.0085. We can definitely reject the null hypothesis that the true
+population mean is over \$500.
+
+### 4.C
+
+*Report and interpret the P-value for Ha: μ \> 500.*
+
+To calculate the P-value for Ha: μ \> 500 we run the same formula as
+before but we specify that we're *not* interested in the lower tail.
+
+```{r}
+Q4_p_value2 <- pt(Q4_T_Statistic, df = (Q4_s_size-1), lower.tail = FALSE)
+Q4_p_value2
+```
+
+The p-value for this one sided test is quite large. It means that we
+should not reject the null hypothesis that the true population mean is
+less than \$500.
+
+To test these p-values we can add them up.
+
+```{r}
+Q4_p_value1 + Q4_p_value2
+```
+
+We find that they add up to 1.
+
+## Question 5
+
+*Jones and Smith separately conduct studies to test H0: μ = 500 against
+Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0.
+Smith gets ȳ = 519.7, with se = 10.0.*
+
+### 5.A
+
+*Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97
+and P-value = 0.049 for Smith.*
+
+First we can create some objects to represent the values for this
+question. Then we can use those to get the test statistic and the
+p-value for Jones and Smith.
+
+```{r}
+Q5_SEM <- 10 # they have the same standard error
+Jones_ymean <- 519.5
+Smith_ymean <- 519.7
+Q5_s_size <- 1000 # they have the same sample size
+
+Q5_umean <- 500
+
+# calculate the test statistic and p-value for Jones:
+Jones_T_Statistic <- (Jones_ymean - Q5_umean)/(Q5_SEM)
+Jones_T_Statistic
+
+# we find that Jones' test statistic is 1.95. We can use that to find the p-value:
+Jones_p_value <- pt(Jones_T_Statistic, df = (Q5_s_size-1), lower.tail = FALSE)*2
+Jones_p_value
+
+# Calculate test statistic and p-value for Smith:
+Smith_T_Statistic <- (Smith_ymean - Q5_umean)/(Q5_SEM)
+Smith_T_Statistic
+
+# we find that Smith's test statistic is 1.97. We can use that to find the p-value:
+Smith_p_value <- pt(Smith_T_Statistic, df = (Q5_s_size-1), lower.tail = FALSE)*2
+Smith_p_value
+```
+
+### 5.B
+
+*Using α = 0.05, for each study indicate whether the result is
+"statistically significant."*
+
+Above we found the p-value for both Jones and Smith, we can use that to
+show how those values compare to alpha set at 0.05.
+
+```{r}
+alpha <- 0.05
+
+Jones_p_value < alpha
+
+Smith_p_value < alpha
+```
+
+This shows that technically Jones' p-value is not statistically
+significant because it is more than the alpha of 0.05, but Smith's
+p-value is technically statistically significant because it is less than
+the alpha.
+
+### 5.C
+
+*Using this example, explain the misleading aspects of reporting the
+result of a test as "P ≤ 0.05" versus "P \> 0.05," or as "reject H0"
+versus "Do not reject H0," without reporting the actual P-value.*
+
+This question demonstrates how close two results can be and still
+technically not have the same significance level. In these cases it is
+important to include the p-value so that readers can put the results
+into context.
+
+## Question 6
+
+*A school nurse wants to determine whether age is a factor in whether
+children choose a healthy snack after school. She conducts a survey of
+300 middle school students, with the results below. Test at α = 0.05 the
+claim that the proportion who choose a healthy snack differs by grade
+level. What is the null hypothesis? Which test should we use? What is
+the conclusion?*
+
+Since we're dealing with categorical variables (grade and the choice of
+a healthy or unhealthy snack) we should use a chi-square test. First
+we'll create the dataframe we'll need to run the test in r.
+
+```{r}
+obs <- matrix(c(31, 69, 43, 57, 51, 49), nrow=3, byrow = TRUE)
+dimnames(obs) <- list(Grade = c("Grade_6", "Grade_7", "Grade_8"),
+                      Snack = c("healthy", "unhealthy"))
+
+obs
+```
+
+Then we can run the chi-square test and print the result:
+
+```{r}
+ChiResult <- chisq.test(obs)
+
+print(ChiResult)
+```
+
+Given the p-value \< 0.05, we can reject the null hypothesis that grade
+level does not have an effect on the choice of healthy snack. The
+relatively high X-squared value also indicates that there is a
+meaningful difference in the choices made by kids in different grade
+levels.
+
+## Question 7
+
+*Per-pupil costs (in thousands of dollars) for cyber charter school
+tuition for school districts in three areas are shown. Test the claim
+that there is a difference in means for the three areas, using an
+appropriate test. What is the null hypothesis? Which test should we use?
+What is the conclusion?*
+
+The null hypothesis is that all three districts have equal average
+tuition. We can use the ANOVA test since we are comparing three means.
+
+First we'll create the dataframe in r:
+
+```{r}
+Area1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)  
+Area2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+Area3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+Q7df <- data.frame(Area1, Area2, Area3)
+
+Q7df_PL <- pivot_longer(Q7df, cols = c(Area1, Area2, Area3), names_to = "district", values_to = "tuition")
+Q7df_PL
+```
+
+Now that we have a dataframe with one continuous variable and one
+categorical variable, we can use the anova test function in r `aov()` to
+test our hypothesis. This type of hypothesis test is appropriate for
+this scenario because we want to compare the mean of three groups.
+
+```{r}
+Q7o <- aov(tuition ~ district, data = Q7df_PL)
+summary(Q7o)
+```
+
+Given that the p value here is less than 0.01, we can reject the null
+hypothesis that the mean tuition is the same at all three schools.
