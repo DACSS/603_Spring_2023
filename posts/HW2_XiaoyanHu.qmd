@@ -1,8 +1,8 @@
 ---
-title: "Homework 1"
+title: "Homework 2"
 author: "Xiaoyan"
 description: "Template of course blog qmd file"
-date: "02/27/2023"
+date: "03/24/2023"
 format:
   html:
     toc: true
@@ -10,7 +10,7 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - hw1
+  - hw2
   - desriptive statistics 
   - probability
 ---
@@ -19,80 +19,81 @@ library(tidyr)
 library(dplyr)
 library(readxl)
 library(ggplot2)
-data<-read_excel("/Users/cassie199/Desktop/23spring/603_Spring_2023-1/posts/_data/LungCapData.xls")
-head(data)
 ```
 # Question 1
-1. Use the LungCapData to answer the following questions. (Hint: Using dplyr, especially
-group_by() and summarize() can help you answer the following questions relatively efficiently.)
-a) What does the distribution of LungCap look like? (Hint: Plot a histogram with probability density on the y axis)
+1. The time between the date a patient was recommended for heart surgery and the surgery date for cardiac patients in Ontario was collected by the Cardiac Care Network (“Wait Times Data
+Guide,” Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean and sample standard deviation for wait times (in days) of patients for two cardiac procedures are given in the accompanying table. Assume that the sample is representative of the Ontario population 
 
--the distribution of LungCap looks like a normal distribution
+Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?
 ```{r}
-ggplot(data, aes(x=LungCap)) + geom_histogram()
+
+# mean mean()
+Mean1<-19
+Mean2<-18
+# standard deviation sd()
+sd1<-10
+sd2<-9
+# sample size
+n1<-539
+n2<-847
+# standard error sd/sqrt(n)
+se1<-sd1/sqrt(n1)
+se2<-sd2/sqrt(n2)
+se1
+se2
+# t-value
+
+# tail_area<-(1-confidence_level)/2
+TA<-(1-0.9)/2
+#t score <-qt(p=1-tail_area,df=s_size-1 )
+tscore1<-qt(p=1-TA, df = n1-1)
+tscore2<-qt(p=1-TA, df = n2-1)
+tscore1
+tscore2
+#CI <-c(s_mean-t_score*SE,s_mean+t_score*SE )
+CI1<-c(Mean1-tscore1*se1, Mean1+tscore1*se1)
+CI2<-c(Mean2-tscore2*se2, Mean2+tscore2*se2)
+CI1
+CI2
 ```
-b) Compare the probability distribution of the LungCap with respect to Males and Females? (Hint:make boxplots separated by gender using the boxplot() function)
-```{r}
-boxplot(data$LungCap~data$Gender)
-```
-c) Compare the mean lung capacities for smokers and non-smokers. Does it make sense?
-```{r}
-boxplot(data$LungCap~data$Smoke)
-```
-d) Examine the relationship between Smoking and Lung Capacity within age groups: “less than or
-equal to 13”, “14 to 15”, “16 to 17”, and “greater than or equal to 18”.
-```{r}
-age_ranges <- c("<=13", "14-15", "16-17",  ">18")
-data$age_ranges <- cut(data$Age, breaks = c(13, 14,15, 16,17, 18),
-                     include.lowest = TRUE)
-ggplot(data, aes(x = age_ranges, y = LungCap)) +
-  geom_boxplot() +
-  labs(x = "Age Range", y = "LungCap")
-```
-e) Compare the lung capacities for smokers and non-smokers within each age group. Is your answer different from the one in part c. What could possibly be going on here?
+
 
 #Question 2
 
-2. Let X = number of prior convictions for prisoners at a state prison at which there are 810
-prisoners.
-
-X 0 1 2 3 4
-Frequency 128 434 160 64 24
-
-a) What is the probability that a randomly selected inmate has exactly 2 prior convictions?
+A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success.
+Construct and interpret a 95% confidence interval for p.
 ```{r, echo=T}
-n<-810
-X<-tibble(x=0:4,
-          F=c(128,434,160,64,24))
-X
-pa<-160/n
-pa
+#p 
+p1<-567/1031
+#sample size 
+n<-1031
+#alpha = 0.05
+se<-sqrt((p1*(1-p1))/n)
+#z score1.96
+CI<-c(p-1.96*se,p+1.96*se)
+CI
 
 ```
-b) What is the probability that a randomly selected inmate has fewer than 2 prior convictions?
+
+#Question 3
+Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within $5 of the true population mean (i.e. they want the confidence interval to have a length of $10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between $30 and $200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation).
 ```{r, echo=T}
-pb<-(128+434)/n
-pb
-```
-c) What is the probability that a randomly selected inmate has 2 or fewer prior convictions?
-```{r, echo=T}
-pc<-(128+434+160)/n
-pc
-```
-d) What is the probability that a randomly selected inmate has more than 2 prior convictions?
-```{r, echo=T}
-pd<-(64+24)/n
-pd
-```
-e) What is the expected value1 for the number of prior convictions?
-```{r, echo=T}
-prior<-c(434,160,64,24)
-mean(prior)
-```
-f) Calculate the variance and the standard deviation for the Prior Convictions.
-```{r, echo=T}
-var(prior)
-sd(prior)
-```
+#z*sd/sqrt(n)=5
+#population sd = 200-30/4 = 42.5
+#alpha = 0.05
+#n=(z*sd/5)^2
+n<-(1.96*42.5/5)^2
+
+n
 
 
+```
+#Question 4
+According to a union agreement, the mean income for all senior-level workers in a large service company equals $500 per week. A representative of a women’s group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = $410 and s = 90
+A. Test whether the mean income of female employees differs from $500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result.
+B. Report the P-value for Ha: μ < 500. Interpret.
+C. Report and interpret the P-value for Ha: μ > 500.
+(Hint: The P-values for the two possible one-sided tests must sum to 1.
+```{r}
+
+```
