@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Diana Rinker">
+<meta name="dcterms.date" content="2023-03-25">
+<meta name="description" content="HW2">
+
+<title>Homework 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/DACSS_Round_Network.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="twitter:title" content="Homework 2">
+<meta name="twitter:description" content="HW2">
+<meta name="twitter:creator" content="@UMassDACSS">
+<meta name="twitter:site" content="@UMassDACSS">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/UMass White Wordmark Horiz.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/">
+ <span class="menu-text">Spring 2023 Posts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">Contributors</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://umass.edu/sbs/dacss">
+ <span class="menu-text">DACSS</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#dacss-603-spring-2023" id="toc-dacss-603-spring-2023" class="nav-link active" data-scroll-target="#dacss-603-spring-2023">DACSS 603, spring 2023</a></li>
+  <li><a href="#homework-2-diana-rinker." id="toc-homework-2-diana-rinker." class="nav-link" data-scroll-target="#homework-2-diana-rinker.">Homework 2, Diana Rinker.</a></li>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1">Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3">Question 3</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4">Question 4</a></li>
+  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5">Question 5</a></li>
+  <li><a href="#question-6" id="toc-question-6" class="nav-link" data-scroll-target="#question-6">Question 6</a></li>
+  <li><a href="#question-7" id="toc-question-7" class="nav-link" data-scroll-target="#question-7">Question 7</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Homework 2</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+<div>
+  <div class="description">
+    HW2
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Diana Rinker </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 25, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="dacss-603-spring-2023" class="level1">
+<h1>DACSS 603, spring 2023</h1>
+</section>
+<section id="homework-2-diana-rinker." class="level1">
+<h1>Homework 2, Diana Rinker.</h1>
+<p>Loading necessary libraries:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2
+──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ tibble  3.1.8     ✔ purrr   1.0.1
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.4     ✔ forcats 1.0.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+</div>
+</section>
+<section id="question-1" class="level1">
+<h1>Question 1</h1>
+<p><strong><em>The time between the date a patient was recommended for heart surgery and the surgery date for cardiac patients in Ontario was collected by the Cardiac Care Network (“Wait Times Data Guide,” Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean and sample standard deviation for wait times (in days) of patients for two cardiac procedures are given in the accompanying table. Assume that the sample is representative of the Ontario population.</em></strong></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Surgical Procedure</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bypass"</span>, <span class="st">"Angiography"</span> )</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Sample Size</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">539</span>,<span class="dv">847</span> )</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">18</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Standard Deviation</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">9</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Surgical Procedure</span><span class="st">`</span>,<span class="st">`</span><span class="at">Sample Size</span><span class="st">`</span>, <span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span>, <span class="st">`</span><span class="at">Standard Deviation</span><span class="st">`</span> )</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(data )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Surgical.Procedure</th>
+<th style="text-align: right;">Sample.Size</th>
+<th style="text-align: right;">Mean.Wait.Time</th>
+<th style="text-align: right;">Standard.Deviation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Bypass</td>
+<td style="text-align: right;">539</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Angiography</td>
+<td style="text-align: right;">847</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><em>Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?</em></p>
+<p>The formula for the confidence interval of a sample is</p>
+<p><span class="math display">\[
+CI =\bar{X} \pm  t \cdot \frac{s}{\sqrt n}
+\]</span></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating degree of freedom for each sample: </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data<span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">confidence_level =</span> <span class="fl">0.9</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">tail_area =</span> (<span class="dv">1</span><span class="sc">-</span>confidence_level)<span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">t_score =</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span>tail_area, <span class="at">df =</span> <span class="st">`</span><span class="at">Sample.Size</span><span class="st">`</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.low  =</span> <span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span> <span class="sc">-</span> t_score <span class="sc">*</span> <span class="st">`</span><span class="at">Standard.Deviation</span><span class="st">`</span> <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="st">`</span><span class="at">Sample.Size</span><span class="st">`</span>), </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.high=</span> <span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span> <span class="sc">+</span> t_score <span class="sc">*</span> <span class="st">`</span><span class="at">Standard.Deviation</span><span class="st">`</span> <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="st">`</span><span class="at">Sample.Size</span><span class="st">`</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.width =</span> <span class="fu">abs</span>(CI.high <span class="sc">-</span> CI.low)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span> (Surgical.Procedure, CI.low,CI.high , CI.width, t_score, <span class="fu">everything</span>() )</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(data ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Surgical.Procedure</th>
+<th style="text-align: right;">CI.low</th>
+<th style="text-align: right;">CI.high</th>
+<th style="text-align: right;">CI.width</th>
+<th style="text-align: right;">t_score</th>
+<th style="text-align: right;">Sample.Size</th>
+<th style="text-align: right;">Mean.Wait.Time</th>
+<th style="text-align: right;">Standard.Deviation</th>
+<th style="text-align: right;">confidence_level</th>
+<th style="text-align: right;">tail_area</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Bypass</td>
+<td style="text-align: right;">18.29029</td>
+<td style="text-align: right;">19.70971</td>
+<td style="text-align: right;">1.419421</td>
+<td style="text-align: right;">1.647691</td>
+<td style="text-align: right;">539</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Angiography</td>
+<td style="text-align: right;">17.49078</td>
+<td style="text-align: right;">18.50922</td>
+<td style="text-align: right;">1.018436</td>
+<td style="text-align: right;">1.646657</td>
+<td style="text-align: right;">847</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">0.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>From the table above I can see that the width of confidence interval for Angiography is smaller than for Bypass.</p>
+<p>Alternatvie way to calculate the interval is by simulating the data based on given parameters and running one-sided t.test() :</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Angiography.data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">847</span>, <span class="at">mean =</span><span class="dv">18</span> , <span class="at">sd =</span> <span class="dv">9</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample mean</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mean.q1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Angiography.data )</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the sample to have a mean of exactly 410</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Angiography.data <span class="ot">&lt;-</span> Angiography.data <span class="sc">+</span> <span class="dv">18</span> <span class="sc">-</span> mean.q1</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Angiography.data, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">conf.level =</span> <span class="fl">0.9</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  Angiography.data
+t = 59.128, df = 846, p-value &lt; 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+90 percent confidence interval:
+ 17.49872 18.50128
+sample estimates:
+mean of x 
+       18 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Bypass.data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">539</span>, <span class="at">mean =</span><span class="dv">19</span> , <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample mean</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>mean.bypass.q1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Bypass.data )</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the sample to have a mean of exactly 410</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>Bypass.data  <span class="ot">&lt;-</span> Bypass.data  <span class="sc">+</span> <span class="dv">19</span> <span class="sc">-</span> mean.bypass.q1</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Bypass.data , <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">conf.level =</span> <span class="fl">0.9</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  Bypass.data
+t = 45.732, df = 538, p-value &lt; 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+90 percent confidence interval:
+ 18.31544 19.68456
+sample estimates:
+mean of x 
+       19 </code></pre>
+</div>
+</div>
+</section>
+<section id="question-2" class="level1">
+<h1>Question 2</h1>
+<p><strong><em>A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success. Construct and interpret a 95% confidence interval for p.</em></strong></p>
+<p>I will assume, that the survey responses are within binomial distribution ( i.e.&nbsp;respondents had an option to agree or disagree that college education is essential for success).</p>
+<p>Point estimate for this sample is 567/1031</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>point.estimate <span class="ot">&lt;-</span> <span class="dv">567</span><span class="sc">/</span><span class="dv">1031</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Confidence interval = point estimate ± margin of error. To calculate a confidence interval for the p, I will usr the following formula:</p>
+<p><span class="math display">\[
+CI =\bar{p} \pm Zscore \cdot SE
+\]</span></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Sample.proportion <span class="ot">&lt;-</span> <span class="dv">567</span><span class="sc">/</span><span class="dv">1031</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Sample.Size <span class="ot">&lt;-</span> <span class="dv">1031</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>data2<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Sample.proportion,Sample.Size  )</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>data2<span class="ot">&lt;-</span> data2<span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SE =</span>(<span class="fu">sqrt</span>(Sample.proportion<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>Sample.proportion)<span class="sc">/</span>Sample.Size)), <span class="co"># for binomial distribution</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">z_score =</span> <span class="fl">1.96</span>, <span class="co"># for 95% cofidence interval  </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">CI.low  =</span> Sample.proportion <span class="sc">-</span> z_score <span class="sc">*</span> SE,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.high=</span> Sample.proportion <span class="sc">+</span> z_score <span class="sc">*</span> SE</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(data2 ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Sample.proportion</th>
+<th style="text-align: right;">Sample.Size</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">z_score</th>
+<th style="text-align: right;">CI.low</th>
+<th style="text-align: right;">CI.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.5499515</td>
+<td style="text-align: right;">1031</td>
+<td style="text-align: right;">0.015494</td>
+<td style="text-align: right;">1.96</td>
+<td style="text-align: right;">0.5195833</td>
+<td style="text-align: right;">0.5803197</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This confidence interval can be interpreted as “The people who agreethat college education is essential for success is between 52% and 58%from general American population”.</p>
+<p>I could also calculate confidence interval by generating a sample data set and using prob.test() function:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#generating data table: </span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 6:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="dv">567</span><span class="sc">/</span><span class="dv">1031</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  n<span class="ot">&lt;-</span><span class="dv">1031</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># repeat until the desired number of successes is obtained</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">567</span>) {</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>          responses <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">1031</span>, <span class="dv">1</span>, <span class="at">p=</span>p)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># count the number of successes</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>          successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(responses)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>respondent.n <span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1031</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>dataset.q2 <span class="ot">&lt;-</span><span class="fu">data.frame</span>( respondent.n , responses)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="at">x =</span> <span class="fu">sum</span>(dataset.q2<span class="sc">$</span>responses), <span class="at">n=</span>n,  <span class="at">p =</span>p )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    1-sample proportions test without continuity correction
+
+data:  sum(dataset.q2$responses) out of n, null probability p
+X-squared = 6.9637e-30, df = 1, p-value = 1
+alternative hypothesis: true p is not equal to 0.5499515
+95 percent confidence interval:
+ 0.5194543 0.5800778
+sample estimates:
+        p 
+0.5499515 </code></pre>
+</div>
+</div>
+<p>This way of calculating CI provided me with the same interval as the first one.</p>
+</section>
+<section id="question-3" class="level1">
+<h1>Question 3</h1>
+<p><strong><em>Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within $5 of the true population mean (i.e.&nbsp;they want the confidence interval to have a length of $10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between $30 and $200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation). Assuming the significance level to be 5%, what should be the size of the sample?</em></strong></p>
+<p>Since I am given standard deviation of population, I can use the following formula for CI for confidence level 95%:</p>
+<p><span class="math display">\[
+CI =\bar{X} \pm  1.96 \cdot \frac{\sigma}{\sqrt n}  
+\]</span> The range of CI will be</p>
+<p><span class="math display">\[
+CI range = 10=(\bar{X} +  1.96 \cdot \frac{\sigma}{\sqrt n})  -(\bar{X} -  1.96 \cdot \frac{\sigma}{\sqrt n})   
+\]</span></p>
+<p><span class="math display">\[
+  2\cdot (1.96 \cdot \frac{\sigma}{\sqrt n})  = 10
+\]</span></p>
+<p><span class="math display">\[
+  {\sqrt n}  = \frac{1.96\sigma}{5}
+\]</span></p>
+<p><span class="math display">\[
+n = (\frac{1.96 \cdot  42.5}{5})^2
+\]</span></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>SD.population <span class="ot">&lt;-</span> (<span class="dv">200-30</span>)<span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>n<span class="ot">&lt;-</span> ((<span class="fl">1.96</span><span class="sc">*</span>SD.population)<span class="sc">/</span><span class="dv">5</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(n) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: right;">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">277.5556</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>To calculate confidence interval width of $10, financial aid office should collect a sample size of 278 students.</p>
+</section>
+<section id="question-4" class="level1">
+<h1>Question 4</h1>
+<p><strong><em>According to a union agreement, the mean income for all senior-level workers in a large service company equals $500 per week. A representative of a women’s group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = $410 and s = 90 A. Test whether the mean income of female employees differs from $500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result. B. Report the P-value for Ha: μ &lt; 500. Interpret. C. Report and interpret the P-value for Ha: μ &gt; 500. (Hint: The P-values for the two possible one-sided tests must sum to 1.</em></strong></p>
+<section id="a.-two-sided-t.test" class="level4">
+<h4 class="anchored" data-anchor-id="a.-two-sided-t.test"><em>A. Two-sided t.test:</em></h4>
+<p><strong><em>Test whether the mean income of female employees differs from $500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result.</em></strong></p>
+<p>Assumption: The sample is representative of all senior-level female workers in that company.</p>
+<p>Ho: mean of female income is close to the company policy income of $500. H1: mean of female income is not the same as the company policy income of $500.</p>
+<p>To test this hypothesis, I will used one-sample t.test, which will compare mean and cinficance interval of a sample to a policy level of $500.</p>
+<p>T.test() function in R uses t-statistics to evaluate small sample size (9).</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sample with a mean close to 410</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>female.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">9</span>, <span class="at">mean=</span><span class="dv">410</span>, <span class="at">sd=</span><span class="dv">90</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample mean</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>sample.mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(female.sample)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the sample to have a mean of exactly 410</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>female.sample <span class="ot">&lt;-</span> female.sample <span class="sc">+</span> <span class="dv">410</span> <span class="sc">-</span> sample.mean</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>a.ttest.sample<span class="ot">&lt;-</span><span class="fu">t.test</span>(female.sample, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">mu=</span><span class="dv">500</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>a.ttest.sample</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  female.sample
+t = -2.2966, df = 8, p-value = 0.05074
+alternative hypothesis: true mean is not equal to 500
+95 percent confidence interval:
+ 319.6305 500.3695
+sample estimates:
+mean of x 
+      410 </code></pre>
+</div>
+</div>
+<p>The output shows 95% confidence interval (325 - 494) with the p-value under 0.05. This interval does not include policy value of $500, meaning that the true female income mean at the company is very unlikely to be 500. Therefore I reject Ho, and Accept H1.</p>
+</section>
+<section id="b.-one-sided-less" class="level4">
+<h4 class="anchored" data-anchor-id="b.-one-sided-less"><em>B. One-sided, “less”</em></h4>
+<p><strong><em>Report the P-value for Ha: μ &lt; 500. Interpret.</em></strong></p>
+<p>Ho: mean of female income is no less than the company policy income of $500. H1: mean of female income is lower than the company policy income of $500.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>b.ttest.sample<span class="ot">&lt;-</span><span class="fu">t.test</span>(female.sample, <span class="at">alternative =</span> <span class="st">"less"</span>, <span class="at">mu=</span><span class="dv">500</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>b.ttest.sample</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  female.sample
+t = -2.2966, df = 8, p-value = 0.02537
+alternative hypothesis: true mean is less than 500
+95 percent confidence interval:
+     -Inf 482.8735
+sample estimates:
+mean of x 
+      410 </code></pre>
+</div>
+</div>
+<p>The confidence interval for this hypothesis is even further from 500, that for two-sided test: (-inf, 455) which does not include 500. I accept alternative hypothesis that true female income is lower than 500. P-value for one-sided test is twice lower than for two-sided , because we are only estimating one direction from the mean.</p>
+</section>
+<section id="c.-one-sided-greater." class="level4">
+<h4 class="anchored" data-anchor-id="c.-one-sided-greater."><em>C. One-sided, “greater”.</em></h4>
+<p><strong><em>Report and interpret the P-value for Ha: μ &gt; 500.</em></strong></p>
+<p>Ho: mean of female income is not greater than the company policy income of $500. H1: mean of female income is greater than the company policy income of $500.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>c.ttest.sample<span class="ot">&lt;-</span><span class="fu">t.test</span>(female.sample, <span class="at">alternative =</span> <span class="st">"greater"</span>, <span class="at">mu=</span><span class="dv">500</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>c.ttest.sample</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  female.sample
+t = -2.2966, df = 8, p-value = 0.9746
+alternative hypothesis: true mean is greater than 500
+95 percent confidence interval:
+ 337.1265      Inf
+sample estimates:
+mean of x 
+      410 </code></pre>
+</div>
+</div>
+<p>The confidence interval for this hypothesis includes 500, which suppports H0 that the female income is not greater than company policy. Additionally, p-value is greater than 0.05 which also supports Ho. <!-- We can see that the sum if p-values for B and C scenarions ( that female --> income is less or greater than 500) equals to 1.</p>
+<hr>
+</section>
+</section>
+<section id="question-5" class="level1">
+<h1>Question 5</h1>
+<p><strong><em>Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.</em></strong></p>
+<p><strong><em>A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.</em></strong></p>
+<p><strong><em>B. Using α = 0.05, for each study indicate whether the result is “statistically significant.”</em></strong></p>
+<p><strong><em>C. Using this example, explain the misleading aspects of reporting the result of a test as “P ≤ 0.05” versus “P &gt; 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the actual P-value.</em></strong></p>
+<section id="a.-calculating-t-statistics-for-each-sample" class="level4">
+<h4 class="anchored" data-anchor-id="a.-calculating-t-statistics-for-each-sample">*A. Calculating t-statistics for each sample:</h4>
+<p><strong><em>Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.</em></strong></p>
+<p>To do that, we will create a summary table containing both samples/ parameters and calculate t-statistic, critical value and p-value</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sample with a mean 519.5 for John</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># John.data1&lt;- rnorm(n=1000,  mean =519.5)</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># John.mean &lt;- mean(John.data1)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># John.data1&lt;- John.data1 + 519.5 - John.mean</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># John.mean &lt;- mean(John.data1)</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># John.mean</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>n<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>) </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>study.name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"John"</span>, <span class="st">"Smith"</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>Means <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">519.5</span>, <span class="fl">519.7</span>) </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">10.0</span>, <span class="fl">10.0</span>) </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(study.name, n, Means, SE)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> summary<span class="sc">%&gt;%</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tail_area =</span> (<span class="dv">1</span><span class="fl">-0.95</span>)<span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">t_score =</span> <span class="fu">round</span>( <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span>tail_area, <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>), <span class="dv">2</span>),<span class="co"># Critical t-value </span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.low  =</span> Means <span class="sc">-</span> t_score <span class="sc">*</span> SE, </span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.high =</span> Means <span class="sc">+</span> t_score <span class="sc">*</span> SE,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">test.statistics =</span> ((Means <span class="sc">-</span> <span class="dv">500</span>)<span class="sc">/</span> SE),</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">p.value =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pt</span>(test.statistics, <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>)) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a> knitr<span class="sc">::</span><span class="fu">kable</span>(summary) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 3%">
+<col style="width: 11%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 19%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">study.name</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Means</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">tail_area</th>
+<th style="text-align: right;">t_score</th>
+<th style="text-align: right;">CI.low</th>
+<th style="text-align: right;">CI.high</th>
+<th style="text-align: right;">test.statistics</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">John</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">519.5</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.025</td>
+<td style="text-align: right;">1.96</td>
+<td style="text-align: right;">499.9</td>
+<td style="text-align: right;">539.1</td>
+<td style="text-align: right;">1.95</td>
+<td style="text-align: right;">0.0514555</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Smith</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">519.7</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.025</td>
+<td style="text-align: right;">1.96</td>
+<td style="text-align: right;">500.1</td>
+<td style="text-align: right;">539.3</td>
+<td style="text-align: right;">1.97</td>
+<td style="text-align: right;">0.0491143</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>I can see from the table above, that the Confidence Interval (CI) for John’s data inludes 500 value, while Somth’s CI doesnt. Also I see that the two datasets result in slightly different test statistics and therefore p-value, which are very close to the tested value. Due to John’s p-value being above 0.05, I will accept HO. However, Smith p-value is below 0.05 and I would decline HO and accept H1.</p>
+</section>
+<section id="b.-interpreting-statistical-significance." class="level4">
+<h4 class="anchored" data-anchor-id="b.-interpreting-statistical-significance."><em>B. Interpreting statistical significance.</em></h4>
+<p><strong><em>Using α = 0.05, for each study indicate whether the result is “statistically significant.”</em></strong></p>
+<p>We can conclude that the difference between 500 and the mean of Smith’s sample is <strong>statistically significant to reject Ho</strong>, while John’s sample mean’s difference from 500 is not statistically significant (i.e. not far enough from 500).</p>
+</section>
+<section id="c.-potential-misleading-of-comparing-p-value-to-0.05" class="level4">
+<h4 class="anchored" data-anchor-id="c.-potential-misleading-of-comparing-p-value-to-0.05"><em>C. Potential misleading of comparing p-value to 0.05:</em></h4>
+<p><strong><em>Using this example, explain the misleading aspects of reporting the result of a test as “P ≤ 0.05” versus “P &gt; 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the actual P-value.</em></strong></p>
+<p>Comparing this two almost identical samples allowed us to demonstrate how a tiny difference in sample mean can produce difference in study outcomes (rejection vs acceptance of Ho). It is important to remember, that the sample means vary due to randomness of sampling process, and therefore produce variety of confidence intervals, test statistics and p-values.Reporting actual p-value will demonstrate its closeness to 0.05 cutoff level, and warn the reader about potential error in conclusion.</p>
+<hr>
+</section>
+</section>
+<section id="question-6" class="level1">
+<h1>Question 6</h1>
+<p><strong><em>A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?</em></strong></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">grade level</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"6"</span>,<span class="st">"7"</span>,<span class="st">"8"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Healthy snack</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">31</span>,<span class="dv">43</span>,<span class="dv">51</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Unhealthy snack</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">69</span>,<span class="dv">57</span>,<span class="dv">49</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>table <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (<span class="st">`</span><span class="at">grade level</span><span class="st">`</span>, <span class="st">`</span><span class="at">Healthy snack</span><span class="st">`</span>, <span class="st">`</span><span class="at">Unhealthy snack</span><span class="st">`</span> )</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># table &lt;- addmargins( table , margin =1:2,  FUN = sum)</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(table)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: left;">grade.level</th>
+<th style="text-align: right;">Healthy.snack</th>
+<th style="text-align: right;">Unhealthy.snack</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">6</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">69</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">7</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">8</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">49</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>This table represents data for two categorical variables: <code>grade level</code> and <code>snack choice</code></p>
+<p>I will generate a sample data as given above:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 6:</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># repeat until the desired number of successes is obtained</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">31</span>) {</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>          grade6 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.31</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># count the number of successes</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>          successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(grade6)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 7:</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">43</span>) {</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>            grade7 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.43</span>)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>            successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(grade7)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 8:</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">51</span>) {</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>          grade8 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.51</span>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>          successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(grade8)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Combining all grades in one table for analysis:</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>  table2<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(grade6, grade7, grade8)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  table2<span class="ot">&lt;-</span> table2 <span class="sc">%&gt;%</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(<span class="fu">c</span>(grade6, grade7, grade8 ), <span class="at">names_to=</span> <span class="st">"grade"</span>, <span class="at">values_to=</span><span class="st">"healthy.choice"</span>)</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  xtabs <span class="ot">&lt;-</span><span class="fu">xtabs</span>(<span class="sc">~</span>table2<span class="sc">$</span>grade <span class="sc">+</span> table2<span class="sc">$</span>healthy.choice)</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(  xtabs )  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">0</th>
+<th style="text-align: right;">1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">grade6</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">grade7</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">grade8</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">51</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The school nurse collected this data to test the following hypothesis:</p>
+<p>Ho: all grades’ samples are coming from the same general population, and probability of making healthy choice is equal for all grades.</p>
+<p>H1: probability of making healthy choice is not equal for all grades.</p>
+<p>I will use a chi-square test to test this hypothesis:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>  table2<span class="sc">$</span>healthy.choice <span class="ot">&lt;-</span> <span class="fu">as.character</span> (table2<span class="sc">$</span>healthy.choice)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  table2<span class="sc">$</span>grade <span class="ot">&lt;-</span> <span class="fu">as.character</span>(table2<span class="sc">$</span>grade)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ch.sq<span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(table2<span class="sc">$</span>grade, table2<span class="sc">$</span>healthy.choice ,<span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>ch.sq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's Chi-squared test
+
+data:  table2$grade and table2$healthy.choice
+X-squared = 8.3383, df = 2, p-value = 0.01547</code></pre>
+</div>
+</div>
+<p>The p-value of 0.01 makes me to reject H0 hypothesis that all grades have equal probability, and accpet H1, that the kids of different grades differ in probability of making haealthy snack choice.</p>
+<hr>
+</section>
+<section id="question-7" class="level1">
+<h1>Question 7</h1>
+<p>Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Area<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fl">6.2</span>, <span class="fl">9.3</span>, <span class="fl">6.8</span>, <span class="fl">6.1</span>, <span class="fl">6.7</span>, <span class="fl">7.5</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>Area<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fl">7.5</span>, <span class="fl">8.2</span>, <span class="fl">8.5</span>, <span class="fl">8.2</span>, <span class="fl">7.0</span>, <span class="fl">9.3</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>Area<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fl">5.8</span>, <span class="fl">6.4</span> ,<span class="fl">5.6</span>, <span class="fl">7.1</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>table.q7 <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (Area<span class="fl">.1</span>, Area<span class="fl">.2</span>, Area<span class="fl">.3</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(table.q7 )   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Area.1</th>
+<th style="text-align: right;">Area.2</th>
+<th style="text-align: right;">Area.3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">7.5</td>
+<td style="text-align: right;">5.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">6.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">8.5</td>
+<td style="text-align: right;">5.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6.1</td>
+<td style="text-align: right;">8.2</td>
+<td style="text-align: right;">7.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7.5</td>
+<td style="text-align: right;">9.3</td>
+<td style="text-align: right;">3.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ho: there is no difference in means between the three areas. H1: At least one of these areas’ means is significantly different.</p>
+<p>To test this hypopthesis, I will use ANOVA test to compare means of three samples:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a> table.q7  <span class="ot">&lt;-</span> table.q7  <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(<span class="fu">c</span>(Area<span class="fl">.1</span>, Area<span class="fl">.2</span>, Area<span class="fl">.3</span> ), <span class="at">names_to=</span> <span class="st">"Area"</span>, <span class="at">values_to=</span><span class="st">"score"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>table.q7<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">as.factor</span> (table.q7<span class="sc">$</span>Area)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>anova.q7 <span class="ot">&lt;-</span> <span class="fu">aov</span>( score <span class="sc">~</span> Area, table.q7 )</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova.q7)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+Area         2  25.66  12.832   8.176 0.00397 **
+Residuals   15  23.54   1.569                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The results of ANOVA test demonstrate p-value of 0.00397. I make a conclusion that at least one of the three areas’ means is significantly different from others (i.e reject Ho and accept H1).</p>
+<hr>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb33" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Homework 2"</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Diana Rinker"</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "HW2"</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "3/25/2023"</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> </span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co">  markdown: </span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co">    wrap: 72</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="fu"># DACSS 603, spring 2023</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="fu"># Homework 2, Diana Rinker.</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>Loading necessary libraries:</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1</span></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>***The time between the date a patient was recommended for heart surgery</span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>and the surgery date for cardiac patients in Ontario was collected by</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>the Cardiac Care Network ("Wait Times Data Guide," Ministry of Health</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>and Long-Term Care, Ontario, Canada, 2006). The sample mean and sample</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>standard deviation for wait times (in days) of patients for two cardiac</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>procedures are given in the accompanying table. Assume that the sample</span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>is representative of the Ontario population.***</span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Surgical Procedure</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bypass"</span>, <span class="st">"Angiography"</span> )</span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Sample Size</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">539</span>,<span class="dv">847</span> )</span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">19</span>, <span class="dv">18</span>)</span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Standard Deviation</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">9</span>)</span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Surgical Procedure</span><span class="st">`</span>,<span class="st">`</span><span class="at">Sample Size</span><span class="st">`</span>, <span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span>, <span class="st">`</span><span class="at">Standard Deviation</span><span class="st">`</span> )</span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(data )</span>
+<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a>*Construct the 90% confidence interval to estimate the actual mean wait</span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>time for each of the two procedures. Is the confidence interval narrower</span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a>for angiography or bypass surgery?*</span>
+<span id="cb33-52"><a href="#cb33-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-53"><a href="#cb33-53" aria-hidden="true" tabindex="-1"></a>The formula for the confidence interval of a sample is</span>
+<span id="cb33-54"><a href="#cb33-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-55"><a href="#cb33-55" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-56"><a href="#cb33-56" aria-hidden="true" tabindex="-1"></a>CI =\bar{X} \pm  t \cdot \frac{s}{\sqrt n}</span>
+<span id="cb33-57"><a href="#cb33-57" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-58"><a href="#cb33-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-59"><a href="#cb33-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-60"><a href="#cb33-60" aria-hidden="true" tabindex="-1"></a><span class="co">#calculating degree of freedom for each sample: </span></span>
+<span id="cb33-61"><a href="#cb33-61" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data<span class="sc">%&gt;%</span></span>
+<span id="cb33-62"><a href="#cb33-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">confidence_level =</span> <span class="fl">0.9</span>,</span>
+<span id="cb33-63"><a href="#cb33-63" aria-hidden="true" tabindex="-1"></a>         <span class="at">tail_area =</span> (<span class="dv">1</span><span class="sc">-</span>confidence_level)<span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb33-64"><a href="#cb33-64" aria-hidden="true" tabindex="-1"></a>         <span class="at">t_score =</span> <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span>tail_area, <span class="at">df =</span> <span class="st">`</span><span class="at">Sample.Size</span><span class="st">`</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb33-65"><a href="#cb33-65" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.low  =</span> <span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span> <span class="sc">-</span> t_score <span class="sc">*</span> <span class="st">`</span><span class="at">Standard.Deviation</span><span class="st">`</span> <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="st">`</span><span class="at">Sample.Size</span><span class="st">`</span>), </span>
+<span id="cb33-66"><a href="#cb33-66" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.high=</span> <span class="st">`</span><span class="at">Mean Wait Time</span><span class="st">`</span> <span class="sc">+</span> t_score <span class="sc">*</span> <span class="st">`</span><span class="at">Standard.Deviation</span><span class="st">`</span> <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="st">`</span><span class="at">Sample.Size</span><span class="st">`</span>),</span>
+<span id="cb33-67"><a href="#cb33-67" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.width =</span> <span class="fu">abs</span>(CI.high <span class="sc">-</span> CI.low)</span>
+<span id="cb33-68"><a href="#cb33-68" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb33-69"><a href="#cb33-69" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb33-70"><a href="#cb33-70" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span> (Surgical.Procedure, CI.low,CI.high , CI.width, t_score, <span class="fu">everything</span>() )</span>
+<span id="cb33-71"><a href="#cb33-71" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(data ) </span>
+<span id="cb33-72"><a href="#cb33-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-73"><a href="#cb33-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-74"><a href="#cb33-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-75"><a href="#cb33-75" aria-hidden="true" tabindex="-1"></a>From the table above I can see that the width of confidence interval for</span>
+<span id="cb33-76"><a href="#cb33-76" aria-hidden="true" tabindex="-1"></a>Angiography is smaller than for Bypass.</span>
+<span id="cb33-77"><a href="#cb33-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-78"><a href="#cb33-78" aria-hidden="true" tabindex="-1"></a>Alternatvie way to calculate the interval is by simulating the data</span>
+<span id="cb33-79"><a href="#cb33-79" aria-hidden="true" tabindex="-1"></a>based on given parameters and running one-sided t.test() :</span>
+<span id="cb33-80"><a href="#cb33-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-81"><a href="#cb33-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-82"><a href="#cb33-82" aria-hidden="true" tabindex="-1"></a>Angiography.data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">847</span>, <span class="at">mean =</span><span class="dv">18</span> , <span class="at">sd =</span> <span class="dv">9</span>)</span>
+<span id="cb33-83"><a href="#cb33-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample mean</span></span>
+<span id="cb33-84"><a href="#cb33-84" aria-hidden="true" tabindex="-1"></a>mean.q1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Angiography.data )</span>
+<span id="cb33-85"><a href="#cb33-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the sample to have a mean of exactly 410</span></span>
+<span id="cb33-86"><a href="#cb33-86" aria-hidden="true" tabindex="-1"></a>Angiography.data <span class="ot">&lt;-</span> Angiography.data <span class="sc">+</span> <span class="dv">18</span> <span class="sc">-</span> mean.q1</span>
+<span id="cb33-87"><a href="#cb33-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-88"><a href="#cb33-88" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Angiography.data, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">conf.level =</span> <span class="fl">0.9</span>) </span>
+<span id="cb33-89"><a href="#cb33-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-90"><a href="#cb33-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-91"><a href="#cb33-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-92"><a href="#cb33-92" aria-hidden="true" tabindex="-1"></a>Bypass.data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">539</span>, <span class="at">mean =</span><span class="dv">19</span> , <span class="at">sd =</span> <span class="dv">10</span>)</span>
+<span id="cb33-93"><a href="#cb33-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample mean</span></span>
+<span id="cb33-94"><a href="#cb33-94" aria-hidden="true" tabindex="-1"></a>mean.bypass.q1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(Bypass.data )</span>
+<span id="cb33-95"><a href="#cb33-95" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the sample to have a mean of exactly 410</span></span>
+<span id="cb33-96"><a href="#cb33-96" aria-hidden="true" tabindex="-1"></a>Bypass.data  <span class="ot">&lt;-</span> Bypass.data  <span class="sc">+</span> <span class="dv">19</span> <span class="sc">-</span> mean.bypass.q1</span>
+<span id="cb33-97"><a href="#cb33-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-98"><a href="#cb33-98" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Bypass.data , <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">conf.level =</span> <span class="fl">0.9</span>) </span>
+<span id="cb33-99"><a href="#cb33-99" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-100"><a href="#cb33-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-101"><a href="#cb33-101" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb33-102"><a href="#cb33-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-103"><a href="#cb33-103" aria-hidden="true" tabindex="-1"></a>***A survey of 1031 adult Americans was carried out by the National</span>
+<span id="cb33-104"><a href="#cb33-104" aria-hidden="true" tabindex="-1"></a>Center for Public Policy. Assume that the sample is representative of</span>
+<span id="cb33-105"><a href="#cb33-105" aria-hidden="true" tabindex="-1"></a>adult Americans. Among those surveyed, 567 believed that college</span>
+<span id="cb33-106"><a href="#cb33-106" aria-hidden="true" tabindex="-1"></a>education is essential for success. Find the point estimate, p, of the</span>
+<span id="cb33-107"><a href="#cb33-107" aria-hidden="true" tabindex="-1"></a>proportion of all adult Americans who believe that a college education</span>
+<span id="cb33-108"><a href="#cb33-108" aria-hidden="true" tabindex="-1"></a>is essential for success. Construct and interpret a 95% confidence</span>
+<span id="cb33-109"><a href="#cb33-109" aria-hidden="true" tabindex="-1"></a>interval for p.***</span>
+<span id="cb33-110"><a href="#cb33-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-111"><a href="#cb33-111" aria-hidden="true" tabindex="-1"></a>I will assume, that the survey responses are within binomial</span>
+<span id="cb33-112"><a href="#cb33-112" aria-hidden="true" tabindex="-1"></a>distribution ( i.e. respondents had an option to agree or disagree that</span>
+<span id="cb33-113"><a href="#cb33-113" aria-hidden="true" tabindex="-1"></a>college education is essential for success).</span>
+<span id="cb33-114"><a href="#cb33-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-115"><a href="#cb33-115" aria-hidden="true" tabindex="-1"></a>Point estimate for this sample is 567/1031</span>
+<span id="cb33-116"><a href="#cb33-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-117"><a href="#cb33-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-118"><a href="#cb33-118" aria-hidden="true" tabindex="-1"></a>point.estimate <span class="ot">&lt;-</span> <span class="dv">567</span><span class="sc">/</span><span class="dv">1031</span></span>
+<span id="cb33-119"><a href="#cb33-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-120"><a href="#cb33-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-121"><a href="#cb33-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-122"><a href="#cb33-122" aria-hidden="true" tabindex="-1"></a>Confidence interval = point estimate ± margin of error. To calculate a</span>
+<span id="cb33-123"><a href="#cb33-123" aria-hidden="true" tabindex="-1"></a>confidence interval for the p, I will usr the following formula:</span>
+<span id="cb33-124"><a href="#cb33-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-125"><a href="#cb33-125" aria-hidden="true" tabindex="-1"></a>$$ </span>
+<span id="cb33-126"><a href="#cb33-126" aria-hidden="true" tabindex="-1"></a>CI =\bar{p} \pm Zscore \cdot SE</span>
+<span id="cb33-127"><a href="#cb33-127" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-128"><a href="#cb33-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-129"><a href="#cb33-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-130"><a href="#cb33-130" aria-hidden="true" tabindex="-1"></a>Sample.proportion <span class="ot">&lt;-</span> <span class="dv">567</span><span class="sc">/</span><span class="dv">1031</span></span>
+<span id="cb33-131"><a href="#cb33-131" aria-hidden="true" tabindex="-1"></a>Sample.Size <span class="ot">&lt;-</span> <span class="dv">1031</span></span>
+<span id="cb33-132"><a href="#cb33-132" aria-hidden="true" tabindex="-1"></a>data2<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Sample.proportion,Sample.Size  )</span>
+<span id="cb33-133"><a href="#cb33-133" aria-hidden="true" tabindex="-1"></a>data2<span class="ot">&lt;-</span> data2<span class="sc">%&gt;%</span></span>
+<span id="cb33-134"><a href="#cb33-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SE =</span>(<span class="fu">sqrt</span>(Sample.proportion<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>Sample.proportion)<span class="sc">/</span>Sample.Size)), <span class="co"># for binomial distribution</span></span>
+<span id="cb33-135"><a href="#cb33-135" aria-hidden="true" tabindex="-1"></a>        <span class="at">z_score =</span> <span class="fl">1.96</span>, <span class="co"># for 95% cofidence interval  </span></span>
+<span id="cb33-136"><a href="#cb33-136" aria-hidden="true" tabindex="-1"></a>       <span class="at">CI.low  =</span> Sample.proportion <span class="sc">-</span> z_score <span class="sc">*</span> SE,</span>
+<span id="cb33-137"><a href="#cb33-137" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.high=</span> Sample.proportion <span class="sc">+</span> z_score <span class="sc">*</span> SE</span>
+<span id="cb33-138"><a href="#cb33-138" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb33-139"><a href="#cb33-139" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(data2 ) </span>
+<span id="cb33-140"><a href="#cb33-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-141"><a href="#cb33-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-142"><a href="#cb33-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-143"><a href="#cb33-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-144"><a href="#cb33-144" aria-hidden="true" tabindex="-1"></a>This confidence interval can be interpreted as "The people who agreethat college education is essential for success is between 52% and 58%from general American population".</span>
+<span id="cb33-145"><a href="#cb33-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-146"><a href="#cb33-146" aria-hidden="true" tabindex="-1"></a>I could also calculate  confidence interval by generating a sample data set and using prob.test() function: </span>
+<span id="cb33-147"><a href="#cb33-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-148"><a href="#cb33-148" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-149"><a href="#cb33-149" aria-hidden="true" tabindex="-1"></a><span class="co">#generating data table: </span></span>
+<span id="cb33-150"><a href="#cb33-150" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 6:</span></span>
+<span id="cb33-151"><a href="#cb33-151" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb33-152"><a href="#cb33-152" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="dv">567</span><span class="sc">/</span><span class="dv">1031</span></span>
+<span id="cb33-153"><a href="#cb33-153" aria-hidden="true" tabindex="-1"></a>  n<span class="ot">&lt;-</span><span class="dv">1031</span></span>
+<span id="cb33-154"><a href="#cb33-154" aria-hidden="true" tabindex="-1"></a>  <span class="co"># repeat until the desired number of successes is obtained</span></span>
+<span id="cb33-155"><a href="#cb33-155" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">567</span>) {</span>
+<span id="cb33-156"><a href="#cb33-156" aria-hidden="true" tabindex="-1"></a>          responses <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">1031</span>, <span class="dv">1</span>, <span class="at">p=</span>p)</span>
+<span id="cb33-157"><a href="#cb33-157" aria-hidden="true" tabindex="-1"></a>  <span class="co"># count the number of successes</span></span>
+<span id="cb33-158"><a href="#cb33-158" aria-hidden="true" tabindex="-1"></a>          successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(responses)</span>
+<span id="cb33-159"><a href="#cb33-159" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb33-160"><a href="#cb33-160" aria-hidden="true" tabindex="-1"></a>respondent.n <span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">1031</span>)</span>
+<span id="cb33-161"><a href="#cb33-161" aria-hidden="true" tabindex="-1"></a>dataset.q2 <span class="ot">&lt;-</span><span class="fu">data.frame</span>( respondent.n , responses)</span>
+<span id="cb33-162"><a href="#cb33-162" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-163"><a href="#cb33-163" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="at">x =</span> <span class="fu">sum</span>(dataset.q2<span class="sc">$</span>responses), <span class="at">n=</span>n,  <span class="at">p =</span>p )</span>
+<span id="cb33-164"><a href="#cb33-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-165"><a href="#cb33-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-166"><a href="#cb33-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-167"><a href="#cb33-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-168"><a href="#cb33-168" aria-hidden="true" tabindex="-1"></a>This way of calculating  CI provided me with the same  interval as the first one.</span>
+<span id="cb33-169"><a href="#cb33-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-170"><a href="#cb33-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-171"><a href="#cb33-171" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 3</span></span>
+<span id="cb33-172"><a href="#cb33-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-173"><a href="#cb33-173" aria-hidden="true" tabindex="-1"></a>***Suppose that the financial aid office of UMass Amherst seeks to</span>
+<span id="cb33-174"><a href="#cb33-174" aria-hidden="true" tabindex="-1"></a>estimate the mean cost of textbooks per semester for students. The</span>
+<span id="cb33-175"><a href="#cb33-175" aria-hidden="true" tabindex="-1"></a>estimate will be useful if it is within \$5 of the true population mean</span>
+<span id="cb33-176"><a href="#cb33-176" aria-hidden="true" tabindex="-1"></a>(i.e. they want the confidence interval to have a length of \$10 or</span>
+<span id="cb33-177"><a href="#cb33-177" aria-hidden="true" tabindex="-1"></a>less). The financial aid office is pretty sure that the amount spent on</span>
+<span id="cb33-178"><a href="#cb33-178" aria-hidden="true" tabindex="-1"></a>books varies widely, with most values between \$30 and \$200. They think</span>
+<span id="cb33-179"><a href="#cb33-179" aria-hidden="true" tabindex="-1"></a>that the population standard deviation is about a quarter of this range</span>
+<span id="cb33-180"><a href="#cb33-180" aria-hidden="true" tabindex="-1"></a>(in other words, you can assume they know the population standard</span>
+<span id="cb33-181"><a href="#cb33-181" aria-hidden="true" tabindex="-1"></a>deviation). Assuming the significance level to be 5%, what should be the</span>
+<span id="cb33-182"><a href="#cb33-182" aria-hidden="true" tabindex="-1"></a>size of the sample?***</span>
+<span id="cb33-183"><a href="#cb33-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-184"><a href="#cb33-184" aria-hidden="true" tabindex="-1"></a>Since I am given standard deviation of population, I can use the</span>
+<span id="cb33-185"><a href="#cb33-185" aria-hidden="true" tabindex="-1"></a>following formula for CI for confidence level 95%:</span>
+<span id="cb33-186"><a href="#cb33-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-187"><a href="#cb33-187" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-188"><a href="#cb33-188" aria-hidden="true" tabindex="-1"></a>CI =\bar{X} \pm  1.96 \cdot \frac{\sigma}{\sqrt n}  </span>
+<span id="cb33-189"><a href="#cb33-189" aria-hidden="true" tabindex="-1"></a>$$ The range of CI will be</span>
+<span id="cb33-190"><a href="#cb33-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-191"><a href="#cb33-191" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-192"><a href="#cb33-192" aria-hidden="true" tabindex="-1"></a>CI range = 10=(\bar{X} +  1.96 \cdot \frac{\sigma}{\sqrt n})  -(\bar{X} -  1.96 \cdot \frac{\sigma}{\sqrt n})   </span>
+<span id="cb33-193"><a href="#cb33-193" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-194"><a href="#cb33-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-195"><a href="#cb33-195" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-196"><a href="#cb33-196" aria-hidden="true" tabindex="-1"></a>  2\cdot (1.96 \cdot \frac{\sigma}{\sqrt n})  = 10</span>
+<span id="cb33-197"><a href="#cb33-197" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-198"><a href="#cb33-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-199"><a href="#cb33-199" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-200"><a href="#cb33-200" aria-hidden="true" tabindex="-1"></a>  {\sqrt n}  = \frac{1.96\sigma}{5}</span>
+<span id="cb33-201"><a href="#cb33-201" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-202"><a href="#cb33-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-203"><a href="#cb33-203" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-204"><a href="#cb33-204" aria-hidden="true" tabindex="-1"></a> n = (\frac{1.96 \cdot  42.5}{5})^2 </span>
+<span id="cb33-205"><a href="#cb33-205" aria-hidden="true" tabindex="-1"></a>$$</span>
+<span id="cb33-206"><a href="#cb33-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-207"><a href="#cb33-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-208"><a href="#cb33-208" aria-hidden="true" tabindex="-1"></a>SD.population <span class="ot">&lt;-</span> (<span class="dv">200-30</span>)<span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb33-209"><a href="#cb33-209" aria-hidden="true" tabindex="-1"></a>n<span class="ot">&lt;-</span> ((<span class="fl">1.96</span><span class="sc">*</span>SD.population)<span class="sc">/</span><span class="dv">5</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb33-210"><a href="#cb33-210" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(n) </span>
+<span id="cb33-211"><a href="#cb33-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-212"><a href="#cb33-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-213"><a href="#cb33-213" aria-hidden="true" tabindex="-1"></a>To calculate confidence interval width of \$10, financial aid office</span>
+<span id="cb33-214"><a href="#cb33-214" aria-hidden="true" tabindex="-1"></a>should collect a sample size of 278 students.</span>
+<span id="cb33-215"><a href="#cb33-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-216"><a href="#cb33-216" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 4</span></span>
+<span id="cb33-217"><a href="#cb33-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-218"><a href="#cb33-218" aria-hidden="true" tabindex="-1"></a>***According to a union agreement, the mean income for all senior-level</span>
+<span id="cb33-219"><a href="#cb33-219" aria-hidden="true" tabindex="-1"></a>workers in a large service company equals \$500 per week. A</span>
+<span id="cb33-220"><a href="#cb33-220" aria-hidden="true" tabindex="-1"></a>representative of a women's group decides to analyze whether the mean</span>
+<span id="cb33-221"><a href="#cb33-221" aria-hidden="true" tabindex="-1"></a>income μ for female employees matches this norm. For a random sample of</span>
+<span id="cb33-222"><a href="#cb33-222" aria-hidden="true" tabindex="-1"></a>nine female employees, ȳ = \$410 and s = 90 A. Test whether the mean</span>
+<span id="cb33-223"><a href="#cb33-223" aria-hidden="true" tabindex="-1"></a>income of female employees differs from \$500 per week. Include</span>
+<span id="cb33-224"><a href="#cb33-224" aria-hidden="true" tabindex="-1"></a>assumptions, hypotheses, test statistic, and P-value. Interpret the</span>
+<span id="cb33-225"><a href="#cb33-225" aria-hidden="true" tabindex="-1"></a>result. B. Report the P-value for Ha: μ <span class="sc">\&lt;</span> 500. Interpret. C. Report and</span>
+<span id="cb33-226"><a href="#cb33-226" aria-hidden="true" tabindex="-1"></a>interpret the P-value for Ha: μ <span class="sc">\&gt;</span> 500. (Hint: The P-values for the two</span>
+<span id="cb33-227"><a href="#cb33-227" aria-hidden="true" tabindex="-1"></a>possible one-sided tests must sum to 1.***</span>
+<span id="cb33-228"><a href="#cb33-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-229"><a href="#cb33-229" aria-hidden="true" tabindex="-1"></a><span class="fu">#### *A. Two-sided t.test:* </span></span>
+<span id="cb33-230"><a href="#cb33-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-231"><a href="#cb33-231" aria-hidden="true" tabindex="-1"></a>***Test whether the mean income of female employees differs from \$500</span>
+<span id="cb33-232"><a href="#cb33-232" aria-hidden="true" tabindex="-1"></a>per week. Include assumptions, hypotheses, test statistic, and P-value.</span>
+<span id="cb33-233"><a href="#cb33-233" aria-hidden="true" tabindex="-1"></a>Interpret the result.***</span>
+<span id="cb33-234"><a href="#cb33-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-235"><a href="#cb33-235" aria-hidden="true" tabindex="-1"></a>Assumption: The sample is representative of all senior-level female</span>
+<span id="cb33-236"><a href="#cb33-236" aria-hidden="true" tabindex="-1"></a>workers in that company.</span>
+<span id="cb33-237"><a href="#cb33-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-238"><a href="#cb33-238" aria-hidden="true" tabindex="-1"></a>Ho: mean of female income is close to the company policy income of</span>
+<span id="cb33-239"><a href="#cb33-239" aria-hidden="true" tabindex="-1"></a>\$500. H1: mean of female income is not the same as the company policy</span>
+<span id="cb33-240"><a href="#cb33-240" aria-hidden="true" tabindex="-1"></a>income of \$500.</span>
+<span id="cb33-241"><a href="#cb33-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-242"><a href="#cb33-242" aria-hidden="true" tabindex="-1"></a>To test this hypothesis, I will used one-sample t.test, which will</span>
+<span id="cb33-243"><a href="#cb33-243" aria-hidden="true" tabindex="-1"></a>compare mean and cinficance interval of a sample to a policy level of</span>
+<span id="cb33-244"><a href="#cb33-244" aria-hidden="true" tabindex="-1"></a>\$500.</span>
+<span id="cb33-245"><a href="#cb33-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-246"><a href="#cb33-246" aria-hidden="true" tabindex="-1"></a>T.test() function in R uses t-statistics to evaluate small sample size</span>
+<span id="cb33-247"><a href="#cb33-247" aria-hidden="true" tabindex="-1"></a>(9).</span>
+<span id="cb33-248"><a href="#cb33-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-249"><a href="#cb33-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-250"><a href="#cb33-250" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sample with a mean close to 410</span></span>
+<span id="cb33-251"><a href="#cb33-251" aria-hidden="true" tabindex="-1"></a>female.sample <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">9</span>, <span class="at">mean=</span><span class="dv">410</span>, <span class="at">sd=</span><span class="dv">90</span>)</span>
+<span id="cb33-252"><a href="#cb33-252" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the sample mean</span></span>
+<span id="cb33-253"><a href="#cb33-253" aria-hidden="true" tabindex="-1"></a>sample.mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(female.sample)</span>
+<span id="cb33-254"><a href="#cb33-254" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust the sample to have a mean of exactly 410</span></span>
+<span id="cb33-255"><a href="#cb33-255" aria-hidden="true" tabindex="-1"></a>female.sample <span class="ot">&lt;-</span> female.sample <span class="sc">+</span> <span class="dv">410</span> <span class="sc">-</span> sample.mean</span>
+<span id="cb33-256"><a href="#cb33-256" aria-hidden="true" tabindex="-1"></a>a.ttest.sample<span class="ot">&lt;-</span><span class="fu">t.test</span>(female.sample, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">mu=</span><span class="dv">500</span>)</span>
+<span id="cb33-257"><a href="#cb33-257" aria-hidden="true" tabindex="-1"></a>a.ttest.sample</span>
+<span id="cb33-258"><a href="#cb33-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-259"><a href="#cb33-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-260"><a href="#cb33-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-261"><a href="#cb33-261" aria-hidden="true" tabindex="-1"></a>The output shows 95% confidence interval (325 - 494) with the p-value</span>
+<span id="cb33-262"><a href="#cb33-262" aria-hidden="true" tabindex="-1"></a>under 0.05. This interval does not include policy value of \$500,</span>
+<span id="cb33-263"><a href="#cb33-263" aria-hidden="true" tabindex="-1"></a>meaning that the true female income mean at the company is very unlikely</span>
+<span id="cb33-264"><a href="#cb33-264" aria-hidden="true" tabindex="-1"></a>to be 500. Therefore I reject Ho, and Accept H1.</span>
+<span id="cb33-265"><a href="#cb33-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-266"><a href="#cb33-266" aria-hidden="true" tabindex="-1"></a><span class="fu">#### *B. One-sided, "less"*</span></span>
+<span id="cb33-267"><a href="#cb33-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-268"><a href="#cb33-268" aria-hidden="true" tabindex="-1"></a>***Report the P-value for Ha: μ \&lt; 500. Interpret.***</span>
+<span id="cb33-269"><a href="#cb33-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-270"><a href="#cb33-270" aria-hidden="true" tabindex="-1"></a>Ho: mean of female income is no less than the company policy income of</span>
+<span id="cb33-271"><a href="#cb33-271" aria-hidden="true" tabindex="-1"></a>\$500. H1: mean of female income is lower than the company policy income</span>
+<span id="cb33-272"><a href="#cb33-272" aria-hidden="true" tabindex="-1"></a>of \$500.</span>
+<span id="cb33-273"><a href="#cb33-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-274"><a href="#cb33-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-275"><a href="#cb33-275" aria-hidden="true" tabindex="-1"></a>b.ttest.sample<span class="ot">&lt;-</span><span class="fu">t.test</span>(female.sample, <span class="at">alternative =</span> <span class="st">"less"</span>, <span class="at">mu=</span><span class="dv">500</span>)</span>
+<span id="cb33-276"><a href="#cb33-276" aria-hidden="true" tabindex="-1"></a>b.ttest.sample</span>
+<span id="cb33-277"><a href="#cb33-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-278"><a href="#cb33-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-279"><a href="#cb33-279" aria-hidden="true" tabindex="-1"></a>The confidence interval for this hypothesis is even further from 500,</span>
+<span id="cb33-280"><a href="#cb33-280" aria-hidden="true" tabindex="-1"></a>that for two-sided test: (-inf, 455) which does not include 500. I</span>
+<span id="cb33-281"><a href="#cb33-281" aria-hidden="true" tabindex="-1"></a>accept alternative hypothesis that true female income is lower than 500.</span>
+<span id="cb33-282"><a href="#cb33-282" aria-hidden="true" tabindex="-1"></a>P-value for one-sided test is twice lower than for two-sided , because</span>
+<span id="cb33-283"><a href="#cb33-283" aria-hidden="true" tabindex="-1"></a>we are only estimating one direction from the mean.</span>
+<span id="cb33-284"><a href="#cb33-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-285"><a href="#cb33-285" aria-hidden="true" tabindex="-1"></a><span class="fu">#### *C. One-sided, "greater".*</span></span>
+<span id="cb33-286"><a href="#cb33-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-287"><a href="#cb33-287" aria-hidden="true" tabindex="-1"></a>***Report and interpret the P-value for Ha: μ \&gt; 500.***</span>
+<span id="cb33-288"><a href="#cb33-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-289"><a href="#cb33-289" aria-hidden="true" tabindex="-1"></a>Ho: mean of female income is not greater than the company policy income</span>
+<span id="cb33-290"><a href="#cb33-290" aria-hidden="true" tabindex="-1"></a>of \$500. H1: mean of female income is greater than the company policy</span>
+<span id="cb33-291"><a href="#cb33-291" aria-hidden="true" tabindex="-1"></a>income of \$500.</span>
+<span id="cb33-292"><a href="#cb33-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-293"><a href="#cb33-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-294"><a href="#cb33-294" aria-hidden="true" tabindex="-1"></a>c.ttest.sample<span class="ot">&lt;-</span><span class="fu">t.test</span>(female.sample, <span class="at">alternative =</span> <span class="st">"greater"</span>, <span class="at">mu=</span><span class="dv">500</span>)</span>
+<span id="cb33-295"><a href="#cb33-295" aria-hidden="true" tabindex="-1"></a>c.ttest.sample</span>
+<span id="cb33-296"><a href="#cb33-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-297"><a href="#cb33-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-298"><a href="#cb33-298" aria-hidden="true" tabindex="-1"></a>The confidence interval for this hypothesis includes 500, which</span>
+<span id="cb33-299"><a href="#cb33-299" aria-hidden="true" tabindex="-1"></a>suppports H0 that the female income is not greater than company policy.</span>
+<span id="cb33-300"><a href="#cb33-300" aria-hidden="true" tabindex="-1"></a>Additionally, p-value is greater than 0.05 which also supports Ho.</span>
+<span id="cb33-301"><a href="#cb33-301" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- We can see that the sum if p-values for B and C scenarions ( that female --&gt;</span></span>
+<span id="cb33-302"><a href="#cb33-302" aria-hidden="true" tabindex="-1"></a>income is less or greater than 500) equals to 1.</span>
+<span id="cb33-303"><a href="#cb33-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-304"><a href="#cb33-304" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb33-305"><a href="#cb33-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-306"><a href="#cb33-306" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 5</span></span>
+<span id="cb33-307"><a href="#cb33-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-308"><a href="#cb33-308" aria-hidden="true" tabindex="-1"></a>***Jones and Smith separately conduct studies to test H0: μ = 500</span>
+<span id="cb33-309"><a href="#cb33-309" aria-hidden="true" tabindex="-1"></a>against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se =</span>
+<span id="cb33-310"><a href="#cb33-310" aria-hidden="true" tabindex="-1"></a>10.0. Smith gets ȳ = 519.7, with se = 10.0.***</span>
+<span id="cb33-311"><a href="#cb33-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-312"><a href="#cb33-312" aria-hidden="true" tabindex="-1"></a>***A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t =</span>
+<span id="cb33-313"><a href="#cb33-313" aria-hidden="true" tabindex="-1"></a>1.97 and P-value = 0.049 for Smith.***</span>
+<span id="cb33-314"><a href="#cb33-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-315"><a href="#cb33-315" aria-hidden="true" tabindex="-1"></a>***B. Using α = 0.05, for each study indicate whether the result is</span>
+<span id="cb33-316"><a href="#cb33-316" aria-hidden="true" tabindex="-1"></a>"statistically significant."***</span>
+<span id="cb33-317"><a href="#cb33-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-318"><a href="#cb33-318" aria-hidden="true" tabindex="-1"></a>***C. Using this example, explain the misleading aspects of reporting</span>
+<span id="cb33-319"><a href="#cb33-319" aria-hidden="true" tabindex="-1"></a>the result of a test as "P ≤ 0.05" versus "P <span class="sc">\&gt;</span> 0.05," or as "reject H0"</span>
+<span id="cb33-320"><a href="#cb33-320" aria-hidden="true" tabindex="-1"></a>versus "Do not reject H0," without reporting the actual P-value.***</span>
+<span id="cb33-321"><a href="#cb33-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-322"><a href="#cb33-322" aria-hidden="true" tabindex="-1"></a><span class="fu">#### *A. Calculating t-statistics for each sample:</span></span>
+<span id="cb33-323"><a href="#cb33-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-324"><a href="#cb33-324" aria-hidden="true" tabindex="-1"></a>***Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97</span>
+<span id="cb33-325"><a href="#cb33-325" aria-hidden="true" tabindex="-1"></a>and P-value = 0.049 for Smith.***</span>
+<span id="cb33-326"><a href="#cb33-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-327"><a href="#cb33-327" aria-hidden="true" tabindex="-1"></a>To do that, we will create a summary table containing both samples/</span>
+<span id="cb33-328"><a href="#cb33-328" aria-hidden="true" tabindex="-1"></a>parameters and calculate t-statistic, critical value and p-value</span>
+<span id="cb33-329"><a href="#cb33-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-330"><a href="#cb33-330" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-331"><a href="#cb33-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-332"><a href="#cb33-332" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sample with a mean 519.5 for John</span></span>
+<span id="cb33-333"><a href="#cb33-333" aria-hidden="true" tabindex="-1"></a><span class="co"># John.data1&lt;- rnorm(n=1000,  mean =519.5)</span></span>
+<span id="cb33-334"><a href="#cb33-334" aria-hidden="true" tabindex="-1"></a><span class="co"># John.mean &lt;- mean(John.data1)</span></span>
+<span id="cb33-335"><a href="#cb33-335" aria-hidden="true" tabindex="-1"></a><span class="co"># John.data1&lt;- John.data1 + 519.5 - John.mean</span></span>
+<span id="cb33-336"><a href="#cb33-336" aria-hidden="true" tabindex="-1"></a><span class="co"># John.mean &lt;- mean(John.data1)</span></span>
+<span id="cb33-337"><a href="#cb33-337" aria-hidden="true" tabindex="-1"></a><span class="co"># John.mean</span></span>
+<span id="cb33-338"><a href="#cb33-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-339"><a href="#cb33-339" aria-hidden="true" tabindex="-1"></a>n<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">1000</span>) </span>
+<span id="cb33-340"><a href="#cb33-340" aria-hidden="true" tabindex="-1"></a>study.name <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"John"</span>, <span class="st">"Smith"</span>)</span>
+<span id="cb33-341"><a href="#cb33-341" aria-hidden="true" tabindex="-1"></a>Means <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">519.5</span>, <span class="fl">519.7</span>) </span>
+<span id="cb33-342"><a href="#cb33-342" aria-hidden="true" tabindex="-1"></a>SE <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">10.0</span>, <span class="fl">10.0</span>) </span>
+<span id="cb33-343"><a href="#cb33-343" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(study.name, n, Means, SE)</span>
+<span id="cb33-344"><a href="#cb33-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-345"><a href="#cb33-345" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> summary<span class="sc">%&gt;%</span></span>
+<span id="cb33-346"><a href="#cb33-346" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tail_area =</span> (<span class="dv">1</span><span class="fl">-0.95</span>)<span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb33-347"><a href="#cb33-347" aria-hidden="true" tabindex="-1"></a>         <span class="at">t_score =</span> <span class="fu">round</span>( <span class="fu">qt</span>(<span class="at">p =</span> <span class="dv">1</span><span class="sc">-</span>tail_area, <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>), <span class="dv">2</span>),<span class="co"># Critical t-value </span></span>
+<span id="cb33-348"><a href="#cb33-348" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.low  =</span> Means <span class="sc">-</span> t_score <span class="sc">*</span> SE, </span>
+<span id="cb33-349"><a href="#cb33-349" aria-hidden="true" tabindex="-1"></a>         <span class="at">CI.high =</span> Means <span class="sc">+</span> t_score <span class="sc">*</span> SE,</span>
+<span id="cb33-350"><a href="#cb33-350" aria-hidden="true" tabindex="-1"></a>         <span class="at">test.statistics =</span> ((Means <span class="sc">-</span> <span class="dv">500</span>)<span class="sc">/</span> SE),</span>
+<span id="cb33-351"><a href="#cb33-351" aria-hidden="true" tabindex="-1"></a>         <span class="at">p.value =</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pt</span>(test.statistics, <span class="at">df =</span> n <span class="sc">-</span><span class="dv">1</span>)) <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb33-352"><a href="#cb33-352" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb33-353"><a href="#cb33-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-354"><a href="#cb33-354" aria-hidden="true" tabindex="-1"></a> knitr<span class="sc">::</span><span class="fu">kable</span>(summary) </span>
+<span id="cb33-355"><a href="#cb33-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-356"><a href="#cb33-356" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-357"><a href="#cb33-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-358"><a href="#cb33-358" aria-hidden="true" tabindex="-1"></a>I can see from the table above, that the Confidence Interval (CI) for</span>
+<span id="cb33-359"><a href="#cb33-359" aria-hidden="true" tabindex="-1"></a>John's data inludes 500 value, while Somth's CI doesnt. Also I see that</span>
+<span id="cb33-360"><a href="#cb33-360" aria-hidden="true" tabindex="-1"></a>the two datasets result in slightly different test statistics and</span>
+<span id="cb33-361"><a href="#cb33-361" aria-hidden="true" tabindex="-1"></a>therefore p-value, which are very close to the tested value. Due to</span>
+<span id="cb33-362"><a href="#cb33-362" aria-hidden="true" tabindex="-1"></a>John's p-value being above 0.05, I will accept HO. However, Smith</span>
+<span id="cb33-363"><a href="#cb33-363" aria-hidden="true" tabindex="-1"></a>p-value is below 0.05 and I would decline HO and accept H1.</span>
+<span id="cb33-364"><a href="#cb33-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-365"><a href="#cb33-365" aria-hidden="true" tabindex="-1"></a><span class="fu">#### *B. Interpreting statistical significance.*</span></span>
+<span id="cb33-366"><a href="#cb33-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-367"><a href="#cb33-367" aria-hidden="true" tabindex="-1"></a>***Using α = 0.05, for each study indicate whether the result is</span>
+<span id="cb33-368"><a href="#cb33-368" aria-hidden="true" tabindex="-1"></a>"statistically significant."***</span>
+<span id="cb33-369"><a href="#cb33-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-370"><a href="#cb33-370" aria-hidden="true" tabindex="-1"></a>We can conclude that the difference between 500 and the mean of Smith's</span>
+<span id="cb33-371"><a href="#cb33-371" aria-hidden="true" tabindex="-1"></a>sample is **statistically significant to reject Ho**, while John's</span>
+<span id="cb33-372"><a href="#cb33-372" aria-hidden="true" tabindex="-1"></a>sample mean's difference from 500 is not statistically significant (i.e.</span>
+<span id="cb33-373"><a href="#cb33-373" aria-hidden="true" tabindex="-1"></a>not far enough from 500).</span>
+<span id="cb33-374"><a href="#cb33-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-375"><a href="#cb33-375" aria-hidden="true" tabindex="-1"></a><span class="fu">#### *C. Potential misleading of comparing p-value to 0.05:*</span></span>
+<span id="cb33-376"><a href="#cb33-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-377"><a href="#cb33-377" aria-hidden="true" tabindex="-1"></a>***Using this example, explain the misleading aspects of reporting the</span>
+<span id="cb33-378"><a href="#cb33-378" aria-hidden="true" tabindex="-1"></a>result of a test as "P ≤ 0.05" versus "P <span class="sc">\&gt;</span> 0.05," or as "reject H0"</span>
+<span id="cb33-379"><a href="#cb33-379" aria-hidden="true" tabindex="-1"></a>versus "Do not reject H0," without reporting the actual P-value.***</span>
+<span id="cb33-380"><a href="#cb33-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-381"><a href="#cb33-381" aria-hidden="true" tabindex="-1"></a>Comparing this two almost identical samples allowed us to demonstrate</span>
+<span id="cb33-382"><a href="#cb33-382" aria-hidden="true" tabindex="-1"></a>how a tiny difference in sample mean can produce difference in study</span>
+<span id="cb33-383"><a href="#cb33-383" aria-hidden="true" tabindex="-1"></a>outcomes (rejection vs acceptance of Ho). It is important to remember,</span>
+<span id="cb33-384"><a href="#cb33-384" aria-hidden="true" tabindex="-1"></a>that the sample means vary due to randomness of sampling process, and</span>
+<span id="cb33-385"><a href="#cb33-385" aria-hidden="true" tabindex="-1"></a>therefore produce variety of confidence intervals, test statistics and</span>
+<span id="cb33-386"><a href="#cb33-386" aria-hidden="true" tabindex="-1"></a>p-values.Reporting actual p-value will demonstrate its closeness to 0.05</span>
+<span id="cb33-387"><a href="#cb33-387" aria-hidden="true" tabindex="-1"></a>cutoff level, and warn the reader about potential error in conclusion.</span>
+<span id="cb33-388"><a href="#cb33-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-389"><a href="#cb33-389" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb33-390"><a href="#cb33-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-391"><a href="#cb33-391" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 6</span></span>
+<span id="cb33-392"><a href="#cb33-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-393"><a href="#cb33-393" aria-hidden="true" tabindex="-1"></a>***A school nurse wants to determine whether age is a factor in whether</span>
+<span id="cb33-394"><a href="#cb33-394" aria-hidden="true" tabindex="-1"></a>children choose a healthy snack after school. She conducts a survey of</span>
+<span id="cb33-395"><a href="#cb33-395" aria-hidden="true" tabindex="-1"></a>300 middle school students, with the results below. Test at α = 0.05 the</span>
+<span id="cb33-396"><a href="#cb33-396" aria-hidden="true" tabindex="-1"></a>claim that the proportion who choose a healthy snack differs by grade</span>
+<span id="cb33-397"><a href="#cb33-397" aria-hidden="true" tabindex="-1"></a>level. What is the null hypothesis? Which test should we use? What is</span>
+<span id="cb33-398"><a href="#cb33-398" aria-hidden="true" tabindex="-1"></a>the conclusion?***</span>
+<span id="cb33-399"><a href="#cb33-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-400"><a href="#cb33-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-401"><a href="#cb33-401" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">grade level</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"6"</span>,<span class="st">"7"</span>,<span class="st">"8"</span>)</span>
+<span id="cb33-402"><a href="#cb33-402" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Healthy snack</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">31</span>,<span class="dv">43</span>,<span class="dv">51</span>)</span>
+<span id="cb33-403"><a href="#cb33-403" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">Unhealthy snack</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">69</span>,<span class="dv">57</span>,<span class="dv">49</span>)</span>
+<span id="cb33-404"><a href="#cb33-404" aria-hidden="true" tabindex="-1"></a>table <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (<span class="st">`</span><span class="at">grade level</span><span class="st">`</span>, <span class="st">`</span><span class="at">Healthy snack</span><span class="st">`</span>, <span class="st">`</span><span class="at">Unhealthy snack</span><span class="st">`</span> )</span>
+<span id="cb33-405"><a href="#cb33-405" aria-hidden="true" tabindex="-1"></a><span class="co"># table &lt;- addmargins( table , margin =1:2,  FUN = sum)</span></span>
+<span id="cb33-406"><a href="#cb33-406" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(table)  </span>
+<span id="cb33-407"><a href="#cb33-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-408"><a href="#cb33-408" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-409"><a href="#cb33-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-410"><a href="#cb33-410" aria-hidden="true" tabindex="-1"></a>This table represents data for two categorical variables: <span class="in">`grade level`</span></span>
+<span id="cb33-411"><a href="#cb33-411" aria-hidden="true" tabindex="-1"></a>and <span class="in">`snack choice`</span></span>
+<span id="cb33-412"><a href="#cb33-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-413"><a href="#cb33-413" aria-hidden="true" tabindex="-1"></a>I will generate a sample data as given above:</span>
+<span id="cb33-414"><a href="#cb33-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-415"><a href="#cb33-415" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-416"><a href="#cb33-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-417"><a href="#cb33-417" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 6:</span></span>
+<span id="cb33-418"><a href="#cb33-418" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb33-419"><a href="#cb33-419" aria-hidden="true" tabindex="-1"></a>  <span class="co"># repeat until the desired number of successes is obtained</span></span>
+<span id="cb33-420"><a href="#cb33-420" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">31</span>) {</span>
+<span id="cb33-421"><a href="#cb33-421" aria-hidden="true" tabindex="-1"></a>          grade6 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.31</span>)</span>
+<span id="cb33-422"><a href="#cb33-422" aria-hidden="true" tabindex="-1"></a>  <span class="co"># count the number of successes</span></span>
+<span id="cb33-423"><a href="#cb33-423" aria-hidden="true" tabindex="-1"></a>          successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(grade6)</span>
+<span id="cb33-424"><a href="#cb33-424" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb33-425"><a href="#cb33-425" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-426"><a href="#cb33-426" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 7:</span></span>
+<span id="cb33-427"><a href="#cb33-427" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb33-428"><a href="#cb33-428" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">43</span>) {</span>
+<span id="cb33-429"><a href="#cb33-429" aria-hidden="true" tabindex="-1"></a>            grade7 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.43</span>)</span>
+<span id="cb33-430"><a href="#cb33-430" aria-hidden="true" tabindex="-1"></a>            successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(grade7)</span>
+<span id="cb33-431"><a href="#cb33-431" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb33-432"><a href="#cb33-432" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb33-433"><a href="#cb33-433" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generating sample for grade 8:</span></span>
+<span id="cb33-434"><a href="#cb33-434" aria-hidden="true" tabindex="-1"></a>  successes <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb33-435"><a href="#cb33-435" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (successes <span class="sc">!=</span> <span class="dv">51</span>) {</span>
+<span id="cb33-436"><a href="#cb33-436" aria-hidden="true" tabindex="-1"></a>          grade8 <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.51</span>)</span>
+<span id="cb33-437"><a href="#cb33-437" aria-hidden="true" tabindex="-1"></a>          successes <span class="ot">&lt;-</span> <span class="fu">sum</span>(grade8)</span>
+<span id="cb33-438"><a href="#cb33-438" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb33-439"><a href="#cb33-439" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Combining all grades in one table for analysis:</span></span>
+<span id="cb33-440"><a href="#cb33-440" aria-hidden="true" tabindex="-1"></a>  table2<span class="ot">&lt;-</span> <span class="fu">data.frame</span>(grade6, grade7, grade8)</span>
+<span id="cb33-441"><a href="#cb33-441" aria-hidden="true" tabindex="-1"></a>  table2<span class="ot">&lt;-</span> table2 <span class="sc">%&gt;%</span></span>
+<span id="cb33-442"><a href="#cb33-442" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(<span class="fu">c</span>(grade6, grade7, grade8 ), <span class="at">names_to=</span> <span class="st">"grade"</span>, <span class="at">values_to=</span><span class="st">"healthy.choice"</span>)</span>
+<span id="cb33-443"><a href="#cb33-443" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-444"><a href="#cb33-444" aria-hidden="true" tabindex="-1"></a>  xtabs <span class="ot">&lt;-</span><span class="fu">xtabs</span>(<span class="sc">~</span>table2<span class="sc">$</span>grade <span class="sc">+</span> table2<span class="sc">$</span>healthy.choice)</span>
+<span id="cb33-445"><a href="#cb33-445" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(  xtabs )  </span>
+<span id="cb33-446"><a href="#cb33-446" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-447"><a href="#cb33-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-448"><a href="#cb33-448" aria-hidden="true" tabindex="-1"></a>The school nurse collected this data to test the following hypothesis:</span>
+<span id="cb33-449"><a href="#cb33-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-450"><a href="#cb33-450" aria-hidden="true" tabindex="-1"></a>Ho: all grades' samples are coming from the same general population, and</span>
+<span id="cb33-451"><a href="#cb33-451" aria-hidden="true" tabindex="-1"></a>probability of making healthy choice is equal for all grades.</span>
+<span id="cb33-452"><a href="#cb33-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-453"><a href="#cb33-453" aria-hidden="true" tabindex="-1"></a>H1: probability of making healthy choice is not equal for all grades.</span>
+<span id="cb33-454"><a href="#cb33-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-455"><a href="#cb33-455" aria-hidden="true" tabindex="-1"></a>I will use a chi-square test to test this hypothesis:</span>
+<span id="cb33-456"><a href="#cb33-456" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-457"><a href="#cb33-457" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-458"><a href="#cb33-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-459"><a href="#cb33-459" aria-hidden="true" tabindex="-1"></a>  table2<span class="sc">$</span>healthy.choice <span class="ot">&lt;-</span> <span class="fu">as.character</span> (table2<span class="sc">$</span>healthy.choice)</span>
+<span id="cb33-460"><a href="#cb33-460" aria-hidden="true" tabindex="-1"></a>  table2<span class="sc">$</span>grade <span class="ot">&lt;-</span> <span class="fu">as.character</span>(table2<span class="sc">$</span>grade)</span>
+<span id="cb33-461"><a href="#cb33-461" aria-hidden="true" tabindex="-1"></a>ch.sq<span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(table2<span class="sc">$</span>grade, table2<span class="sc">$</span>healthy.choice ,<span class="at">correct =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-462"><a href="#cb33-462" aria-hidden="true" tabindex="-1"></a>ch.sq</span>
+<span id="cb33-463"><a href="#cb33-463" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-464"><a href="#cb33-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-465"><a href="#cb33-465" aria-hidden="true" tabindex="-1"></a>The p-value of 0.01 makes me to reject H0 hypothesis that all grades</span>
+<span id="cb33-466"><a href="#cb33-466" aria-hidden="true" tabindex="-1"></a>have equal probability, and accpet H1, that the kids of different grades</span>
+<span id="cb33-467"><a href="#cb33-467" aria-hidden="true" tabindex="-1"></a>differ in probability of making haealthy snack choice.</span>
+<span id="cb33-468"><a href="#cb33-468" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-469"><a href="#cb33-469" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb33-470"><a href="#cb33-470" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-471"><a href="#cb33-471" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 7</span></span>
+<span id="cb33-472"><a href="#cb33-472" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-473"><a href="#cb33-473" aria-hidden="true" tabindex="-1"></a>Per-pupil costs (in thousands of dollars) for cyber charter school</span>
+<span id="cb33-474"><a href="#cb33-474" aria-hidden="true" tabindex="-1"></a>tuition for school districts in three areas are shown. Test the claim</span>
+<span id="cb33-475"><a href="#cb33-475" aria-hidden="true" tabindex="-1"></a>that there is a difference in means for the three areas, using an</span>
+<span id="cb33-476"><a href="#cb33-476" aria-hidden="true" tabindex="-1"></a>appropriate test. What is the null hypothesis? Which test should we use?</span>
+<span id="cb33-477"><a href="#cb33-477" aria-hidden="true" tabindex="-1"></a>What is the conclusion?</span>
+<span id="cb33-478"><a href="#cb33-478" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-479"><a href="#cb33-479" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-480"><a href="#cb33-480" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-481"><a href="#cb33-481" aria-hidden="true" tabindex="-1"></a>Area<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fl">6.2</span>, <span class="fl">9.3</span>, <span class="fl">6.8</span>, <span class="fl">6.1</span>, <span class="fl">6.7</span>, <span class="fl">7.5</span>)</span>
+<span id="cb33-482"><a href="#cb33-482" aria-hidden="true" tabindex="-1"></a>Area<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fl">7.5</span>, <span class="fl">8.2</span>, <span class="fl">8.5</span>, <span class="fl">8.2</span>, <span class="fl">7.0</span>, <span class="fl">9.3</span>)</span>
+<span id="cb33-483"><a href="#cb33-483" aria-hidden="true" tabindex="-1"></a>Area<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fl">5.8</span>, <span class="fl">6.4</span> ,<span class="fl">5.6</span>, <span class="fl">7.1</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>)</span>
+<span id="cb33-484"><a href="#cb33-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-485"><a href="#cb33-485" aria-hidden="true" tabindex="-1"></a>table.q7 <span class="ot">&lt;-</span> <span class="fu">data.frame</span> (Area<span class="fl">.1</span>, Area<span class="fl">.2</span>, Area<span class="fl">.3</span>)</span>
+<span id="cb33-486"><a href="#cb33-486" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(table.q7 )   </span>
+<span id="cb33-487"><a href="#cb33-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-488"><a href="#cb33-488" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-489"><a href="#cb33-489" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-490"><a href="#cb33-490" aria-hidden="true" tabindex="-1"></a>Ho: there is no difference in means between the three areas. H1: At</span>
+<span id="cb33-491"><a href="#cb33-491" aria-hidden="true" tabindex="-1"></a>least one of these areas' means is significantly different.</span>
+<span id="cb33-492"><a href="#cb33-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-493"><a href="#cb33-493" aria-hidden="true" tabindex="-1"></a>To test this hypopthesis, I will use ANOVA test to compare means of</span>
+<span id="cb33-494"><a href="#cb33-494" aria-hidden="true" tabindex="-1"></a>three samples:</span>
+<span id="cb33-495"><a href="#cb33-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-496"><a href="#cb33-496" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb33-497"><a href="#cb33-497" aria-hidden="true" tabindex="-1"></a> table.q7  <span class="ot">&lt;-</span> table.q7  <span class="sc">%&gt;%</span></span>
+<span id="cb33-498"><a href="#cb33-498" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pivot_longer</span>(<span class="fu">c</span>(Area<span class="fl">.1</span>, Area<span class="fl">.2</span>, Area<span class="fl">.3</span> ), <span class="at">names_to=</span> <span class="st">"Area"</span>, <span class="at">values_to=</span><span class="st">"score"</span>)</span>
+<span id="cb33-499"><a href="#cb33-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-500"><a href="#cb33-500" aria-hidden="true" tabindex="-1"></a>table.q7<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">as.factor</span> (table.q7<span class="sc">$</span>Area)</span>
+<span id="cb33-501"><a href="#cb33-501" aria-hidden="true" tabindex="-1"></a>anova.q7 <span class="ot">&lt;-</span> <span class="fu">aov</span>( score <span class="sc">~</span> Area, table.q7 )</span>
+<span id="cb33-502"><a href="#cb33-502" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova.q7)</span>
+<span id="cb33-503"><a href="#cb33-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-504"><a href="#cb33-504" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb33-505"><a href="#cb33-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-506"><a href="#cb33-506" aria-hidden="true" tabindex="-1"></a>The results of ANOVA test demonstrate p-value of 0.00397. I make a</span>
+<span id="cb33-507"><a href="#cb33-507" aria-hidden="true" tabindex="-1"></a>conclusion that at least one of the three areas' means is significantly</span>
+<span id="cb33-508"><a href="#cb33-508" aria-hidden="true" tabindex="-1"></a>different from others (i.e reject Ho and accept H1).</span>
+<span id="cb33-509"><a href="#cb33-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-510"><a href="#cb33-510" aria-hidden="true" tabindex="-1"></a>---</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
