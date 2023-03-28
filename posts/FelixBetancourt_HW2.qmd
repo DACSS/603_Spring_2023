@@ -1,0 +1,338 @@
+---
+title: "Homework 2"
+author: "Felix Betanourt"
+desription: "DACSS 603 HW2"
+date: "03/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - anova
+  - chi-square
+  - p value
+  - confidence interval
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Homework 2
+
+DACSS 603, Spring 2023
+
+```{r}
+# Loading packages
+
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyverse))
+library(formattable)
+suppressPackageStartupMessages(library(kableExtra))
+library(ggplot2)
+library(readxl)
+```
+
+#### 1. The time between the date a patient was recommended for heart surgery and the surgery date for cardiac patients in Ontario was collected by the Cardiac Care Network ("Wait Times Data Guide," Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean and sample standard deviation for wait times (in days) of patients for two cardiac procedures are given in the accompanying table. Assume that the sample is representative of the Ontario population.
+
+| Surgical Procedure | Sample Size | Mean wait time | Standard Deviation |
+|--------------------|-------------|----------------|--------------------|
+| Bypass             | 539         | 19             | 10                 |
+| Angiography        | 847         | 18             | 9                  |
+
+#### Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?
+
+```{r}
+
+bypass_n <- 539
+bypass_mean <- 19
+bypass_sd <- 10
+```
+
+Confidence interval (90%) for Bypass type of surgery
+
+```{r}
+error <- qnorm(p=0.9)*bypass_sd/sqrt(bypass_n)
+b_left <- bypass_mean-error
+b_right <- bypass_mean+error
+ci_b <- c(b_left, b_right)
+print(ci_b)
+```
+
+Confidence interval (90%) for Angiography type of surgery
+
+```{r}
+angio_n <- 847
+angio_mean <- 18
+angio_sd <- 9
+
+error <- qnorm(p=0.9)*angio_sd/sqrt(angio_n)
+a_left <- angio_mean-error
+a_right <- angio_mean+error
+ci_a <- c(a_left, a_right)
+print(ci_a)
+```
+
+#### Which is the narrower method?
+
+```{r}
+b_diff <- b_right-b_left
+a_diff <- a_right - a_left
+```
+
+Bypass CI length
+
+```{r}
+#bypass
+print(b_diff)
+```
+
+Angiography CI length
+
+```{r}
+#Angiography
+print(a_diff)
+```
+
+CI for Angiography is the narrower method.
+
+------------------------------------------------------------------------
+
+#### 2. A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success.
+
+#### Construct and interpret a 95% confidence interval for p.
+
+```{r}
+# p value
+
+p <- 567/1031
+p
+
+z <- qnorm(0.95)
+
+#Confidence interval for p
+CI <- p + c(-1, 1) * z * sqrt((p*(1-p))/1031)
+CI
+
+```
+
+Based on the sample of 1031 adult Americans, we estimate, with 95%
+confidence, that between 52.45% and 57.54% of all adult Americans
+believe that a college education is essential for success.
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+#### 3. Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within \$5 of the true population mean (i.e. they want the confidence interval to have a length of \$10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between \$30 and \$200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation).
+
+#### Assuming the significance level to be 5%, what should be the size of the sample.
+
+```{r}
+sigma <- (200 - 30) / 4 
+error <- 5
+
+n <- ceiling((qnorm(0.95) * sigma / error) ^ 2)
+n
+
+```
+The sample size should be 196.
+
+
+#### According to a union agreement, the mean income for all senior-level workers in a large service company equals \$500 per week. A representative of a women's group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = \$410 and s = 90
+ 
+#### A. Test whether the mean income of female employees differs from \$500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result.
+
+
+```{r}
+n_s <- 9  
+sample_mean <- 410  
+sample_sd <- 90  
+```
+
+Assuming that:
+
+1. The sample of female employees is a random sample from the population of all female employees.
+2. The population of female employees' incomes follows a normal distribution or the sample size is large enough for the central limit theorem to apply.
+3. The population standard deviation is unknown.
+
+Null Hypothesis H0: Women's income mean (μ) = \$500 per week
+
+
+```{r}
+
+h0_mean <- 500
+
+# t value
+t_stat <- (sample_mean - h0_mean) / (sample_sd / sqrt(n_s))
+
+#p-value
+p_val <- 2 * pt(-abs(t_stat), df = n_s - 1)
+p_val
+
+```
+
+P-value is significantly lower than 0.05 significance level, therefore we reject the null hypothesis and we can't say that woman's income mean equals the population mean (\$500 per week).
+
+Mean income of female employees in the company is significantly lower than $500 per week.
+
+
+#### B. Report the P-value for Ha: μ \< 500. Interpret.
+
+```{r}
+p_left <- pt(t_stat, df = n_s-1)
+p_left
+```
+
+P-value for the left-tailed test is less than the significance level of 0.05. Therefore, we reject the null hypothesis and conclude that there is sufficient evidence to suggest that the mean income of female employees is less than $500 per week
+
+
+#### C. Report and interpret the P-value for Ha: μ \> 500. (Hint: The P-values for the two possible one-sided tests must sum to 1.
+
+
+```{r}
+p_right <- 1 - p_left
+p_right
+
+```
+
+#### 5.  Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.
+
+A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.
+
+```{r}
+n_s2 <- 1000 
+h0_mean2 <- 500
+
+#Jones
+sample_meanj <- 519.5  
+sample_sdj <- 10  
+
+# t value
+t_statj <- (sample_meanj - h0_mean2) / (sample_sdj)
+t_statj
+
+#p-value
+p_valj <- 2 * pt(-abs(t_statj), df = n_s2 - 1)
+p_valj
+```
+
+```{r}
+
+#Smith
+sample_meansm <- 519.7  
+sample_sdsm <- 10  
+
+# t value
+t_statsm <- (sample_meansm - h0_mean2) / (sample_sdsm)
+t_statsm
+
+#p-value
+p_valsm <- 2 * pt(-abs(t_statsm), df = n_s2 - 1)
+p_valsm
+
+```
+
+B. Using α = 0.05, for each study indicate whether the result is "statistically significant."
+
+We fail to reject the null hypothesis. In this case, both studies have p-values slightly above 0.05, but below it. So we can say that both studies have marginally significant results at the α = 0.05 level.
+
+C. Using this example, explain the misleading aspects of reporting the result of a test as "P ≤ 0.05" versus "P \> 0.05," or as "reject H0" versus "Do not reject H0," without reporting the actual P-value.
+
+Reporting the result of a hypothesis test simply as "P ≤ 0.05" or "reject H0" without reporting the actual p-value can be misleading in several ways:
+
+- It doesn't provide information about the magnitude of the effect or the strength of evidence against the null hypothesis. 
+
+- It does not convey the uncertainty associated with the p-value. In this example, both studies have p-values slightly above and below 0.05. Reporting the result as simply "P ≤ 0.05" implies a false sense of certainty. 
+
+
+
+---------------------------------------------------------------------------------------------------------
+
+#### 6.  A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack  differs by grade level. 
+
+| Grade Level        | 6th grade   | 7th grade      | 8th grade          |
+|--------------------|-------------|----------------|--------------------|
+| Healthy Snack      | 31          | 43             | 51                 |
+| Unhealthy Snack    | 69          | 57             | 49                 |
+
+
+#### What is the null hypothesis? 
+
+The proportion of observed children choosing healthy or unhealthy snack is equal to the expected proportion in all grades. 
+
+
+#### Which test should we use? 
+
+Chi-square
+
+
+```{r}
+
+snack_obs <- matrix(c(31, 43, 51, 69, 57, 49), nrow = 2, byrow = TRUE)
+rownames(snack_obs) <- c("Healthy", "Unhealthy")
+colnames(snack_obs) <- c("6th grade", "7th grade", "8th grade")
+
+obs <- table(snack_obs)
+
+total_obs <- sum(snack_obs)
+snack_exp <- rep(sum(snack_obs)/3, 3)
+snack_exp <- rbind(snack_exp, snack_exp)
+rownames(snack_exp) <- c("Healthy", "Unhealthy")
+colnames(snack_exp) <- c("6th grade", "7th grade", "8th grade")
+snack_exp <- snack_exp * total_obs
+
+chisq.test(snack_obs, snack_exp, 0.05)
+
+```
+
+#### What is the conclusion?
+
+We reject the Null Hypothesis. Seems that there is a significant difference between observed proportion of children choosing healthy snack based on the grade versus the expected proportion. In this case seems that in low grades children the proportion of children choosing healthy snack are lower than higher grades.
+
+
+#### 7. Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. 
+
+"Area 1" 6.2 9.3 6.8 6.1 6.7 7.5 
+"Area 2" 7.5 8.2 8.5 8.2 7.0 9.3 
+"Area 3" 5.8 6.4 5.6 7.1 3.0 3.5
+
+#### What is the null hypothesis? 
+
+The means for the Per-pupil costs in the 3 school districts areas are equal.
+
+#### Which test should we use? 
+
+One-way Anova.
+
+```{r}
+
+area1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+area2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+area3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+perpupil <- data.frame(area1, area2, area3)
+
+summary(perpupil)
+
+perpupil2 <- stack(perpupil[,1:3])
+
+model <- aov(values ~ ind, data = perpupil2)
+
+summary(model)
+
+```
+
+#### What is the conclusion?
+
+The per-pupil cost is significantly different based on the area (p<0.05).
+
+
+
