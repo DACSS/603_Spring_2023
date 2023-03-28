@@ -1,0 +1,293 @@
+---
+title: "Homework 2"
+author: "Christine Brydges"
+description: "Homework 2 Submission"
+date: "03/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - hypothesis testing
+  - probability
+---
+
+# Question 1
+
+Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?
+
+First, we will read in the data into a data frame
+
+```{r}
+`Surgical Procedure` <- c("Bypass", "Angiography" )
+`Sample Size` <- c(539,847 )
+`Mean Wait Time` <- c(19, 18)
+`Standard Deviation` <- c(10, 9)
+surgicaldata<- data.frame(`Surgical Procedure`,`Sample Size`, `Mean Wait Time`, `Standard Deviation` )
+print(surgicaldata)
+```
+
+Below, we will calculate the lower bounds and upper bounds of a 90% confidence interval for the bypass and angiography data in order to see which has a wider confidence interval.
+
+As shown below, the confidence interval of the Angiography data is smaller than the confidence interval of the Bypass data. This means that the Angiography data sample has more precise population estimates than the Bypass data.
+
+```{r, echo=T}
+# Calculate the t_score, lower bound of CI, upper bound of CI, and width of CI for Bypass and Angiography data. Add these calculations as columns to the original data table using mutate 
+surgicaldata <- surgicaldata %>%
+  mutate(confidence_level = 0.9,
+         p_value = 1 - (1-confidence_level)/2,
+         t_score = qt(p_value, df = `Sample.Size` -1),
+         CI.low  = `Mean Wait Time` - t_score * `Standard.Deviation` / sqrt(`Sample.Size`), 
+         CI.high= `Mean Wait Time` + t_score * `Standard.Deviation` / sqrt(`Sample.Size`),
+         CI.width = abs(CI.high - CI.low)
+         )
+#Print Results
+print(surgicaldata)
+cat("Bypass 90% confidence interval width:", surgicaldata[1, 10], "& Angiography 90% confidence interval width:", surgicaldata[2, 10])
+```
+
+# Question 2
+
+A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success.
+
+Construct and interpret a 95% confidence interval for p.
+
+First, we will find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success.
+
+```{r, echo=T}
+sample_size_college <- 1031
+college_essential <- 567
+college_essential_proportion <- (college_essential/sample_size_college)
+#Use the prop.test() function to find the confidence interval for the point estimate (proportion)
+proportion_test <- prop.test(college_essential, sample_size_college, conf.level = 0.95)$conf.int
+cat("The point estimate of of all adult Americans who believe that a college education is essential for success is", college_essential_proportion, "The 95% confidence interval for this point estimate is", proportion_test)
+```
+
+This 95% confidence interval for a confidence interval of 52% - 58% means that we can be 95% confident that the percentage of all adult Americans believe that a college education is essential for success is between 52% - 58%.
+
+# Question 3
+
+Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within \$5 of the true population mean (i.e. they want the confidence interval to have a length of \$10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between 30 dollars and 200 dollars. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation).
+
+Assuming the significance level to be 5%, what should be the size of the sample?
+
+We will calculate the size of the sample we will need to determine the mean cost of textbooks per semester for students.
+
+As shown below, the sample size needed to determine the mean cost of textbooks per semester for students at a 95% confidence interval is 278 students.
+
+```{r, echo=T}
+
+#Calculate pop_sd by (200 - 30 = 170)/4 (the population sd is a quarter of current sample standard deviation)
+pop_sd <- (170/4)
+ME <- 5
+
+#Calculate sample_size with margin of error formula (ME = z *(sigma/sqrt(n)), solving for N this is n = (z * sigma/ME)^2
+#To do that, first we will calculate z score critical value using this formula critical_value_for_z <- qnorm(p, lower.tail = TRUE)
+p_each_tail <- (0.05/2)
+#To use qnorm, we will want to use the p value under just one (not both tails), 0.05/2 
+z <-  abs(qnorm(p_each_tail))
+sample_size <- round(((pop_sd * z)/ME)^ 2)
+cat("UMass Amherst needs a sample size of",sample_size, "students to determine the mean cost of textbooks per semester for students at a 95% confidence interval.")
+
+```
+
+# Question 4
+
+## a
+
+According to a union agreement, the mean income for all senior-level workers in a large service company equals \$500 per week. A representative of a women's group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = \$410 and s = 90.
+
+**Approach:**
+
+I will be using a critical value approach to hypothesis testing, finding a test statistic, the critical value, and comparing the two.
+
+**Hypotheses:**
+
+**H0:** There is no difference in the mean income of female employees in the large service company and the sample group.
+
+**H1:** There is a significant difference in the mean income of female employees in the large service company and the sample group.
+
+To test the hypothesis, I will compare the test statistic to the critical value. If the test statistic is more extreme (in the positive and/or negative direction), the null hypothesis is rejected.
+
+If the test statistic is not as extreme as the critical value, the null hypothesis is not rejected.
+
+**Assumptions:**
+
+-   The data is normally distributed.
+
+-   The sample is a truly random sample
+
+-   The two groups do not have overlapping employees and are truly independent samples
+
+**Significance Level:**
+
+We will use a significant level of 0.05
+
+The test statistic is more extreme (-3) than the critical value (-1.83), and the difference is statistically significant with a p-value of 0.017 as shown below, so we can reject the null hypothesis that there is no different in the mean income of female employees in the large service group and in the sample group of female employees.
+
+Next, we used a one sample t-test to understand the p value for Ha: mu \< 500.
+
+Ho: Mean of female income is not less than the company policy income of \$500. H1: Mean of female income is lower than the company policy income of \$500
+
+and a one sample t-test to understand the p value for Ha: mu \> 500 Ho: Mean of female income is not more than the company policy income of \$500. H1: Mean of female income is more than the company policy income of \$500
+
+The p-value for Ha: mu \< 500 is .008 and the p-value for Ha: mu \>500 is 0.99, meaning there is a significant chance that mu is less than 500 and a very low chance of mu being more than 500. In other words, it is highly likely that the mean income of female employees in the sample group is lower than the mean income of female employees in the large service group.
+
+```{r, echo=T}
+sample_income <- 500
+sample_size <- 9
+benchmark_income <- 410
+sample_standard_deviation <- 90
+
+#First, I will calculate the standard error of the mean in order to calculate a test statistic. Standard error can be calculated by standard_error = (sample_standard_deviation/sqrt(sample_size))
+
+sample_standard_error <- sample_standard_deviation/sqrt(sample_size)
+
+test_statistic <- (benchmark_income - sample_income)/(sample_standard_error)
+print(test_statistic)
+
+# We will use this formula to find the t critical value: qt(p, df, lower.tail=TRUE); with p being the significance and df being the degrees of freedom (in this case, number of observations)
+critical_value_t <- qt(.05, 9, lower.tail = TRUE)
+print(critical_value_t)
+
+p_value_of_difference <- pt(test_statistic, df =(sample_size - 1), lower.tail = TRUE)*2
+print(p_value_of_difference)
+
+#Use a one sample t-test to understand p-value for Ha: mu <500
+p_value_smaller500 <- pt(test_statistic, df =(sample_size - 1), lower.tail = TRUE)
+cat("The p-value for the mean being less than $500 is", p_value_smaller500, "and")
+
+#Use a one sample t-test to understand p-value for Ha: mu > 500
+p_value_greater500 <- pt(test_statistic, df =(sample_size - 1), lower.tail = FALSE)
+cat(" the p-value for the mean being more than $500 is", p_value_greater500)
+```
+
+# Question 5
+
+Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000.
+
+Jones gets ȳ = 519.5, with se = 10.0.
+
+Smith gets ȳ = 519.7, with se = 10.0.
+
+## a.
+
+Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.
+
+First we will calculate the test statistics and p-values for each.
+
+```{r}
+means <- c(519.5,519.7) 
+sample_size <- c(1000, 1000)
+n <- 1000
+standard_error <- c(10,10)
+two_studies <- data.frame(means, sample_size, standard_error)
+
+two_studies <- two_studies %>%
+  mutate(tail_area = (1-0.95)/2,
+         t_score = round( qt(p = 1-tail_area, df = (n - 1)), 2),
+         CI.low  = means - t_score * standard_error, 
+         CI.high = means + t_score * standard_error,
+         test.statistics = ((means - 500)/ standard_error),
+         p.value = (1 - pt(test.statistics, df = n -1)) * 2
+         )
+
+print(two_studies)
+```
+
+## b.
+
+Using α = 0.05, for each study indicate whether the result is "statistically significant."
+
+As can be seen above, despite having very close numbers for their means, Jones and Smith had different "significance" results, with Jones getting a non-significant result (with a P-value of 0.051 and a t of 1.95) and Smith getting a significant result (with a P-value of 0.049 and a t of 1.97).
+
+## c.
+
+Using this example, explain the misleading aspects of reporting the result of a test as "P ≤ 0.05" versus "P \> 0.05," or as "reject H0" versus "Do not reject H0," without reporting the actual P-value.
+
+It is important to report the actual P-value, because the degree to which something was insignificant or not is important. As can be seen in this example, Jones' results are just barely insignificant, and if repeated could yield significant results. Also, it helps people make assumptions based on a "rounding error". If both were to round their numbers up and down, they would both come to have 0.05, which would be significant for both of them.
+
+# Question 6
+
+A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+We will want to use a Chi-Square test because we will be looking at proportions, which warrants a Chi-Square test as shown below
+
+![](images/Hypothesis_Test.jpeg)
+
+**Hypotheses:**
+
+**H0 :** The grade level variable and proportion of students choosing a healthy snack variable are independent from one another, there is no relationship between them.
+
+**H1:** The grade level variable and proportion of students choosing a healthy snack variable are dependent, there is a relationship between the two categorical variables. Knowing the value of one variable helps to predict the value of the other variable
+
+```{r}
+snacks_data <- data.frame(grade=c("6th grade", "7th grade", "8th grade"), healthysnacks = c(31, 43, 51), unhealthysnacks = c(69, 57, 49))
+
+snacks_data$proportion_chose_healthy <- (snacks_data$healthysnacks/(snacks_data$healthysnacks + snacks_data$unhealthysnacks))
+
+print(snacks_data)
+```
+
+Then, we will want to run the Chi-square test to see if there is a relationship between the grade level variable and proportion of students choosing healthy snacks variable.
+
+As can be seen below, the p-value is 0.1991, or more than 0.05. That means that we cannot reject the null hypothesis that there are no significant differences between the proportion of students that choose healthy snacks, based on differences in grade level .
+
+```{r}
+
+chisq.test(snacks_data$proportion_chose_healthy, snacks_data$grade, correct = FALSE)
+
+```
+
+## Question 7
+
+Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+Since we are comparing the means of three related samples for a categorical predictor variable (school district) and a quantitative outcome variable (per-pupil cost) we will be using an ANOVA test.
+
+Assumptions in running this test are: - The observations are obtained independently and randomly from the populations in the three district areas - The data for every Area is normally distributed. - These normal populations have a common variance
+
+The hypotheses we will be testing with this ANOVA test area: H0/Null: There is no difference in the mean per-pupil cost for any of the areas/districts H1/Alternative: The mean per-pupil cost for the areas/districts are not equal.
+
+![A flowchart for choosing a statistical test (From scribbr.com)](images/flowchart-for-choosing-a-statistical-test.png){fig-align="left" width="350"}
+
+First, we will want to create a data frame out of vectors of the values for each District Area.
+
+```{r}
+#Load tidyr
+library(tidyr)
+
+#Create a data frame out of three vectors from different school districts
+Area_1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+Area_2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+Area_3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+```
+
+To use an ANOVA function, the data needs to be normally distributed.
+
+To check for normal distribution, we can create qqplots to ensure normal distribution. The three groups appear to be normally distributed, as can be seen by most points being on or close to the line. There are a few outliers for Area 1 and Area 2. We may want to consider removing these outliers for analysis.
+
+```{r}
+qqnorm(Area_1, pch = 1, frame = FALSE)
+qqline(Area_1, col = "steelblue", lwd = 2)
+qqnorm(Area_2, pch = 1, frame = FALSE)
+qqline(Area_2, col = "orange", lwd = 2)
+qqnorm(Area_3, pch = 1, frame = FALSE)
+qqline(Area_3, col = "hotpink", lwd = 2)
+```
+
+Next, we will run an ANOVA test to see if there is a significant difference between the price per student in the different areas.
+
+From the results below, we can see there is a significant difference between the areas, as Pr(\>F) is less than 0.05. This allows us to reject the null hypothesis that there is no difference in the average
+
+```{r}
+All_Areas <- data.frame(Area_1, Area_2, Area_3)
+
+All_Areas <- pivot_longer(All_Areas, cols = c(Area_1, Area_2, Area_3), names_to = "Area", values_to = "Per_Pupil_Costs")
+
+one.way <- aov(Per_Pupil_Costs ~ Area, data = All_Areas)
+summary(one.way)
+```
