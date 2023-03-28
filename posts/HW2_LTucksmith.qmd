@@ -1,0 +1,251 @@
+---
+title: "HW2"
+author: "Liam Tucksmith"
+desription: "HW2"
+date: "03/12/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - Liam Tucksmith
+  - LungCapData
+  - tidyverse
+  - readxl
+  - ggplot2
+  - dplyr
+  - tidyr
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo=T}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=T}
+df <- read_excel("_data/LungCapData.xls")
+```
+
+1.  The time between the date a patient was recommended for heart
+    surgery and the surgery date for cardiac patients in Ontario was
+    collected by the Cardiac Care Network ("Wait Times Data Guide,"
+    Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The
+    sample mean and sample standard deviation for wait times (in days)
+    of patients for two cardiac procedures are given in the accompanying
+    table. Assume that the sample is representative of the Ontario
+    population
+
+Construct the 90% confidence interval to estimate the actual mean wait
+time for each of the two procedures. Is the confidence interval narrower
+for angiography or bypass surgery?
+
+```{r, echo=T}
+bp_num <- 539
+bp_mean <- 19
+bp_sd <- 10
+bp_se <- sqrt(bp_sd)
+ag_num <- 847
+ag_mean <- 18
+ag_sd <- 9
+ag_se <- sqrt(ag_sd)
+
+alpha = 0.1
+degrees.freedom = bp_num - 1
+t.score = qt(p=alpha/2, df=degrees.freedom,lower.tail=F)
+
+margin.error <- t.score * bp_se
+
+lower.bound <- bp_mean - margin.error
+upper.bound <- bp_mean + margin.error
+bypass_confidenceInterval <- print(c(lower.bound,upper.bound))
+
+degrees.freedom = ag_num - 1
+t.score = qt(p=alpha/2, df=degrees.freedom,lower.tail=F)
+
+margin.error <- t.score * ag_se
+
+lower.bound <- ag_mean - margin.error
+upper.bound <- ag_mean + margin.error
+angiography_confidenceInterval <- print(c(lower.bound,upper.bound))
+```
+
+The confidence interval is narrower for angiography surgery than it is
+for bypass surgery. The bypass surgery confidence interval spans from
+13.78954 to 24.21046 days while the angiography surgery spans from
+13.06003 to 22.93997 days. Since the bypass surgery confidence interval
+spans 10.42 days and the angiography surgery spans 9.88 days, the
+angiography surgery has a narrower confidence interval than the bypass
+surgery.
+
+2.  A survey of 1031 adult Americans was carried out by the National
+    Center for Public Policy. Assume that the sample is representative
+    of adult Americans. Among those surveyed, 567 believed that college
+    education is essential for success. Find the point estimate, p, of
+    the proportion of all adult Americans who believe that a college
+    education is essential for success. Construct and interpret a 95%
+    confidence interval for p.
+
+```{r}
+n = 1031 
+college_y = 567
+p = college_y/n
+print(p)
+
+margin_error <- qnorm(0.95)*sqrt(p*(1-p)/n)
+lowerbound <- p - margin_error
+upperbound <- p + margin_error
+
+p_confidenceInterval <- print(c(lowerbound,upperbound))
+```
+
+3.  Suppose that the financial aid office of UMass Amherst seeks to
+    estimate the mean cost of textbooks per semester for students. The
+    estimate will be useful if it is within \$5 of the true population
+    mean (i.e. they want the confidence interval to have a length of
+    \$10 or less). The financial aid office is pretty sure that the
+    amount spent on books varies widely, with most values between \$30
+    and \$200. They think that the population standard deviation is
+    about a quarter of this range (in other words, you can assume they
+    know the population standard deviation). Assuming the significance
+    level to be 5%, what should be the size of the sample
+
+```{r}
+margin_error_max = 5
+confidence_interval_length = 10
+lower_bound_avg = 30
+upper_bound_avg = 200
+range = upper_bound_avg - lower_bound_avg
+
+z = .95 +(1-.95)/2
+n = ((z - (range/4))/confidence_interval_length)^2
+
+print(n)
+```
+
+4.  According to a union agreement, the mean income for all senior-level
+    workers in a large service company equals \$500 per week. A
+    representative of a women's group decides to analyze whether the
+    mean income μ for female employees matches this norm. For a random
+    sample of nine female employees, ȳ = \$410 and s = 90
+
+```{r}
+income_n <- c(rnorm(9, mean = 410, sd = 90))
+```
+
+A. Test whether the mean income of female employees differs from \$500
+per week. Include assumptions, hypotheses, test statistic, and P-value.
+Interpret the result.
+
+assumption: The mean income of female employees is \$500 per week. 
+null hypothesis: The mean income of female employees is \$500 per week. alternative hypothesis: The mean income of female employees differs from \$500 per week.
+
+```{r}
+income_female <- t.test(income_n, mu=500)
+print(income_female)
+```
+
+The result is that with 95% certainty the mean female income falls
+between \$322.6557 and \$441.1327. Since the range falls below \$500, we reject the null hypothesis that the mean female income is \$500, and accept the alternative hypothesis that the true mean female income is not equal to \$500.
+
+B. Report the P-value for Ha: μ \< 500. Interpret.
+
+```{r}
+income_female <- t.test(income_n, mu=500, alternative = 'less')
+print(income_female)
+```
+
+The p_value is 0.0081. It is less than the 0.5 alpha so we reject the null hypothesis that that the mean female income is \$500, and accept the alternative hypothesis that the true mean female income is less than $500.
+
+C. Report and interpret the P-value for Ha: μ \> 500.
+
+```{r}
+income_female <- t.test(income_n, mu=500, alternative = 'greater')
+print(income_female)
+```
+
+The p_value is 0.9919. It is not less than the 0.5 alpha so we fail to reject the null hypothesis that that the mean female income is $500.
+
+5.  Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.
+
+```{r}
+sd.js = 10*(sqrt(1000))
+
+income_jones <- c(rnorm(1000, mean = 519.5, sd = sd.js))
+incomes_smith <- c(rnorm(1000, mean = 519.7, sd = sd.js))
+```
+
+A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.
+
+```{r}
+jones_t <- (519.5 - 500)/(sd.js/sqrt(1000))
+jones_p <- 2*(pt(-jones_t, 999))
+
+print(jones_t)
+print(jones_p)
+
+
+smith_t <- (519.7 - 500)/(sd.js/sqrt(1000))
+smith_p <- 2*(pt(-smith_t, 999))
+
+print(smith_t)
+print(smith_p)
+```
+
+B. Using α = 0.05, for each study indicate whether the result is "statistically significant."
+
+The Jones study result is not statistically significant because their p-value is above the alpha. The Smith study result is statistically significant because the p-value is below the alpha.
+
+C. Using this example, explain the misleading aspects of reporting the result of a test as "P ≤ 0.05" versus "P \> 0.05," or as "reject H0" versus "Do not reject H0," without reporting the actual P-value.
+
+Because in this case the p-value is so close to the alpha, it's misleading to not report the actual p-value. If someone only read that a null hypothesis was not rejected and not that statistical significance criteria was almost met, they may falsely attribute the strength of confidence of which the null hypothesis was not rejected with. It's important to report the p-value so that the strength of confidence is
+known.
+
+6.  A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+x = proportion of students who choose a healthy snack
+null hypothesis: X is not affected by grade level. 
+alternative hypothesis: X is affected by grade level. 
+```{r}
+grade <- c(6, 7, 8) 
+healthy_prop <- c(31, 43, 51)
+unhealthy_prop <- c(69, 57, 49)
+student_n <- c(100, 100, 100)
+
+student_data <- data.frame(grade, healthy_prop, unhealthy_prop)
+
+student_t <- prop.test(student_data$healthy_prop, n=student_n)
+print(student_t)
+```
+The conclusion is that since the p-value of 0.01547 is below our 0.05 value we reject the null hypothesis that the proportion of students who choose a healthy snack is not affected by grade level in favor of the alternative hypothesis that the proportion of students who choose a healthy snack is affected by grade level. 
+
+7. Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+null hypothesis: There is not a difference in mean per-pupil cost (in thousands of dollars) for cyber charter school tuition for school districts for the three areas.
+alternative hypothesis: There is a difference in mean per-pupil cost (in thousands of dollars) for cyber charter school tuition for school districts for the three areas. 
+```{r}
+values <- c(6.2,9.3,6.8,6.1,6.7,7.5,
+           7.5,8.2,8.5,8.2,7.0,9.3,
+           5.8,6.4,5.6,7.1,3.0,3.5)
+area <- c(1,1,1,1,1,1,
+          2,2,2,2,2,2,
+          3,3,3,3,3,3)
+
+cost_data <- data.frame(values, area)
+
+anova <- aov(values~area, data = cost_data)
+summary(anova)
+```
+The conclusion is that since the p-value of 0.0542 is above our 0.05 value we fail reject the null hypothesis that there is not a difference in mean per-pupil cost (in thousands of dollars) for cyber charter school tuition for school districts for the three areas in favor of the alternative hypothesis that there is a difference in mean per-pupil cost (in thousands of dollars) for cyber charter school tuition for school districts for the three areas. 
