@@ -53,6 +53,8 @@ Angiography 847           18                9
 ```
 
 ## Question 2
+A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success. Construct and interpret a 95% confidence interval for p.
+
 ```{r}
 # The point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success is:
 
@@ -69,30 +71,158 @@ Angiography 847           18                9
 
 # We can interpret this as saying that, based on the sample data, we estimate that between 51.7% and 58.2% of all adult Americans believe that a college education is essential for success.
 ```
+
 ## Question 3
+Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within $5 of the true population mean (i.e. they want the confidence interval to have a length of $10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between $30 and $200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation). Assuming the significance level to be 5%, what should be the size of the sample?
 
 ```{r}
+# margin of error formula
+## ME = z * (sigma / sqrt(n))
+### solving for n
+#### n = (z * sigma/ME)^2
+##### replacing values
+###### z = significance level 5% = critical z value for 95% conf int = 1.96
+###### sigma = 1/4 of range of textbook costs = (200-30)/4 = 42.5
+###### ME = estimate within 5 of the true population mean = 5
 
+# calculate result
+n <- round((1.96*42.5/5)^2)
+
+# print result
+cat("Ideal sample size:", n, "\n")
 
 
 ```
 
+Using the margin of error formula for confidence intervals and solving for n (sample size), we see that the ideal sample size (rounded to the nearest integer) is 278.
+
+## Question 4
+According to a union agreement, the mean income for all senior-level workers in a large service company equals $500 per week. A representative of a women’s group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = $410 and s = 90.
 
 
+Test whether the mean income of female employees differs from $500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result.
+
+Assumptions:
+
+The data is normally distributed.
+
+The sample is a simple random sample.
+
+The standard deviation of the population is unknown.
+
+Hypotheses:
+
+H0: μ = 500
+
+H1: Ha: μ ≠ 500
+
+Test statistic:
+
+t = (ȳ - μ) / (s / sqrt(n)) = (410 - 500) / (90 / sqrt(9)) = -3
+P-value:
+
+The P-value is 0.01707168, which is less than the level of significance of 0.05. Therefore, we reject the null hypothesis and conclude that there is sufficient evidence to suggest that the mean income of female employees differs from $500 per week.
+Report the P-value for Ha: μ < 500. Interpret.
+
+The P-value is 0.008535841, which is less than the level of significance of 0.05. Therefore, we reject the null hypothesis and conclude that there is sufficient evidence to suggest that the mean income of female employees is less than $500 per week.
+Report and interpret the P-value for Ha: μ > 500.
+
+The P-value is 0.9914642, which is more than the level of significance of 0.05. Therefore, we fail to reject the null hypothesis and conclude that there is sufficient evidence to suggest that the mean income of female employees is greater than $500 per week.
+```{r}
+# A.3.a. Test statistic
+(410 - 500) / (90 / sqrt(9))
+
+# A.4.a. P-value two-sided
+pt(-3, 8) * 2
+
+# B.1. P-value μ < 500
+pt(-3, 8)
+
+# C.1. P-value μ > 500
+pt(-3, 8, lower.tail=FALSE)
+```
+
+## Question 5
+Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.
+
+Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.
+
+Jones:
+
+t = (ȳ - μ) / se = (519.5 - 500) / 10 = 19.5 / 10 = 1.95
+
+P-value = round(2 * pt(q=1.95, df=999, lower.tail=FALSE), 3) = 0.051
+
+Smith:
+
+t = (ȳ - μ) / se = (519.7 - 500) / 10 = 19.7 / 10 = 1.97
+
+P-value = round(2 * pt(q=1.97, df=999, lower.tail=FALSE), 3) = 0.049
+
+Using α = 0.05, for each study indicate whether the result is “statistically significant.”
+
+Since Jones’ P-value is greater than 0.05, we fail to reject the null hypothesis, indicating that his results are not statistically significant. In contrast, Smith’s P-value is less than 0.05, therefore we reject the null hypothesis and find his results statistically significant.
+Using this example, explain the misleading aspects of reporting the result of a test as “P ≤ 0.05” versus “P > 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the actual P-value.
+
+“P ≤ 0.05” or “reject H0” without reporting the actual P-value can be misleading because it doesn’t provide information on how strong the evidence is against the null hypothesis. For example, both Jones and Smith barely pass the 0.05 threshold, having 0.049 and 0.051, respectively. Reporting this would help readers and analysts to take the strength of the evidence in consideration (in this case, “rejecting H0” or “failing to reject H0” should be taken with a grain of salt).
+```{r}
+# A.1.b. Proving Jones' p-value
+round(2 * pt(q=1.95, df=999, lower.tail=FALSE), 3)
+
+# A.2.b. Proving Smith's p-value
+round(2 * pt(q=1.97, df=999, lower.tail=FALSE), 3)
+```
+
+## Question 6
+
+A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+Grade level	6th grade	7th grade	8th grade
+Healthy snack	31	43	51
+Unhealthy snack	69	57	49
+Null hypothesis: There is no difference in the proportion of students who choose a healthy snack based on grade level.
+
+Test: Chi-squared test because we are assessing whether proportions of outcomes (choosing healthy versus unhealthy snacks) in each grade are equal or different.
+
+Conclusion: Since the p-value is 0.01547, we reject the null hypothesis at the 0.05 level of significance and conclude that there is a significant difference in the proportion of healthy snack choices among the different grade levels.
+
+```{r}
+# create a matrix of the observed values
+observed <- matrix(c(31, 43, 51, 69, 57, 49), nrow = 2, byrow = TRUE)
+
+# perform the chi-squared test
+result <- chisq.test(observed)
+
+# print the results
+print(observed)
+
+print(result)
+```
 
 
+## Question 7
 
+Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?
 
+Area 1	6.2	9.3	6.8	6.1	6.7	7.5
+Area 2	7.5	8.2	8.5	8.2	7.0	9.3
+Area 3	5.8	6.4	5.6	7.1	3.0	3.5
+Null hypothesis: There is no difference in means for the three areas.
 
+Test: Analysis of Variance (ANOVA) because we are computing the difference between the means of three or more groups.
 
+Conclusion: Given that the P-value associated to the F-statistic is 0.00397, we reject the null hypothesis and conclude that there is a significant difference in means for the three areas.
 
+```{r}
+area1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+area2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+area3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
 
+anova_result <- aov(c(area1, area2, area3) ~ rep(c("Area 1", "Area 2", "Area 3")
+                                                 , c(6, 6, 6)))
+print(summary(anova_result))
 
-
-
-
-
-
+```
 
 
 
