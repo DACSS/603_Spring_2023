@@ -1,0 +1,170 @@
+---
+title: "Homework 2"
+author: "Guanhua Tan"
+description: "Homework 2"
+date: "03/23/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - t.test
+---
+
+```{r}
+library(tidyverse)
+```
+
+# Question 1
+
+```{r, echo=T}
+# Bypass 
+s_mean<-19
+s_size <-539
+standard_error <- 10/539
+standard_error
+
+# t-value
+confidence_level <- 0.9
+tail_area <- (1-confidence_level)/2
+t_score <- qt(p = 1-tail_area, df = s_size-1)
+t_score
+# plug everything back in
+CI <- c(s_mean - t_score * standard_error,
+        s_mean + t_score * standard_error)
+print(CI)
+
+```
+18.97 <= CI_bypass <= 19.03
+
+
+```{r, echo=T}
+# Angiography
+s_mean_a<-18
+s_size_a<-847
+standard_error_a <- 9/847
+standard_error_a
+
+# t-value
+confidence_level <- 0.9
+tail_area <- (1-confidence_level)/2
+t_score<- qt(p = 1-tail_area, df = s_size-1)
+t_score
+# plug everything back in
+CI_a <- c(s_mean_a- t_score * standard_error_a,
+        s_mean_a + t_score * standard_error_a)
+print(CI_a)
+
+```
+17.98 <= CI_angiograpy<= 18.02
+
+The Confidence Interval is narrower for Angiography surgery because it has a smaller standard_error.
+
+# Question 2
+
+```{r, echo=TRUE}
+p2 <- 567/1031
+p2
+SE2 <-sqrt(p2*(1-p2)/1031)
+tail_area2 <-(1-0.95)/2
+t_score2 <-qt(p-tail_area2, df=1030)
+CI2_A<-p2-t_score2*SE2
+CI2_B <-p2+t_score2*SE2
+CI2_A
+CI2_B
+```
+0.549 <= P <= 0.551
+
+# Question 3
+
+```{r, echo=T}
+sd_question3 <- (200-30)/4
+Margin3 <-5
+n <- (1.96*sd_question3/Margin3)^2
+n
+```
+the size of students is 277
+
+#Question 4
+
+Null hypothesis: The mean income of female employees is equal to $500 per week.
+H0: μ = $500
+Alternative hypothesis: The mean income of female employees is different from $500 per week.
+Ha: μ ≠ $500
+t.test suggests the mean income of female employees is different from $500 per week. We reject the Null hypothesis.
+
+```{r}
+female_group_mean <-410
+sd_4<-90
+n_4<-9
+t_stat4<-(female_group_mean-500)/(sd_4/sqrt(n_4))
+P_value_4 <-(1-pt(t_stat4, df = n_4-1, lower.tail = F))*2
+
+t_stat4
+P_value_4
+
+```
+t-statistic is -3.
+p-value is 0.017.
+
+B. Report the P-value for Ha: μ < 500. Interpret.
+C. Report and interpret the P-value for Ha: μ > 500.
+```{r}
+P_value_lower4<-pt(t_stat4, df=n_4-1, lower.tail=TRUE)
+P_value_high4<-pt(t_stat4, df=n_4-1, lower.tail = F)
+
+P_value_lower4
+P_value_high4
+```
+For Ha: mu<500, we run the pt function and p-value is 0.008, which suggests that we reject the Null hypothesis and the mean income of female employees is much less than 500.
+
+For Ha: mu >500, we run the pt function and p-value is 0.99, which suggests we fail to reject the Null hypothesis and we are unable to demonstrate the income mean of female employees is greater thant 500.
+
+# Question 5
+```{r}
+# Question 5
+t_score_5_Jones <-(519.5-500)/10
+p_value_5_Jones<- 2*(1-pt(t_score_5_Jones, df=999))
+t_score_5_Jones
+p_value_5_Jones
+
+t_score_5_Smith <-(519.7-500)/10
+p_value_5_Smith <- 2*(1-pt(t_score_5_Smith, df=999))
+t_score_5_Smith
+p_value_5_Smith
+```
+B If α=0.5, Smith is statically significant because his p-value is smaller than α.
+C If we don't get the actual p-value, we can only conclude that Smith is statically significant without that there is a very tiny difference between two groups. Also, we will ignore that Smith's p-value is barely smaller than α, which suggests that it is not extremely significant. 
+
+# Question 6
+```{r}
+
+df_6<-data.frame("Grade Level"=c("Heathy sanck", "Unhealth snack"), "6th grade"=c(31,69), "7th grade"=c(43,57), "8th grade"=c(51,49))
+
+chisq.test(df_6[,-1], correct=F)
+
+```
+Null hypothesis: means of 3 grades to choose two types of snack are equal.
+We should use chisq test to test the correlation between grades and the counts of healthy and unhealthy snacks.
+Chisq suggests that we should reject the null hypothesis because p-value is 0.01547, which is smaller than 0.5. In other words, different grades show differen choices of snacks.
+
+
+# Question 7
+```{r}
+# Question 7
+df_7<- data.frame("Area1"=c(6.2,9.3,6.8,6.1,6.7,7.5),
+                  "Area2"=c(7.5,8.2,8.5,8.2,7.0,9.3),
+                  "Area3"=c(5.8,6.5,5.6,7.1,3.0,3.5))
+df_7_long <- df_7 %>%
+  pivot_longer(cols=c(Area1, Area2, Area3),names_to="Area", values_to = "Fee")
+
+my.anova_7<-aov(Fee ~ Area, df_7_long)
+summary(my.anova_7)
+```
+Null hypothesis: mean of three areas are equal.
+We should use anova test.
+Anova test suggests that we should reject the null hypothesis because p-value is 0.0043, which is much smaller than 0.5. In other words, tutions are highly related to areas.
+
