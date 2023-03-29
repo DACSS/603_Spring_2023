@@ -1,0 +1,494 @@
+---
+title: "Homework 2"
+author: "Emma Narkewicz"
+description: "Template of course blog qmd file"
+date: "02/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - confidence_interval
+  - emma_narkewicz
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+# Question 1
+
+I constructed the 90% confidence interval of each of the two heart
+procedures manually using the equation: *CI = (X bar) ± (t × s/sqrt(n))*
+and the mean wait time, sample standard deviation, and sample size
+provided for the Bypass and Angiography heart procedures.
+
+For both procedures I calculated the t-score based on 2 tails, as there
+was no information indicating we should only focus on the upper or lower
+tail.
+
+```{r}
+# Calculating 90% CI  manually of Bypass heart surgery
+## sample mean wait time
+s_mean_bypass <- 19
+## sample sd
+s_sd_bypass <- 10
+## sample size (n)
+s_size_bypass <- 539
+## standard error  (sd/swrt(n))
+s_se_bypass <- s_sd_bypass / sqrt (s_size_bypass)
+s_se_bypass
+## Specify confidence level 
+confidence_level_bypass <- 0.9
+##Calculate tail area of 2-tail t-test
+tail_area_bypass <- (1 - confidence_level_bypass)/2
+tail_area_bypass
+#calculation t-score using qt
+t_score_bypass <-  qt(p = 1 - tail_area_bypass, df = s_size_bypass - 1)
+t_score_bypass
+##Calculating upper & lower CI bypass
+CI_bypass <- c(s_mean_bypass - t_score_bypass * s_se_bypass, s_mean_bypass + t_score_bypass * s_se_bypass)
+print(CI_bypass)
+```
+
+-   *The 90% confidence interval for the Bypass wait time is 18.29
+    days - 19.71 days*
+
+```{r}
+#Calculating the 90% CI manually of angiography heart surgery
+##sample mean wait time
+s_mean_angio <- 18
+##sample sd
+s_sd_angio <- 9
+## sample size (n)
+s_size_angio <- 847
+## standard error  (sd/swrt(n)
+s_se_angio <- s_sd_angio / sqrt (s_size_angio)
+s_se_angio
+## Specify confidence level 
+confidence_level_angio <- 0.9
+##Calculate tail area of 2-tail t-test
+tail_area_angio <- (1 - confidence_level_angio)/2
+tail_area_angio
+#calculation t-score using qt
+t_score_angio <-  qt(p = 1 - tail_area_angio, df = s_size_angio - 1)
+t_score_angio
+##Calculating upper & lower CI bypass
+CI_angio <- c(s_mean_angio - t_score_angio * s_se_angio, s_mean_angio + t_score_angio * s_se_angio)
+print(CI_angio)
+```
+
+-   *The 90% confidence interval for the Angiography wait time is 17.49
+    days - 18.51 days*
+
+```{r}
+#narrower CI
+delta_CI_bypass = 19.71 - 18.29
+delta_CI_bypass
+delta_CI_angio = 18.51 - 17.49
+delta_CI_angio
+```
+
+-   *The confidence interval is narrower for the Angiography (CI delta
+    of 1.02 days) than the confidence interval for the Bypass (CI delta
+    of 1.42 days)*
+
+# Question 2
+
+To calculate & interpret a 95% CI for the proportion of all adult
+Americans who believe that a college education is essential for success
+I used prop.test() because this involves estimating a proportion, not a
+probability. In this test, a "success" is defined as an adult American
+reporting a college education is essential for success, with the
+alternative being a response of an adult American reporting a college
+education is not essential for success.
+
+The point estimate for the proportion of adult Americans who believe
+that college is essential is 0.55.
+
+```{r}
+#Calculate point estimate college is essential
+
+sample_size_survey <- 1031
+point_estimate_college_essential <- 567/sample_size_survey
+point_estimate_college_essential
+
+```
+
+Specific information plugged in was:
+
+-   sample proportion p = point estimate (0.5499515),
+-   number sample "successes" x = 567
+-   sample size n = 1031
+
+```{r}
+#Performing prop.test
+prop.test(x = 567, n = 1031, p = point_estimate_college_essential)
+```
+
+The 95% confidence interval is \[0.52, 0.58\]
+
+This should be interpreted as 95% of confidence intervals calculated
+with this procedure would contain the true proportion of adult Americans
+who believe that a college education is essential for success.
+
+# Question 3
+
+Suppose that the financial aid office of UMass Amherst seeks to estimate
+the mean cost of textbooks per semester for students. The estimate will
+be useful if it is within \$5 of the true population mean (i.e. they
+want the confidence interval to have a length of \$10 or less). The
+financial aid office is pretty sure that the amount spent on books
+varies widely, with most values between \$30 and \$200. They think that
+the population standard deviation is about a quarter of this range (in
+other words, you can assume they know the population standard
+deviation).
+
+Assuming the significance level to be 5%, what should be the size of the
+sample?
+
+Because we are assuming we know the population sd, this signals we
+should a 2-sided z-test to calculate the sample size. I can solve for
+sample size using the z-score through the Margin of Error (MOE) equation
+that:
+
+MOE = zscore @ confidence level * (sqrt(sd\^2/n))
+
+rearranging the equation to solve for n by squaring both sides,
+multiplying by n, and then dividing by MOE\^2 results in the equation:
+
+n = (z\^2 \* sd\^2)/ (MOE\^2)
+
+-   MOE = +/- 5
+-   pop sd = (200-30)/4 = 42.5
+-   at an alpha level 0.05, 2-sided z-score = 1.959964
+
+```{r}
+#solving for sample size
+
+n = ((1.959964^2) * (42.5^2)) / (5^2) 
+n
+
+```
+
+*The ideal sample size is 278*
+
+# Question 4
+
+According to a union agreement, the mean income for all senior-level
+workers in a large service company equals \$500 per week. A
+representative of a women's group decides to analyze whether the mean
+income μ for female employees matches this norm. For a random sample of
+nine female employees, ȳ = \$410 and s = 90
+
+## A
+
+Test whether the mean income of female employees differs from \$500 per
+week. Include assumptions, hypotheses, test statistic, and P-value.
+Interpret the result.
+
+Assumptions of a 1-sample t-test:
+
+-   population is normally distributed
+
+-   observations in our sample are generated independently of one
+    another
+
+Information we are provided is that:
+
+-   Population mean (μ) = 500
+
+-   Sample mean (y bar) = 410
+
+-   Sample sd = 90 s
+
+-   Sample n = 9
+
+Null Hypothesis: (H0) female mean income μ = 500 Alternative Hypothesis:
+(Ha) female mean income μ ≠ 500
+
+Calculate the t statistic using the equation:
+
+*t = (y bar - μ ) / (sd estimate / sqrt(N))*
+
+```{r}
+## Calculating tscore
+
+t =  (410 - 500) / (90/sqrt(9))
+t
+```
+
+The t-score is -3
+
+To solve for the p-value from the t-score I will use the pt() function,
+with a q = the t-statistic of -3, df = 8 (9-1).
+
+It it is important to note that an assumption of the pt() function is
+you are looking for the probability of the lower tail, not both tails.
+Because the t score is negative looking at the lower tail is
+appropriate, but to get the probability for 2-tailed test we need to
+multiply the lower tail probability by 2.
+
+```{r}
+#Calculating p-value
+
+p_lower_tail = pt(q = t, df =8, lower.tail = TRUE)
+p_lower_tail
+
+
+```
+
+This gives us the probability that μ is less than 500, but that is only
+1 tail, so we multiply this problity by 2 to get the p value for our
+2-sided t-test
+
+```{r}
+#Two-side t
+p_twotail =  p_lower_tail * 2
+p_twotail
+
+```
+
+With a 2-tail p value of 0.017, we can confidently reject the null
+hypothesis that female salary μ = 500 as p\< 0.05. This suggests that
+the true mean salary of female workers is not equal to \$500.
+
+## B
+ Report the P-value for Ha: μ \< 500. Interpret.
+
+```{r}
+#P-value Ha: μ < 500
+
+p_lower_tail = pt(q = t, df =8, lower.tail = TRUE)
+
+p_lower_tail
+
+```
+
+With a small p-value of 0.00854 we reject the null hypothesis that μ =
+500, suggesting that the true mean salary of female workers is less than
+$500. 
+
+## C
+ Report and interpret the P-value for Ha: μ \> 500.
+
+```{r}
+#P-value Ha: μ > 500
+
+p_upper_tail = pt(q = t, df =8, lower.tail = FALSE)
+
+p_upper_tail
+```
+
+With a large p-value of 0.99 we fail to reject the null hypothesis that
+μ = 500, suggesting that the true means salary of female workers is not
+greater than \$500.
+
+# Question 5
+
+Jones and Smith separately conduct studies to test H0: μ = 500
+against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with
+se = 10.0. Smith gets ȳ = 519.7,with se = 10.0.
+
+## A
+
+Show that Show that t = 1.95 and P-value = 0.051 for Jones. Show that t
+= 1.97 and P-value = 0.049 for Smith.
+
+Because we are provided with standard error not standard deviation, I
+used the equation:
+
+t = (ȳ - μ) / se
+
+```{r}
+#Jones T score
+
+t_Jones = (519.5 - 500) / 10.0
+t_Jones
+
+```
+
+*For Jones the t score is indeed 1.95*
+
+To calculate the p-value, I will use pt(), q = 1.95, df = (1000-1) =
+999). Because Jone's t-score is positive, we look at the upper tail.
+
+```{r}
+#Calculate 1-tail p-value Jones
+p_upper_tail_Jones = pt(q = t_Jones, df = 999, lower.tail = FALSE)
+p_upper_tail_Jones
+
+```
+
+The p value of the upper tail for Jones is 0.02572777, but because the
+alternative hypothesis is 2-tailed, it needs to be multiplied by 2
+
+```{r}
+#Calculating p_value Jones
+p_Jones = p_upper_tail_Jones * 2
+p_Jones
+
+```
+
+*This shows the p-value of Jones is indeed 0.51*
+
+```{r}
+# Smith T score 
+t_Smith = (519.7 - 500) / 10.0
+t_Smith
+```
+
+*The t-score for Smith is indeed 1.97.* The p value is calculated the
+same way as for Jones, using pt() & the upper tail:
+
+```{r}
+#Calculate 1-tail p-value Smith
+p_upper_tail_Smith = pt(q = t_Smith, df = 999, lower.tail = FALSE)
+p_upper_tail_Smith
+```
+
+```{r}
+#Smith p=value
+p_Smith = p_upper_tail_Smith * 2
+p_Smith
+```
+
+*Smith's p-value does = 0.049*
+
+## B
+
+Using an alpha level = 0.05 for both
+
+-   Jones' p-value = 0.51 means a non-statistically significant result,
+    where we fail to reject the null hypothesis that μ = 500\
+-   Smith's p=value = 0.49 means a statistically significant results,
+    where we reject the null hypothesis that μ = 500
+
+## C
+
+This example showcases how reporting the actual p-value is important, as
+in this case the p-values are very close between Jones & Smith, which
+are both right on the edge of significance (0.050 +/- 0.01). A p-value
+of 0.049 & a p-value of 0.0000000049 are both less than 0.05 & would
+both lead us to reject the null hypothesis, but the second p-value is
+highly significant while the first p-value is only barely significant at
+an alpha level of 0.05. Reporting the p-value itself gives readers &
+other researchers information to much better understand your statistical
+findings than just reporting if the p value is \> or \< 0.05 or if you
+do or do not reject H0.
+
+# Question 6
+
+A school nurse wants to determine whether age is a factor in whether
+children choose a healthy snack after school. She conducts a survey of
+300 middle school students, with the results below. Test at α = 0.05 the
+claim that the proportion who choose a healthy snack differs by grade
+level. What is the null hypothesis? Which test should we use? What is
+the conclusion?
+
+-   The null hypothesis is that there is no association between the
+    grade of the student and if they choose a healthy snack (they are independent). In this
+    question independence would result in the proportion of students in each
+    grade who choose a healthy snack is the same: H0: p6th = p7th = p8th
+
+-   Because I want to test if there is an association between 2
+    categorical variables, snack preference & grade level, I used a
+    chi-squared test.
+
+First I recreated the HW2 snacks data table in R:
+
+```{r}
+#Recreating nurse data
+
+Health_tab <- matrix(c(31, 43, 51, 69, 57, 49), nrow=2, byrow=TRUE)
+colnames(Health_tab) <- c('6th','7th','8th')
+rownames(Health_tab) <- c('Healthy','Unhealthy')
+Health_tab <- as.table(Health_tab)
+
+Health_tab
+
+```
+
+Then a chi-squared was run on the data set:
+
+```{r}
+#Chi Squared test
+
+chisq.test(Health_tab)
+
+```
+
+-   Conclusion : The p-value of 0.015 from the chi-squared test is less
+    than alpha=0.05, meaning we reject the null hypothesis that there is
+    no association between student grade level and preference for
+    healthy snacks.
+
+-   At a significance level of 0.05 and df = 2, the critical value =
+    5.991. The X-squared = 8.3383 is greater than the critical value,
+    once again supporting rejecting the null hypothesis. This suggests
+    snack preference is not independent of grade level.
+
+# Question 7
+
+Per-pupil costs (in thousands of dollars) for cyber charter school
+tuition for school districts in three areas are shown. Test the claim
+that there is a difference in means for the three areas, using an
+appropriate test. What is the null hypothesis? Which test should we use?
+What is the conclusion?
+
+-   The null hypothesis is that there is no difference between the mean
+    per-pupil cost for cyber charter tuition in 3 different areas, which
+    can be written out as: 
+
+H0: μ1 = μ2 = μ3
+
+-   Because we are testing if there is a difference between the means of
+    3 or more groups that differ by the categorical variable of area we
+    should use a ANOVA test
+
+-   I entered in the data below manually, and then pivoted longer to get
+    2 columns, Area and Cost.
+
+```{r}
+Area_1 <- c( 6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+Area_2 <- c( 7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+Area_3 <- c( 5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+charter_data <- data.frame (Area_1, Area_2, Area_3)
+
+```
+
+```{r}
+#Pivoted Longer
+
+pivot_charter <- charter_data %>%
+  pivot_longer(c(Area_1, Area_2, Area_3 ), names_to= "Area", values_to="Cost")
+
+pivot_charter
+
+```
+
+Lastly, I ran the ANOVA, specifying Area as the independent variable &
+Cost (per pupil) as the dependent variable.
+
+```{r}
+#Anova 
+anova_charter <- aov( Cost ~ Area, data = pivot_charter)
+
+summary(anova_charter)
+
+
+```
+
+The resulting p-value of 0.00397 is less than an alpha = 0.05 and
+therefor significant, leading us to reject out null hypothesis that
+there is no difference in the mean per-pupil charter school cost between
+the 3 areas. There does appear to be a difference in per-pupil charter
+school cost based on which of the 3 areas the school is in.
