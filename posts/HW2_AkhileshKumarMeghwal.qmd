@@ -1,0 +1,435 @@
+---
+title: "Homework 2"
+author: "Akhilesh Kumar Meghwal"
+description: "The second homework"
+date: "02/27/2023"
+format:
+  html:
+    df-print: paged
+    css: styles.css
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Homework2
+  - Akhilesh
+---
+
+```{r setup, include=FALSE, warnings=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(stats)
+library(knitr)
+library(kableExtra)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Question 1
+
+The time between the date a patient was recommended for heart surgery and the surgery date 
+for cardiac patients in Ontario was collected by the Cardiac Care Network (“Wait Times Data 
+Guide,” Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean 
+and sample standard deviation for wait times (in days) of patients for two cardiac procedures 
+are given in the accompanying table. Assume that the sample is representative of the Ontario 
+population
+
+
+### Data table
+
+```{r, results='asis', echo=FALSE, fig.show='hold', out.width='100%', out.height='10%'}
+# Create the data frame
+
+surgical_procedure <- c("Bypass", "Angiography")
+sample_size <- c(539, 847)
+mean_wait_time <- c(19, 18)
+standard_deviation <- c(10, 9)
+
+surgery <- data.frame(surgical_procedure, sample_size, mean_wait_time, standard_deviation)
+
+# Create the table with kable
+
+kable(surgery, align = "c", booktabs = TRUE, 
+      col.names = c("Surgical Procedure", "Sample Size", "Mean Wait Time", "Standard Deviation")) %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE, position = 'center', font_size = 14, stripe_color='black')
+```
+
+Construct the 90% confidence interval to estimate the actual mean wait time for each of the two 
+procedures. Is the confidence interval narrower for angiography or bypass surgery?
+
+### Confidence Interval Calculation for Bypass and Angiography
+
+```{r}
+
+# 90% confidence interval
+
+confidence_level <- 0.90
+
+# Tail area
+
+tail_area <- (1-confidence_level)/2
+
+# t_score Calculation
+
+t_score <- qt(p = 1-tail_area, df = sample_size-1)
+
+# Standard Error Calculation
+
+standard_error <- standard_deviation/sqrt(sample_size)
+
+# Confidence Interval Calculation for Bypass and Angiography
+
+confidence_interval <- c(mean_wait_time - t_score * standard_error,
+        mean_wait_time + t_score * standard_error)
+
+confidence_interval
+
+```
+
+### Conclusion 
+
+The Cardiac Care Network collected data on the time between the date a patient was recommended for heart surgery and the surgery date for cardiac patients in Ontario. The sample mean and standard deviation of wait times (in days) for two cardiac procedures, bypass and angiography, were reported in a table.
+
+To estimate the actual mean wait time for each of the two procedures, a 90% confidence interval was constructed using the t-distribution. The confidence interval for bypass surgery is between 18.29 and 19.71 days, while the confidence interval for angiography is between 17.49 and 18.51 days.
+
+These results suggest that, with 90% confidence, the true mean wait time for bypass surgery is likely to fall between 18.29 and 19.71 days, and the true mean wait time for angiography is likely to fall between 17.49 and 18.51 days. Comparing the two confidence intervals, we can see that the interval for bypass surgery is slightly wider than the interval for angiography. This indicates that there is slightly more uncertainty in the estimate of the true mean wait time for bypass surgery than for angiography.
+
+Overall, the confidence intervals provide important information about the precision of the sample means as estimates of the true population means. The intervals convey the range of values within which the population mean is likely to fall with a certain level of confidence, and they can help healthcare providers and policymakers make informed decisions about resource allocation and patient care.
+
+
+## Question 2
+
+A survey of 1031 adult Americans was carried out by the National Center for Public 
+Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 
+believed that college education is essential for success. Find the point estimate, p, of the 
+proportion of all adult Americans who believe that a college education is essential for success. 
+Construct and interpret a 95% confidence interval for p.
+
+### 1-sample proportions test
+
+```{r}
+
+prop.test(567, 1031, conf.level = .95)
+
+```
+### Conclusion 
+
+The National Center for Public Policy conducted a survey of 1031 adult Americans to determine the proportion of people who believe that a college education is essential for success. Among the 1031 adults surveyed, 567 believed that a college education is essential for success.
+
+Using the prop.test() function in R with a 95% confidence level, the point estimate of the proportion of all adult Americans who believe that a college education is essential for success is 0.5499515, suggesting that 54.99% of adult Americans believe that a college education is essential for success. We can use this proportion as a point estimate of the true proportion of adult Americans who hold this belief.Additionally, the confidence interval at a 95% confidence level for this proportion is [0.5189682, 0.5805580].
+
+The interpretation of this confidence interval is that if we were to repeat this survey many times and construct a confidence interval for each survey, approximately 95% of these intervals would contain the true population proportion. Therefore, we can conclude that with 95% confidence, the proportion of all adult Americans who believe that a college education is essential for success is somewhere between 0.5189682 and 0.5805580 and that a majority of adult Americans believe that a college education is essential for success, as the lower bound of the interval is above 0.5.
+
+Since the confidence interval does not include 0.5 (the null probability), we can conclude that the proportion of all adult Americans who believe that a college education is essential for success is significantly different from 0.5 at the 0.05 significance level.
+
+## Question 3
+
+Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within $5 of the true population mean (i.e. they want the confidence interval to have a length of $10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between $30 and $200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation). Assuming the significance level to be 5%, what should be the size of the sample
+
+### Sample Size Calculation
+
+```{r}
+
+# Define variables
+M_Error <- 5
+standard_deviation <- (200-30)/4
+alpha <- 0.05
+z_alpha <- qnorm(p = 1-alpha/2, lower.tail = FALSE)
+
+
+# Calculate required sample size
+
+sample_size <- ceiling(((z_alpha * standard_deviation) / M_Error)^2)
+
+
+# Required Sample Size, Round up to nearest integer
+
+cat("The required sample size is:", sample_size)
+```
+### Conclusion 
+
+The financial aid office of UMass Amherst wants to estimate the mean cost of textbooks per semester for their students. They want the estimate to be accurate within $5 of the true population mean, and the confidence interval should have a length of $10 or less. The office has some prior knowledge that the amount spent on textbooks varies widely, with most values between $30 and $200, and they assume that the population standard deviation is about a quarter of this range.
+
+To determine the sample size needed for their estimation, they use a formula that takes into account the margin of error, confidence level, and estimated population standard deviation. The calculated sample size is 278, meaning that they would need to survey 278 students to estimate the mean cost of textbooks per semester within $5 with a 95% confidence interval.
+
+This estimation is important for the financial aid office to determine the appropriate amount of financial assistance to provide to students for textbooks. If the estimate is inaccurate or the confidence interval is too wide, they risk providing inadequate or excessive support, which can affect the academic success and financial well-being of the students. Therefore, it is crucial for the financial aid office to carefully plan and conduct their survey to obtain reliable and useful estimates.
+
+## Question 4
+
+According to a union agreement, the mean income for all senior-level workers in a large 
+service company equals $500 per week. A representative of a women’s group decides to analyze 
+whether the mean income μ for female employees matches this norm. For a random sample of 
+nine female employees, ȳ = $410 and s = 90
+
+  A. Test whether the mean income of female employees differs from $500 per week. Include 
+    assumptions, hypotheses, test statistic, and P-value. Interpret the result.
+  B. Report the P-value for Ha: μ < 500. Interpret.
+  C. Report and interpret the P-value for Ha: μ > 500.
+  (Hint: The P-values for the two possible one-sided tests must sum to 1.
+
+### Question 4-A
+
+Two assumptions for the analysis: 
+
+(1) Sample is randomly selected, and 
+(2) Population follows a normal distribution.
+
+The null hypothesis is that the mean income of female employees is equal to $500 per week, represented as H0: μ = 500. 
+
+The alternative hypothesis is that the mean income of female employees differs from $500 per week, represented as Ha: μ ≠ 500.
+
+We will reject the null hypothesis if the p-value is less than or equal to 0.05, indicating that the observed sample mean of $410 is significantly different from the population mean of $500.
+
+### Test Statistic and p value calculation
+
+```{r}
+
+sample_mean <- 410 # sample mean
+mu <- 500 # population mean
+standard_deviation <- 90 # standard deviation
+sample_size <- 9 # sample size
+
+# Calculating test-statistic
+
+t_score <- (sample_mean-mu)/(standard_deviation/sqrt(sample_size))
+
+cat("test-statistic:", t_score, '\n')
+
+p_val <- 2 * pt(t_score, df = sample_size - 1, lower.tail = TRUE)
+
+cat("p value :", p_val)
+
+```
+### Conclusion  
+
+In this analysis, we are investigating whether the mean income of female employees in a large service company differs from the norm of $500 per week, according to a union agreement. We have a sample of nine randomly selected female employees, with a sample mean of $410 and a sample standard deviation of $90.
+
+Based on our assumptions of random sampling and normal population distribution, we conduct a hypothesis test with a significance level of 0.05. Our null hypothesis is that the population mean of female employee income is equal to $500 per week, while our alternative hypothesis is that the mean income differs from $500 per week.
+
+Our test results in a test-statistic of -3 and a p-value of 0.01707168, which is less than the significance level of 0.05. Therefore, we reject the null hypothesis and conclude that the mean income of female employees in this service company is significantly different from $500 per week.
+
+
+### Question 4-B
+
+Two assumptions for the analysis: 
+
+(1) Sample is randomly selected, and 
+(2) Population follows a normal distribution.
+
+The null hypothesis is that the mean income of female employees is equal to $500 per week, represented as H0: mu = 500.
+
+The alternative hypothesis is that the mean income of female employees is less than $500 per week, represented as Ha: mu < 500.
+
+We will reject the null hypothesis if the p-value is less than 0.05, indicating that the observed sample mean of $410 is significantly lower than the population mean of $500.
+
+### p-value calculation
+
+```{r}
+p <- pt(t_score, sample_size-1, lower.tail = TRUE)
+p
+```
+### Conclusion 
+
+Performed one-tailed t-test to test the hypothesis. The p-value associated with this test statistic is 0.008535841.
+
+Since the p-value is less than the significance level of 0.05, we reject the null hypothesis and conclude that there is sufficient evidence to support the claim that the mean income of female employees is lower than $500 per week. This implies that female employees in this service company are paid less than the senior-level workers as per the union agreement.
+
+### Question 4-C
+
+Two assumptions for the analysis: 
+
+(1) Sample is randomly selected, and 
+(2) Population follows a normal distribution.
+
+The null hypothesis is that the mean income of female employees is equal to $500 per week, represented as H0: mu = 500.
+
+The alternative hypothesis is that the mean income of female employees is greater than $500 per week, represented as Ha: mu > 500.
+
+We will reject the null hypothesis if the p-value is less than 0.05, indicating that the observed sample mean of $410 is significantly higher than the population mean of $500.
+
+### p-value calculation
+
+```{r}
+p <- pt(t_score, sample_size-1, lower.tail = FALSE)
+p
+```
+### Conclusion 
+
+The p-value is 0.9914642, which is greater than the significance level of 0.05. Therefore, we fail to reject the null hypothesis and conclude that there is insufficient evidence to support the claim that the mean income of female employees is greater than $500 per week. In other words, we cannot conclude that female employees earn significantly more than the agreed-upon mean income for all senior-level workers in the company.
+
+## Question 5
+
+Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each 
+with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7,
+with se = 10.0.
+
+  A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 
+     for Smith.
+  B. Using α = 0.05, for each study indicate whether the result is “statistically significant.”
+  C. Using this example, explain the misleading aspects of reporting the result of a test as “P ≤      0.05” versus “P > 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the      actual P-value.
+
+### Question 5-A
+
+Two assumptions for the analysis: 
+
+(1) Sample is randomly selected, and 
+(2) Population follows a normal distribution.
+
+The null hypothesis for both studies is that the population mean is equal to 500, represented as H0: μ = 500.
+
+The alternative hypothesis for both studies is that the population mean is not equal to 500, represented as Ha: μ ≠ 500.
+
+We will reject the null hypothesis at a p-value less than 0.05
+
+### Calculating t-statistic and p-value for Jones
+
+```{r}
+sample_mean <- 519.5
+mu <- 500
+standard_error <- 10
+sample_size <- 1000
+
+t_score_jones <- (sample_mean-mu)/(standard_error)
+t_score_jones
+
+
+p <- 2*pt(t_score_jones, sample_size-1, lower.tail = FALSE)
+p
+
+```
+
+### Calculating t-statistic and p-value for Smith
+
+```{r}
+sample_mean <- 519.7
+mu <- 500
+standard_error <- 10
+sample_size <- 1000
+
+t_score_smith <- (sample_mean-mu)/(standard_error)
+t_score_smith
+
+
+p <- 2*pt(t_score_smith, sample_size-1, lower.tail = FALSE)
+p
+```
+### Conclusion 
+
+Jones has a test-statistic of 1.95 and a p-value of 0.05145555, while Smith has a test-statistic of 1.97 and a p-value of 0.05145555.
+
+### Question 5-B
+
+### Conclusion 
+
+Based on the given information, the result is statistically significant for Smith, but not for Jones.
+
+For Jones, the p-value (0.05145555) is greater than the significance level (α = 0.05), which means that we fail to reject the null hypothesis. This indicates that the result is not statistically significant for Jones.
+
+For Smith, the p-value (0.04911426) is less than the significance level (α = 0.05), which means that we reject the null hypothesis. This indicates that the result is statistically significant for Smith.
+
+### Question 5-C
+
+### Conclusion 
+
+The misleading aspect of reporting the result of a test as "P ≤ 0.05" versus "P > 0.05" or as "reject H0" versus "do not reject H0" without reporting the actual P-value is that it can mask the degree of uncertainty in the results. In this example, if we only reported "P ≤ 0.05" for Smith's study, we would conclude that the result is statistically significant. However, we would miss the fact that the P-value is very close to the significance level, indicating that the result may not be very strong or may be subject to random chance. Similarly, if we only reported "P > 0.05" for Jones's study, we would conclude that the result is not statistically significant, but we would miss the fact that the P-value is very close to the significance level, indicating that the result may be borderline significant. Therefore, it is important to report the actual P-value to provide a more accurate interpretation of the results.
+
+
+If we fail to report the P-value and simply state whether the P-value is less than/equal to or greater than the defined significance level of the test, one cannot determine the strength of the conclusion. In the Jones/Smith example, reporting the results only as *P ≤ 0.05* versus *P > 0.05* will lead to different conclusions about very similar results.
+
+## Question 6
+
+A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results 
+below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+### Null Hypothesis 
+
+The null hypothesis is that there is no association between grade level and the proportion of students who choose a healthy snack. 
+
+The alternative hypothesis is that there is an association between grade level and the proportion of students who choose a healthy snack.
+
+### Which test should we use? (Chi Square)?
+
+In the case of the school nurse's survey data on snack choices, a chi-square test of independence should be used because the data is categorical (healthy snack vs unhealthy snack) and the research question is about whether there is a relationship between snack choice and grade level. The chi-square test is used to determine whether there is a significant association between two categorical variables.
+
+### Chi-square Test
+
+```{r}
+# Create the contingency table
+snack_table <- matrix(c(31, 43, 51, 69, 57, 49), nrow = 2, byrow = TRUE)
+rownames(snack_table) <- c("Healthy snack", "Unhealthy snack")
+colnames(snack_table) <- c("6th grade", "7th grade", "8th grade")
+snack_table
+
+# Conduct the chi-square test of independence
+chisq.test(snack_table)
+```
+### Conclusion
+
+Since the p-value is less than the significance level of 0.05, 
+
+The output of the chisq.test function indicates that the chi-square test statistic is 8.3383 with 2 degrees of freedom, and the corresponding p-value is 0.01547. So we can reject the null hypothesis that there is no association between snack choice and grade level, and conclude that there is evidence of a significant association between two categorical variables: snack choice and grade level at a significance level of 0.05.
+
+Based on the results of the chi-square test of independence, it is found that there is a statistically significant association between snack choice and grade level among the surveyed students. Specifically, the data indicates that the proportion of students who choose healthy snacks differs significantly across grade levels. The contingency table and chi-square test showed that more 6th-grade students (31) chose healthy snacks compared to 7th-grade students (43) and 8th-grade students (51). On the other hand, more 8th-grade students (49) chose unhealthy snacks compared to 6th-grade students (69) and 7th-grade students (57).
+
+Therefore, we can conclude that grade level is a factor in whether children choose a healthy snack after school. The proportion of students who choose a healthy snack appears to differ across the three grade levels. Overall, these results suggest that the school may need to target their health promotion efforts towards the specific grade levels where unhealthy snack choices are more prevalent. The results may also inform further research into the factors that influence snack choices among middle school students.
+
+## Question 7
+
+Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+```{r}
+
+# Define the data
+data <- data.frame(
+  Area = c("Area 1", "Area 2", "Area 3"),
+  Value1 = c(6.2, 7.5, 5.8),
+  Value2 = c(9.3, 8.2, 6.4),
+  Value3 = c(6.8, 8.5, 5.6),
+  Value4 = c(6.1, 8.2, 7.1),
+  Value5 = c(6.7, 7.0, 3.0),
+  Value6 = c(7.5, 9.3, 3.5)
+)
+
+data1=data
+# # Alternatively, you can set the row names separately
+colnames(data1) <- NULL
+# # Display table without boundaries/borders
+knitr::kable(data1, row.names = FALSE, col.names = NULL,
+             border = NA, digits = 1)%>%
+  kable_styling(bootstrap_options = "striped", full_width = TRUE, position = 'center', font_size = 14, stripe_color='black')
+
+```
+### Null Hypothesis
+
+In order to investigate if there is a difference in means for the per-pupil costs of cyber charter school tuition in three different areas, we can use Analysis of Variance (ANOVA) test. ANOVA is a statistical test that compares means of three or more groups.
+
+Null Hypothesis: The null hypothesis for the ANOVA test would state that there is no significant difference between the means of the per-pupil costs for cyber charter school tuition in the three areas. This can be expressed mathematically as H0: μ1 = μ2 = μ3, where μ1, μ2, and μ3 represent the means of the per-pupil costs for cyber charter school tuition in Area 1, Area 2, and Area 3, respectively.
+
+Alternative Hypothesis: On the other hand, the alternative hypothesis (H1) suggests that at least one mean is significantly different from the others.
+
+### Which test should we use? (Anova)
+
+To test the claim that there is a difference in means for the three areas, we can use the analysis of variance (ANOVA) test. 
+
+In this case, since we are comparing means across three areas, we can use a one-way ANOVA. We will use the following R code to conduct the test:
+
+To conduct the ANOVA test in R, we can use the aov function.
+
+### Anova Test
+
+```{r}
+# Reshape the data to long format
+data_long <- gather(data, key = "Variable", value = "Value", -Area)
+
+# Conduct ANOVA test
+result <- aov(Value ~ Area, data = data_long)
+
+# Print the ANOVA table
+summary(result)
+```
+### Conclusion
+
+The ANOVA table shows that the F value is 8.176 and the p-value is 0.00397. Since the p-value is less than the significance level of 0.05, we reject the null hypothesis and conclude that there is evidence of a difference in means for the three areas. 
+
+Therefore, we can infer that the per-pupil costs for cyber charter school tuition differ among the three areas. Specifically, we found that the mean per-pupil costs for cyber charter school tuition in Area 1 (mean = 7.1) and Area 2 (mean = 8.1) were higher than the mean per-pupil costs in Area 3 (mean = 5.23). The ANOVA test supports the conclusion that there is a significant difference between the means of the per-pupil costs for cyber charter school tuition in the three areas.
