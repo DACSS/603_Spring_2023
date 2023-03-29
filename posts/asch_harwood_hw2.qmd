@@ -1,0 +1,425 @@
+---
+title: "Homework 2"
+author: "Asch Harwood"
+description: "hw2"
+date: "3/28/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - hypothesis_testing
+---
+
+```{r message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+# Q1
+
+```{r}
+# create data frame
+df <- data.frame(
+  "Surgical Procedure" = c("Bypass", "Angiography"),
+  "Sample Size" = c(539, 847),
+  "Mean Wait Time" = c(19, 18),
+  "Standard Deviation" = c(10, 9)
+)
+
+# bypass confidence interval
+mean <- 19
+n <- 539
+sd <- 10
+ci_level <- .9
+tail_area <- (1 - ci_level)/2
+t_score <- qt(p=1-tail_area, df = n - 1)
+b_ci <- c(mean - t_score * sd/sqrt(n), mean + t_score * sd/sqrt(n))
+
+# angiography
+mean <- 18
+n <- 847
+sd <- 9
+ci_level <- .9
+tail_area <- (1 - ci_level)/2
+t_score <- qt(p=1-tail_area, df = n - 1)
+a_ci <- c(mean - t_score * sd/sqrt(n), mean + t_score * sd/sqrt(n))
+
+
+cat("Bypass 90% Confidence Interval: (", b_ci[1], ", ", b_ci[2], ")", sep = "")
+cat("\n")
+cat("\n")
+cat("Angiography 90% Confidence Interval: (", a_ci[1], ", ", a_ci[2], ")", sep = "")
+
+```
+
+
+### Interpretation
+
+Bypass confidence interval: 18.29029, 19.70971
+Angiography confidence interval: 17.49078 18.50922
+
+The angiography confidence level is smaller.
+
+# Q2
+
+```{r}
+n <- 1031 # num of americans survey
+college_essential <- 567 # num americans believe college is essential
+point_estimate <- college_essential/n
+prop_results <- prop.test(college_essential, n)
+
+cat("College is essential point estimate:", point_estimate)
+cat("\n")
+cat("\n")
+cat("College is essential 95% Confidence Interval: (", prop_results$conf.int[1], ", ", prop_results$conf.int[2], ")", sep = "")
+```
+
+# Q3
+
+```{r}
+# solve for n:  CI = x + (t * (sd / sqrt(n)))
+# plug in value in this equation: n = (sd * t / (CI - x))^2
+#calculate mean
+high_price <- 200
+low_price <- 30
+
+sd <- (high_price - low_price) * .25
+mean <- (high_price + low_price)/2
+ci_lower <- mean - 5
+ci_upper <- mean + 5
+ci_level <- .95
+estimated_sample_size <- (sd * ci_level / (ci_upper - mean))^2
+
+cat("The estimated sample size is: ", round(estimated_sample_size))
+```
+
+
+
+# Q4
+
+```{r}
+# goal: test whether mean female incole is inline with union agreement
+mean_weekly_income_predicted <- 500
+n = 9
+mean_sampled = 410
+sd_sample = 90
+```
+
+### Q4_A
+
+#### Approach and Assumptions
+
+- Approach 1: Construct confidence interval
+- Approach 2: One-sample, two-tailed T-test
+
+- Assumptions: 
+1. Sample is random and representative of underlying population
+2. Data is normally distributed
+3. Sample observations are independent
+4. Population standard deviation is not known
+
+- Hypothesis
+1. h0: female weekly salary is the same as union weekly ($410 == $500)
+2. h1: female weekly salary is different from the union weekly (higher/lower) ($410 != $500)
+
+
+```{r}
+
+#confidence interval calculation
+mean <- 410
+union_mean <- 500
+n <- 9
+sd <- 90
+alpha <- 0.05
+ci_level <- .95
+tail_area <- (1 - ci_level)/2
+t_score <- qt(p=1-tail_area, df = n - 1)
+a_ci <- c(mean - t_score * sd/sqrt(n), mean + t_score * sd/sqrt(n))
+
+#p-value calculation
+
+#compute t_staistics
+t_stat <- (mean - union_mean)/(sd/sqrt(n))
+
+#computer degrees of freedom
+df <- n - 1
+
+#calculate lower/left tail because t statistics is negative
+#multipy by two for two-tailed test
+p_val <- 2*pt(t_stat, df)
+
+cat("Approach 1: Confidence Interval")
+cat("\n")
+cat("\n")
+cat("Female Salary 95% Confidence Interval: (", a_ci[1], ", ", a_ci[2], ")", sep = "")
+cat("\n")
+cat("T score:", t_score)
+
+cat("\n")
+cat("\n")
+cat("Interpretation")
+cat("\n")
+cat("\n")
+
+cat("The 95% confidence interval for the weekly female salary of $410 does not include $500, so we can reject the null hypothesis in favor of the alternative hypthosis that weekly female salary differs from $500 a week")
+
+
+cat("Approach 2: Calculat P Value")
+cat("\n")
+cat("\n")
+
+cat("T statistic:", t_stat)
+cat("\n")
+cat("Two-tailed P Value", p_val)
+cat("\n")
+cat("Is P value less than alpha?:", p_val < alpha)
+
+
+cat("\n")
+cat("\n")
+cat("Interpretation")
+cat("\n")
+cat("\n")
+
+cat("We can reject the null hypothesis in favor of the alternative hypothosis that weekly female salary differs from $500 a week because the observed p value of", p_val, "is less than our designated signifiance level of", alpha, ".")
+
+
+```
+
+
+### Q4_B
+
+```{r}
+#p-value calculation
+
+mean <- 410
+union_mean <- 500
+n <- 9
+sd <- 90
+alpha <- 0.05
+
+#compute t_staistics
+t_stat <- (mean - union_mean)/(sd/sqrt(n))
+
+#computer degrees of freedom
+df <- n - 1
+
+p_val <- pt(t_stat, df, lower.tail = TRUE)
+
+#calculate lower/left tail because t statistics is negative
+#multipy by two for two-tailed test
+cat("Lower Tail P Value:", p_val)
+cat("\n")
+cat("This lower tail p value can be used to test whether the observed weekly female salary is less than the union wage. In this case, if we were doing a one-tailed t-test with an alpha significance level of 0.05, we could reject the null hypothesis in favor of the altnernative that weekly female salary is less than the union wage with a p value of", p_val,".")
+
+```
+
+
+### Q4_C
+
+```{r}
+
+mean <- 410
+union_mean <- 500
+n <- 9
+sd <- 90
+alpha <- 0.05
+
+#compute t_staistics
+t_stat <- (mean - union_mean)/(sd/sqrt(n))
+
+#computer degrees of freedom
+df <- n - 1
+
+p_val <- pt(t_stat, df, lower.tail = FALSE)
+
+#calculate lower/left tail because t statistics is negative
+#multipy by two for two-tailed test
+cat("Upper Tail P Value:", p_val)
+cat("\n")
+cat("This upper tail p value can be used to test whether the observed weekly female salary is more than the union wage. In this case, if we were doing a one-tailed t-test with an alpha significance level of 0.05, we cannot reject the null hypothesis in favor of the altnernative that weekly female salary is less than the union wage with a p value of", p_val,".")
+```
+# Q5
+
+```{r}
+n <- 1000 #sample size
+df <- n - 1 #degrees of freedom
+se <- 10.0 #standard error
+pop_mean <- 500 #assumed pop mean
+y_jones <- 519.5
+y_smith <- 519.7
+t_jones <- 1.95
+t_smith <- 1.97
+p_jones <- 0.051
+p_smith <- 0.049
+
+# helper functions - computes t-stat
+t_stat_func <- function(mean_1, test_mean, standard_error){
+  t_stat <- (mean_1 - test_mean)/(standard_error)
+  return(t_stat)
+}
+
+#helper function - computers p-value
+p_val_func <- function(t_stat, df, tail_type){
+  if (t_stat < 0){
+    p_val <- pt(t_stat, df, lower.tail = TRUE)
+  } else{
+    p_val <- pt(t_stat, df, lower.tail = FALSE)
+  }
+  if (tail_type==2){
+    p_val <- p_val*2
+  }else{p_val}
+  
+  return(p_val)
+}
+
+```
+
+### Q5_A
+```{r}
+
+#compute t_staistics for jones
+
+t_stat_jones <- t_stat_func(y_jones, pop_mean, se)
+
+p_val_jones <- p_val_func(t_stat_jones, df, 2)
+
+t_stat_smith <- t_stat_func(y_smith, pop_mean, se)
+
+p_val_smith <- p_val_func(t_stat_smith, df, 2)
+
+cat("Jones")
+cat("\n")
+cat("T statistic:", t_stat_jones,",", "P value:", p_val_jones)
+
+cat("\n")
+cat("\n")
+
+cat("Smith")
+cat("\n")
+cat("T statistic:", t_stat_smith,",", "P value:", p_val_smith)
+```
+### Q5_B
+
+With an alpha of 0.05, Smith's result is statistically significant, while Jones's result is not.
+
+### Q5_C
+
+The chosen significant level (alpha = 0.05, for example) is typically a rule of thumb in the social sciences. In this case, a decision to round a value to decimal places would put both of these p-values at 0.05. Context matters as well. Depending on what is being measured in this example, the difference between 519.5 versus 519.7 might not be meaningful, or it could represent a huge real world difference. The implications/consequences of committing type 1 or type 2 error could be pertinent in the interpretation of these p_values as well. By reporting the actual p-values, readers are empowered to better evaluate the decisions of the researchers.
+
+# Q6
+
+#### Null Hypothesis
+H0: There is no association between snack choice and grade level
+
+6th_grade_healthy_snack_31 = 7th_grade_healthy_snack_43 = 8th_grade_healthy_snack_51
+
+6th_grade_unhealthy_snack_69 = 7th_grade_healthy_snack_57 = 8th_grade_healthy_snack_49
+
+#### Chi Squared Test
+
+- We will use a chi-squared test
+
+```{r}
+snack_counts <- matrix(
+  c(31, 43, 51, 69, 57, 49),
+  nrow = 2,
+  byrow = TRUE
+)
+rownames(snack_counts) <- c("Healthy_Snack", "Unhealthy_Snack")
+colnames(snack_counts) <- c("6th grade", "7th grade", "8th grade")
+snack_counts
+
+# Perform the Chi-square test
+chi_square_test <- chisq.test(snack_counts)
+
+# Print the test results
+print(chi_square_test)
+```
+#### Interpretation
+
+We can reject the null hypothesis that there is no association between snack choice and grade in favor of the alternative hypothesis that there is an association between snack choice and grade
+
+
+```{r}
+# Create a dataframe
+snack_data <- data.frame(
+  Grade_Level = c("6th grade", "7th grade", "8th grade"),
+  Healthy_Snack = c(31, 43, 51),
+  Unhealthy_Snack = c(69, 57, 49)
+)
+
+# Calculate the proportions
+snack_data$Total <- snack_data$Healthy_Snack + snack_data$Unhealthy_Snack
+snack_data$Healthy_Prop <- snack_data$Healthy_Snack / snack_data$Total
+snack_data$Unhealthy_Prop <- snack_data$Unhealthy_Snack / snack_data$Total
+
+# Reshape the data to a long format
+snack_data_long <- tidyr::gather(snack_data, key = "Snack_Type", value = "Proportion", Healthy_Prop, Unhealthy_Prop)
+
+# Create a bar plot using ggplot2
+ggplot(snack_data_long, aes(x = Grade_Level, y = Proportion, fill = Snack_Type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Proportion of Healthy and Unhealthy Snacks by Grade Level",
+       x = "Grade Level",
+       y = "Proportion",
+       fill = "Snack Type") +
+  theme_minimal()
+```
+
+
+
+# Q7
+```{r}
+# Data from the table
+data_matrix <- matrix(
+  c(
+    6.2, 9.3, 6.8, 6.1, 6.7, 7.5,
+    7.5, 8.2, 8.5, 8.2, 7.0, 9.3,
+    5.8, 6.4, 5.6, 7.1, 3.0, 3.5
+  ),
+  nrow = 3,
+  byrow = TRUE
+)
+# Create a dataframe with Area and Value columns
+data_df <- data.frame(
+  Area = factor(rep(c("Area 1", "Area 2", "Area 3"), each = 6)),
+  Value = as.vector(t(data_matrix))
+)
+
+mean_df <- data_df %>%
+  group_by(Area) %>%
+  summarise(mean_val = mean(Value))
+```
+
+
+### Answer
+
+#### Null Hypothesis
+
+H0: All groups have the same population mean
+
+area_1 = area_2 = area_3 is TRUE
+
+H1: At least one group has a different population mean
+
+area_1 = area_2 = area_3 is FALSE
+
+#### ANOVA
+
+- Since we are trying to determine if the observed differences in area means are statistically significant, we will use a one-way analysis of variance test
+
+```{r}
+anova_results <- aov(Value ~ Area, data_df)
+summary(anova_results)
+```
+#### Interpretation
+
+With a P value of 0.00397 we can reject the null hypothesis that there is no difference between the three group means in favor of the alternative hypothesis that there is indeed a difference.
+
+
+
