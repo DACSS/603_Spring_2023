@@ -1,0 +1,256 @@
+---
+title: "Homework 2"
+author: "Saisrinivas Ambatipudi"
+description: "Homework 2 603"
+date: "03/28/2023"
+format:
+  html:
+    df-print: paged
+    css: styles.css
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Homework 2
+  - Saisrinivas Ambatipudi
+---
+
+```{r setup, include=FALSE, warnings=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(stats)
+library(knitr)
+library(kableExtra)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Question 1
+
+```{r, results='asis', echo=FALSE, fig.show='hold', out.width='100%', out.height='10%'}
+# Create the data frame
+
+s_p <- c("Bypass", "Angiography")
+s_s <- c(539, 847)
+m_w_t <- c(19, 18)
+s_d <- c(10, 9)
+
+surgery <- data.frame(s_p, s_s, m_w_t, s_d)
+
+# Create the table with kable
+
+kable(surgery, align = "c", booktabs = TRUE, 
+      col.names = c("Surgical Procedure", "Sample Size", "Mean Wait Time", "Standard Deviation")) %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE, position = 'center', font_size = 14, stripe_color='black')
+```
+
+
+```{r}
+
+# 90% confidence interval
+
+c_l <- 0.90
+
+# Tail area
+
+t_a <- (1-c_l)/2
+
+# t_score Calculation
+
+t_s <- qt(p = 1-t_a, df = s_s-1)
+
+# Standard Error Calculation
+
+s_e <- s_d/sqrt(s_s)
+
+# Confidence Interval Calculation for Bypass and Angiography
+
+c_i <- c(m_w_t - t_s * s_e,
+        m_w_t + t_s * s_e)
+
+c_i
+
+```
+
+The Cardiac Care Network analyzed wait times for cardiac procedures in Ontario, constructing a 90% confidence interval using the t-distribution. For bypass surgery, the true mean wait time is estimated to be between 18.29 and 19.71 days, while for angiography it is between 17.49 and 18.51 days. The bypass surgery interval is slightly wider, indicating more uncertainty in the estimate. These confidence intervals help inform decisions on resource allocation and patient care by indicating the likely range of true mean wait times.
+
+## Question 2
+
+```{r}
+
+prop.test(567, 1031, conf.level = .95)
+
+```
+
+The National Center for Public Policy surveyed 1031 adult Americans, finding that 54.99% believe a college education is essential for success. A 95% confidence interval for this proportion is [0.5189682, 0.5805580], suggesting that between 51.90% and 58.06% of adult Americans hold this belief. Since the interval doesn't include 0.5, we can conclude that the proportion is significantly different from 0.5 at the 0.05 significance level, indicating a majority of adult Americans believe in the importance of a college education.
+
+## Question 3
+
+```{r}
+
+# Define variables
+M_E <- 5
+s_d <- (200-30)/4
+a <- 0.05
+z_a<- qnorm(p = 1-a/2, lower.tail = FALSE)
+
+
+# Calculate required sample size
+
+s_s <- ceiling(((z_a * s_d) / M_E)^2)
+
+
+# Required Sample Size, Round up to nearest integer
+
+cat("The required sample size is:", s_s)
+```
+
+UMass Amherst's financial aid office aims to estimate the mean cost of textbooks per semester within $5, using a $10 or less confidence interval. Assuming a population standard deviation of a quarter of the range ($30-$200), they calculate a required sample size of 278 students for a 95% confidence interval. Accurate estimates are vital for determining appropriate financial assistance for textbooks, ensuring student academic success and financial well-being.
+
+## Question 4
+
+### Question 4-A
+
+We assume that the sample is random and that the population has a normal distribution.
+Null hypothesis: H0: μ = 500
+Alternative hypothesis: Ha: μ ≠ 500
+We will reject the null hypothesis at a p-value, p <= 0.05
+
+```{r}
+
+s_m <- 410 # sample mean
+mu <- 500 # population mean
+s_d <- 90 # standard deviation
+s_s <- 9 # sample size
+
+# Calculating test-statistic
+
+t_s <- (s_m-mu)/(s_d/sqrt(s_s))
+
+cat("test-statistic:", t_s, '\n')
+
+p_v <- 2 * pt(t_s, df = s_s - 1, lower.tail = TRUE)
+
+cat("p value :", p_v)
+
+```
+
+We investigate if the mean income of nine randomly selected female employees in a large service company differs from the $500 per week union agreement. With a sample mean of $410 and a standard deviation of $90, we conduct a hypothesis test at a 0.05 significance level. The resulting p-value of 0.01707168 is less than 0.05, leading us to reject the null hypothesis and conclude that the mean income of female employees significantly differs from $500 per week.
+
+
+### Question 4-B
+
+We assume that the sample is random and that the population has a normal distribution.
+Null hypothesis: H0: μ = 500
+Alternative hypothesis: Ha: μ < 500
+We will reject the null hypothesis at a p-value less than 0.05
+
+```{r}
+p <- pt(t_s, s_s-1, lower.tail = TRUE)
+p
+```
+
+A one-tailed t-test yielded a p-value of 0.008535841, which is less than the 0.05 significance level. We reject the null hypothesis, concluding that female employees in this service company earn less than $500 per week, implying they are paid less than senior-level workers per the union agreement.
+
+### Question 4-C
+
+We assume that the sample is random and that the population has a normal distribution.
+Null hypothesis: H0: μ = 500
+Alternative hypothesis: Ha: μ > 500
+We will reject the null hypothesis at a p-value less than 0.05
+
+```{r}
+p <- pt(t_s, s_s-1, lower.tail = FALSE)
+p
+```
+
+With a p-value of 0.9914642, greater than the 0.05 significance level, we fail to reject the null hypothesis. There is insufficient evidence to support the claim that female employees earn more than $500 per week, meaning we cannot conclude they earn significantly more than the agreed-upon mean income for senior-level workers.
+
+## Question 5
+
+### Question 5-A
+
+We assume that the sample is random and that the population has a normal distribution.
+Null hypothesis: H0: μ = 500
+Alternative hypothesis: Ha: μ ≠ 500
+We will reject the null hypothesis at a p-value less than 0.05
+
+```{r}
+s_m <- 519.5
+mu <- 500
+s_e <- 10
+s_s <- 1000
+
+t_s_j <- (s_m-mu)/(s_e)
+t_s_j
+
+
+p <- 2*pt(t_s_j, s_s-1, lower.tail = FALSE)
+p
+
+```
+
+```{r}
+s_m <- 519.7
+mu <- 500
+s_e <- 10
+s_s <- 1000
+
+t_s_s <- (s_m-mu)/(s_e)
+t_s_s
+
+
+p <- 2*pt(t_s_s, s_s-1, lower.tail = FALSE)
+p
+```
+Jones obtained a test-statistic of 1.95 and a p-value of 0.05145555, whereas Smith achieved a test-statistic of 1.97 with the same p-value of 0.05145555.
+
+### Question 5-B
+
+Based on the given information, the result is statistically significant for Smith, but not for Jones.
+
+For Jones, the p-value (0.05145555) is greater than the significance level (α = 0.05), which means that we fail to reject the null hypothesis. This indicates that the result is not statistically significant for Jones.
+
+For Smith, the p-value (0.04911426) is less than the significance level (α = 0.05), which means that we reject the null hypothesis. This indicates that the result is statistically significant for Smith.
+
+### Question 5-C
+
+Reporting results as "P ≤ 0.05" or "P > 0.05" without providing the actual P-value can mask the degree of uncertainty in the findings. In the Jones/Smith example, such reporting could lead to different conclusions for very similar results. It is important to report the actual P-value to accurately interpret the results and understand the strength of the conclusion.
+
+## Question 6
+
+To examine if the proportion of students selecting healthy snacks varies by grade level, we employ the chi-squared test of independence. The null hypothesis assumes the same proportion across all grades, while the alternative hypothesis posits differing proportions based on grade level.
+
+```{r}
+# Create the contingency table
+s_t <- matrix(c(31, 43, 51, 69, 57, 49), nrow = 2, byrow = TRUE)
+rownames(s_t) <- c("Healthy snack", "Unhealthy snack")
+colnames(s_t) <- c("6th grade", "7th grade", "8th grade")
+s_t
+
+# Conduct the chi-square test of independence
+chisq.test(s_t)
+```
+The chi-square test statistic is 8.3383 with 2 degrees of freedom, and a p-value of 0.01547, which is less than the 0.05 significance level. We reject the null hypothesis, concluding that there is a significant association between snack choice and grade level among surveyed students.
+
+More 6th-graders chose healthy snacks compared to 7th and 8th-graders, while more 8th-graders chose unhealthy snacks. This suggests grade level influences snack choice, and health promotion efforts should target specific grades with higher unhealthy snack choices. These findings may also guide further research on factors affecting middle school students' snack choices.
+
+## Question 7
+To test the claim that there is a difference in means for the three areas, we will use a one-way ANOVA test. 
+The null hypothesis is that the means for the three areas are the same. 
+The alternative hypothesis is that at least one area's mean is different from the others.
+
+```{r}
+
+# Data in vectors
+area1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+area2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+area3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+# One-way ANOVA test
+test <- aov(c(area1, area2, area3) ~ factor(c(rep("Area 1", length(area1)), rep("Area 2", length(area2)), rep("Area 3", length(area3)))))
+summary(test)
+
+```
+With a p-value of 0.00397, which is below the significance level (α = 0.05), we reject the null hypothesis, concluding that there is a difference in means among the three areas.
