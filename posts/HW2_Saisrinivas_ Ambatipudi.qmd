@@ -26,25 +26,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## Question 1
-
-```{r, results='asis', echo=FALSE, fig.show='hold', out.width='100%', out.height='10%'}
-# Create the data frame
-
-s_p <- c("Bypass", "Angiography")
-s_s <- c(539, 847)
-m_w_t <- c(19, 18)
-s_d <- c(10, 9)
-
-surgery <- data.frame(s_p, s_s, m_w_t, s_d)
-
-# Create the table with kable
-
-kable(surgery, align = "c", booktabs = TRUE, 
-      col.names = c("Surgical Procedure", "Sample Size", "Mean Wait Time", "Standard Deviation")) %>%
-  kable_styling(bootstrap_options = "striped", full_width = FALSE, position = 'center', font_size = 14, stripe_color='black')
-```
-
+## Q1
 
 ```{r}
 
@@ -75,7 +57,7 @@ c_i
 
 The Cardiac Care Network analyzed wait times for cardiac procedures in Ontario, constructing a 90% confidence interval using the t-distribution. For bypass surgery, the true mean wait time is estimated to be between 18.29 and 19.71 days, while for angiography it is between 17.49 and 18.51 days. The bypass surgery interval is slightly wider, indicating more uncertainty in the estimate. These confidence intervals help inform decisions on resource allocation and patient care by indicating the likely range of true mean wait times.
 
-## Question 2
+## Q2
 
 ```{r}
 
@@ -85,7 +67,7 @@ prop.test(567, 1031, conf.level = .95)
 
 The National Center for Public Policy surveyed 1031 adult Americans, finding that 54.99% believe a college education is essential for success. A 95% confidence interval for this proportion is [0.5189682, 0.5805580], suggesting that between 51.90% and 58.06% of adult Americans hold this belief. Since the interval doesn't include 0.5, we can conclude that the proportion is significantly different from 0.5 at the 0.05 significance level, indicating a majority of adult Americans believe in the importance of a college education.
 
-## Question 3
+## Q3
 
 ```{r}
 
@@ -108,9 +90,9 @@ cat("The required sample size is:", s_s)
 
 UMass Amherst's financial aid office aims to estimate the mean cost of textbooks per semester within $5, using a $10 or less confidence interval. Assuming a population standard deviation of a quarter of the range ($30-$200), they calculate a required sample size of 278 students for a 95% confidence interval. Accurate estimates are vital for determining appropriate financial assistance for textbooks, ensuring student academic success and financial well-being.
 
-## Question 4
+## Q4
 
-### Question 4-A
+### Q4-A
 
 We assume that the sample is random and that the population has a normal distribution.
 Null hypothesis: H0: μ = 500
@@ -139,7 +121,7 @@ cat("p value :", p_v)
 We investigate if the mean income of nine randomly selected female employees in a large service company differs from the $500 per week union agreement. With a sample mean of $410 and a standard deviation of $90, we conduct a hypothesis test at a 0.05 significance level. The resulting p-value of 0.01707168 is less than 0.05, leading us to reject the null hypothesis and conclude that the mean income of female employees significantly differs from $500 per week.
 
 
-### Question 4-B
+### Q4-B
 
 We assume that the sample is random and that the population has a normal distribution.
 Null hypothesis: H0: μ = 500
@@ -153,7 +135,7 @@ p
 
 A one-tailed t-test yielded a p-value of 0.008535841, which is less than the 0.05 significance level. We reject the null hypothesis, concluding that female employees in this service company earn less than $500 per week, implying they are paid less than senior-level workers per the union agreement.
 
-### Question 4-C
+### Q4-C
 
 We assume that the sample is random and that the population has a normal distribution.
 Null hypothesis: H0: μ = 500
@@ -167,9 +149,9 @@ p
 
 With a p-value of 0.9914642, greater than the 0.05 significance level, we fail to reject the null hypothesis. There is insufficient evidence to support the claim that female employees earn more than $500 per week, meaning we cannot conclude they earn significantly more than the agreed-upon mean income for senior-level workers.
 
-## Question 5
+## Q5
 
-### Question 5-A
+### Q5-A
 
 We assume that the sample is random and that the population has a normal distribution.
 Null hypothesis: H0: μ = 500
@@ -206,7 +188,7 @@ p
 ```
 Jones obtained a test-statistic of 1.95 and a p-value of 0.05145555, whereas Smith achieved a test-statistic of 1.97 with the same p-value of 0.05145555.
 
-### Question 5-B
+### Q5-B
 
 Based on the given information, the result is statistically significant for Smith, but not for Jones.
 
@@ -214,11 +196,11 @@ For Jones, the p-value (0.05145555) is greater than the significance level (α =
 
 For Smith, the p-value (0.04911426) is less than the significance level (α = 0.05), which means that we reject the null hypothesis. This indicates that the result is statistically significant for Smith.
 
-### Question 5-C
+### Q5-C
 
 Reporting results as "P ≤ 0.05" or "P > 0.05" without providing the actual P-value can mask the degree of uncertainty in the findings. In the Jones/Smith example, such reporting could lead to different conclusions for very similar results. It is important to report the actual P-value to accurately interpret the results and understand the strength of the conclusion.
 
-## Question 6
+## Q6
 
 To examine if the proportion of students selecting healthy snacks varies by grade level, we employ the chi-squared test of independence. The null hypothesis assumes the same proportion across all grades, while the alternative hypothesis posits differing proportions based on grade level.
 
@@ -236,7 +218,7 @@ The chi-square test statistic is 8.3383 with 2 degrees of freedom, and a p-value
 
 More 6th-graders chose healthy snacks compared to 7th and 8th-graders, while more 8th-graders chose unhealthy snacks. This suggests grade level influences snack choice, and health promotion efforts should target specific grades with higher unhealthy snack choices. These findings may also guide further research on factors affecting middle school students' snack choices.
 
-## Question 7
+## Q7
 To test the claim that there is a difference in means for the three areas, we will use a one-way ANOVA test. 
 The null hypothesis is that the means for the three areas are the same. 
 The alternative hypothesis is that at least one area's mean is different from the others.
