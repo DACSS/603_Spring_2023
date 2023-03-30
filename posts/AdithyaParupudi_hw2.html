@@ -200,6 +200,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul class="collapse">
   <li><a href="#a-1" id="toc-a-1" class="nav-link" data-scroll-target="#a-1">5A</a></li>
   <li><a href="#b-1" id="toc-b-1" class="nav-link" data-scroll-target="#b-1">5B</a></li>
+  <li><a href="#c-1" id="toc-c-1" class="nav-link" data-scroll-target="#c-1">5C</a></li>
   </ul></li>
   <li><a href="#question-6" id="toc-question-6" class="nav-link" data-scroll-target="#question-6">Question 6</a></li>
   <li><a href="#question-7" id="toc-question-7" class="nav-link" data-scroll-target="#question-7">Question 7</a></li>
@@ -525,6 +526,10 @@ sample estimates:
 <section id="b-1" class="level2">
 <h2 class="anchored" data-anchor-id="b-1">5B</h2>
 <p>The p-value is 0.05145555 for Jones. As p-value is greater than the 0.05, we fail to reject the null hypothesis. The p-value is 0.04911426 for Jones. As p-value is less than the 0.05, we reject the null hypothesis. Therefore, the result is statistically significant for Smith, but not Jones.</p>
+</section>
+<section id="c-1" class="level2">
+<h2 class="anchored" data-anchor-id="c-1">5C</h2>
+<p>If we fail to report the P-value and simply state whether the P-value is less than/equal to or greater than the defined significance level of the test, one cannot determine the strength of the conclusion. In the Jones/Smith example, reporting the results only as <em>P ≤ 0.05</em> versus <em>P &gt; 0.05</em> will lead to different conclusions about very similar results.</p>
 </section>
 </section>
 <section id="question-6" class="level1">
@@ -1092,48 +1097,51 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb46-217"><a href="#cb46-217" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-218"><a href="#cb46-218" aria-hidden="true" tabindex="-1"></a>The p-value is 0.05145555 for Jones. As p-value is greater than the 0.05, we fail to reject the null hypothesis. The p-value is 0.04911426 for Jones. As p-value is less than the 0.05, we reject the null hypothesis. Therefore, the result is statistically significant for Smith, but not Jones.</span>
 <span id="cb46-219"><a href="#cb46-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-220"><a href="#cb46-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-221"><a href="#cb46-221" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 6</span></span>
-<span id="cb46-222"><a href="#cb46-222" aria-hidden="true" tabindex="-1"></a>To test the claim that the proportion of students who choose a healthy snack differs by grade level, we will use the chi-squared test of independence. </span>
-<span id="cb46-223"><a href="#cb46-223" aria-hidden="true" tabindex="-1"></a>The null hypothesis is that the proportion of students who choose a healthy snack is the same across all grade levels. </span>
-<span id="cb46-224"><a href="#cb46-224" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis is that the proportion of students who choose a healthy snack differs by grade level.</span>
-<span id="cb46-225"><a href="#cb46-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-228"><a href="#cb46-228" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-229"><a href="#cb46-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Data in a matrix</span></span>
-<span id="cb46-230"><a href="#cb46-230" aria-hidden="true" tabindex="-1"></a>table_6 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">31</span>, <span class="dv">43</span>, <span class="dv">51</span>, <span class="dv">69</span>, <span class="dv">57</span>, <span class="dv">49</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb46-231"><a href="#cb46-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-232"><a href="#cb46-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Row and column names</span></span>
-<span id="cb46-233"><a href="#cb46-233" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(table_6) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Healthy snack"</span>, <span class="st">"Unhealthy snack"</span>)</span>
-<span id="cb46-234"><a href="#cb46-234" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(table_6) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"6th grade"</span>, <span class="st">"7th grade"</span>, <span class="st">"8th grade"</span>)</span>
-<span id="cb46-235"><a href="#cb46-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-236"><a href="#cb46-236" aria-hidden="true" tabindex="-1"></a><span class="co"># Chi-squared test of independence</span></span>
-<span id="cb46-237"><a href="#cb46-237" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(table_6)</span>
-<span id="cb46-238"><a href="#cb46-238" aria-hidden="true" tabindex="-1"></a>test</span>
-<span id="cb46-239"><a href="#cb46-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-240"><a href="#cb46-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-241"><a href="#cb46-241" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-242"><a href="#cb46-242" aria-hidden="true" tabindex="-1"></a>The p-value (0.01547) is less than the significance level (α = 0.05). Therefore, we reject the null hypothesis and conclude that the proportion of students who choose a healthy snack differs by grade level.)</span>
+<span id="cb46-220"><a href="#cb46-220" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5C</span></span>
+<span id="cb46-221"><a href="#cb46-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-222"><a href="#cb46-222" aria-hidden="true" tabindex="-1"></a>If we fail to report the P-value and simply state whether the P-value is less than/equal to or greater than the defined significance level of the test, one cannot determine the strength of the conclusion. In the Jones/Smith example, reporting the results only as *P ≤ 0.05* versus *P &gt; 0.05* will lead to different conclusions about very similar results.</span>
+<span id="cb46-223"><a href="#cb46-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-224"><a href="#cb46-224" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 6</span></span>
+<span id="cb46-225"><a href="#cb46-225" aria-hidden="true" tabindex="-1"></a>To test the claim that the proportion of students who choose a healthy snack differs by grade level, we will use the chi-squared test of independence. </span>
+<span id="cb46-226"><a href="#cb46-226" aria-hidden="true" tabindex="-1"></a>The null hypothesis is that the proportion of students who choose a healthy snack is the same across all grade levels. </span>
+<span id="cb46-227"><a href="#cb46-227" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis is that the proportion of students who choose a healthy snack differs by grade level.</span>
+<span id="cb46-228"><a href="#cb46-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-231"><a href="#cb46-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-232"><a href="#cb46-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Data in a matrix</span></span>
+<span id="cb46-233"><a href="#cb46-233" aria-hidden="true" tabindex="-1"></a>table_6 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">31</span>, <span class="dv">43</span>, <span class="dv">51</span>, <span class="dv">69</span>, <span class="dv">57</span>, <span class="dv">49</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-234"><a href="#cb46-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-235"><a href="#cb46-235" aria-hidden="true" tabindex="-1"></a><span class="co"># Row and column names</span></span>
+<span id="cb46-236"><a href="#cb46-236" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(table_6) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Healthy snack"</span>, <span class="st">"Unhealthy snack"</span>)</span>
+<span id="cb46-237"><a href="#cb46-237" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(table_6) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"6th grade"</span>, <span class="st">"7th grade"</span>, <span class="st">"8th grade"</span>)</span>
+<span id="cb46-238"><a href="#cb46-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-239"><a href="#cb46-239" aria-hidden="true" tabindex="-1"></a><span class="co"># Chi-squared test of independence</span></span>
+<span id="cb46-240"><a href="#cb46-240" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(table_6)</span>
+<span id="cb46-241"><a href="#cb46-241" aria-hidden="true" tabindex="-1"></a>test</span>
+<span id="cb46-242"><a href="#cb46-242" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-243"><a href="#cb46-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-244"><a href="#cb46-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-245"><a href="#cb46-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-244"><a href="#cb46-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-245"><a href="#cb46-245" aria-hidden="true" tabindex="-1"></a>The p-value (0.01547) is less than the significance level (α = 0.05). Therefore, we reject the null hypothesis and conclude that the proportion of students who choose a healthy snack differs by grade level.)</span>
 <span id="cb46-246"><a href="#cb46-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-247"><a href="#cb46-247" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 7</span></span>
-<span id="cb46-248"><a href="#cb46-248" aria-hidden="true" tabindex="-1"></a>To test the claim that there is a difference in means for the three areas, we will use a one-way ANOVA test. </span>
-<span id="cb46-249"><a href="#cb46-249" aria-hidden="true" tabindex="-1"></a>The null hypothesis is that the means for the three areas are the same. </span>
-<span id="cb46-250"><a href="#cb46-250" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis is that at least one area's mean is different from the others.</span>
-<span id="cb46-251"><a href="#cb46-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-254"><a href="#cb46-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-255"><a href="#cb46-255" aria-hidden="true" tabindex="-1"></a><span class="co"># Data in vectors</span></span>
-<span id="cb46-256"><a href="#cb46-256" aria-hidden="true" tabindex="-1"></a>area1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">6.2</span>, <span class="fl">9.3</span>, <span class="fl">6.8</span>, <span class="fl">6.1</span>, <span class="fl">6.7</span>, <span class="fl">7.5</span>)</span>
-<span id="cb46-257"><a href="#cb46-257" aria-hidden="true" tabindex="-1"></a>area2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">7.5</span>, <span class="fl">8.2</span>, <span class="fl">8.5</span>, <span class="fl">8.2</span>, <span class="fl">7.0</span>, <span class="fl">9.3</span>)</span>
-<span id="cb46-258"><a href="#cb46-258" aria-hidden="true" tabindex="-1"></a>area3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">5.8</span>, <span class="fl">6.4</span>, <span class="fl">5.6</span>, <span class="fl">7.1</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>)</span>
-<span id="cb46-259"><a href="#cb46-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-260"><a href="#cb46-260" aria-hidden="true" tabindex="-1"></a><span class="co"># One-way ANOVA test</span></span>
-<span id="cb46-261"><a href="#cb46-261" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="fu">c</span>(area1, area2, area3) <span class="sc">~</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Area 1"</span>, <span class="fu">length</span>(area1)), <span class="fu">rep</span>(<span class="st">"Area 2"</span>, <span class="fu">length</span>(area2)), <span class="fu">rep</span>(<span class="st">"Area 3"</span>, <span class="fu">length</span>(area3)))))</span>
-<span id="cb46-262"><a href="#cb46-262" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(test)</span>
-<span id="cb46-263"><a href="#cb46-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-264"><a href="#cb46-264" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-265"><a href="#cb46-265" aria-hidden="true" tabindex="-1"></a>The p-value (0.00397) is less than the significance level (α = 0.05). Therefore, we reject the null hypothesis and conclude that there is a difference in means for the three areas.</span>
+<span id="cb46-247"><a href="#cb46-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-248"><a href="#cb46-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-249"><a href="#cb46-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-250"><a href="#cb46-250" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 7</span></span>
+<span id="cb46-251"><a href="#cb46-251" aria-hidden="true" tabindex="-1"></a>To test the claim that there is a difference in means for the three areas, we will use a one-way ANOVA test. </span>
+<span id="cb46-252"><a href="#cb46-252" aria-hidden="true" tabindex="-1"></a>The null hypothesis is that the means for the three areas are the same. </span>
+<span id="cb46-253"><a href="#cb46-253" aria-hidden="true" tabindex="-1"></a>The alternative hypothesis is that at least one area's mean is different from the others.</span>
+<span id="cb46-254"><a href="#cb46-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-257"><a href="#cb46-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-258"><a href="#cb46-258" aria-hidden="true" tabindex="-1"></a><span class="co"># Data in vectors</span></span>
+<span id="cb46-259"><a href="#cb46-259" aria-hidden="true" tabindex="-1"></a>area1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">6.2</span>, <span class="fl">9.3</span>, <span class="fl">6.8</span>, <span class="fl">6.1</span>, <span class="fl">6.7</span>, <span class="fl">7.5</span>)</span>
+<span id="cb46-260"><a href="#cb46-260" aria-hidden="true" tabindex="-1"></a>area2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">7.5</span>, <span class="fl">8.2</span>, <span class="fl">8.5</span>, <span class="fl">8.2</span>, <span class="fl">7.0</span>, <span class="fl">9.3</span>)</span>
+<span id="cb46-261"><a href="#cb46-261" aria-hidden="true" tabindex="-1"></a>area3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">5.8</span>, <span class="fl">6.4</span>, <span class="fl">5.6</span>, <span class="fl">7.1</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>)</span>
+<span id="cb46-262"><a href="#cb46-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-263"><a href="#cb46-263" aria-hidden="true" tabindex="-1"></a><span class="co"># One-way ANOVA test</span></span>
+<span id="cb46-264"><a href="#cb46-264" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="fu">c</span>(area1, area2, area3) <span class="sc">~</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Area 1"</span>, <span class="fu">length</span>(area1)), <span class="fu">rep</span>(<span class="st">"Area 2"</span>, <span class="fu">length</span>(area2)), <span class="fu">rep</span>(<span class="st">"Area 3"</span>, <span class="fu">length</span>(area3)))))</span>
+<span id="cb46-265"><a href="#cb46-265" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(test)</span>
+<span id="cb46-266"><a href="#cb46-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-267"><a href="#cb46-267" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-268"><a href="#cb46-268" aria-hidden="true" tabindex="-1"></a>The p-value (0.00397) is less than the significance level (α = 0.05). Therefore, we reject the null hypothesis and conclude that there is a difference in means for the three areas.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
