@@ -1,0 +1,200 @@
+---
+title: "Hw 2 by Kristin Abijaoude"
+author: "Kristin Abijaoude"
+description: "HW2"
+date: "03/16/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Hw2
+  - kristin abijaoude
+  - distribution 
+  - probability
+---
+
+```{r}
+# load packages
+packages <- c("readr", "ggplot2", "caret", "summarytools", "tidyverse", "dplyr", "stats", "pwr")
+lapply(packages, require, character.only = TRUE)
+```
+
+# Question 1
+
+```{r}
+surgical_procedures <- c("bypass","angiography")
+sample_size <- c(589, 847)
+mean_wait_time <- c(19, 18)
+standard_deviation <- c(10,9)
+
+surgery_data <- data.frame(surgical_procedures, sample_size, mean_wait_time, standard_deviation)
+surgery_data
+```
+Wait times are in days. 
+
+```{r}
+# confidence level for bypass and angiography
+conf_level <- 0.9
+
+# standard error for bypass
+bypass_se <- 10 / sqrt(589)
+
+# confidence interval for bypass
+bypassCI <- 19 + qt(c(0.05, 0.95), 589-1) * bypass_se
+bypassCI
+```
+
+```{r}
+# standard error for angiography
+angio_se <- 9 / sqrt(847)
+
+# confidence interval for angiography
+angioCI <- 18 + qt(c(0.05, 0.95), 847-1) * angio_se
+angioCI
+```
+
+# Question 2 
+
+```{r}
+# out of 1031 Americans surveyed
+p <- 567 / 1031 
+# 54% of Americans believe college education is essential for success
+
+# 95% significant level
+conf<- 0.95 
+
+# standard error
+college_se <- sqrt(p*(1-p)/1031) 
+
+# confidence interval
+collegeCI <- p + qnorm(c(0.025, 0.975)) * college_se
+collegeCI 
+```
+
+# Question 3
+
+```{r}
+# $5 or less within the estimate
+est <- 5
+
+# money spent on textbooks varies widely, mostly between $30 and $200
+sigma <- (200 - 30) / 4
+
+# significant level 
+alpha <- 0.5
+
+# z-alpha
+z_alpha <- qnorm(1 - alpha / 2)
+
+# sample size of books
+n <- ceiling((z_alpha * sigma / est) ^ 2)
+n
+```
+
+# Question 4
+## A
+```{r}
+# t test
+f_emp <- 410
+income <- 500
+s <- 90
+t <- (f_emp - income) / (s / sqrt(9))
+t
+```
+
+## B
+```{r}
+# degree of freedom
+df <- 9 - 1 
+# df = 8
+
+# p-value
+p_value <- pt(t, df)
+p_value
+
+# significant level
+alpha <- 0.05
+
+# to reject or not to reject
+if (p_value < alpha/2 || p_value > 1-alpha/2) {
+  cat("Reject the null hypothesis")
+} else {
+  cat("Fail to reject the null hypothesis")
+}
+```
+
+## C
+```{r}
+1-p_value
+
+# fail to reject null hypothesis
+```
+
+# Question 5
+## A
+
+```{r}
+#  T values
+t_jones <- (519.5 - 500) / 10 # sample mean = 519.5 - 500 for population mean / sample error of 10.0
+t_jones
+
+t_smith <- (519.7 - 500) / 10 # sample mean = 519.7 - 500 for population mean / sample error of 10.0
+t_smith
+```
+
+```{r}
+# p values
+p_jones <- 2 * pt(-abs(t_jones), df = 999)
+p_jones
+
+p_smith <- 2 * pt(-abs(t_smith), df = 999)
+p_smith
+```
+
+## B
+
+Smith's result is statistically significant, while Jones' is not.
+
+## C
+
+While the two results are close in variables, one of them is significant while the other is not. That's why P-value is important in determining whether to reject or fail to reject the hypothesis. 
+
+# Question 6
+
+```{r}
+healthy <- c(31, 43, 51)
+unhealthy <- c(69, 57, 49)
+
+snack <- rbind(healthy, unhealthy)
+
+colnames(snack) <- c("6th grade", "7th grade", "8th grade")
+rownames(snack) <- c("healthy", "unhealthy")
+
+snack
+# α = 0.05
+```
+```{r}
+chisq.test(snack, correct = FALSE)
+```
+
+Since the p-value is smaller than the 0.05 threshold, we can conclude that there is an association between grade and snack choices.
+
+# Question 7
+
+```{r}
+tuition <- data.frame(
+  area = c(rep("Area_1", 6), rep("Area_2", 6), rep("Area_3", 6)),
+  cost = c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3, 5.8, 6.4, 5.6, 7.1, 3.0, 3.5))
+
+tuition
+```
+
+```{r}
+tuition_model <- aov(cost ~ area, data = tuition)
+summary(tuition_model)
+```
+
+From these results, we can conclude that there is not much statistical significance between the area of a given charter school and the cost of the tuition in said charter schools.
