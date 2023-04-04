@@ -1,0 +1,224 @@
+---
+title: "Homework 2"
+author: "Abigail Balint"
+desription: "HW2 Responses"
+date: "04/03/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - homework2
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+Generating a table here to calculate standard deviation
+```{r}
+heart <- matrix(c(539, 19, 10, 847, 18, 9), ncol=3, byrow=TRUE)
+colnames(heart) <- c('Sample Size','Mean Wait Time','Standard Deviation')
+rownames(heart) <- c('Bypass','Angiography')
+heart <- as.table(heart)
+head(heart)
+```
+
+Calculating confidence interval for Bypass:
+```{r}
+stander1 <- 10/sqrt(539)
+confidence_level <- 0.90 
+tail_area <- (1-confidence_level)/2
+t_score <- qt(p = 1-tail_area, df = 539-1)
+t_score
+CI <- c(19 - t_score * stander1,
+        19 + t_score * stander1)
+print(CI)
+
+
+
+
+```
+
+Calculating confidence interval for Angiography:
+```{r}
+stander2 <- 9/sqrt(847)
+confidence_level <- 0.90 
+tail_area <- (1-confidence_level)/2
+t_score <- qt(p = 1-tail_area, df = 847-1)
+t_score
+CI <- c(18 - t_score * stander2,
+        18 + t_score * stander2)
+print(CI)
+```
+
+```{r}
+BypassInt <- 19.70971 - 18.29029
+AngiographyInt <- 18.50922-17.49078 
+print(BypassInt)  
+print(AngiographyInt) 
+```
+Question: Is the confidence interval narrower for angiography or bypass surgery?
+Answer: The interval for angiography surgery is shorter at an interval of 1.01.
+
+## Question 2
+
+Here I am using a prop test function to find the p value - 
+
+```{r}
+prop.test(567, 1031, conf.level = 0.95)
+```
+Answer: To interpret this, I am looking at my confidence interval and seeing that the true population mean of those who believe college is needed for success is somewhere between 52-58% which makes sense because the reported percentage from this random sample who believe college is needed for success is 54%, inside of that range.
+
+## Question 3
+
+My calculations to find the sample size are step by step in the below code block:
+
+```{r}
+#Starting by trying to find margin of error:
+#Formula is error= z * SD/sqrt of n
+#By squaring the whole thing, can transform this formular to to n=z^2*SD^2/error^2
+# Z score for 95% confidence is 1.96
+1.96^2
+#n=3.8416*SD^2/error^2
+#Finding the range and dividing it by 4 since we know SD is quarter of the range
+(200-30)/4
+42.5^2
+#Now formula looks like this and just need to find standard error n=3.8416*1806.25/error^2
+#We know that margin of error is 5 (within $5)
+5^2
+#Now we can fill in the final formula n=3.8416*1806.25/25
+(3.8416*1806.25)/25
+#n=277.56
+```
+Answer: The sample size should be about 278 (rounded)
+
+## Question 4
+
+A. Test whether the mean income of female employees differs from $500 per week. Include
+assumptions, hypotheses, test statistic, and P-value. Interpret the result.
+
+Assumptions - 
+-Randomly generated sample
+-From the same general population
+-Distribution is normal
+
+Null hypothesis - females earn  $500 a week
+Alternative hypothesis - females earn more or less than $500 a week
+
+Calculating the t value below using standard formula -
+
+t= (sample mean-population mean)/(standard deviation/sample size^2)
+```{r}
+tvalue =  (410 - 500) / (90/sqrt(9))
+tvalue
+```
+Answer: t=-3
+
+This tells us that the mean of the female group is three standard deviations away from the mean of the overall group's pay.
+
+B. Report the P-value for alternative hypothesis: μ < 500. Interpret.
+
+Calculating p-value -
+
+Formula pt(q = t, df =standardeviation-1, lower.tail = TRUE)
+
+```{r}
+pt(q = tvalue, df =8, lower.tail = TRUE)
+
+```
+
+Answer: .01 (rounded)
+
+A p-value of .01 means we can reject the alternative hypothesis (mean for females < 500 a week)
+
+C. Report and interpret the P-value for alternative hypothesis: μ > 500.
+
+```{r}
+pt(q = tvalue, df =8, lower.tail = FALSE)
+```
+ 
+ Answer: .99 (rounded)
+This is the same but flipped, can reject the alternative hypothesis (mean for females > 500 a week)
+
+
+## Question 5
+
+
+Using formula t= sample mean-population mean/standard error
+
+```{r}
+t=(519.5-500)/10
+print(t)
+pt(q = t, df = 999, lower.tail = FALSE)*2
+```
+Answer: Jones t=1.95, p=.051
+
+```{r}
+t=(519.7-500)/10
+print(t)
+pt(q = t, df = 999, lower.tail = FALSE)*2
+```
+Answer: Smith t=1.97, p=.049
+
+B. This makes Smith statistically significant because .049 falls below .05 but .051 does not.
+
+C. This shows that results presented this way can be misleading because even though the p-values are extremely close here, one would report rejecting the null hypothesis and one wouldn't even though the differences in results are marginal.
+
+## Question 6
+
+
+Null hypothesis: Proportion of those who choose healthy snacks is not equal by grade level.
+
+Generating table -
+```{r}
+snack <- matrix(c(31, 43, 51, 69, 57, 49), ncol=3, byrow=TRUE)
+colnames(snack) <- c('6th','7th','8th')
+rownames(snack) <- c('healthy','unhealthy')
+snack <- as.table(snack)
+head(snack)
+```
+
+Performing chi squared test - 
+
+```{r}
+chisq.test(snack, .05, correct = FALSE)
+
+```
+Since the p value is .01 we can assume that there is a difference by grade level in those who choose unhealthy vs healthy snacks, rejecting null hypothesis.
+
+## Question 7
+
+
+Null hypothesis: There is no difference in per-pupil costs between areas.
+
+Generating data frame -
+
+```{r}
+area <- c(rep("Area1", 6), rep("Area2", 6), rep("Area3", 6))
+cost <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3,
+          5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+tuition <- data.frame(area,cost)
+head(tuition)
+```
+
+```{r}
+
+anova <- aov(cost ~ area, data = tuition)
+summary(anova)
+```
+Interpretation: The p value is very low indicating there is a difference and we can reject the null hypothesis.
+:
