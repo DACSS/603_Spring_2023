@@ -1,0 +1,177 @@
+---
+title: "Homework2"
+author: "Rahul Somu"
+description: "Homework2"
+date: "04/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1
+
+Below code chunk calculated the confidence interval for bypass surgery as [18.80009, 19.19991], and the confidence interval for angiography as [17.76757, 18.23243].
+Based on the results, we can conclude confidence interval for bypass surgery is slightly narrower than that of  angiography, which implies that the estimate of the mean wait time for bypass surgery is slightly more precise than that of angiography.
+
+```{r, echo=T}
+# Create dataframe
+df <- data.frame(
+  procedure = c("Bypass", "Angiography"),
+  sample_size = c(539, 847),
+  sample_mean = c(19, 18),
+  sample_sd = c(10, 9)
+)
+
+# confidence level
+conf_level <- 0.9
+
+#degrees of freedom for each procedure
+df$df <- df$sample_size - 1
+
+#critical value for the confidence interval
+t_critical <- qt(1 - (1 - conf_level) / 2, df$df)
+
+#standard error of the mean for each procedure
+df$sem <- df$sample_sd / sqrt(df$sample_size)
+
+# confidence intervals for each procedure
+df$ci <- apply(df[, c("sample_mean", "sem", "df")], 1, function(x) {
+  x[1] + c(-1, 1) * t_critical * x[2] * sqrt(x[3] + 1) / sqrt(x[3])
+})
+
+# Print the confidence intervals
+cat("Confidence intervals:\n")
+print(df$ci)
+
+```
+#Question 2
+
+Below results suggest that we are 95% confident that the true proportion of adult Americans who believe that the college education is essential for success lies between 0.5189 and 0.5808.
+
+```{r, echo=T}
+
+n <- 1031
+p_hat <- 567/1031
+z <- qnorm(1-0.05/2)
+
+CI <- p_hat + z*sqrt(p_hat*(1-p_hat)/n) * c(-1, 1)
+CI
+
+```
+
+#Question 3
+
+```{r, echo=T}
+
+n = ((1.959964)^2 * (42.5)^2) / (5)^2
+n
+```
+
+#Question 4
+
+```{r, echo=T}
+
+# Part A
+n <- 9
+ybar <- 410
+s <- 90
+mu0 <- 500
+alpha <- 0.05
+se <- s / sqrt(n)
+t <- (ybar - mu0) / se
+p_value <- 2 * pt(-abs(t), df = n - 1)
+
+# Report results
+cat("Test statistic:", round(t, 2), "\n")
+cat("P-value:", p_value, "\n")
+if(p_value < alpha) {
+  cat("Reject null hypothesis; the mean income of female employees differs from $500 per week.\n")
+} else {
+  cat("Fail to reject null hypothesis. \n")
+}
+
+# Part B
+p_value_lt <- pt(t, df = n - 1)
+cat("P-value (Ha: μ < 500):", p_value_lt, "\n")
+if(p_value_lt < alpha) {
+  cat("the mean income of female employees is less than $500 per week.\n")
+} else {
+  cat("Fail to reject null hypothesis. \n")
+}
+
+# Part C
+p_value_gt <- pt(-t, df = n - 1)
+cat("P-value (Ha: μ > 500):", p_value_gt, "\n")
+if(p_value_gt < alpha) {
+  cat("the mean income of female employees is greater than $500 per week.\n")
+} else {
+  cat("Fail to reject null hypothesis\n")
+}
+
+```
+
+#QUESTION 5
+
+```{r, echo=T}
+# Jones' study
+jones <- data.frame(y_bar = 519.5, se = 10.0, n = 1000)
+jones$t <- (jones$y_bar - 500) / jones$se
+jones$p_value <- 2 * pt(-abs(jones$t), df = jones$n - 1)
+jones$t
+jones$p_value
+
+# Smith's study
+smith <- data.frame(y_bar = 519.7, se = 10.0, n = 1000)
+smith$t <- (smith$y_bar - 500) / smith$se
+smith$p_value <- 2 * pt(-abs(smith$t), df = smith$n - 1)
+smith$t
+smith$p_value 
+# Significance testing
+alpha <- 0.05
+if (jones$p_value < alpha) {
+  cat("Jones' study is statistically significant\n")
+} else {
+  cat("Jones' study is not statistically significant\n")
+}
+if (smith$p_value < alpha) {
+  cat("Smith's study is statistically significant\n")
+} else {
+  cat("Smith's study is not statistically significant\n")
+}
+
+
+
+
+```
+#Question 6
+
+```{r, echo=T}
+# Create contingency table
+snack_table <- matrix(c(31, 43, 51, 69, 57, 49), nrow = 3, byrow = TRUE)
+
+# Perform chi-squared test
+chisq.test(snack_table)
+
+```
+#Question 7
+
+```{r, echo=T}
+# Create a data frame
+area <- c(rep("Area 1", 6), rep("Area 2", 6), rep("Area 3", 6))
+cost <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3, 5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+cost_data <- data.frame(area, cost)
+
+# Perform one-way ANOVA
+model <- aov(cost ~ area, data = cost_data)
+
+# Print ANOVA table summary
+summary(model)
+
+```
