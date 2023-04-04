@@ -1,0 +1,318 @@
+---
+title: "Blog Post #2"
+author: "Alexis Gamez"
+description: "DACSS 603 HW#2"
+date: "03/26/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - probability distributions
+  - hypothesis testing
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+**The time between the date a patient was recommended for heart surgery and the surgery date for cardiac patients in Ontario was collected by the Cardiac Care Network (“Wait Times Data Guide,” Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean and sample standard deviation for wait times (in days) of patients for two cardiac procedures are given in the accompanying table. Assume that the sample is representative of the Ontario population**
+
+```{r}
+Procedure <- c('Bypass', 'Angiography')
+Sample <- c(539,847)
+Mean_WT <- c(19,18)
+SD <- c(10,9)
+
+Procedure_df <- data.frame(Procedure, Sample, Mean_WT, SD)
+
+print(Procedure_df)
+```
+
+**Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?**
+
+Standard Error is calculated using the following equation.
+
+*SE = SD/sqrt(sample size)*
+
+Our first step will be to use this equation to calculate the standard error for both procedures and afterwards, set the confidence interval to 90%.
+
+```{r}
+SE_By <- 10/sqrt(539)
+SE_An <- 9/sqrt(847)
+
+Conf_Int <- 0.90
+```
+
+Now that we have our standard error, we designate the tail area of our confidence interval using the following equation.
+
+*Tail Area = (1 - Confidence Interval)/2*
+
+With that Tail Area calculated we can use all our new found variables to construct the confidence interval values we're looking for. We use the student t distribution function to calculate the t-scores for each procedure. From there, we can take into account all our new found values to calculate the confidence intervals.
+
+```{r}
+tail <- (1-Conf_Int)/2
+
+t_By <- qt(p = 1-tail, df = 539-1)
+t_An <- qt(p = 1-tail, df = 847-1)
+
+CI_By <- c(19 - t_By * SE_By,
+       19 + t_By * SE_By)
+
+CI_An <- c(18 - t_An * SE_An,
+        18 + t_An * SE_An)
+
+CI <- c('X1', 'X2')
+Bypass <- c(CI_By)
+Angiography <- c(CI_An)
+
+CI_df <- data.frame(CI, Bypass, Angiography)
+
+print(CI_df)
+```
+
+From our visualization here we can see that the confidence interval for the Angiography procedure is more narrow than that for the Bypass procedure.
+
+# Question 2
+
+**A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success. Construct and interpret a 95% confidence interval for p.**
+
+```{r}
+Survey <- c('Adults')
+Sample <- c(1031)
+Essential <- (567)
+Other <- (1031-567)
+
+Survey_df <- data.frame(Survey, Sample, Essential, Other)
+
+print(Survey_df)
+```
+
+Thankfully, we can simply run a `prop.test` to construct the 95% confidence interval while simultaneously calculating our point estimate.
+
+```{r}
+prop.test(Essential, Sample, conf.level = 0.95)
+```
+
+We can see that the point estimate of the proportion of all adult Americans who believe that a college education is essential for success is located at the 54.99% point in our data frame.
+
+The results from our test also shows us that 95% of calculated confidence intervals would reflect the true percentage of the sample that believe college education is essential between 51.89-58.05% of the time. 
+
+# Question 3
+
+**Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within $5 of the true population mean (i.e. they want the confidence interval to have a length of $10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between $30 and $200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation). Assuming the significance level to be 5%, what should be the size of the sample**
+
+Breaking it down, we need to calculate the sample size(n) using the z-value for a significance level of 5%. Knowing this we can use the Confidence Interval equation that utilizes z-value and restructure it to calculate the n value we seek.
+
+*Confidence Interval = (X bar) ± (z × s/sqrt(n))*
+
+Restructured turns into:
+
+*n = ((z x Standard Deviation)/Margin of Error)^2*
+
+Before we can calculate n, we need to find the corresponding z-value and standard deviation. We already know that the z-value of 95% confidence interval is 1.96 and we can use the range and estimate provided to calculate a relatively accurate standard deviation.
+
+```{r}
+z <- 1.96
+
+SD <- (200-30)/4
+```
+
+With these calculated, we can plug the values back in to our n equation to receive the necessary sample size.
+
+```{r}
+n <- ((z*SD)/5)^2
+print(n)
+```
+
+According to our calculations, the required sample size would be 278 students.
+
+# Question 4
+
+**According to a union agreement, the mean income for all senior-level workers in a large service company equals $500 per week. A representative of a women's group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = $410 and s = 90**
+
+## A)
+
+**Test whether the mean income of female employees differs from $500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result.**
+
+Assumptions:
+
+* The sample provided is randomly selected and representative of the population
+* Population is normally distributed
+* The variance of both populations are equal
+
+Null Hypothesis(H0): μ = 500 
+
+Alternative Hypothesis(HA): μ ≠ 500
+
+t-test Formula:
+*t = (Y bar - μ)/(Standard Deviation/sqrt(n))*
+
+```{r}
+t <- (410-500)/(90/sqrt(9))
+t
+```
+
+```{r}
+p <- 2*pt(t, 9-1)
+p
+```
+
+The test statistic and p-value we receive are equal to -3 and 0.0171 respectively. Because our p-value < 0.05, we are able to reject the null hypothesis meaning that the mean income of female employees differs from $500 per week. 
+
+## B)
+
+**Report the P-value for Ha: μ < 500. Interpret.**
+
+Here we're being asked to calculate a one sided p-value where the alternative hypothesis is that μ < 500. In order to calculate said p-value, we must specify within our function that we will be look at the lower tail of the data.
+
+H0: μ >= 500 
+
+HA: μ < 500 
+
+```{r}
+p1 <- pt(t, 9-1, lower.tail = T)
+p1
+```
+
+Being provided such a small p-value tells us that we are able to reject the null hypothesis and embrace the alternative that mean female income within the population is less than $500 per week.
+
+## C)
+
+**Report and interpret the P-value for Ha: μ > 500.**
+*(Hint: The P-values for the two possible one-sided tests must sum to 1.)*
+
+Here, we'll be functionally doing the same thing as in part b, but instead of using the lower tail we'll be focusing on the upper. Under these circumstances, we'll be adopting the following hypothesis.
+
+H0: μ =< 500 
+
+HA: μ > 500 
+
+```{r}
+p2 <- pt(t, 9-1, lower.tail = F)
+p2
+```
+
+In this case, we receive a p-value > 0.05 meaning that we fail to reject the null and that the mean female income within the population is not greater than $500.
+
+# Question 5
+
+**Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.**
+
+## A)
+
+**Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.**
+
+t-test Formula:
+*t = (Y bar - μ)/Standard Error*
+
+### Jones
+
+```{r}
+tJones <- (519.5-500)/10
+tJones
+```
+
+```{r}
+pJones <- 2*pt(tJones, 1000-1, lower.tail = F)
+pJones
+```
+
+### Smith
+
+```{r}
+tSmith <- (519.7-500)/10
+tSmith
+```
+
+```{r}
+pSmith <- 2*pt(tSmith, 1000-1, lower.tail = F)
+pSmith
+```
+
+## B)
+
+**Using α = 0.05, for each study indicate whether the result is “statistically significant.”**
+
+Alpha(α) is the level at which a result is considered statistically significant or not. 
+
+With our significance level defined, we know that `pJones`, sitting at  0.051, would not be considered statistically significant and we fail to reject the null (μ = 500). On the other hand, `pSmith` (0.049)
+would be considered statistically significant resulting in our ability to reject the null (μ ≠ 500).
+
+## C)
+
+**Using this example, explain the misleading aspects of reporting the result of a test as “P ≤ 0.05” versus “P > 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the actual P-value.**
+
+Statistical significance is something that must be well defined prior to the gathering and analyzing data. The term holds weight in the credibility of research and analysis and without it being clearly defined, it's uncertain whether or not the work that was done truly holds up and proves anything. Not reporting the actual P-values could lead to confusion and misinterpretation down the road. This makes it important to begin every varying analysis with the a clear definition of hypothesis and significance level.
+
+# Question 6
+
+**A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?**
+
+n = 300
+
+α = 0.05
+
+H0: The proportion of students who choose a healthy snack *is not* affected by grade level. 
+
+HA: The proportion of students who choose a healthy snack *is* affected by grade level.
+
+The variables that we'll be utilizing in this analysis are both categorical, meaning we'll complete our analysis using a Chi-Squared test. We can start out by reading in the data we've received, in matrix form so that it's suited for the the Chi-Squared function.
+
+```{r}
+Grade_df <- matrix(c(31, 43, 51, 69, 57, 49), nrow = 2, byrow = TRUE)
+
+# Row and column names
+rownames(Grade_df) <- c("Healthy snack", "Unhealthy snack")
+colnames(Grade_df) <- c("6th grade", "7th grade", "8th grade")
+
+print(Grade_df)
+```
+
+With our matrix defined, we can plug it into the `chisq.test()` function.
+
+```{r}
+chisq.test(Grade_df)
+```
+
+Given our significance level is set to 0.05, the p-value we've received from our analysis shows that our results are indeed statistically significant meaning we can reject the null. Under these circumstances, the proportion of students who choose a healthy snack *is* affected by grade level.
+
+# Question 7
+
+**Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown. Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?**
+
+H0: The 3 districts have *equal* average tuition
+
+HA: The 3 districts have *non-equal* average tuition
+
+In this case, because we are comparing 3 separate mean values, we will be using an Anova test. The first step would be to read in our data into a data frame reflective of the figure we were provided.
+
+```{r}
+Area1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+Area2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+Area3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+Area_df <- data.frame(Area1, Area2, Area3)
+Area_anova_df <- pivot_longer(Area_df, c(Area1, Area2, Area3), names_to = "Area", values_to = "tuition")
+
+print(Area_anova_df)
+```
+
+With the last function in the code chunk above, we've created a data frame capable of being utilized in the Anova function `aov()`. We can use this function to test the hypothesis we've previously defined.
+
+```{r}
+Area_aov <- aov(tuition ~ Area, data = Area_anova_df)
+summary(Area_aov)
+```
+
+Our new p-value is equal to 0.00397. Given that result, we are capable of rejecting the null up to a significance level of 0.01 or α = 0.01 meaning that mean tuition varies in at least one of the 3 schools.  
