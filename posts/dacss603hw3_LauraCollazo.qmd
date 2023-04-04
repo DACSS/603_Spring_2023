@@ -1,0 +1,154 @@
+---
+title: "DACSS 603 Homework 3"
+author: "Laura Collazo"
+description: "Homework 3 for DASS 603"
+date: "02/05/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - scatterplot matrix
+  
+---
+
+# Libraries
+
+```{r, echo=T, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(alr4)
+library(smss)
+
+```
+
+
+# Question 1
+
+This question examines the dependence of fertility on the gross national product per person (ppgdp) in US dollars from 2009.
+
+## a
+
+The predictor variable is ppgdp and the response variable is fertility.  
+
+## b
+
+A scatterplot of these variables is shown below. It revels that woman have less children as gdp increases.
+
+A straight line function does not seem plausible for this graph as points are clustered primarily in one area.
+
+```{r, echo=T}
+
+ggplot(UN11, aes(x = ppgdp, y = fertility)) + 
+  geom_point() +
+labs(x = "Per capita gross domestic product in US dollars",
+     y = "Number of children per woman")
+
+```
+
+## c
+
+When log is used, a simple linear regression model does seem plausible to summarize this graph. 
+
+```{r, echo=T}
+
+ggplot(UN11, aes(x = log(ppgdp), y = log(fertility))) + 
+  geom_point() +
+labs(x = "Per capita gross domestic product in US dollars",
+     y = "Number of children per woman")
+
+```
+
+# Question 2
+
+Question two asks if the slope of a prediction equation will change if the explanatory variable in converted from USD to GBP (a), and also if the correlation will change (b). One GBP is equal to about 1.33 USD in this example.
+
+## a 
+
+The slope of the equation will change because the explanatory variable is responsible for determining the slope.
+
+## b
+
+The correlation will not change as correlation is not based on units.
+
+# Question 3
+
+Question 3 asks if water runoff in Southern California could be predicted from past data so that engineers, planners, and policy makers could do their job more efficiently. The below scatterplot examines 43 years worth of precipitation data taken at 6 sites in the Sierra Nevada mountatins and stream runoff volume (BSAAM) at a site near Bishop, CA.   
+
+```{r, echo=T}
+
+pairs(water)
+
+```
+The scatterplot matrix shows a strong positive relationship between the amount of precipitation and stream runoff volume at 3 sites (OPBPC, OPRC, and OPSLAKE). The other two sites appear to have a positive relationship, but not very strong. Year does not appear to be a strong predictor of precipitation or run-off volume.
+
+# Question 4
+
+Question four examines the relationship between 5 ratings on RateMyProfessors.com provided by students at a large campus in the Midwest of 364 instructors.
+
+```{r, echo=T}
+
+df4 <- Rateprof %>% 
+  select(c(quality, helpfulness, clarity, easiness, raterInterest))
+
+pairs(df4)
+
+```
+The above scatterplot matrix shows there is a strong positive relationship among the variables quality, helpfulness, and clarity. There is a weak positive correlation between easiness, quality, helpfullness, and clarity, and there appears to be almost no relationship between easiness and raterInterest. Finally, raterInterest also has a weak positive correlation between quality, helpfulness, and clarity.
+
+# Question 5
+
+Question five examines data provided by social science graduate students at the University of Florida enrolled in STA 6126. Two relationship will be examined:
+
+1. outcome variable (y): political ideology (pi)
+   explanatory variable (x): religiosity (re)
+
+2. outcome variable (y): high school GPA (hi)
+   explanatory variable (x): hours of TV watching (tv)
+
+## a
+
+The below graphs show how the explanatory variable relates to the outcome variable.
+
+```{r, echo=T}
+
+data("student.survey")
+
+ggplot(student.survey, aes(x = re, y = pi)) + 
+  geom_jitter() +
+labs(title = "Political idology & church attendance",
+     x = "religious service attendance",
+     y = "political ideology") 
+
+ggplot(student.survey, aes(x = tv, y = hi)) + 
+  geom_jitter() +
+labs( title = "High school GPA & average weekly hours of TV",
+      x = "average hours of TV per week",
+      y = "high school GPA")
+
+```
+
+## b
+
+```{r}
+
+student.survey$moderate <- ifelse(student.survey$pi == 'moderate', 1, 0)
+
+df5_1 <- summary(lm(pi ~ re, data = student.survey))
+
+df5_1
+
+
+df5_2 <- summary(lm(hi~tv, data = student.survey))
+
+df5_2
+
+```
+
+
+1. The plot that examines political ideology and church attendance reveals there is a correlation between how conservative a student is and how often they attend religious services. It seems the more conservative a student is the more they report attending religious services. 
+
+2. The plot that examines high school GPA and average hours of weekly TV shows that these two variables are not 
