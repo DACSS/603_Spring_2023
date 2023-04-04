@@ -1,0 +1,94 @@
+---
+title: "Final Project Check In"
+author: "Young Soo Choi"
+description: "Final Project Check In"
+date: "03/22/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Final Project
+---
+
+# Intro
+
+Spring is the season when baseball starts. In Korea, baseball is also the most popular league that attracts the largest number of spectators among all professional sports, and I have been a big fan since I was young. As you know, baseball is a sport with countless numbers, and this data analysis is actually done a lot. I can't think of an interesting way to use and learn various statistical techniques in the subject of quantity analysis than using the sport of baseball. Therefore, I chose baseball as the my final project topic. 
+
+
+
+# Setting Research Problem
+
+Baseball is a game in which each nine-member team competes for nine innings to score more points. It is obviously a player who participates here. However, the baseball team is not made up of only players. Each baseball team has a manager, who decides who will participate in the game before the game, sets the batting order, and during the game, replaces pitchers, uses pinch hitters, and steals.
+
+However, there are various controversies over how much of these managers account for in this game. This controversy varies from league to league, for example, in the U.S. Major League Baseball, the manager tends to be viewed as an organization manager, and in Asia, such as Japan and Korea, the manager is often treated as a general commanding the army in battle. In other words, in the case of the Asian league, there are many views that the manager actually has the ability to increase the team's score and reduce the number of runs by performing various operations within the game. On the contrary, in the case of Major League Baseball, the prevailing perception is that the proportion of manager actually involved in the team's scoring and losing points in the game is very small.
+
+There may be various opinions on where this difference in perception comes from. Of course, it should be considered that the environment of the game called baseball is very different from country to country. However, in the United States, various empirical studies have been conducted on these topics using vast amounts of actual data, but in Korea, these studies are still in their early stages. With this in mind, I would like to use actual data from Korean baseball to empirically check how the manager's intervention affects a single game. In other words, the manager's organizational management capabilities, the ability to manage and motivate players, are separate, and simply want to find out how often he operates in a game, that is, how much he intervenes in the game, affects the team's scoring ability.(Here, the correlation between the team's ability to curb losing points and the manager's intervention is also important, but it will be excluded from this project. This is because unlike batting, in the case of defense, it is not only difficult to quantify related variables, but also difficult to obtain such data.)
+
+In conclusion, the research question of this project that I set is, will the more intervention from the coach, the better the scoring ability of the baseball team?
+
+Accordingly, the research hypothesis will be set as "the more intervention the coach has, the more points the team has." At this time, the null hypothesis is that "the manager's intervention in the game does not increase the team's score."
+
+
+# Research Design
+
+## Key Concepts and Operational Definitions
+
+A baseball team's score is simply available. However, it is necessary to first determine how to define the manager's intervention. There are various roles that managers can play in baseball's offense. They include determining the batting order, using pinch-hitters, bunting, etc. Although it has not been confirmed yet, the director's intervention in this project will be determined by the number of attempts to steal and bunt in consideration of the ease of obtaining data.
+In summary, the independent variable is the baseball manager's intervention in the game(offense), and the dependent variable is the team's score.
+
+## How to test hypothesis
+
+There are many ways to do this.
+First of all, it is possible to simply compare the average score between teams with a lot of manager intervention and teams with less manager intervention.
+However, this simple comparison may not take into account the team's differences in offensive power. In other words, if a team with strong offensive power (i.e., a team with the ability to score more points without the manager's intervention) had more coach intervention, the conclusion could be distorted.
+Therefore, considering this, a method of obtaining the expected score level of each team using a regression model and comparing how much the actual score was can be used.
+
+
+# Explore the data
+
+The Korean professional baseball league was launched in 1982 and is called the KBO(Korea Baseball Organization) League. Fortunately, a jounalist provided a career record of the kbo league from 1982 to 2020 and I used it, and all Korean words included in the data were modified in English.
+
+source: https://github.com/bigkini/kindeR
+
+```{r}
+library(tidyverse)
+batting <- read_csv("_data/kbo_team_batting_eng.csv")
+win_lose <- read_csv("_data/kbo_win_lose_eng.csv")
+```
+'batting' is a team-specific batting record related to the offense, and 'win_lose' is a team-specific winning and losing record by year.
+
+For easy analysis, these two data are combined into one.
+
+```{r}
+df<-merge(win_lose, batting, by=c("year", "team"))
+```
+
+Now, let's briefly explore the data as an introduction to the kbo league.(For reference, each team's name has been unified to the most recent name if it has been changed.)
+
+
+```{r}
+head(df)
+tail(df)
+```
+
+```{r}
+table(df$year)
+table(df$team)
+```
+You can see the number of teams participating in the league by year and know the number of years participating in the league for each team. In other words, in the 39 years leading up to 2020, the number of participating teams increased from 6 to 10, and the total number of teams that existed was 12. (2 teams disbanded, Unicorns and Raiders)
+
+
+```{r}
+plot(df$year, df$games)
+```
+Looking at the number of games played by each team by year, it can be seen that it increased from 80 games d in 1982 to 144 games in 2020.
+
+Finally, let's briefly look at various variables related to hitting.
+
+```{r}
+summary(df[,10:28])
+```
+
