@@ -1,0 +1,240 @@
+---
+title: "Homework 3"
+author: "Miguel Curiel"
+description: "Regression analyses and transformations for DACSS 603."
+date: "04/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - linear regression
+  - distribution transformation
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, eval=TRUE}
+# load necessary packages
+library(tidyverse)
+library(alr4)
+library(smss)
+```
+
+# Question 1
+
+**United Nations** (Data file: UN11in alr4) The data in the file UN11
+contains several variables, including ppgdp, the gross national product
+per person in U.S. dollars, and fertility, the birth rate per 1000
+females, both from the year 2009. The data are for 199 localities,
+mostly UN member countries, but also other areas such as Hong Kong that
+are not independent countries. The data were collected from the United
+Nations (2011). We will study the dependence of fertility on ppgdp.
+
+a.  Identify the predictor and the response.
+
+    a.  Predictor = ppgdp
+
+    b.  Response = fertility
+
+b.  Draw the scatterplot of fertility on the vertical axis versus ppgdp
+    on the horizontal axis and summarize the information in this graph.
+    Does a straight-line mean function seem to be plausible for a
+    summary of this graph?
+
+    a.  No, a straight-line mean function does not seem plausible
+        because the distribution seems to be somewhat curvilinear.
+
+c.  Draw the scatterplot of log(fertility) versus log(ppgdp) using
+    natural logarithms. Does the simple linear regression model seem
+    plausible for a summary of this graph? If you use a different base
+    of logarithms, the shape of the graph won't change, but the values
+    on the axes will change.
+
+    a.  Yes, a simple linear regression model with a logarithmic
+        transformation seems to be plausible as it is better at
+        capturing the curvilinear relationship between variables.
+
+```{r, eval=TRUE, echo=TRUE}
+ggplot(data = UN11, aes(x = ppgdp, y = fertility)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F) +
+  labs(title='1.b. Scatterplot of fertility versus ppgdp')
+```
+
+```{r, eval=TRUE, echo=TRUE}
+ggplot(data = UN11, aes(x = log(ppgdp), y = log(fertility))) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F) +
+  labs(title='1.c. Scatterplot of log(fertility) versus log(ppgdp)')
+```
+
+# Question 2
+
+Annual income, in dollars, is an explanatory variable in a regression
+analysis. For a British version of the report on the analysis, all
+responses are converted to British pounds sterling (1 pound equals about
+1.33 dollars, as of 2016).
+
+a.  How, if at all, does the slope of the prediction equation change?
+
+    a.  Using the standard slope-intercept equation - `y = mx + b` - the
+        slope (m) will not change as this this relationship is
+        independent of the unit of measurement. What will change is the
+        intercept (b), meaning that the starting point will be 1.33
+        instead of 1.
+
+b.  How, if at all, does the correlation change?
+
+    a.  Similarly to the slope, the correlation does not change as this
+        is affected by the relationship between two variables (y = mx)
+        rather than the starting point or, in this case, the unit of
+        measurement (b).
+
+# Question 3
+
+**Water runoff in the Sierras** (Data file: water in alr4) Can Southern
+California's water supply in future years be predicted from past data?
+One factor affecting water availability is stream runoff. If runoff
+could be predicted, engineers, planners, and policy makers could do
+their jobs more efficiently. The data file contains 43 years' worth of
+precipitation measurements taken at six sites in the Sierra Nevada
+mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and OPSLAKE) and
+stream runoff volume at a site near Bishop, California, labeled BSAAM.
+Draw the scatterplot matrix for these data and summarize the information
+available from these plots.
+
+```{r, eval=TRUE, echo=TRUE}
+
+pairs(water[,-1])
+```
+
+As we can see from the scatterplot matrix, the sites that seem to
+correlate the most to BSAAM are OPSLAKE, OPRC, and OPBPC, while APSLAKE,
+APSAB, and APMAM do not seem to be correlated at all. Therefore, if a
+model were to be created to predict runoff, a good idea would be to
+start by including the precipitation of sites that begin with an "O" and
+exclude those that begin "A".
+
+# Question 4
+
+**Professor ratings** (Data file: Rateprof in alr4) In the website and
+online forum RateMyProfessors.com, students rate and comment on their
+instructors. Launched in 1999, the site includes millions of ratings on
+thousands of instructors. The data file includes the summaries of the
+ratings of 364 instructors at a large campus in the Midwest
+(Bleske-Rechek and Fritsch, 2011). Each instructor included in the data
+had at least 10 ratings over a several year period. Students provided
+ratings of 1--5 on quality, helpfulness, clarity, easiness of
+instructor's courses, and raterInterest in the subject matter covered in
+the instructor's courses. The data file provides the averages of these
+five ratings. Create a scatterplot matrix of these five variables.
+Provide a brief description of the relationships between the five
+ratings.
+
+```{r, eval=TRUE, echo=TRUE}
+
+pairs(~ quality + helpfulness + clarity + easiness + raterInterest, data=Rateprof)
+```
+
+Just by looking at the scatterplot matrix, there are a couple of
+variables that are seemingly correlated. In particular, quality seems to
+have a nearly perfect, positive correlation with helpfulness and
+clarity. Similarly, helpfulness seems to have a moderate-to-high
+positive correlation. In contrast, easiness of the instructor's courses
+and raterInterest do not seem to be highly correlated with any of the
+variables.
+
+# Question 5
+
+For the student.survey data file in the smss package, conduct regression
+analyses relating (i) y = political ideology and x = religiosity, and
+(ii) y = high school GPA and x = hours of TV watching.
+
+a.  Graphically portray how the explanatory variable relates to the
+    outcome variable in each of the two cases.
+
+    1.  Plots can be found below.
+
+b.  Summarize and interpret results of inferential analyses.
+
+    1.  From the numerical analysis, both instances are statistically
+        significant, however scenario i (political ideology against
+        religiosity) is much more significant than scenario ii (high
+        school GPA against hours spent watching TV). Further, from the
+        graphics we can see that only scenario i (political ideology
+        against religiosity) is clearly linear, whereas scenario ii
+        (high school GPA against hours spent watching TV) could benefit
+        from preprocessing techniques such as a logarithmic
+        transformation or treating outliers/missing data.
+
+```{r, eval=TRUE, echo=TRUE}
+data("student.survey", package = "smss")
+df <- student.survey
+
+df$pi_numeric <- factor(df$pi, levels = c(
+  "very conservative"
+  ,"conservative"
+  ,"slightly conservative"
+  ,"moderate"
+  ,"slightly liberal"
+  ,"liberal"
+  ,"very liberal"
+), labels = c(1,2,3,4,5,6,7)
+)
+
+df$pi_numeric <- as.numeric(as.character(df$pi_numeric))
+
+df$re_numeric <- factor(df$re, levels = c(
+  "never"
+  ,"occasionally"
+  ,"most weeks"
+  ,"every week"
+), labels = c(1,2,3,4)
+)
+
+df$re_numeric <- as.numeric(as.character(df$re_numeric))
+
+summary(lm(pi_numeric ~ re_numeric, data=df))
+```
+
+```{r, eval=TRUE, echo=TRUE}
+ggplot(data = df, aes(x = re_numeric, y = pi_numeric)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F) +
+  labs(title='5.a.i. Scatterplot of political ideology versus religiosity'
+       ,x="religiosity"
+       ,y='political ideology') +
+  scale_y_continuous(labels = c(
+  "very conservative"
+  ,"conservative"
+  ,"slightly conservative"
+  ,"moderate"
+  ,"slightly liberal"
+  ,"liberal"
+  ,"very liberal"
+    ), breaks = c(1,2,3,4,5,6,7)) +
+  scale_x_continuous(labels = c(
+  "never"
+  ,"occasionally"
+  ,"most weeks"
+  ,"every week"
+    ), breaks = c(1,2,3,4))
+```
+
+```{r, eval=TRUE, echo=TRUE}
+ggplot(data = df, aes(x = tv, y = hi)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F) +
+  labs(title='5.a.ii. Scatterplot of high school GPA against hours spent watching TV'
+       ,x='hours spent watching TV'
+       ,y='high school GPA')
+```
