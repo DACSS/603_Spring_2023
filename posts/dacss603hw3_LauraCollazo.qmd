@@ -2,7 +2,7 @@
 title: "DACSS 603 Homework 3"
 author: "Laura Collazo"
 description: "Homework 3 for DASS 603"
-date: "02/05/2023"
+date: "04/07/2023"
 format:
   html:
     toc: true
@@ -12,6 +12,8 @@ format:
 categories:
   - hw3
   - scatterplot matrix
+  - logarithm
+  - regression
   
 ---
 
@@ -36,9 +38,9 @@ The predictor variable is ppgdp and the response variable is fertility.
 
 ## b
 
-A scatterplot of these variables is shown below. It revels that woman have less children as gdp increases.
+A scatterplot of these variables is shown below. It revels that woman tend to have less children as GDP increases.
 
-A straight line function does not seem plausible for this graph as points are clustered primarily in one area.
+A straight line function does not seem plausible for this graph as points are clustered primarily in one area. A linear regression line would therefore not be the best fit for the data.
 
 ```{r, echo=T}
 
@@ -51,14 +53,14 @@ labs(x = "Per capita gross domestic product in US dollars",
 
 ## c
 
-When log is used, a simple linear regression model does seem plausible to summarize this graph. 
+When log-log is used, a simple linear regression model does seem plausible to summarize this graph. 
 
 ```{r, echo=T}
 
 ggplot(UN11, aes(x = log(ppgdp), y = log(fertility))) + 
   geom_point() +
-labs(x = "Per capita gross domestic product in US dollars",
-     y = "Number of children per woman")
+labs(x = "Log of per capita gross domestic product in US dollars",
+     y = "Log of number of children per woman")
 
 ```
 
@@ -83,7 +85,7 @@ Question 3 asks if water runoff in Southern California could be predicted from p
 pairs(water)
 
 ```
-The scatterplot matrix shows a strong positive relationship between the amount of precipitation and stream runoff volume at 3 sites (OPBPC, OPRC, and OPSLAKE). The other two sites appear to have a positive relationship, but not very strong. Year does not appear to be a strong predictor of precipitation or run-off volume.
+The scatterplot matrix shows a strong positive relationship between the amount of precipitation and stream runoff volume at 3 sites (OPBPC, OPRC, and OPSLAKE). The other sites appear to have a positive relationship, but not very strong. Year does not appear to be a strong predictor of precipitation or run-off volume.
 
 # Question 4
 
@@ -97,7 +99,7 @@ df4 <- Rateprof %>%
 pairs(df4)
 
 ```
-The above scatterplot matrix shows there is a strong positive relationship among the variables quality, helpfulness, and clarity. There is a weak positive correlation between easiness, quality, helpfullness, and clarity, and there appears to be almost no relationship between easiness and raterInterest. Finally, raterInterest also has a weak positive correlation between quality, helpfulness, and clarity.
+The above scatterplot matrix shows there is a strong positive relationship among the variables quality, helpfulness, and clarity. There is a weak positive correlation between easiness, quality, helpfulness, and clarity. Finally, there appears to be almost no relationship between raterInterest and the other variables.
 
 # Question 5
 
@@ -109,9 +111,9 @@ Question five examines data provided by social science graduate students at the 
 2. outcome variable (y): high school GPA (hi)
    explanatory variable (x): hours of TV watching (tv)
 
-## a
+## 1a
 
-The below graphs show how the explanatory variable relates to the outcome variable.
+The below graph shows how the explanatory variable (religiosity) relates to the outcome variable (political ideology).
 
 ```{r, echo=T}
 
@@ -123,6 +125,18 @@ labs(title = "Political idology & church attendance",
      x = "religious service attendance",
      y = "political ideology") 
 
+```
+
+## 1b
+
+The plot reveals there is a weak positive correlation between how often a students attend religious services and how conservative they are.
+
+## 2a
+
+The below graph shows how the explanatory variable (hours of TV watching) relates to the outcome variable (high school GPA).
+
+```{r}
+
 ggplot(student.survey, aes(x = tv, y = hi)) + 
   geom_jitter() +
 labs( title = "High school GPA & average weekly hours of TV",
@@ -130,25 +144,24 @@ labs( title = "High school GPA & average weekly hours of TV",
       y = "high school GPA")
 
 ```
+## 2b
 
-## b
+Glancing at the plot there doesn't appear to be much of a correlation. However, when looking at the summary of the regression below, p < .05 which indicates statistical significance. R-squared is very low, though, meaning the regression is not a strong prediction model. The plot below includes the regression line to visualize this.
 
 ```{r}
 
-student.survey$moderate <- ifelse(student.survey$pi == 'moderate', 1, 0)
-
-df5_1 <- summary(lm(pi ~ re, data = student.survey))
-
-df5_1
-
-
-df5_2 <- summary(lm(hi~tv, data = student.survey))
-
-df5_2
+ summary(lm(hi~tv, data = student.survey))
 
 ```
 
+```{r}
 
-1. The plot that examines political ideology and church attendance reveals there is a correlation between how conservative a student is and how often they attend religious services. It seems the more conservative a student is the more they report attending religious services. 
+ggplot(student.survey, aes(x = tv, y = hi)) + 
+  geom_jitter() +
+  geom_smooth(method = "lm") +
+labs( title = "High school GPA & average weekly hours of TV",
+      x = "average hours of TV per week",
+      y = "high school GPA")
 
-2. The plot that examines high school GPA and average hours of weekly TV shows that these two variables are not 
+```
+
