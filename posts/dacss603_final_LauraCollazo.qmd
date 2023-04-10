@@ -83,9 +83,8 @@ The full dataset can be found [here](https://databank.illinois.edu/datasets/IDB-
 
 To answer the research question for the present study, the following variables have been selected. Details on these variables are included in following sections.
 
-* `race`
 * `gender`
-* `year`
+* `race`
 * `bel_1`
 * `bel_2`
 * `bel_2_r`
@@ -98,26 +97,24 @@ To answer the research question for the present study, the following variables h
 
 Using the above variables, additional variables were created to aid in analysis. These included 6 belonging variables with the data un-coded to show the actual response options and 6 more belonging variables as order factors. The variable `bel_sum` was also created to create an overall belonging score for each participant. 
 
-#### Race/Ethnicity
-
-The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5).
-
 #### Gender
 
 The responses for `gender` include "Man" (2) and "Woman or non-binary" (1). The researchers who collected this data explain that their were so few students who identified as non-binary that the sample was too small for a separate analysis (Jeng et al., 2023). What they did do was run all analysis twice, once with non-binary students excluded and once with this group combine with respondents who identified as women. They found their findings to be the same in both instances and therefore choose to combine these two groups. For the purpose of this study, this variable will be coded as "Male" and "Female."
 
-#### Year
+#### Race/Ethnicity
+
+The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5).
 
 #### Belonging
 
 A total of 6 Likert questions were asked to measure social belonging which were adapted from Goodenow's (1993) Psychological Sense of School Membership (PSSM) scale. Five response options ("Not at all true", "Slightly true", "Moderately true", "Mostly true", and "Completely true") were provided to students to answer the below questions. Questions 2, 4, and 5 were reversed scored which is why 2 variables exist for each of these questions.
 
-1. I feel like a real part of this class (`bel_1`)
-2. Sometimes I feel as if I don’t belong in this class(`bel_2` and `bel_2_r`)
-3. I am included in lots of activities in this class(`bel_3`)
-4. I feel very different from most other students in this class (`bel_4` and `bel_4_r`)
-5. I wish I were in a different class (`bel_5` and `bel_5_r`)
-6. I feel proud of belonging to this class (`bel_6`)
+1. I feel like a real part of this class
+2. Sometimes I feel as if I don’t belong in this class
+3. I am included in lots of activities in this class
+4. I feel very different from most other students in this class
+5. I wish I were in a different class
+6. I feel proud of belonging to this class
 
 #### Explore Data
 
@@ -139,7 +136,7 @@ data <- belonging_data %>%
   
 # select needed columns
   
-  select(race, gender, year, bel_1, bel_2, bel_2_r, bel_3, bel_4, bel_4_r, bel_5, bel_5_r, bel_6) %>%
+  select(gender, race, bel_1, bel_2, bel_2_r, bel_3, bel_4, bel_4_r, bel_5, bel_5_r, bel_6) %>%
 
 # create variable bel_sum which sums all belonging responses
   
@@ -217,17 +214,6 @@ str(data)
 
 # create xtabs and bar plot to visualize variables
 
-# race
-
-xt_race <- xtabs(~race, data = data)
-
-kable(xt_race) %>% 
-  kable_styling("striped")
-
-barplot(xt_race, 
-        xlab = "Race",
-        ylab = "Frequency")
-
 # gender
 
 xt_gender <- xtabs(~gender, data = data)
@@ -239,15 +225,15 @@ barplot(xt_gender,
         xlab = "Gender",
         ylab = "Frequency")
 
-# year
+# race
 
-xt_year <- xtabs(~year, data = data)
+xt_race <- xtabs(~race, data = data)
 
-kable(xt_year) %>% 
+kable(xt_race) %>% 
   kable_styling("striped")
 
-barplot(xt_year, 
-        xlab = "Year in school",
+barplot(xt_race, 
+        xlab = "Race",
         ylab = "Frequency")
 
 # bel_sum
@@ -339,17 +325,13 @@ Below are some preliminary visualizations for analysis. This section will be mod
 
 # histograms
 
-histogram(~ bel_sum | race,
-          data=data,
-          layout=c(1,5))
-
 histogram(~ bel_sum | gender,
           data=data,
           layout=c(1,2))
 
-histogram(~ bel_sum | year,
+histogram(~ bel_sum | race,
           data=data,
-          layout=c(1,4))
+          layout=c(2,5))
 
 ```
 
@@ -410,32 +392,7 @@ boxplot(bel_sum ~ gender,
         ylab="Value",
         xlab= "Belonging")
 
-# year
-
-sum_bel_year <- Summarize(bel_sum ~ year,
-                data=data,
-                digits=3)
-
-kable(sum_bel_year) %>% 
-  kable_styling("striped")
-
-ggplot(sum_bel_year, aes(x = year,
-                y = mean)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.2))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Belonging") +
-    xlab("Year")
-
-boxplot(bel_sum ~ year,
-        data=data,
-        ylab="Value",
-        xlab= "Belonging")
-
-# sum of bel, race, and gender
+# sum of bel
 
 sum_bel <- Summarize(bel_sum ~ race + gender,
                 data=data,
@@ -447,12 +404,11 @@ kable(sum_bel) %>%
 
 ggplot(sum_bel, aes(x = race,
                 y = mean,
-                group= gender,
                 color = gender)) +
     geom_errorbar(aes(ymin = Q1,
                       ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.6))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.6))) +
+                   width=.2, size=0.7, position = (position_dodge(.2))) +
+    geom_point(shape=15, size=4, position = (position_dodge(.2))) +
     theme_bw() +
     theme(axis.title = element_text(face = "bold")) +
     ylab("Belonging") +
@@ -465,81 +421,7 @@ boxplot(bel_sum ~ gender + race,
         ylab="Value",
         xlab= "Belonging")
 
-# sum of bel, race, and year
-
-sum_bel_2 <- Summarize(bel_sum ~ race + year,
-                data=data,
-                digits=3)
-
-kable(sum_bel_2) %>% 
-  kable_styling("striped")
-
-
-ggplot(sum_bel_2, aes(x = race,
-                y = mean,
-                group = year,
-                color = year)) +
-    geom_errorbar(aes(ymin = Q1,
-                      ymax = Q3),
-                   width=.2, size=0.7, position = (position_dodge(.6))) +
-    geom_point(shape=15, size=4, position = (position_dodge(.6))) +
-    theme_bw() +
-    theme(axis.title = element_text(face = "bold")) +
-    ylab("Belonging") +
-    xlab("Race") +
-    labs(color = "Year")
-
-boxplot(bel_sum ~ year + race,
-        data=data,
-        names=c("a.1", "a.2", "a.3", "a.4", "b.1", "b.2", "b.3", "b.4", "h.1", "h.2", "h.3", "h.4", "o.1", "o.2", "o.3", "o.4", "w.1", "w.2", "w.3", "w.4"),
-        ylab="Value",
-        xlab= "Belonging")
-
 ```
-
-# Hypothesis Testing
-## ANOVA
-
-```{r}
-
-# race
-
-anova_race <- aov(bel_sum ~ race, data =data)
-
-summary(anova_race)
-
-ggplot(data, aes(x = race, y = bel_sum, color=race))+
-    geom_boxplot()+
-    ylab("Belonging")+xlab("Race")
-
-# gender
-
-anova_gender <- aov(bel_sum ~ gender, data =data)
-
-summary(anova_gender)
-
-ggplot(data, aes(x = gender, y = bel_sum, color=gender))+
-    geom_boxplot()+
-    ylab("Belonging")+xlab("Gender")
-
-# year
-
-anova_year <- aov(bel_sum ~ year, data =data)
-
-summary(anova_year)
-
-ggplot(data, aes(x = year, y = bel_sum, color= year, group = year))+
-    geom_boxplot()+
-    ylab("Belonging")+xlab("Year")
-
-# year
-
-anova <- aov(bel_sum ~ race + gender + year, data =data)
-
-summary(anova)
-
-```
-
 
 # References
 
