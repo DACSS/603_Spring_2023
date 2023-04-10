@@ -1,0 +1,254 @@
+---
+title: "Homework 3"
+author: "Justine Shakespeare"
+description: "Homework 3 for DACSS 603 Spring 2023"
+date: "02/05/2023"
+format:
+  html:
+    df-print: paged
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - linear regression
+  - Justine Shakespeare
+---
+
+Before we dive into the homework let's load the data.
+
+```{r, results=FALSE , message=FALSE }
+library(alr4)
+library(smss)
+library(tidyverse)
+```
+
+# Question 1
+
+*United Nations (Data file: UN11 in alr4) The data in the file UN11 contains several variables, including ppgdp, the gross national product per person in U.S. dollars, and fertility, the birth rate per 1000 females, both from the year 2009. The data are for 199 localities, mostly UN member countries, but also other areas such as Hong Kong that are not independent countries. The data were collected from the United Nations (2011). We will study the dependence of fertility on ppgdp.*
+
+## a
+
+*Identify the predictor and the response.*
+
+First we'll load the data and take a look.
+
+```{r}
+data(UN11)
+glimpse(UN11)
+```
+
+`Fertility` is the ***response*** variable and `ppgdp` is the ***predictor*** variable.
+
+## b
+
+*Draw the scatterplot of fertility on the vertical axis versus ppgdp on the horizontal axis and summarize the information in this graph. Does a straight-line mean function seem to be plausible for a summary of this graph?*
+
+We'll use `ggplot()` to draw the scatterplot.
+
+```{r}
+ggplot(UN11, aes(ppgdp, fertility)) + geom_point() +
+  labs(title = "Fertility by GDP per Capita", x = "GDP per capita", 
+       y = "Fertility (birth rate per 1000 females)")
+```
+
+This graph shows that fertility levels can vary widely for countries with low gdp per capita, but as the gdp per capita gets larger, the fertility levels are relatively low. Given the shape, it does not seem like a straight-line mean function will be appropriate as a summary of this graph.
+
+## c
+
+*Draw the scatterplot of log(fertility) versus log(ppgdp) using natural logarithms. Does the simple linear regression model seem plausible for a summary of this graph? If you use a different base of logarithms, the shape of the graph won't change, but the values on the axes will change.*
+
+We'll use the `log()` function to get the natural logarithms of both variables.
+
+```{r}
+UN11$log_fertility <- log(UN11$fertility)
+UN11$log_ppgdp <- log(UN11$ppgdp)
+
+ggplot(UN11, aes(log_ppgdp, log_fertility)) + geom_point() +
+  labs(title = "Fertility by GDP per Capita: Logarithm Edition", 
+       x = "Log of GDP per capita", 
+       y = "Log of Fertility (birth rate per 1000 females)") + 
+  geom_smooth(method = "lm")
+```
+
+This graph does lend itself well to using a linear regression model. We've added an OLS line here using the `geom_smooth()` function.
+
+# Question 2
+
+*Annual income, in dollars, is an explanatory variable in a regression analysis. For a British version of the report on the analysis, all responses are converted to British pounds sterling (1 pound equals about 1.33 dollars, as of 2016).*
+
+First, let's create some data we can use to investigate the answers to these questions.
+
+```{r}
+# create initial dataset
+x_US <- rnorm(100, mean = 50, sd = 10)
+y <- 2 * x_US + rnorm(100, mean = 0, sd = 5)
+df <- data.frame(x_US, y)
+
+# create additional variable that converts x variable into pounds sterling
+df$x_UK <- df$x_US*(1/1.33)
+```
+
+## a
+
+*How, if at all, does the slope of the prediction equation change?*
+
+To answer this question we'll run a linear regression for both x_US and y, and x_UK and y and compare the coefficients.
+
+```{r}
+## US dollars
+LR_US <- lm(formula = y ~ x_US, data = df)
+summary(LR_US)$coefficients
+
+## UK pounds sterling
+LR_UK <- lm(formula = y ~ x_UK, data = df)
+summary(LR_UK)$coefficients
+```
+
+The coefficients are different, indicating that the slope did change with the different currency. The signs are the same (both slopes are positive and indicate a positive relationship), but the slope of the regression with pounds sterling is steeper.
+
+## b
+
+*How, if at all, does the correlation change?*
+
+We'll run the `cor()` function to compare the correlations.
+
+```{r}
+cor(df$x_US, df$y, method = "pearson")
+
+cor(df$x_UK, df$y, method = "pearson")
+```
+
+The correlations appears to be the same for pounds sterling and US dollars.
+
+# Question 3
+
+*Water runoff in the Sierras (Data file: water in alr4) Can Southern California's water supply in future years be predicted from past data? One factor affecting water availability is stream runoff. If runoff could be predicted, engineers, planners, and policy makers could do their jobs more efficiently. The data file contains 43 years' worth of precipitation measurements taken at six sites in the Sierra Nevada mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and OPSLAKE) and stream runoff volume at a site near Bishop, California, labeled BSAAM. Draw the scatterplot matrix for these data and summarize the information available from these plots.*
+
+```{r}
+pairs(water)
+```
+
+It looks as thought the variable that captures stream runoff volume (BSAAM) correlates rather highly with the variables, OPBPC, OPRC, and OPSLAKE. In fact, it looks as though all of those variables have a strong linear and positive relationship with each other. 
+
+While the relationship between BSAAM and the other sites (APMAM, APSAB, APSLAKE) does not appear to be strong, those sites all seem to have a positive linear relationship with each other. 
+
+It is worth noting the Years variable does not appear to have a meaningful relationship with the other variables.
+
+# Question 4
+
+*Professor ratings (Data file: Rateprof in alr4) In the website and online forum RateMyProfessors.com, students rate and comment on their instructors. Launched in 1999, the site includes millions of ratings on thousands of instructors. The data file includes the summaries of the ratings of 364 instructors at a large campus in the Midwest (Bleske-Rechek and Fritsch, 2011). Each instructor included in the data had at least 10 ratings over a several year period. Students provided ratings of 1--5 on quality, helpfulness, clarity, easiness of instructor's courses, and raterInterest in the subject matter covered in the instructor's courses. The data file provides the averages of these five ratings. Create a scatterplot matrix of these five variables. Provide a brief description of the relationships between the five ratings.*
+
+Let's first take a closer look at the data so we know the names of the variables we're interested in.
+
+```{r}
+glimpse(Rateprof)
+```
+
+Now let's use the `pairs()` function to take a look at how these variables relate to one another.
+
+```{r}
+pairs(Rateprof[, c("quality", "helpfulness", "clarity", "easiness", "raterInterest")])
+```
+
+It appears as if quality, helpfulness, and clarity all have a strong positive linear relationship with one another. Interestingly, quality and helpfulness and quality and clarity both seem to correlate slightly more with one another than helpfulness and clarity. The relationship between easiness and the other variables looks to be a fairly weak positive correlation. Similarly, raterInterest seems to have a weak positive linear relationship with the other variables.
+
+# Question 5
+
+*For the student.survey data file in the smss package, conduct regression analyses relating (by convention, y denotes the outcome variable, x denotes the explanatory variable) y = political ideology and x = religiosity, and y = high school GPA and x = hours of TV watching.*
+
+Let's load the data and take a closer look.
+
+```{r}
+data(student.survey)
+glimpse(student.survey)
+```
+
+The first pair of variables are currently ordinal variables. In order to run a regression, let's convert the values to numeric.
+
+```{r}
+student.survey_i <- student.survey %>% 
+  mutate("pol_ideo" = case_when(
+    pi == "very liberal" ~ 1, 
+    pi == "liberal" ~ 2,
+    pi == "slightly liberal" ~ 3,
+    pi == "moderate" ~ 4,
+    pi == "slightly conservative" ~ 5,
+    pi == "conservative" ~ 6, 
+    pi == "very conservative" ~ 7)) %>% 
+  mutate("religiosity" = case_when(
+    re == "never" ~ 1,
+    re == "occasionally" ~ 2, 
+    re == "most weeks" ~ 3,
+    re == "every week" ~ 4))
+```
+
+First we'll explore the relationship between political ideology and religiosity. 
+(i) y = political ideology and x = religiosity
+
+## a
+
+*Graphically portray how the explanatory variable relates to the outcome variable in each of the two cases.*
+
+We can explore this relationship and our finding with a visual depiction of the data. 
+
+The scatterplot of this data is a little awkward because of the nature of the data (that it was originally ordinal variables). 
+
+```{r}
+ggplot(student.survey_i, aes(religiosity, pol_ideo)) + 
+  geom_point() + 
+  geom_smooth(method = "lm") +
+  labs(title = "Political Ideology and Religiosity", x = "Religiosity", y = "Political Ideology")
+  
+```
+
+Let's see what it looks like in a bar chart. We'll use the original variables so that R recognizes them as ordinal.
+
+```{r}
+ggplot(student.survey_i, aes(re, fill = pi)) + 
+  geom_bar() +
+  labs(title = "Political Ideology and Religiosity", x = "How often respondents attend religious services", y = "Count", fill = "Political Ideology") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This chart illustrates the relationship a little better. You can see that pretty much all of the respondents who identified as "very conservative" also reported attending religious services "every week", which is the most frequent choice available.
+
+## b
+
+*Summarize and interpret results of inferential analyses.*
+
+We can run the linear regression with the numeric variables we made earlier. 
+
+```{r}
+pol_reg <- lm(pol_ideo ~ religiosity, data = student.survey_i)
+summary(pol_reg)
+```
+The results of this regression indicate that there is a positive and significant relationship between religiosity and political ideology (p-value 1.22e-06 <0.001), with people who report being more conservative also reporting being more likely to attend religious services often. The R-squared value is also fairly high (0.3359), indicating that the model is a relatively good fit. 
+
+Now let's take a look at the second set of variables and explore their relationship.
+(ii) y = high school GPA and x = hours of TV watching.
+
+## a
+
+*Graphically portray how the explanatory variable relates to the outcome variable in each of the two cases.*
+
+Since both of these variables are continuous this relationship lends itself well to being visualized with a scatterplot.
+
+```{r}
+ggplot(student.survey_i, aes(tv, hi)) + 
+  geom_point() + 
+  labs(title = "High school GPA and hours of of TV watched per week", x = "Hours of TV watched per week", y = "High school GPA")
+```
+
+This visualization indicates there is a negative relationship between the number of hours of tv watched per week and high school GPA.
+
+## b
+
+*Summarize and interpret results of inferential analyses.*
+
+```{r}
+gpa_tv <- lm(hi ~ tv, data = student.survey_i)
+summary(gpa_tv)
+```
+This linear regression model indicates that the relationship between these variables is negative, as we could see from the scatterplot above. It is also significant (p-vlue 0.0388 < 0.05). The R-squared is not as large as the previous relationship we explored, indicating the model is not as good of a fit. 
