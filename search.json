@@ -1036,6 +1036,76 @@
     "text": "f\n\n\nCode\nmean<-sum(p_df$x*p_df$pro)\n\n\nFirst, to obtain the variance, get the sum of the squared difference between the x-value and the average value (expected value) and divided by the total number of prisoners.\nThe standard deviation is the square root of the variance.\n\n\nCode\nsum((x-mean)^2*p_df$freq)/810\n\n\n[1] 0.8562353\n\n\nCode\nsqrt(sum((x-mean)^2*p_df$freq)/810)\n\n\n[1] 0.9253298\n\n\nVariance is 0.8562 and standard deviation is 0.925.\nAlternatively, the variance can be obtained by multiplying the square of the difference between the x-value and the average value by each probability.\n\n\nCode\nsum((x-mean)^2*p_df$pro)\n\n\n[1] 0.8562353\n\n\nCode\nsqrt(sum((x-mean)^2*p_df$pro))\n\n\n[1] 0.9253298\n\n\nAs expected, the answer is the same."
   },
   {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html",
+    "href": "posts/dacss603hw3_LauraCollazo.html",
+    "title": "DACSS 603 Homework 3",
+    "section": "",
+    "text": "Code\nlibrary(tidyverse)\nlibrary(alr4)\nlibrary(smss)"
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#a",
+    "href": "posts/dacss603hw3_LauraCollazo.html#a",
+    "title": "DACSS 603 Homework 3",
+    "section": "a",
+    "text": "a\nThe predictor variable is ppgdp and the response variable is fertility."
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#b",
+    "href": "posts/dacss603hw3_LauraCollazo.html#b",
+    "title": "DACSS 603 Homework 3",
+    "section": "b",
+    "text": "b\nA scatterplot of these variables is shown below. It revels that woman tend to have less children as GDP increases.\nA straight line function does not seem plausible for this graph as points are clustered primarily in one area. A linear regression line would therefore not be the best fit for the data.\n\n\nCode\nggplot(UN11, aes(x = ppgdp, y = fertility)) + \n  geom_point() +\nlabs(x = \"Per capita gross domestic product in US dollars\",\n     y = \"Number of children per woman\")"
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#c",
+    "href": "posts/dacss603hw3_LauraCollazo.html#c",
+    "title": "DACSS 603 Homework 3",
+    "section": "c",
+    "text": "c\nWhen log-log is used, a simple linear regression model does seem plausible to summarize this graph.\n\n\nCode\nggplot(UN11, aes(x = log(ppgdp), y = log(fertility))) + \n  geom_point() +\nlabs(x = \"Log of per capita gross domestic product in US dollars\",\n     y = \"Log of number of children per woman\")"
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#a-1",
+    "href": "posts/dacss603hw3_LauraCollazo.html#a-1",
+    "title": "DACSS 603 Homework 3",
+    "section": "a",
+    "text": "a\nThe slope of the equation will change because the explanatory variable is responsible for determining the slope."
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#b-1",
+    "href": "posts/dacss603hw3_LauraCollazo.html#b-1",
+    "title": "DACSS 603 Homework 3",
+    "section": "b",
+    "text": "b\nThe correlation will not change as correlation is not based on units."
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#a-2",
+    "href": "posts/dacss603hw3_LauraCollazo.html#a-2",
+    "title": "DACSS 603 Homework 3",
+    "section": "1a",
+    "text": "1a\nThe below graph shows how the explanatory variable (religiosity) relates to the outcome variable (political ideology).\n\n\nCode\ndata(\"student.survey\")\n\nggplot(student.survey, aes(x = re, y = pi)) + \n  geom_jitter() +\nlabs(title = \"Political idology & church attendance\",\n     x = \"religious service attendance\",\n     y = \"political ideology\")"
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#b-2",
+    "href": "posts/dacss603hw3_LauraCollazo.html#b-2",
+    "title": "DACSS 603 Homework 3",
+    "section": "1b",
+    "text": "1b\nThe plot reveals there is a weak positive correlation between how often a students attend religious services and how conservative they are."
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#a-3",
+    "href": "posts/dacss603hw3_LauraCollazo.html#a-3",
+    "title": "DACSS 603 Homework 3",
+    "section": "2a",
+    "text": "2a\nThe below graph shows how the explanatory variable (hours of TV watching) relates to the outcome variable (high school GPA).\n\n\nCode\nggplot(student.survey, aes(x = tv, y = hi)) + \n  geom_jitter() +\nlabs( title = \"High school GPA & average weekly hours of TV\",\n      x = \"average hours of TV per week\",\n      y = \"high school GPA\")"
+  },
+  {
+    "objectID": "posts/dacss603hw3_LauraCollazo.html#b-3",
+    "href": "posts/dacss603hw3_LauraCollazo.html#b-3",
+    "title": "DACSS 603 Homework 3",
+    "section": "2b",
+    "text": "2b\nGlancing at the plot there doesn’t appear to be much of a correlation. However, when looking at the summary of the regression below, p < .05 which indicates statistical significance. R-squared is very low, though, meaning the regression is not a strong prediction model. The plot below includes the regression line to visualize this.\n\n\nCode\n summary(lm(hi~tv, data = student.survey))\n\n\n\nCall:\nlm(formula = hi ~ tv, data = student.survey)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-1.2583 -0.2456  0.0417  0.3368  0.7051 \n\nCoefficients:\n             Estimate Std. Error t value Pr(>|t|)    \n(Intercept)  3.441353   0.085345  40.323   <2e-16 ***\ntv          -0.018305   0.008658  -2.114   0.0388 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.4467 on 58 degrees of freedom\nMultiple R-squared:  0.07156,   Adjusted R-squared:  0.05555 \nF-statistic: 4.471 on 1 and 58 DF,  p-value: 0.03879\n\n\n\n\nCode\nggplot(student.survey, aes(x = tv, y = hi)) + \n  geom_jitter() +\n  geom_smooth(method = \"lm\") +\nlabs( title = \"High school GPA & average weekly hours of TV\",\n      x = \"average hours of TV per week\",\n      y = \"high school GPA\")\n\n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
     "objectID": "posts/HW2_JustineShakespeare.html",
     "href": "posts/HW2_JustineShakespeare.html",
     "title": "Homework 2",
@@ -1981,6 +2051,76 @@
     "text": "Question 2\nCreating a data frame –\n\n\nCode\npriorconviction <- c(0,1,2,3,4)\nprisoners <- c(128,434,160,64,24)\nq2 <- data.frame(priorconviction, prisoners)\nhead(q2)\n\n\n  priorconviction prisoners\n1               0       128\n2               1       434\n3               2       160\n4               3        64\n5               4        24\n\n\n\nWhat is the probability that a randomly selected inmate has exactly 2 prior convictions?\n\n\n\nCode\n160/810\n\n\n[1] 0.1975309\n\n\nI found it to be .1975 or 19.75%\n\nWhat is the probability that a randomly selected inmate has fewer than 2 prior convictions?\n\n\n\nCode\n(434+128)/810\n\n\n[1] 0.6938272\n\n\nTo get this I added the sample of 0 or 1 prior conviction and it comes out to .69 or 69%.\n\nWhat is the probability that a randomly selected inmate has 2 or fewer prior convictions?\n\n\n\nCode\n(128+434+160)/810\n\n\n[1] 0.891358\n\n\nTo get this I added the sample of 0 or 1 or 2 prior convictions and it comes out to .89 or 89%.\n\nWhat is the probability that a randomly selected inmate has more than 2 prior convictions?\n\n\n\nCode\n(64+24)/810\n\n\n[1] 0.108642\n\n\nTo get this I added the sample of 3 or 4 prior convictions and it comes out to .108 or 11%.\n\nWhat is the expected value1 for the number of prior convictions?\n\n\n\nCode\nsum(q2$priorconviction*prisoners)\n\n\n[1] 1042\n\n\nCode\n1042/810\n\n\n[1] 1.28642\n\n\nTo get this I summed all of the numbers of prior convictions by the amount of prisoners (1042) then divided this by total sample (810) to get a final expected value of 1.28 prior convictions.\n\nCalculate the variance and the standard deviation for the Prior Convictions.\n\n\n\nCode\nvar(q2$priorconviction)\n\n\n[1] 2.5\n\n\nCode\nvar(q2$priorconviction)*(5-1)/5\n\n\n[1] 2\n\n\nI used the above code to find a sample variance of 2.5 and a population variance of 2.\n\n\nCode\nsd(q2$priorconviction)\n\n\n[1] 1.581139\n\n\nI used the standard deviation function to calculate the above.\n:::"
   },
   {
+    "objectID": "posts/HW3_JustineShakespeare.html",
+    "href": "posts/HW3_JustineShakespeare.html",
+    "title": "Homework 3",
+    "section": "",
+    "text": "Before we dive into the homework let’s load the data."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#a",
+    "href": "posts/HW3_JustineShakespeare.html#a",
+    "title": "Homework 3",
+    "section": "a",
+    "text": "a\nIdentify the predictor and the response.\nFirst we’ll load the data and take a look.\n\n\nCode\ndata(UN11)\nglimpse(UN11)\n\n\nRows: 199\nColumns: 6\n$ region    <fct> Asia, Europe, Africa, Africa, Caribbean, Latin Amer, Asia, C…\n$ group     <fct> other, other, africa, africa, other, other, other, other, oe…\n$ fertility <dbl> 5.968, 1.525, 2.142, 5.135, 2.000, 2.172, 1.735, 1.671, 1.94…\n$ ppgdp     <dbl> 499.0, 3677.2, 4473.0, 4321.9, 13750.1, 9162.1, 3030.7, 2285…\n$ lifeExpF  <dbl> 49.49, 80.40, 75.00, 53.17, 81.10, 79.89, 77.33, 77.75, 84.2…\n$ pctUrban  <dbl> 23, 53, 67, 59, 100, 93, 64, 47, 89, 68, 52, 84, 89, 29, 45,…\n\n\nFertility is the response variable and ppgdp is the predictor variable."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#b",
+    "href": "posts/HW3_JustineShakespeare.html#b",
+    "title": "Homework 3",
+    "section": "b",
+    "text": "b\nDraw the scatterplot of fertility on the vertical axis versus ppgdp on the horizontal axis and summarize the information in this graph. Does a straight-line mean function seem to be plausible for a summary of this graph?\nWe’ll use ggplot() to draw the scatterplot.\n\n\nCode\nggplot(UN11, aes(ppgdp, fertility)) + geom_point() +\n  labs(title = \"Fertility by GDP per Capita\", x = \"GDP per capita\", \n       y = \"Fertility (birth rate per 1000 females)\")\n\n\n\n\n\nThis graph shows that fertility levels can vary widely for countries with low gdp per capita, but as the gdp per capita gets larger, the fertility levels are relatively low. Given the shape, it does not seem like a straight-line mean function will be appropriate as a summary of this graph."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#c",
+    "href": "posts/HW3_JustineShakespeare.html#c",
+    "title": "Homework 3",
+    "section": "c",
+    "text": "c\nDraw the scatterplot of log(fertility) versus log(ppgdp) using natural logarithms. Does the simple linear regression model seem plausible for a summary of this graph? If you use a different base of logarithms, the shape of the graph won’t change, but the values on the axes will change.\nWe’ll use the log() function to get the natural logarithms of both variables.\n\n\nCode\nUN11$log_fertility <- log(UN11$fertility)\nUN11$log_ppgdp <- log(UN11$ppgdp)\n\nggplot(UN11, aes(log_ppgdp, log_fertility)) + geom_point() +\n  labs(title = \"Fertility by GDP per Capita: Logarithm Edition\", \n       x = \"Log of GDP per capita\", \n       y = \"Log of Fertility (birth rate per 1000 females)\") + \n  geom_smooth(method = \"lm\")\n\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\nThis graph does lend itself well to using a linear regression model. We’ve added an OLS line here using the geom_smooth() function."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#a-1",
+    "href": "posts/HW3_JustineShakespeare.html#a-1",
+    "title": "Homework 3",
+    "section": "a",
+    "text": "a\nHow, if at all, does the slope of the prediction equation change?\nTo answer this question we’ll run a linear regression for both x_US and y, and x_UK and y and compare the coefficients.\n\n\nCode\n## US dollars\nLR_US <- lm(formula = y ~ x_US, data = df)\nsummary(LR_US)$coefficients\n\n\n             Estimate Std. Error    t value     Pr(>|t|)\n(Intercept) -1.176207 2.67247630 -0.4401186 6.608204e-01\nx_US         2.015151 0.05289985 38.0937023 1.495847e-60\n\n\nCode\n## UK pounds sterling\nLR_UK <- lm(formula = y ~ x_UK, data = df)\nsummary(LR_UK)$coefficients\n\n\n             Estimate Std. Error    t value     Pr(>|t|)\n(Intercept) -1.176207  2.6724763 -0.4401186 6.608204e-01\nx_UK         2.680151  0.0703568 38.0937023 1.495847e-60\n\n\nThe coefficients are different, indicating that the slope did change with the different currency. The signs are the same (both slopes are positive and indicate a positive relationship), but the slope of the regression with pounds sterling is steeper."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#b-1",
+    "href": "posts/HW3_JustineShakespeare.html#b-1",
+    "title": "Homework 3",
+    "section": "b",
+    "text": "b\nHow, if at all, does the correlation change?\nWe’ll run the cor() function to compare the correlations.\n\n\nCode\ncor(df$x_US, df$y, method = \"pearson\")\n\n\n[1] 0.9678526\n\n\nCode\ncor(df$x_UK, df$y, method = \"pearson\")\n\n\n[1] 0.9678526\n\n\nThe correlations appears to be the same for pounds sterling and US dollars."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#a-2",
+    "href": "posts/HW3_JustineShakespeare.html#a-2",
+    "title": "Homework 3",
+    "section": "a",
+    "text": "a\nGraphically portray how the explanatory variable relates to the outcome variable in each of the two cases.\nWe can explore this relationship and our finding with a visual depiction of the data.\nThe scatterplot of this data is a little awkward because of the nature of the data (that it was originally ordinal variables).\n\n\nCode\nggplot(student.survey_i, aes(religiosity, pol_ideo)) + \n  geom_point() + \n  geom_smooth(method = \"lm\") +\n  labs(title = \"Political Ideology and Religiosity\", x = \"Religiosity\", y = \"Political Ideology\")\n\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\nLet’s see what it looks like in a bar chart. We’ll use the original variables so that R recognizes them as ordinal.\n\n\nCode\nggplot(student.survey_i, aes(re, fill = pi)) + \n  geom_bar() +\n  labs(title = \"Political Ideology and Religiosity\", x = \"How often respondents attend religious services\", y = \"Count\", fill = \"Political Ideology\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\nThis chart illustrates the relationship a little better. You can see that pretty much all of the respondents who identified as “very conservative” also reported attending religious services “every week”, which is the most frequent choice available."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#b-2",
+    "href": "posts/HW3_JustineShakespeare.html#b-2",
+    "title": "Homework 3",
+    "section": "b",
+    "text": "b\nSummarize and interpret results of inferential analyses.\nWe can run the linear regression with the numeric variables we made earlier.\n\n\nCode\npol_reg <- lm(pol_ideo ~ religiosity, data = student.survey_i)\nsummary(pol_reg)\n\n\n\nCall:\nlm(formula = pol_ideo ~ religiosity, data = student.survey_i)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-2.81243 -0.87160  0.09882  1.12840  3.09882 \n\nCoefficients:\n            Estimate Std. Error t value Pr(>|t|)    \n(Intercept)   0.9308     0.4252   2.189   0.0327 *  \nreligiosity   0.9704     0.1792   5.416 1.22e-06 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 1.345 on 58 degrees of freedom\nMultiple R-squared:  0.3359,    Adjusted R-squared:  0.3244 \nF-statistic: 29.34 on 1 and 58 DF,  p-value: 1.221e-06\n\n\nThe results of this regression indicate that there is a positive and significant relationship between religiosity and political ideology (p-value 1.22e-06 <0.001), with people who report being more conservative also reporting being more likely to attend religious services often. The R-squared value is also fairly high (0.3359), indicating that the model is a relatively good fit.\nNow let’s take a look at the second set of variables and explore their relationship. (ii) y = high school GPA and x = hours of TV watching."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#a-3",
+    "href": "posts/HW3_JustineShakespeare.html#a-3",
+    "title": "Homework 3",
+    "section": "a",
+    "text": "a\nGraphically portray how the explanatory variable relates to the outcome variable in each of the two cases.\nSince both of these variables are continuous this relationship lends itself well to being visualized with a scatterplot.\n\n\nCode\nggplot(student.survey_i, aes(tv, hi)) + \n  geom_point() + \n  labs(title = \"High school GPA and hours of of TV watched per week\", x = \"Hours of TV watched per week\", y = \"High school GPA\")\n\n\n\n\n\nThis visualization indicates there is a negative relationship between the number of hours of tv watched per week and high school GPA."
+  },
+  {
+    "objectID": "posts/HW3_JustineShakespeare.html#b-3",
+    "href": "posts/HW3_JustineShakespeare.html#b-3",
+    "title": "Homework 3",
+    "section": "b",
+    "text": "b\nSummarize and interpret results of inferential analyses.\n\n\nCode\ngpa_tv <- lm(hi ~ tv, data = student.survey_i)\nsummary(gpa_tv)\n\n\n\nCall:\nlm(formula = hi ~ tv, data = student.survey_i)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-1.2583 -0.2456  0.0417  0.3368  0.7051 \n\nCoefficients:\n             Estimate Std. Error t value Pr(>|t|)    \n(Intercept)  3.441353   0.085345  40.323   <2e-16 ***\ntv          -0.018305   0.008658  -2.114   0.0388 *  \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.4467 on 58 degrees of freedom\nMultiple R-squared:  0.07156,   Adjusted R-squared:  0.05555 \nF-statistic: 4.471 on 1 and 58 DF,  p-value: 0.03879\n\n\nThis linear regression model indicates that the relationship between these variables is negative, as we could see from the scatterplot above. It is also significant (p-vlue 0.0388 < 0.05). The R-squared is not as large as the previous relationship we explored, indicating the model is not as good of a fit."
+  },
+  {
     "objectID": "posts/HW1_solution_Pang.html",
     "href": "posts/HW1_solution_Pang.html",
     "title": "Homework 1 Solution",
@@ -2160,7 +2300,7 @@
     "href": "index.html",
     "title": "DACSS 603 Introduction to Quantitative Analysis Spring 2023",
     "section": "",
-    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nApr 11, 2023\n\n\nHomework 3\n\n\nMiguel Curiel\n\n\n\n\nApr 3, 2023\n\n\nHomework 2\n\n\nAbigail Balint\n\n\n\n\nApr 2, 2023\n\n\nHomework2\n\n\nRahul Somu\n\n\n\n\nMar 29, 2023\n\n\nHomework 2\n\n\nRosemary Pang\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nAsch Harwood\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nEmma Narkewicz\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nFelix Betanourt\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nAlexa Potter\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nMiguel Curiel\n\n\n\n\nMar 27, 2023\n\n\nFinal Project check-in (1)\n\n\nDiana Rinker\n\n\n\n\nMar 27, 2023\n\n\nHomework 2\n\n\nJustine Shakespeare\n\n\n\n\nMar 27, 2023\n\n\nHomework 2\n\n\nYoung Soo Choi\n\n\n\n\nMar 26, 2023\n\n\nBlog Post #2\n\n\nAlexis Gamez\n\n\n\n\nMar 25, 2023\n\n\nHomework 2\n\n\nDiana Rinker\n\n\n\n\nMar 24, 2023\n\n\nHomework 2\n\n\nXiaoyan\n\n\n\n\nMar 24, 2023\n\n\nFinal Project Check-in 1\n\n\nRahul Somu\n\n\n\n\nMar 23, 2023\n\n\nDACSS 603 Homework 2\n\n\nLaura Collazo\n\n\n\n\nMar 23, 2023\n\n\nHomework 2\n\n\nGuanhua Tan\n\n\n\n\nMar 22, 2023\n\n\nFinal Project Check In\n\n\nYoung Soo Choi\n\n\n\n\nMar 22, 2023\n\n\nFinal Project check in 1\n\n\nThrishul Pola\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Part 1\n\n\nAlexa Potter\n\n\n\n\nMar 21, 2023\n\n\nFinal Project - Check-In 1\n\n\nCaitlin Rowley\n\n\n\n\nMar 21, 2023\n\n\n603_Project_Check_In_Akhilesh\n\n\nAkhilesh Kumar & Saisrinivas Ambatipudi\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Proposal\n\n\nEmma Narkewicz\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Check in 1\n\n\nKristin Abijaoude\n\n\n\n\nMar 21, 2023\n\n\nFinalPart1\n\n\nLiam Tucksmith\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Part 1\n\n\nTyler Tewksbury\n\n\n\n\nMar 21, 2023\n\n\nThe Pandemic’s Toll on Mental Health: A Look at the Tech Sector (DRAFT)\n\n\nMiguel Curiel\n\n\n\n\nMar 21, 2023\n\n\nMaternal Mortality and Women's Empowerment: Exploring Socio-Political Factors Associated with Better Outcomes for Mothers Across the Globe\n\n\nJustine Shakespeare\n\n\n\n\nMar 20, 2023\n\n\nFinal Project Initial Research\n\n\nAbigail Balint\n\n\n\n\nMar 20, 2023\n\n\nEstimating National Food Waste with State/Local Waste Characterization Studies in the United States\n\n\nAsch Harwood\n\n\n\n\nMar 20, 2023\n\n\nHomework 1\n\n\nJerin Jacob\n\n\n\n\nMar 20, 2023\n\n\nFinal Project Checkin\n\n\nAdithya Parupudi\n\n\n\n\nMar 18, 2023\n\n\nProject Proposal\n\n\nAlexis Gamez\n\n\n\n\nMar 18, 2023\n\n\nFinal Project - Check point 1\n\n\nFelix Betanourt\n\n\n\n\nMar 17, 2023\n\n\nFinal Project Checkin-1\n\n\nXiaoyan\n\n\n\n\nMar 16, 2023\n\n\nHw 2 by Kristin Abijaoude\n\n\nKristin Abijaoude\n\n\n\n\nMar 12, 2023\n\n\nHW2\n\n\nLiam Tucksmith\n\n\n\n\nMar 10, 2023\n\n\nFinal Project Proposal Check-in1\n\n\nMeredith Derian-Toth\n\n\n\n\nMar 10, 2023\n\n\nFinal Project 603\n\n\nJerin Jacob\n\n\n\n\nMar 4, 2023\n\n\nFinal Project Check 1\n\n\nGuanhua Tan\n\n\n\n\nMar 1, 2023\n\n\nHomework 1 Solution\n\n\nRosemary Pang\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nOllie Murphy\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1 - Akhilesh Kumar\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nEmma Narkewicz\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nZhiyuan Zhou\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nChristine Brydges\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nAsch Harwood\n\n\n\n\nFeb 28, 2023\n\n\nHomework - 1\n\n\nDarron Bunt\n\n\n\n\nFeb 27, 2023\n\n\nHomework 1\n\n\nSaisrinivas Ambatipudi\n\n\n\n\nFeb 27, 2023\n\n\nHomework 2\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\nFeb 27, 2023\n\n\nHw 1 by Kristin Abijaoude\n\n\nKristin Abijaoude\n\n\n\n\nFeb 27, 2023\n\n\nHomework 1\n\n\nYoung Soo Choi\n\n\n\n\nFeb 27, 2023\n\n\nHomework1\n\n\nRahul Somu\n\n\n\n\nFeb 27, 2023\n\n\nHomework 2\n\n\nAdithya Parupudi\n\n\n\n\nFeb 27, 2023\n\n\nHomework 1\n\n\nXiaoyan\n\n\n\n\nFeb 26, 2023\n\n\nHomework 1\n\n\nCaitlin Rowley\n\n\n\n\nFeb 26, 2023\n\n\nHomework 1\n\n\nJustine Shakespeare\n\n\n\n\nFeb 25, 2023\n\n\nHomework 1\n\n\nAlexa Potter\n\n\n\n\nFeb 24, 2023\n\n\nHomework 1\n\n\nFelix Betanourt\n\n\n\n\nFeb 23, 2023\n\n\nHomework1 - EDA of LungCap Data\n\n\nAdithya Parpudi\n\n\n\n\nFeb 23, 2023\n\n\nHomework 1\n\n\nAbigail Balint\n\n\n\n\nFeb 20, 2023\n\n\nBlog Post #1\n\n\nAlexis Gamez\n\n\n\n\nFeb 20, 2023\n\n\nHW1\n\n\nLiam Tucksmith\n\n\n\n\nFeb 20, 2023\n\n\nHomework 1\n\n\nMiguel Curiel\n\n\n\n\nFeb 19, 2023\n\n\nDACSS 603 Homework 1\n\n\nLaura Collazo\n\n\n\n\nFeb 17, 2023\n\n\nHomework 1\n\n\nDiana Rinker\n\n\n\n\nFeb 5, 2023\n\n\nHomework 1\n\n\nGuanhua Tan\n\n\n\n\nFeb 5, 2023\n\n\nHomework - 2\n\n\nThrishul\n\n\n\n\nFeb 5, 2023\n\n\nHomework_One\n\n\nMeredith Derian-Toth\n\n\n\n\nFeb 5, 2023\n\n\nHomework - 1\n\n\nThrishul\n\n\n\n\nInvalid Date\n\n\nProposal for DACSS 603 Final Project\n\n\nLaura Collazo\n\n\n\n\n\n\nNo matching items"
+    "text": "The blog posts here are contributed by students enrolled in DACSS 603, Introduction to Quantitative Analysis.\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nApr 11, 2023\n\n\nHomework 3\n\n\nMiguel Curiel\n\n\n\n\nApr 7, 2023\n\n\nDACSS 603 Homework 3\n\n\nLaura Collazo\n\n\n\n\nApr 3, 2023\n\n\nHomework 2\n\n\nAbigail Balint\n\n\n\n\nApr 2, 2023\n\n\nHomework2\n\n\nRahul Somu\n\n\n\n\nMar 29, 2023\n\n\nHomework 2\n\n\nRosemary Pang\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nAsch Harwood\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nEmma Narkewicz\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nFelix Betanourt\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nAlexa Potter\n\n\n\n\nMar 28, 2023\n\n\nHomework 2\n\n\nMiguel Curiel\n\n\n\n\nMar 27, 2023\n\n\nFinal Project check-in (1)\n\n\nDiana Rinker\n\n\n\n\nMar 27, 2023\n\n\nHomework 2\n\n\nJustine Shakespeare\n\n\n\n\nMar 27, 2023\n\n\nHomework 2\n\n\nYoung Soo Choi\n\n\n\n\nMar 26, 2023\n\n\nBlog Post #2\n\n\nAlexis Gamez\n\n\n\n\nMar 25, 2023\n\n\nHomework 2\n\n\nDiana Rinker\n\n\n\n\nMar 24, 2023\n\n\nHomework 2\n\n\nXiaoyan\n\n\n\n\nMar 24, 2023\n\n\nFinal Project Check-in 1\n\n\nRahul Somu\n\n\n\n\nMar 23, 2023\n\n\nDACSS 603 Homework 2\n\n\nLaura Collazo\n\n\n\n\nMar 23, 2023\n\n\nHomework 2\n\n\nGuanhua Tan\n\n\n\n\nMar 22, 2023\n\n\nFinal Project Check In\n\n\nYoung Soo Choi\n\n\n\n\nMar 22, 2023\n\n\nFinal Project check in 1\n\n\nThrishul Pola\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Part 1\n\n\nAlexa Potter\n\n\n\n\nMar 21, 2023\n\n\nFinal Project - Check-In 1\n\n\nCaitlin Rowley\n\n\n\n\nMar 21, 2023\n\n\n603_Project_Check_In_Akhilesh\n\n\nAkhilesh Kumar & Saisrinivas Ambatipudi\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Proposal\n\n\nEmma Narkewicz\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Check in 1\n\n\nKristin Abijaoude\n\n\n\n\nMar 21, 2023\n\n\nFinalPart1\n\n\nLiam Tucksmith\n\n\n\n\nMar 21, 2023\n\n\nFinal Project Part 1\n\n\nTyler Tewksbury\n\n\n\n\nMar 21, 2023\n\n\nThe Pandemic’s Toll on Mental Health: A Look at the Tech Sector (DRAFT)\n\n\nMiguel Curiel\n\n\n\n\nMar 21, 2023\n\n\nMaternal Mortality and Women's Empowerment: Exploring Socio-Political Factors Associated with Better Outcomes for Mothers Across the Globe\n\n\nJustine Shakespeare\n\n\n\n\nMar 20, 2023\n\n\nFinal Project Initial Research\n\n\nAbigail Balint\n\n\n\n\nMar 20, 2023\n\n\nEstimating National Food Waste with State/Local Waste Characterization Studies in the United States\n\n\nAsch Harwood\n\n\n\n\nMar 20, 2023\n\n\nHomework 1\n\n\nJerin Jacob\n\n\n\n\nMar 20, 2023\n\n\nFinal Project Checkin\n\n\nAdithya Parupudi\n\n\n\n\nMar 18, 2023\n\n\nProject Proposal\n\n\nAlexis Gamez\n\n\n\n\nMar 18, 2023\n\n\nFinal Project - Check point 1\n\n\nFelix Betanourt\n\n\n\n\nMar 17, 2023\n\n\nFinal Project Checkin-1\n\n\nXiaoyan\n\n\n\n\nMar 16, 2023\n\n\nHw 2 by Kristin Abijaoude\n\n\nKristin Abijaoude\n\n\n\n\nMar 12, 2023\n\n\nHW2\n\n\nLiam Tucksmith\n\n\n\n\nMar 10, 2023\n\n\nFinal Project Proposal Check-in1\n\n\nMeredith Derian-Toth\n\n\n\n\nMar 10, 2023\n\n\nFinal Project 603\n\n\nJerin Jacob\n\n\n\n\nMar 4, 2023\n\n\nFinal Project Check 1\n\n\nGuanhua Tan\n\n\n\n\nMar 1, 2023\n\n\nHomework 1 Solution\n\n\nRosemary Pang\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nOllie Murphy\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1 - Akhilesh Kumar\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nEmma Narkewicz\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nZhiyuan Zhou\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nChristine Brydges\n\n\n\n\nFeb 28, 2023\n\n\nHomework 1\n\n\nAsch Harwood\n\n\n\n\nFeb 28, 2023\n\n\nHomework - 1\n\n\nDarron Bunt\n\n\n\n\nFeb 27, 2023\n\n\nHomework 1\n\n\nSaisrinivas Ambatipudi\n\n\n\n\nFeb 27, 2023\n\n\nHomework 2\n\n\nAkhilesh Kumar Meghwal\n\n\n\n\nFeb 27, 2023\n\n\nHw 1 by Kristin Abijaoude\n\n\nKristin Abijaoude\n\n\n\n\nFeb 27, 2023\n\n\nHomework 1\n\n\nYoung Soo Choi\n\n\n\n\nFeb 27, 2023\n\n\nHomework1\n\n\nRahul Somu\n\n\n\n\nFeb 27, 2023\n\n\nHomework 2\n\n\nAdithya Parupudi\n\n\n\n\nFeb 27, 2023\n\n\nHomework 1\n\n\nXiaoyan\n\n\n\n\nFeb 26, 2023\n\n\nHomework 1\n\n\nCaitlin Rowley\n\n\n\n\nFeb 26, 2023\n\n\nHomework 1\n\n\nJustine Shakespeare\n\n\n\n\nFeb 25, 2023\n\n\nHomework 1\n\n\nAlexa Potter\n\n\n\n\nFeb 24, 2023\n\n\nHomework 1\n\n\nFelix Betanourt\n\n\n\n\nFeb 23, 2023\n\n\nHomework1 - EDA of LungCap Data\n\n\nAdithya Parpudi\n\n\n\n\nFeb 23, 2023\n\n\nHomework 1\n\n\nAbigail Balint\n\n\n\n\nFeb 20, 2023\n\n\nBlog Post #1\n\n\nAlexis Gamez\n\n\n\n\nFeb 20, 2023\n\n\nHW1\n\n\nLiam Tucksmith\n\n\n\n\nFeb 20, 2023\n\n\nHomework 1\n\n\nMiguel Curiel\n\n\n\n\nFeb 19, 2023\n\n\nDACSS 603 Homework 1\n\n\nLaura Collazo\n\n\n\n\nFeb 17, 2023\n\n\nHomework 1\n\n\nDiana Rinker\n\n\n\n\nFeb 5, 2023\n\n\nHomework 1\n\n\nGuanhua Tan\n\n\n\n\nFeb 5, 2023\n\n\nHomework - 2\n\n\nThrishul\n\n\n\n\nFeb 5, 2023\n\n\nHomework_One\n\n\nMeredith Derian-Toth\n\n\n\n\nFeb 5, 2023\n\n\nHomework - 1\n\n\nThrishul\n\n\n\n\nInvalid Date\n\n\nProposal for DACSS 603 Final Project\n\n\nLaura Collazo\n\n\n\n\nFeb 5, 2023\n\n\nHomework 3\n\n\nJustine Shakespeare\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about/Rowena.Kosher.html",
