@@ -1,0 +1,263 @@
+---
+title: "Homework 3"
+author: "Young Soo Choi"
+description: "hw3"
+date: "04/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+---
+
+# Question 1
+
+```{r}
+# data loading
+library(alr4)
+data(UN11)
+
+# check data
+head(UN11)
+dim(UN11)
+```
+
+## (a)
+Through the given problem, it can be seen that the research topic is the effect of ppgdp on the birth rate. In this research topic, the predictor is 'ppgdp' and the response is 'fertility'. 
+
+## (b)
+
+First of all, a regression model between the ppgdp and fertility of countries was derived.
+
+```{r}
+summary(lm(UN11$fertility~UN11$ppgdp))
+```
+
+A regression model such as Fertility = 3.178-0.00003*ppGDP was derived. In other words, a single unit increase in ppgdp reduces the fertility rate by 0.00003.
+
+Now, expressing this as a scatterplot is as follows.
+
+```{r}
+library(tidyverse)
+options(scipen=999)
+plot(UN11$ppgdp, UN11$fertility, 
+     xlab="ppGDP",
+     ylab="Fertility",
+     col="cornflowerblue")
+abline(lm(UN11$fertility~UN11$ppgdp), col="blue")
+text(mean(UN11$ppgdp)+30000, mean(UN11$fertility)+0.5, "Fertility = 3.178-0.00003*ppGDP", col = "blue")
+
+```
+
+Overall, the regression equation derived earlier seems reasonable at first glance as it shows a downward trend to the right, but it can also be seen that the distribution of ppgdp is quite biased to the right.
+
+```{r}
+mean(UN11$ppgdp)
+median(UN11$ppgdp)
+```
+
+This can also be seen from the comparison of the mean and the median, and the mean of ppgdp is 13011.95 and the median is 4684.5, indicating that the distribution of ppgdp is biased to the right. 
+Therefore, a simple linear regression model that does not properly convert variables will have many limitations in explaining the variability of fertility.
+
+## (c)
+
+First, a new objects with a value obtained by logarithms each variable is generated.
+
+```{r}
+UN11$log_ppgdp<-log(UN11$ppgdp)
+UN11$log_fertility<-log(UN11$fertility)
+```
+
+Using these objects, the regression model was obtained in the same way as the problem (b) and a scatterplot was drawn.
+
+```{r}
+summary(lm(UN11$log_fertility~UN11$log_ppgdp))
+```
+
+```{r}
+plot(UN11$log_ppgdp, UN11$log_fertility, 
+     xlab="Log(ppGDP)",
+     ylab="Log(Fertility)",
+     col="chartreuse4")
+abline(lm(UN11$log_fertility~UN11$log_ppgdp), col="darkgreen")
+text(mean(UN11$log_ppgdp+1.2), mean(UN11$log_fertility+0.8), "Log(Fertility) = 2.666-0.2072*Log(ppGDP)", col = "darkgreen")
+
+```
+
+A regression line that reflects the data much better than when a regression line was derived without transforming variables was derived.
+The R-squared value is also higher than before transform.(0.19 -> 0.53) In other words, the performance of the regression model improved by logarithms each variable.
+
+```{r}
+# change base of logarithms
+UN11$log10_ppgdp<-log(UN11$ppgdp, base=exp(10))
+UN11$log10_fertility<-log(UN11$fertility, base=exp(10))
+
+summary(lm(UN11$log10_fertility~UN11$log10_ppgdp))
+
+plot(UN11$log10_ppgdp, UN11$log10_fertility, 
+     xlab="Log10(ppGDP)",
+     ylab="Log10(Fertility)",
+     col="gray")
+abline(lm(UN11$log10_fertility~UN11$log10_ppgdp), col="black")
+text(mean(UN11$log10_ppgdp), mean(UN11$log10_fertility+0.07), "Log10(Fertility) = 0.2666-0.2072*Log10(ppGDP)", col = "black")
+
+
+```
+
+When base of logarithms changed to 10, there are no changes in distribution of data and shape of line. But scales of each axes are changed.
+
+# Question 2
+
+```{r}
+UN11$pound_ppgdp<-UN11$ppgdp/1.33
+```
+
+## (a)
+
+```{r}
+summary(lm(UN11$fertility~UN11$pound_ppgdp))
+```
+
+```{r}
+plot(UN11$pound_ppgdp, UN11$fertility, 
+     xlab="ppGDP(£)",
+     ylab="Fertility",
+     col="cornflowerblue")
+abline(lm(UN11$fertility~UN11$pound_ppgdp), col="blue")
+text(mean(UN11$pound_ppgdp)+30000, mean(UN11$fertility)+0.5, "Fertility = 3.178-0.00004*ppGDP(£)", col = "blue")
+
+```
+
+When dollars are converted into pounds, the slope of the simple regression line changes.(from approx. 0.00003 to approx. 0.00004). But the intercept does not change.
+
+## (b)
+
+Even if the monetary unit is changed, the r-squared value remains unchanged (equivalent to 0.1936). That is, there is no change in the ratio at which the change in ppgdp explains the change in the facility.
+In the problem (a), the change in slope is simply caused by the unit conversion of the x variable. In fact, applying the exchange rate of 1.33, which is the changed slope, shows that it is the same as the slope calculated in dollars.
+
+```{r}
+0.000042575/1.33
+```
+
+# Question 3
+
+```{r}
+data(water)
+head(water)
+dim(water)
+```
+```{r}
+summary(lm(BSAAM~APMAM+APSAB+APSLAKE+OPBPC+OPRC+OPSLAKE,water))
+pairs(water[,2:8])
+cor(water[,2:8])
+```
+
+A multiple regression model was derived to find out the relationship between the annual precipitation of the six sites presented in the problem and the stream runoff volume.
+
+It was analyzed that 92.5% of the stream runoff volume fluctuation could be explained through the precipitation variation at six sites(R-squared is 0.9248). However, this analysis may overlook the problem of overfitting, an increase in explanatory power due to an increase in the number of variables.
+
+There are also variables that show a fairly high correlation between the variables included in the model. It should be considered that these variables can also distort the explanatory power of the model.
+
+In addition, it should be considered that a small number of extreme data can have a distorted effect on the entire data.
+
+Overall, stream runoff volume can be predicted to some extent using various variables, but the relationship between variables and the existence of extreme values should be considered when creating this prediction model.
+
+# Question 4
+
+```{r}
+data("Rateprof")
+head(Rateprof)
+dim(Rateprof)
+```
+
+```{r}
+pairs(Rateprof[,8:12])
+cor(Rateprof[,8:12])
+```
+
+First of all, it is easy to see that these three variables(quality, helpfulness, clarity) are highly correlated with each other and show a clear linear relationship.(All correlation coefficient 0.9 or higher)
+
+Next, in the case of easiness, it shows a some positive correlation with the above three variables(correlation coefficient about 0.5). However, the correlation with the raterInterest appears weaker than them. In other words, it shows a weak positive correlation.
+
+Finally, the rateInterest has a positive correlation coefficient of about 0.4 with the previous three variables(quality, helpfulness, clarity), and shows a positive correlation coefficient of about 0.2 with easiness.
+
+In summary, since quality, helpfulness, clarity has a very strong correlation with each other, it is necessary to consider the method of excluding some variables in consideration of the advantages of statistical analysis including these variables.
+
+# Question 5
+
+```{r}
+library(smss)
+data(student.survey)
+
+head(student.survey)
+dim(student.survey)
+```
+
+## (i-a)
+
+Looking at the data first, it is composed of nominal variables.
+
+```{r}
+table(student.survey$pi)
+table(student.survey$re)
+```
+Regression analysis such as logistic regression can also be performed for nominal variables. Here, regression analysis will be performed simply by assigning a number corresponding to each variable value. The level of the variable is a orderal variable, and in the case of religion, the higher the number, the more participation in religious activities, and in the case of political ideology, the higher the number, the more conservative it was.
+
+```{r}
+# transform variables
+student.survey$pol_id<-
+  ifelse(student.survey[,"pi"]=="very liberal", 1,
+       ifelse(student.survey[,"pi"]=="liberal", 2,
+              ifelse(student.survey[,"pi"]=="slightly liberal", 3,
+                     ifelse(student.survey[,"pi"]=="moderate", 4,
+                            ifelse(student.survey[,"pi"]=="slightly conservative", 5,
+                                   ifelse(student.survey[,"pi"]=="conservative", 6, 7))))))
+
+
+student.survey$rel_fre<-
+  ifelse(student.survey[,"re"]=="never",1,
+         ifelse(student.survey[,"re"]=="occasionally", 2,
+                ifelse(student.survey[,"re"]=="most weeks", 3, 4)))
+```
+
+```{r}
+# regression model
+summary(lm(student.survey$pol_id~student.survey$rel_fre))
+
+# plot
+plot(student.survey$rel_fre, student.survey$pol_id, xaxt = 'n', yaxt='n',
+     xlab="Religiosity",
+     ylab="Political Ideology",
+     col="cornflowerblue")
+axis(1, at = seq(1, 4, by = 1), labels = c("never", "occasionally", "most weeks", "every weeks"))
+axis(2, at = seq(1,7, by=1), labels = c("very liberal", "liberal", "slightly liberal", "moderate", "slightly conservative", "conservative", "very conservative"))
+abline(lm(student.survey$pol_id~student.survey$rel_fre), col="blue")
+```
+
+## (i-b)
+
+The effect of religiosity on political ideology shows a positive correlation. In other words, the more often you participate in religious activities, the more conservative your political ideology becomes, and the more you do not participate in religious activities, the more liberal your political ideology tends to become.
+
+## (ii-a)
+
+
+
+```{r}
+# regression model
+summary(lm(student.survey$hi~student.survey$tv))
+
+# plot
+plot(student.survey$tv, student.survey$hi,
+     xlab="hours of TV watching",
+     ylab="high school GPA",
+     col="cornflowerblue")
+abline(lm(student.survey$hi~student.survey$tv), col="blue")
+
+```
+
+## (ii-b)
+
+As shown in the figure, there is a weak negative correlation, However, size of effect is small(R-squared is 0.0715). In this case, there could be a variable that distorts the size or direction of the effect between the variable of watching TV and performance. Therefore, it is necessary to further analyze the relationship with other variables.

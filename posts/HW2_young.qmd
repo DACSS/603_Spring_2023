@@ -20,21 +20,19 @@ library(tidyverse)
 library(dplyr)
 ```
 
-
 # Question 1
 
 In order to obtain the confidence interval, first, a t-value of 90% confidence level must be obtained with the given statistics.
 
 First, I will look for the confidence interval of the bypass group.
 
+
 ```{r}
 # t of the given bypass group
 bypass.t<-qt(p=0.95, df=539)
 bypass.t
 ```
-
 The confidence interval includes a section that falls margin of error from a specific predicted value, and this problem is to obtain the confidence interval of the mean, so the upper and lower limits of the confidence interval were obtained using the sample mean and the previously obtained t-value, respectively.
-
 
 ```{r}
 # confidence interval of bypass group
@@ -43,14 +41,17 @@ bypass.conf.low<-19-bypass.t*(10/sqrt(539))
 bypass.conf.up
 bypass.conf.low
 ```
-Now let's look at the confidence interval of 90% of the angiography group in the same way.
+
+Now let’s look at the confidence interval of 90% of the angiography group in the same way.
 
 ```{r}
 # confidence interval of angiography group
 
 angio.t<-qt(p=0.95, df=847)
 angio.t
+```
 
+```{r}
 angio.conf.up<-18+angio.t*(9/sqrt(847))
 angio.conf.low<-18-angio.t*(9/sqrt(847))
 angio.conf.up
@@ -60,6 +61,7 @@ angio.conf.low
 For a 90% confidence interval, a bypass group is from 18.29 to 19.71, an angiography group is from 17.49 to 18.51.
 
 ## More
+
 Random data were generated using the given statistics and each confidence interval was also obtained.
 
 ```{r}
@@ -94,14 +96,9 @@ When the significance level is 5%, the meaning of this confidence interval is th
 
 # Question 3
 
-Depending on the value given in the problem, the population standard deviation is 42.5 (170/4), and the allowable margin of error is 5. And margin of error can be obtained by z*sd/(n^1/2).
-So n can be obtained by solving the following equation.
-   margin of error =< z*sd(n^1/2)
-transform that equation,
-   n >= (z*sd/margin of error)^2
-   
-The significance level here is 5%, so z is 1.96. And sd is 42.5 margin of error is 5. 
-Then n >= (1.96*42.5/5)^2
+Depending on the value given in the problem, the population standard deviation is 42.5 (170/4), and the allowable margin of error is 5. And margin of error can be obtained by zsd/(n^1/2). So n can be obtained by solving the following equation. margin of error =< zsd(n^1/2) transform that equation, n >= (z*sd/margin of error)^2
+
+The significance level here is 5%, so z is 1.96. And sd is 42.5 margin of error is 5. Then n >= (1.96*42.5/5)^2
 
 ```{r}
 (1.96*42.5/5)^2
@@ -115,8 +112,7 @@ n >= 277.56, In other words, the number of samples must exceed 278 to meet the c
 
 First, assume that s in the population is equal to the sample in question. And the significance level is set at 5%.
 
-Null Hypothesis: μ = 500
-Alternative Hypothesis: μ ≠ 500
+Null Hypothesis: μ = 500 Alternative Hypothesis: μ ≠ 500
 
 Since it is a test that estimates whether the parameter is a specific value, a two-side t-test should be performed. At this time, t is ȳ - μ / s/(n^1/2).
 
@@ -182,11 +178,11 @@ smith.p
 
 ## B
 
-α is a level arbitrarily set according to the researcher's judgment, and does not affect the t or p-value of each hypothesis.
+α is a level arbitrarily set according to the researcher’s judgment, and does not affect the t or p-value of each hypothesis.
 
 The p value means the probability that t will have such a value when t is a normal distribution, that is, even if ȳ=μ=500, and se is 10, the probability of ȳ=519.5 can be 5.14%. Therefore, p greater than α means that even if ȳ=μ is true, the probability of accidentally ȳ=519.5 is greater than the type 1 error set by the researcher (false positive), which means that the null hypothesis cannot be rejected.
 
-So when α=0.05, Jones's null hypothesis cannot be rejected, and Smith's null hypothesis can be rejected. In other words, only Smith's research results are statistically significant.
+So when α=0.05, Jones’s null hypothesis cannot be rejected, and Smith’s null hypothesis can be rejected. In other words, only Smith’s research results are statistically significant.
 
 ## C
 
@@ -238,7 +234,7 @@ df.7<-data.frame(
 )
 ```
 
-Then let's do ANOVA using the aov function and look at the resulting statistics.
+Then let’s do ANOVA using the aov function and look at the resulting statistics.
 
 ```{r}
 summary(aov(cost~area, df.7))
