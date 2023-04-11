@@ -1,0 +1,139 @@
+---
+title: "Homework3"
+author: "Rahul Somu"
+description: "HW3 alr4 UNI"
+date: "02/05/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - desriptive statistics 
+  - probability
+---
+
+```{r, echo=T}
+library(readxl)
+library(alr4)
+data(UN11)
+library(ggplot2)
+```
+
+
+# Question 1
+
+## 1a
+
+The predictor variable in the data is  ppgdp, gross national product per person, and the response variable is fertility, the birth rate per 1000 females. The study is to how the fertility depends on the ppgdp value.
+
+##1b
+
+As per the scatterplot, there is a negative relationship between ppgdp and fertility - as ppgdp increases, fertility decreases. As the relationship doesn't seem to be linear, straight-line mean function may not be the best fit for this data.
+
+
+```{r, echo=T}
+
+ggplot(UN11, aes(x = ppgdp, y = fertility)) +
+  geom_point()
+
+```
+
+
+#1c
+As per the plot,he relationship between log(ppgdp) and log(fertility) appears to be linear. So a simple linear regression model can be a reasonable summary for this data.
+
+```{r, echo=T}
+ggplot(UN11, aes(x = log(ppgdp), y = log(fertility))) +
+  geom_point()
+```
+
+#Question 2
+
+(a) If all responses are converted from USD to pounds, the slope for prediction equation will remain unchanged, because the change in unit of measurement affects only the scale of the explanatory variable, not its relationship to the response variable.
+
+(b) the correlation between the explanatory variable and the response variable will not be affected while Converting the responses from dollars to pounds sterling, as correlation is the measure of strength and direction of linear relationship between the two variables, which can't get affected by the change in unit of measurement. However, numerical value of correlation coefficient may vary due to differences in scale of variables.
+
+
+#Question 3
+
+Below scatterplot matrix reveals some moderate to significant positive linear connections between the stream runoff volume at the Bishop site and the precipitation measurements taken at other sites. For instance, a definite upward trend can be seen in the scatterplots between BSAAM and APSAB, APSLAKE, and OPSLAKE. On the other hand, weaker relationships can be shown in the scatterplots between BSAAM and APMAM, OPBPC, and OPRC. Additionally, several pairs of variables clearly have nonlinear connections with one another, such as APSAB and APSLAKE and APSAB and OPSLAKE. In general, the scatterplot matrix offers a helpful visual description of the connections between the dataset's variables.
+
+```{r, echo=T}
+
+# Load the water dataset
+data(water)
+
+# Inspect the first few rows of the data
+head(water)
+
+# Create the scatterplot matrix
+pairs(water)
+```
+
+
+#Question 4
+
+Based on the scatterplot matrix, following relationships can be observed between the five ratings:
+
+Strong positive correlations between helpfulness and quality imply that high-quality instructors are also seen as helpful.
+Although not as significantly as quality and helpfulness, there is a positive association between clarity and helpfulness.
+It is possible that students may not always see easier professors as being helpful given the weak negative association between ease and helpfulness.
+There is a slender negative association between quality and easiness, suggesting that high-quality instructors may not always be regarded as easy.
+RaterInterest and the other four ratings don't significantly correlate.
+
+```{r, echo=T}
+data(Rateprof)
+names(Rateprof)
+
+# Extract the five rating variables
+ratings <- Rateprof[, 8:12]
+
+# Create the scatterplot matrix
+pairs(ratings)
+
+```
+
+#Question 5
+As a result, a scatterplot is created, with political ideology on the y-axis and religiosity on the x-axis. According to the plot, there seems to be a modest inverse correlation between the two factors, with more religious people preferring to be more conservative politically.
+
+This results in a scatterplot where the y-axis represents high school GPA and the x-axis represents TV viewing time. According to the plot, there seems to be a minor inverse correlation between the two factors, with more TV viewers typically having lower high school GPAs.
+
+
+
+
+```{r, echo=T}
+
+library(smss)
+data(student.survey)
+
+# (i) Regression analysis for political ideology and religiosity
+model1 <- lm(as.numeric(pi) ~ re, data = student.survey)
+summary(model1)
+
+# (ii) Regression analysis for high school GPA and hours of TV watching
+model2 <- lm(hi ~ tv, data = student.survey)
+summary(model2)
+
+# Graphical visualization for political ideology and religiosity
+library(ggplot2)
+ggplot(student.survey, aes(x = re, y = pi)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  xlab("Religiosity") +
+  ylab("Political Ideology")
+
+# Graphical visualization for high school GPA and hours of TV watching
+ggplot(student.survey, aes(x = tv, y = hi)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  xlab("TV Hours") +
+  ylab("High School GPA")
+```
+
+
+We may find the coefficients of the linear regression models as well as numerous statistical tests and measures of model fit in the output of the summary() function. The first analysis shows that the slope of the regression line is -0.043, meaning that, on average, political ideology falls by 0.043 units for every unit increase in religiosity. The association between the two variables is statistically significant because the slope coefficient's p-value is less than 0.05. Religiosity only partially accounts for the variation in political ideology, according to the model's R-squared value of 0.013.
+
+In the second study, the slope of the regression line is -0.020, meaning that the average high school GPA declines by 0.020 points for every hour more spent watching TV. The association between the two variables is statistically significant because the slope coefficient's p-value is less than 0.05. The model's R-squared value is 0.004, meaning that TV watching accounts for a very little amount of the variation in high school GPA.
