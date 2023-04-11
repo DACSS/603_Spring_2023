@@ -1,0 +1,157 @@
+---
+title: "Hw 2 by Kristin Abijaoude"
+author: "Kristin Abijaoude"
+description: "HW2"
+date: "04/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Hw3
+  - kristin abijaoude
+  - un 
+  - smss
+---
+
+# Question 1: Fertility vs. GDP
+
+```{r}
+# load packages
+packages <- c("readr", "ggplot2", "caret", "summarytools", "smss", "alr4", "tidyverse", "dplyr", "stats", "pwr")
+lapply(packages, require, character.only = TRUE)
+```
+
+```{r}
+data(UN11)
+summary(UN11)
+head(UN11)
+```
+
+## A
+
+`fertility`: Predictor
+
+`ppgdp`: Response
+
+## B
+
+```{r}
+plot(x = UN11$fertility, y = UN11$ppgdp,
+     xlab = "Fertility",
+     ylab = "GDP")
+```
+
+Based on this graph, a straight-line mean function does not seem to be plausible for a summary of this graph, due to the fact that the points are clustered in one area.
+
+## C
+
+```{r}
+plot(x = log(UN11$fertility), y = log(UN11$ppgdp),
+     xlab = "Fertility",
+     ylab = "GDP")
+```
+
+On the other hand, it's plausible to make a straight line mean function from the graph above. It paints a clearer picture of a trend. In other words, one can see from the graph that there is a correlation between fertility rates and GDP- richer countries tend to have fewer children per woman.
+
+# Question 2: in UK pounds
+
+```{r}
+UN11_uk <- UN11 %>% 
+  select(ppgdp, fertility) %>%
+  mutate(gdp_uk = ppgdp / 1.33)
+
+
+plot(x = log(UN11_uk$fertility), y = log(UN11_uk$gdp_uk),
+     xlab = "Fertility",
+     ylab = "GDP")
+```
+
+There seems to be no changes when I convert US dollars into UK pounds, and it's no surprise since both currencies are two of the strongest in the world. The trend is still the same.
+
+# Question 3: Water Runoff in the Sierras
+
+```{r}
+data(water)
+head(water)
+```
+
+```{r}
+pairs(water)
+```
+
+From this graph, the data seems too cluttered to make a prediction out of; in other words, there is no correlation between the past years and percipitation measures in inches.
+
+# Question 4: Rate My Professors
+
+```{r}
+data(Rateprof)
+summary(Rateprof)
+```
+
+```{r}
+Rate_pairs <- Rateprof %>%
+  select(clarity, quality, helpfulness, easiness, raterInterest)
+
+pairs(Rate_pairs)
+```
+
+-   There seems to be a very clear positive correlation between `clarity`, `helpfulness`, and `quality`, given by the seemingly straight lines.
+-   While the trends are not as straight, `easiness` has a positive correlation between variables `clarity`, `helpfulness`, and `quality`.
+-   `raterInterest`, on the other hand, presents less of a correlation, for a lack of better words, when it's graphed with the rest of the variables, but you can see a general pattern of positive correlation with those variables.
+
+# Question 5: Student Surveys
+
+```{r}
+data(student.survey)
+head(student.survey)
+help("student.survey") # to find out what those columns stand for
+```
+```{r}
+unique(student.survey$pi)
+```
+
+
+## Political Ideology vs Religiosity 
+
+```{r}
+student.survey<- student.survey%>% 
+       mutate(p_i = case_when(pi == "very liberal" ~ 1,
+                              pi == "liberal" ~ 2,
+                              pi == "slightly liberal" ~ 3,
+                              pi == "moderate" ~ 4,
+                              pi == "slightly conservative" ~ 5,
+                              pi == "conservative" ~ 6,
+                              pi == "very conservative" ~ 7,
+                              TRUE ~ 0)) 
+student.survey<- student.survey%>% 
+       mutate(r_e = case_when(re == "never" ~ 1,
+                              re == "occasionally" ~ 2,
+                              re == "most weeks" ~ 3,
+                              re == "every week" ~ 4,
+                              TRUE ~ 0))
+
+religion <- lm(p_i ~ r_e, data = student.survey)
+religion
+
+plot(religion)
+```
+
+### Interpretion 
+
+The intercept coefficient is around 0.93, meaning that one's political ideology starts around the "very liberal" area, and the religiosity coefficient starts around 0.97, meaning that one basically never attends religious services. In other word, this model starts of with a very liberal person who never attends church. The more religious a person is (i.e. the more often they attend religious services at places such as church or synagogue etc.), the more ideologically conservative they tend to be. 
+
+## High School GPA vs Hours of Watching TV
+
+```{r}
+TV <- lm(hi ~ tv, data = student.survey)
+TV
+
+plot(TV)
+```
+
+### Interpretation
+
+What we have here is the Intercept of around 3.44, which means that this is the student's expected high school GPA when they watch 0 hours of TV. The negative coefficient of -0.01831 means that the more hours one watches TV, the lower their GPA by this amount.
