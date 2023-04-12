@@ -1,0 +1,140 @@
+---
+title: "Homework - 1"
+author: "Tyler Tewksbury"
+description: "Homework 1"
+date: "02/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1
+
+## a
+
+First, let's read in the data from the Excel file:
+
+```{r, echo=T}
+library(readxl)
+library(tidyverse)
+df <- read_excel("_data/LungCapData.xls")
+```
+
+
+The distribution of LungCap looks as follows:
+
+```{r, echo=T}
+hist(df$LungCap)
+```
+
+The histogram suggests that the distribution is close to a normal distribution. Most of the observations are close to the mean. Very few observations are close to the margins (0 and 15).
+
+## b
+
+```{r}
+boxplot(LungCap ~ Gender, df )
+```
+The probability distribution with respect to Males and Females is very similar. The min, max, and median are all slightly higher for males.
+
+## C
+
+```{r}
+mean(subset(df$LungCap, df$Smoke == "no"))
+mean(subset(df$LungCap, df$Smoke == "yes"))
+```
+Lung capacity for smokers is higher in this dataset, which does not seem to make sense.
+
+##d 
+```{r}
+df <- df %>% 
+  mutate(
+    age_group = dplyr::case_when(
+      Age <= 13            ~ "<=13",
+      Age == 14 | Age == 15 ~ "14-15",
+      Age == 16 | Age == 17 ~ "16-17",
+      Age >= 18             ~ ">=18"
+    )
+)
+
+df2 <- df %>%
+  group_by(age_group, Smoke) %>%
+  summarise_at(vars(LungCap),  list(AvgLungCap = mean))
+ 
+df2
+
+```
+
+The relationship between age and lung capacity implies that lung capacity increases as one gets older.
+
+##e
+
+For smokers specifically, their lung capacity is higher for all age groups except >=18. This differs from part C, where all smokers had higher lung capacity. There are a few possible explanations for this. 
+
+```{r}
+df %>% group_by(Smoke, age_group) %>% summarise(count = n())
+```
+There are far more people under 13 in this dataset than those above 18, a majority of whom do not smoke. Above 18 as well there are more nonsmokers than smokers. The large count of those under 13 are likely skewing the analysis from part C. 
+
+# Question 2
+
+##a
+
+```{r}
+prob = (160/810)
+prob
+```
+
+About 19.75%
+
+##b
+
+```{r}
+prob2 = ((434+128)/810)
+prob2
+```
+About 69.38%
+
+##c
+
+```{r}
+prob3 = ((434+128+160)/810)
+prob3
+```
+
+About 89.14%
+
+##d
+
+```{r}
+prob4 = ((64+24)/810)
+prob4
+```
+About 10.86%
+
+##e
+
+```{r}
+convictions <- c(rep(0, 128), rep(1, 434), rep(2, 160), rep(3, 64), rep(4, 24))
+mean(convictions)
+```
+
+##f
+
+```{r}
+
+
+var(convictions)
+
+sd(convictions)
+
+
+```
+Variance - .857
+St Dev - .926
