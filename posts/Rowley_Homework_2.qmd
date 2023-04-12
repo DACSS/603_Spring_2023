@@ -37,16 +37,71 @@ library(readxl)
 
 ```{r}
 # bypass: sample size = 539, mean wait time = 19, SD = 10
-# angiography: sample size =847, mean wait time = 18, SD = 9
 
-bypass <- c(rnorm(539, mean = 19, sd = 10))
-angiography <- c(rnorm(847, mean = 18, sd = 9))
+b_size=539
+b_mean=19
+b_sd=10
+b_ci=0.9
 
-t.test(bypass, angiography, var.equal=FALSE, conf.level = .90)
+# calculate standard error:
+bypass_se = b_sd/sqrt(b_size)
 
+# specify confidence interval:
+bypass_tail <- (1-b_ci)/2
+print(bypass_tail)
+
+# calculate t-value:
+b_t_value <-  qt(p=1-bypass_tail, df=b_size-1)
+print(b_t_value)
+
+# calculate confidence intervals:
+b_conf_int <- c(b_mean-b_t_value*bypass_se, b_mean+b_t_value*bypass_se)
+print(b_conf_int)
 ```
 
-The actual mean wait time for bypass survey is 18.97 days, while the actual mean wait time for angiography surgery The confidence level is narrower for bypass survey is 18.26 days.
+The 90% confidence interval for wait-time for bypass surgery is 18.3--19.7 days.
+
+```{r}
+# angiography: sample size = 847, mean wait time = 18, SD = 9
+
+a_size=847
+a_mean=18
+a_sd=9
+a_ci=0.9
+
+# calculate standard error:
+angio_se = a_sd/sqrt(a_size)
+
+# specify confidence interval:
+angio_tail <- (1-a_ci)/2
+print(angio_tail)
+
+# calculate t-value:
+a_t_value <-  qt(p=1-angio_tail, df=a_size-1)
+print(a_t_value)
+
+# calculate confidence intervals:
+a_conf_int <- c(a_mean-a_t_value*angio_se, a_mean+a_t_value*angio_se)
+print(a_conf_int)
+```
+
+The 90% confidence interval for wait-time for angiography surgery is 17.5--18.5 days.
+
+```{r}
+# calculate size of confidence interval for bypass:
+
+bypass_ci_size=19.70971-18.29029
+print(bypass_ci_size)
+```
+
+```{r}
+# calculate size of confidence interval for angiography:
+
+angio_ci_size=18.50922-17.49078
+print(angio_ci_size)
+```
+
+The confidence level is narrower for angiography surgery (1.01844) than it is for bypass surgery (1.41942).
 
 ### Question 2
 
@@ -57,8 +112,15 @@ The actual mean wait time for bypass survey is 18.97 days, while the actual mean
 | Construct and interpret a 95% confidence interval for p.
 
 ```{r}
+# binomial test - compares a sample proportion to a hypothesized proportion
 
+total_pop = 1031
+survey_pop = 567
+
+binom.test(survey_pop, total_pop)
 ```
+
+The proportion of American adults who believe that a college education is essential for success, or p, is 0.55%, which falls between the 95% confidence interval of 52%-58%.
 
 ### Question 3
 
@@ -70,8 +132,24 @@ The actual mean wait time for bypass survey is 18.97 days, while the actual mean
 | this range (in other words, you can assume they know the population standard deviation). Assuming the significance level to be 5%, what should be the size of the sample?
 
 ```{r}
+# find sample size using [error=z*SD/sqrt of n]
 
+# range in cost of books:
+range=200-30
+
+# population SD is 1/4 of range:
+population_sd = range/4
+print(population_sd)
+
+# If 95% of the area lies between −z and z, then 5% of the area must lie outside of this range. Since normal curves are symmetric, half of this amount (2.5%) must lie before −z. Then the area under the curve before z must be: 0.025+0.95=0.975. The number z is the 97.5th percentile of the standard normal distribution:
+z=qnorm(.975)
+
+# estimate is within $5 of true population mean:
+n=((z*population_sd)/5)^2
+print(n)
 ```
+
+The sample size should be 278.
 
 ### Question 4
 
@@ -80,14 +158,168 @@ The actual mean wait time for bypass survey is 18.97 days, while the actual mean
 | B. Report the P-value for Ha: u\<500. Interpret.
 | C. Report and interpret the P-value for Ha: u\>500. (Hint: the P-values for the two possible one-sided tests must sum to 1).
 
-```{r}
+#### A)
 
+```{r}
+# mean income = $500/week
+# mean income female: y=$410, s=90
+
+# A)
+# test statistics: describes how far your observed data is from the null hypothesis of no relationship between variables or no difference among sample groups (support or reject null)
+# formula: x_bar is sample mean, mu is hypothesized population mean, sd is sample standard deviation, and n is sample size.
+# formula: (sample mean-population mean)/(standard deviation/sqrt(sample size))
+
+test_stat <- function(x_bar, mu, sd, n){return((x_bar-mu)/(sd/sqrt(n)))}
+
+sample_mean=410
+pop_mean=500
+sd=90
+sample_size=9
+
+# find t-value:
+t_stat <- test_stat(sample_mean, pop_mean, sd, sample_size)
+print(t_stat)
 ```
+
+```{r}
+# t-value is negative, so find lower tail
+# degree of freedom = n-1
+# find p-value:
+low_p_value <- pt(q=t_stat, df=8, lower.tail=TRUE)
+print(low_p_value)
+
+# find p-value for two-tailed t-test:
+low_p_value <- 2*pt(t_stat, 8)
+print(low_p_value)
+```
+
+My assumption is that the mean income of female employees will differ from the mean of all senior-level workers (\$500/week). After running test statistics, we see that the t-stat is -3, meaning that females' average pay is 3 standard deviations from the population mean. We also see that the p-value is 0.02, which means that we can reject the null hypothesis, which assumes that there is no significant difference in pay across genders (i.e., females make \$500/week on average).
+
+#### B)
+
+```{r}
+# B
+# calculate p-value for LT alternative hypothesis (Ha: u<500):
+
+p_Ha = pt(q=t_stat, df=8, lower.tail=TRUE)
+p_Ha
+```
+
+The p-value for the lower-tail alternative hypothesis is 0.009, which supports our previous assertion that we can reject the null hypothesis and accept the alternative. This indicates that u≠500. In other words, females do not make \$500/week.
+
+#### C)
+
+```{r}
+# C
+# calculate p-value for UT alternative hypothesis 2 (Ha: u>500):
+
+p_Ha = pt(q=t_stat, df=8, lower.tail=FALSE)
+p_Ha
+```
+
+The p-value for the upper-tail alternative hypothesis is 0.991, which indicates that 'u' is not greater than 500. In other words, we now know that, on average, females make less than \$500/week.
 
 ### Question 5
 
-Question 6
+| Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.
+| A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.
+| B. Using α = 0.05, for each study indicate whether the result is "statistically significant."
+| C. Using this example, explain the misleading aspects of reporting the result of a test as "P ≤0.05" versus "P \> 0.05," or as "reject H0" versus "Do not reject H0," without reporting the actual P-value.
 
-Assuming the significance level to be 5%, what should be the size of the sample
+#### A)
+
+```{r}
+# H0: u=500
+# Ha: u≠500
+# n=1000
+# Jones: y=519.5, se=10.0
+# Smith : y=519.7, se=10.0
+
+# Jones: t=1.95
+
+t_jones = ((519.5 - 500)/ 10)
+cat("t value for Jones:", t_jones, '\n')
+```
+
+```{r}
+# Jones: p-value=0.0515
+
+cat('p value for Jones:', round(2*pt(t_jones, df = 999, lower.tail=FALSE), 4), '\n')
+```
+
+```{r}
+# Smith: t=1.97
+
+t_smith = ((519.7 - 500)/ 10)
+cat("t value for Smith:", t_smith, '\n')
+```
+
+```{r}
+# Smith: p-value=0.049
+
+cat('p value for Smith:', round(2*pt(t_smith, df = 999, lower.tail=FALSE), 4), '\n')
+```
+
+#### B)
+
+Assuming that 0.05 indicates statistical significance, we can see that while Smith's study shows statistical significance with a p-value of 0.0491 (\<0.05), Jones's does not (p-value=0.0515, p-value\>0.05).
+
+#### C)
+
+Based on this example, we can see why it is misleading to report a p-value as significant solely using "p ≤0.05," "reject H0," or "cannot reject H0" as indicators. After calculating each study's respective p-value, we can see that the two values are very close, and, if we were to round each to the nearest hundredth, both would be equal to 0.05. So, it is important to provide the p-values themselves so as to make the distinction between degrees of significance. In other words, although Jones's study showed statistical significance and Smith's did not, the differences in the two p-values was marginal, so it is important to indicate by how slim a margin both were greater/less than the significance level (0.05) so as to not overestimate statistical significance.
+
+### Question 6
+
+| A school nurse wants to determine whether age is a factor in whether children choose a
+| healthy snack after school. She conducts a survey of 300 middle school students, with the results
+| below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade
+| level. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+```{r}
+# 6th: healthy = 31, unhealthy = 69
+# 7th: healthy = 43, unhealthy = 57
+# 8th: healthy = 51, unhealthy = 49
+# n=300, each grade has 100 survey participants
+
+# create dataframe:
+grade <- c(rep("6th", 100), rep("7th", 100), rep("8th", 100))
+snack <- c(rep("healthy", 31), rep("unhealthy", 69), rep("healthy", 43),
+           rep("unhealthy", 57), rep("healthy", 51), rep("unhealthy", 49))
+
+survey_data <- data.frame(grade, snack)
+head(survey_data)
+
+# transform dataframe into table:
+table(survey_data$snack,survey_data$grade)
+
+# conduct chi-squared test:
+chisq.test(survey_data$snack,survey_data$grade,correct = FALSE)
+```
+
+The null hypothesis is that age is not a factor in whether children choose a healthy snack after school. To test this hypothesis (two categorical variables), we should use Pearson's Chi-squared test. After running this test, we can see that the p-value is 0.015, which indicates statistical significance. Thus, we can reject the null hypothesis and conclude that age is a factor in whether children choose a healthy snack after school.
 
 ### Question 7
+
+| Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school
+| districts in three areas are shown. Test the claim that there is a difference in means for the three
+| areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is
+| the conclusion?
+
+```{r}
+# area 1: 6.2, 9.3, 6.8, 6.1, 6.7, 7.5
+# area 2: 7.5, 8.2, 8.5, 8.2, 7.0, 9.3
+# area 3: 5.8, 6.4, 5.6, 7.1, 3.0, 3.5
+
+# create dataframe:
+area <- c(rep("area_1", 6), rep("area_2", 6), rep("area_3", 6))
+cost <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3,
+          5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+area_cost <- data.frame(area,cost)
+head(area_cost)
+
+# one-way ANOVA test:
+one.way <- aov(cost ~ area, data = area_cost)
+summary(one.way)
+```
+
+The null hypothesis is that area has an effect on cost per pupil. Because we are testing the means of more than one group with one independent variable, we should use the one-way ANOVA test. After running the ANOVA test, we can see that the p-value (0.00397) is statistically significant. Thus, we can reject the null hypothesis and conclude that area does have an effect on cost per pupil.
