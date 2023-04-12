@@ -1,0 +1,99 @@
+---
+title: "Homework 3"
+author: "Abigail Balint"
+desription: "HW3 Responses"
+date: "04/11/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - homework3
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(alr4)
+library(smss)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+a) The predictor is the ppgdp variable and the response is fertility.
+b) Scatterplot below:
+A straight line function here doesn't make sense because at the low end of GDP the fertility rates have a huge range.
+```{r}
+ggplot(data = UN11, aes(x = ppgdp, y = fertility)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+
+```
+
+c) Scatterplot with log applied:
+
+Applying the log smooths out the graphs bringing the distribution closer to a straight line.
+```{r}
+ggplot(data = UN11, aes(x = log(ppgdp), y = log(fertility))) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+```
+# Question 2
+
+a) The slope would not change because all of values in the explanatory variable are being adjusted at exactly the same rate so the way that they impact any response variables is not going to change. The slope equation is unaffected. Similarly, b), the correlation would not change either because the impact is equal across all values.
+
+# Question 3
+
+
+I used the pairs function to generate a matrix of scatterplots for every combination of variables. I can see that the bottom right quadrant is most correlated. This shows that the stream runoff at BSAAM is most correlated to the precipitation measurements at OPBPC, OPRC, and OPSLAKE.
+```{r}
+pairs(water)
+```
+
+# Question 4
+
+First I am showing the head of the data set to see what the five variable names are.
+```{r}
+head(Rateprof)
+
+```
+Then I am generating a matrix with those variables using pairs function.
+
+Looking at the results, it's interesting to see that rating doesn't actually correlate with either of the four other variables that heavily. The only variables that seem to be correlated in a semi straight line are quality and helpfullness (most correlated), clarity and quality, and helpfulness and clarity.
+
+```{r}
+pairs(~ quality + helpfulness + clarity + easiness + raterInterest, data=Rateprof)
+
+```
+
+# Question 5
+
+For the religion vs political ideology chart, I can see that those who attended church never or occasionally are more likely to be on the liberal side of the spectrum, but the sample is more spread out for those who attend church often or every week. It looks like there is more likely to be a correlation with little/no church and being liberal than with lots of church and being conservative. 
+
+```{r}
+?student.survey
+data("student.survey")
+ggplot(data = student.survey, aes(x = re, y = pi)) +
+  geom_point(position = "jitter")+
+  geom_smooth(method = "lm") 
+
+
+```
+This graph shows a pretty strong correlation with more hours of TV correlating to a lower high school GPA. Similarly to the previous graph, the correlation is strongest with zero hours and a high GPA, and the distribution widens as the hours of TV per week increase.
+
+```{r}
+data("student.survey")
+ggplot(data = student.survey, aes(x = tv, y = hi)) +
+  geom_smooth(method = "lm")
+```
+
