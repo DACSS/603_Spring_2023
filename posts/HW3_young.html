@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Young Soo Choi">
+<meta name="dcterms.date" content="2023-04-11">
+<meta name="description" content="hw3">
+
+<title>Homework 3</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/DACSS_Round_Network.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<meta name="twitter:title" content="Homework 3">
+<meta name="twitter:description" content="hw3">
+<meta name="twitter:creator" content="@UMassDACSS">
+<meta name="twitter:site" content="@UMassDACSS">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/UMass White Wordmark Horiz.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/">
+ <span class="menu-text">Spring 2023 Posts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">Contributors</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://umass.edu/sbs/dacss">
+ <span class="menu-text">DACSS</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/"><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link active" data-scroll-target="#question-1">Question 1</a>
+  <ul class="collapse">
+  <li><a href="#a" id="toc-a" class="nav-link" data-scroll-target="#a">(a)</a></li>
+  <li><a href="#b" id="toc-b" class="nav-link" data-scroll-target="#b">(b)</a></li>
+  <li><a href="#c" id="toc-c" class="nav-link" data-scroll-target="#c">(c)</a></li>
+  </ul></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a>
+  <ul class="collapse">
+  <li><a href="#a-1" id="toc-a-1" class="nav-link" data-scroll-target="#a-1">(a)</a></li>
+  <li><a href="#b-1" id="toc-b-1" class="nav-link" data-scroll-target="#b-1">(b)</a></li>
+  </ul></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3">Question 3</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4">Question 4</a></li>
+  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5">Question 5</a>
+  <ul class="collapse">
+  <li><a href="#i-a" id="toc-i-a" class="nav-link" data-scroll-target="#i-a">(i-a)</a></li>
+  <li><a href="#i-b" id="toc-i-b" class="nav-link" data-scroll-target="#i-b">(i-b)</a></li>
+  <li><a href="#ii-a" id="toc-ii-a" class="nav-link" data-scroll-target="#ii-a">(ii-a)</a></li>
+  <li><a href="#ii-b" id="toc-ii-b" class="nav-link" data-scroll-target="#ii-b">(ii-b)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Homework 3</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">hw3</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    hw3
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Young Soo Choi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 11, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="question-1" class="level1">
+<h1>Question 1</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data loading</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'alr4' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: car</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: effects</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'effects' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>lattice theme set by effectsTheme()
+See ?effectsTheme for details.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UN11)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># check data</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN11)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                region  group fertility   ppgdp lifeExpF pctUrban
+Afghanistan       Asia  other     5.968   499.0    49.49       23
+Albania         Europe  other     1.525  3677.2    80.40       53
+Algeria         Africa africa     2.142  4473.0    75.00       67
+Angola          Africa africa     5.135  4321.9    53.17       59
+Anguilla     Caribbean  other     2.000 13750.1    81.10      100
+Argentina   Latin Amer  other     2.172  9162.1    79.89       93</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(UN11)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 199   6</code></pre>
+</div>
+</div>
+<section id="a" class="level2">
+<h2 class="anchored" data-anchor-id="a">(a)</h2>
+<p>Through the given problem, it can be seen that the research topic is the effect of ppgdp on the birth rate. In this research topic, the predictor is ‘ppgdp’ and the response is ‘fertility’.</p>
+</section>
+<section id="b" class="level2">
+<h2 class="anchored" data-anchor-id="b">(b)</h2>
+<p>First of all, a regression model between the ppgdp and fertility of countries was derived.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>ppgdp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = UN11$fertility ~ UN11$ppgdp)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.9006 -0.8801 -0.3547  0.6749  3.7585 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  3.178e+00  1.048e-01  30.331  &lt; 2e-16 ***
+UN11$ppgdp  -3.201e-05  4.655e-06  -6.877  7.9e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.206 on 197 degrees of freedom
+Multiple R-squared:  0.1936,    Adjusted R-squared:  0.1895 
+F-statistic: 47.29 on 1 and 197 DF,  p-value: 7.903e-11</code></pre>
+</div>
+</div>
+<p>A regression model such as Fertility = 3.178-0.00003*ppGDP was derived. In other words, a single unit increase in ppgdp reduces the fertility rate by 0.00003.</p>
+<p>Now, expressing this as a scatterplot is as follows.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.4.1     ✔ purrr   1.0.1
+✔ tibble  3.1.8     ✔ dplyr   1.1.0
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.4     ✔ forcats 1.0.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+✖ dplyr::recode() masks car::recode()
+✖ purrr::some()   masks car::some()</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen=</span><span class="dv">999</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>ppgdp, UN11<span class="sc">$</span>fertility, </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"ppGDP"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Fertility"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>ppgdp), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>ppgdp)<span class="sc">+</span><span class="dv">30000</span>, <span class="fu">mean</span>(UN11<span class="sc">$</span>fertility)<span class="sc">+</span><span class="fl">0.5</span>, <span class="st">"Fertility = 3.178-0.00003*ppGDP"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Overall, the regression equation derived earlier seems reasonable at first glance as it shows a downward trend to the right, but it can also be seen that the distribution of ppgdp is quite biased to the right.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(UN11<span class="sc">$</span>ppgdp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13011.95</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(UN11<span class="sc">$</span>ppgdp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4684.5</code></pre>
+</div>
+</div>
+<p>This can also be seen from the comparison of the mean and the median, and the mean of ppgdp is 13011.95 and the median is 4684.5, indicating that the distribution of ppgdp is biased to the right. Therefore, a simple linear regression model that does not properly convert variables will have many limitations in explaining the variability of fertility.</p>
+</section>
+<section id="c" class="level2">
+<h2 class="anchored" data-anchor-id="c">(c)</h2>
+<p>First, a new objects with a value obtained by logarithms each variable is generated.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log_ppgdp<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>ppgdp)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log_fertility<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>fertility)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Using these objects, the regression model was obtained in the same way as the problem (b) and a scatterplot was drawn.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log_ppgdp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = UN11$log_fertility ~ UN11$log_ppgdp)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.79828 -0.21639  0.02669  0.23424  0.95596 
+
+Coefficients:
+               Estimate Std. Error t value            Pr(&gt;|t|)    
+(Intercept)     2.66551    0.12057   22.11 &lt;0.0000000000000002 ***
+UN11$log_ppgdp -0.20715    0.01401  -14.79 &lt;0.0000000000000002 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3071 on 197 degrees of freedom
+Multiple R-squared:  0.526, Adjusted R-squared:  0.5236 
+F-statistic: 218.6 on 1 and 197 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>log_ppgdp, UN11<span class="sc">$</span>log_fertility, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Log(ppGDP)"</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Log(Fertility)"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"chartreuse4"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log_ppgdp), <span class="at">col=</span><span class="st">"darkgreen"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>log_ppgdp<span class="fl">+1.2</span>), <span class="fu">mean</span>(UN11<span class="sc">$</span>log_fertility<span class="fl">+0.8</span>), <span class="st">"Log(Fertility) = 2.666-0.2072*Log(ppGDP)"</span>, <span class="at">col =</span> <span class="st">"darkgreen"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A regression line that reflects the data much better than when a regression line was derived without transforming variables was derived. The R-squared value is also higher than before transform.(0.19 -&gt; 0.53) In other words, the performance of the regression model improved by logarithms each variable.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change base of logarithms</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log10_ppgdp<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>ppgdp, <span class="at">base=</span><span class="fu">exp</span>(<span class="dv">10</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log10_fertility<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>fertility, <span class="at">base=</span><span class="fu">exp</span>(<span class="dv">10</span>))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log10_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log10_ppgdp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = UN11$log10_fertility ~ UN11$log10_ppgdp)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.079828 -0.021639  0.002669  0.023424  0.095596 
+
+Coefficients:
+                 Estimate Std. Error t value            Pr(&gt;|t|)    
+(Intercept)       0.26655    0.01206   22.11 &lt;0.0000000000000002 ***
+UN11$log10_ppgdp -0.20715    0.01401  -14.79 &lt;0.0000000000000002 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.03071 on 197 degrees of freedom
+Multiple R-squared:  0.526, Adjusted R-squared:  0.5236 
+F-statistic: 218.6 on 1 and 197 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>log10_ppgdp, UN11<span class="sc">$</span>log10_fertility, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Log10(ppGDP)"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Log10(Fertility)"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"gray"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log10_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log10_ppgdp), <span class="at">col=</span><span class="st">"black"</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>log10_ppgdp), <span class="fu">mean</span>(UN11<span class="sc">$</span>log10_fertility<span class="fl">+0.07</span>), <span class="st">"Log10(Fertility) = 0.2666-0.2072*Log10(ppGDP)"</span>, <span class="at">col =</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When base of logarithms changed to 10, there are no changes in distribution of data and shape of line. But scales of each axes are changed.</p>
+</section>
+</section>
+<section id="question-2" class="level1">
+<h1>Question 2</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>pound_ppgdp<span class="ot">&lt;-</span>UN11<span class="sc">$</span>ppgdp<span class="sc">/</span><span class="fl">1.33</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="a-1" class="level2">
+<h2 class="anchored" data-anchor-id="a-1">(a)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>pound_ppgdp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = UN11$fertility ~ UN11$pound_ppgdp)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.9006 -0.8801 -0.3547  0.6749  3.7585 
+
+Coefficients:
+                     Estimate   Std. Error t value             Pr(&gt;|t|)    
+(Intercept)       3.177911642  0.104772778  30.331 &lt; 0.0000000000000002 ***
+UN11$pound_ppgdp -0.000042575  0.000006191  -6.877       0.000000000079 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.206 on 197 degrees of freedom
+Multiple R-squared:  0.1936,    Adjusted R-squared:  0.1895 
+F-statistic: 47.29 on 1 and 197 DF,  p-value: 0.00000000007903</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>pound_ppgdp, UN11<span class="sc">$</span>fertility, </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"ppGDP(£)"</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Fertility"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>pound_ppgdp), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>pound_ppgdp)<span class="sc">+</span><span class="dv">30000</span>, <span class="fu">mean</span>(UN11<span class="sc">$</span>fertility)<span class="sc">+</span><span class="fl">0.5</span>, <span class="st">"Fertility = 3.178-0.00004*ppGDP(£)"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When dollars are converted into pounds, the slope of the simple regression line changes.(from approx. 0.00003 to approx. 0.00004). But the intercept does not change.</p>
+</section>
+<section id="b-1" class="level2">
+<h2 class="anchored" data-anchor-id="b-1">(b)</h2>
+<p>Even if the monetary unit is changed, the r-squared value remains unchanged (equivalent to 0.1936). That is, there is no change in the ratio at which the change in ppgdp explains the change in the facility. In the problem (a), the change in slope is simply caused by the unit conversion of the x variable. In fact, applying the exchange rate of 1.33, which is the changed slope, shows that it is the same as the slope calculated in dollars.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000042575</span><span class="sc">/</span><span class="fl">1.33</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.00003201128</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="question-3" class="level1">
+<h1>Question 3</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(water)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(water)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Year APMAM APSAB APSLAKE OPBPC  OPRC OPSLAKE  BSAAM
+1 1948  9.13  3.58    3.91  4.10  7.43    6.47  54235
+2 1949  5.28  4.82    5.20  7.55 11.11   10.26  67567
+3 1950  4.20  3.77    3.67  9.52 12.20   11.35  66161
+4 1951  4.60  4.46    3.93 11.14 15.15   11.13  68094
+5 1952  7.15  4.99    4.88 16.34 20.05   22.81 107080
+6 1953  9.70  5.65    4.91  8.88  8.15    7.41  67594</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(water)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 43  8</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(BSAAM<span class="sc">~</span>APMAM<span class="sc">+</span>APSAB<span class="sc">+</span>APSLAKE<span class="sc">+</span>OPBPC<span class="sc">+</span>OPRC<span class="sc">+</span>OPSLAKE,water))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = BSAAM ~ APMAM + APSAB + APSLAKE + OPBPC + OPRC + 
+    OPSLAKE, data = water)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-12690  -4936  -1424   4173  18542 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 15944.67    4099.80   3.889 0.000416 ***
+APMAM         -12.77     708.89  -0.018 0.985725    
+APSAB        -664.41    1522.89  -0.436 0.665237    
+APSLAKE      2270.68    1341.29   1.693 0.099112 .  
+OPBPC          69.70     461.69   0.151 0.880839    
+OPRC         1916.45     641.36   2.988 0.005031 ** 
+OPSLAKE      2211.58     752.69   2.938 0.005729 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 7557 on 36 degrees of freedom
+Multiple R-squared:  0.9248,    Adjusted R-squared:  0.9123 
+F-statistic: 73.82 on 6 and 36 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(water[,<span class="dv">2</span><span class="sc">:</span><span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(water[,<span class="dv">2</span><span class="sc">:</span><span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            APMAM      APSAB    APSLAKE      OPBPC      OPRC    OPSLAKE
+APMAM   1.0000000 0.82768637 0.81607595 0.12238567 0.1544155 0.10754212
+APSAB   0.8276864 1.00000000 0.90030474 0.03954211 0.1056396 0.02961175
+APSLAKE 0.8160760 0.90030474 1.00000000 0.09344773 0.1063836 0.10058669
+OPBPC   0.1223857 0.03954211 0.09344773 1.00000000 0.8647073 0.94334741
+OPRC    0.1544155 0.10563959 0.10638359 0.86470733 1.0000000 0.91914467
+OPSLAKE 0.1075421 0.02961175 0.10058669 0.94334741 0.9191447 1.00000000
+BSAAM   0.2385695 0.18329499 0.24934094 0.88574778 0.9196270 0.93843604
+            BSAAM
+APMAM   0.2385695
+APSAB   0.1832950
+APSLAKE 0.2493409
+OPBPC   0.8857478
+OPRC    0.9196270
+OPSLAKE 0.9384360
+BSAAM   1.0000000</code></pre>
+</div>
+</div>
+<p>A multiple regression model was derived to find out the relationship between the annual precipitation of the six sites presented in the problem and the stream runoff volume.</p>
+<p>It was analyzed that 92.5% of the stream runoff volume fluctuation could be explained through the precipitation variation at six sites(R-squared is 0.9248). However, this analysis may overlook the problem of overfitting, an increase in explanatory power due to an increase in the number of variables.</p>
+<p>There are also variables that show a fairly high correlation between the variables included in the model. It should be considered that these variables can also distort the explanatory power of the model.</p>
+<p>In addition, it should be considered that a small number of extreme data can have a distorted effect on the entire data.</p>
+<p>Overall, stream runoff volume can be predicted to some extent using various variables, but the relationship between variables and the existence of extreme values should be considered when creating this prediction model.</p>
+</section>
+<section id="question-4" class="level1">
+<h1>Question 4</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Rateprof"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Rateprof)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  gender numYears numRaters numCourses pepper discipline              dept
+1   male        7        11          5     no        Hum           English
+2   male        6        11          5     no        Hum Religious Studies
+3   male       10        43          2     no        Hum               Art
+4   male       11        24          5     no        Hum           English
+5   male       11        19          7     no        Hum           Spanish
+6   male       10        15          9     no        Hum           Spanish
+   quality helpfulness  clarity easiness raterInterest sdQuality sdHelpfulness
+1 4.636364    4.636364 4.636364 4.818182      3.545455 0.5518564     0.6741999
+2 4.318182    4.545455 4.090909 4.363636      4.000000 0.9020179     0.9341987
+3 4.790698    4.720930 4.860465 4.604651      3.432432 0.4529343     0.6663898
+4 4.250000    4.458333 4.041667 2.791667      3.181818 0.9325048     0.9315329
+5 4.684211    4.684211 4.684211 4.473684      4.214286 0.6500112     0.8200699
+6 4.233333    4.266667 4.200000 4.533333      3.916667 0.8632717     1.0327956
+  sdClarity sdEasiness sdRaterInterest
+1 0.5045250  0.4045199       1.1281521
+2 0.9438798  0.5045250       1.0744356
+3 0.4129681  0.5407021       1.2369438
+4 0.9990938  0.5882300       1.3322506
+5 0.5823927  0.6117753       0.9749613
+6 0.7745967  0.6399405       0.6685579</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Rateprof)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 366  17</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(Rateprof[,<span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(Rateprof[,<span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                quality helpfulness   clarity  easiness raterInterest
+quality       1.0000000   0.9810314 0.9759608 0.5651154     0.4706688
+helpfulness   0.9810314   1.0000000 0.9208070 0.5635184     0.4630321
+clarity       0.9759608   0.9208070 1.0000000 0.5358884     0.4611408
+easiness      0.5651154   0.5635184 0.5358884 1.0000000     0.2052237
+raterInterest 0.4706688   0.4630321 0.4611408 0.2052237     1.0000000</code></pre>
+</div>
+</div>
+<p>First of all, it is easy to see that these three variables(quality, helpfulness, clarity) are highly correlated with each other and show a clear linear relationship.(All correlation coefficient 0.9 or higher)</p>
+<p>Next, in the case of easiness, it shows a some positive correlation with the above three variables(correlation coefficient about 0.5). However, the correlation with the raterInterest appears weaker than them. In other words, it shows a weak positive correlation.</p>
+<p>Finally, the rateInterest has a positive correlation coefficient of about 0.4 with the previous three variables(quality, helpfulness, clarity), and shows a positive correlation coefficient of about 0.2 with easiness.</p>
+<p>In summary, since quality, helpfulness, clarity has a very strong correlation with each other, it is necessary to consider the method of excluding some variables in consideration of the advantages of statistical analysis including these variables.</p>
+</section>
+<section id="question-5" class="level1">
+<h1>Question 5</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(smss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'smss' was built under R version 4.2.3</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(student.survey)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(student.survey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  subj ge ag  hi  co   dh   dr tv sp ne ah    ve pa           pi           re
+1    1  m 32 2.2 3.5    0  5.0  3  5  0  0 FALSE  r conservative   most weeks
+2    2  f 23 2.1 3.5 1200  0.3 15  7  5  6 FALSE  d      liberal occasionally
+3    3  f 27 3.3 3.0 1300  1.5  0  4  3  0 FALSE  d      liberal   most weeks
+4    4  f 35 3.5 3.2 1500  8.0  5  5  6  3 FALSE  i     moderate occasionally
+5    5  m 23 3.1 3.5 1600 10.0  6  6  3  0 FALSE  i very liberal        never
+6    6  m 39 3.5 3.5  350  3.0  4  5  7  0 FALSE  d      liberal occasionally
+     ab    aa    ld
+1 FALSE FALSE FALSE
+2 FALSE FALSE    NA
+3 FALSE FALSE    NA
+4 FALSE FALSE FALSE
+5 FALSE FALSE FALSE
+6 FALSE FALSE    NA</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(student.survey)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 60 18</code></pre>
+</div>
+</div>
+<section id="i-a" class="level2">
+<h2 class="anchored" data-anchor-id="i-a">(i-a)</h2>
+<p>Looking at the data first, it is composed of nominal variables.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(student.survey<span class="sc">$</span>pi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+         very liberal               liberal      slightly liberal 
+                    8                    24                     6 
+             moderate slightly conservative          conservative 
+                   10                     6                     4 
+    very conservative 
+                    2 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(student.survey<span class="sc">$</span>re)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+       never occasionally   most weeks   every week 
+          15           29            7            9 </code></pre>
+</div>
+</div>
+<p>Regression analysis such as logistic regression can also be performed for nominal variables. Here, regression analysis will be performed simply by assigning a number corresponding to each variable value. The level of the variable is a orderal variable, and in the case of religion, the higher the number, the more participation in religious activities, and in the case of political ideology, the higher the number, the more conservative it was.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># transform variables</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>student.survey<span class="sc">$</span>pol_id<span class="ot">&lt;-</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"very liberal"</span>, <span class="dv">1</span>,</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"liberal"</span>, <span class="dv">2</span>,</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"slightly liberal"</span>, <span class="dv">3</span>,</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"moderate"</span>, <span class="dv">4</span>,</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"slightly conservative"</span>, <span class="dv">5</span>,</span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"conservative"</span>, <span class="dv">6</span>, <span class="dv">7</span>))))))</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>student.survey<span class="sc">$</span>rel_fre<span class="ot">&lt;-</span></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(student.survey[,<span class="st">"re"</span>]<span class="sc">==</span><span class="st">"never"</span>,<span class="dv">1</span>,</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ifelse</span>(student.survey[,<span class="st">"re"</span>]<span class="sc">==</span><span class="st">"occasionally"</span>, <span class="dv">2</span>,</span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ifelse</span>(student.survey[,<span class="st">"re"</span>]<span class="sc">==</span><span class="st">"most weeks"</span>, <span class="dv">3</span>, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression model</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>pol_id<span class="sc">~</span>student.survey<span class="sc">$</span>rel_fre))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = student.survey$pol_id ~ student.survey$rel_fre)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.81243 -0.87160  0.09882  1.12840  3.09882 
+
+Coefficients:
+                       Estimate Std. Error t value   Pr(&gt;|t|)    
+(Intercept)              0.9308     0.4252   2.189     0.0327 *  
+student.survey$rel_fre   0.9704     0.1792   5.416 0.00000122 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.345 on 58 degrees of freedom
+Multiple R-squared:  0.3359,    Adjusted R-squared:  0.3244 
+F-statistic: 29.34 on 1 and 58 DF,  p-value: 0.000001221</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(student.survey<span class="sc">$</span>rel_fre, student.survey<span class="sc">$</span>pol_id, <span class="at">xaxt =</span> <span class="st">'n'</span>, <span class="at">yaxt=</span><span class="st">'n'</span>,</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Religiosity"</span>,</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Political Ideology"</span>,</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="at">by =</span> <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"never"</span>, <span class="st">"occasionally"</span>, <span class="st">"most weeks"</span>, <span class="st">"every weeks"</span>))</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">7</span>, <span class="at">by=</span><span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very liberal"</span>, <span class="st">"liberal"</span>, <span class="st">"slightly liberal"</span>, <span class="st">"moderate"</span>, <span class="st">"slightly conservative"</span>, <span class="st">"conservative"</span>, <span class="st">"very conservative"</span>))</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>pol_id<span class="sc">~</span>student.survey<span class="sc">$</span>rel_fre), <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="i-b" class="level2">
+<h2 class="anchored" data-anchor-id="i-b">(i-b)</h2>
+<p>The effect of religiosity on political ideology shows a positive correlation. In other words, the more often you participate in religious activities, the more conservative your political ideology becomes, and the more you do not participate in religious activities, the more liberal your political ideology tends to become.</p>
+</section>
+<section id="ii-a" class="level2">
+<h2 class="anchored" data-anchor-id="ii-a">(ii-a)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression model</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>hi<span class="sc">~</span>student.survey<span class="sc">$</span>tv))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = student.survey$hi ~ student.survey$tv)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.2583 -0.2456  0.0417  0.3368  0.7051 
+
+Coefficients:
+                   Estimate Std. Error t value            Pr(&gt;|t|)    
+(Intercept)        3.441353   0.085345  40.323 &lt;0.0000000000000002 ***
+student.survey$tv -0.018305   0.008658  -2.114              0.0388 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4467 on 58 degrees of freedom
+Multiple R-squared:  0.07156,   Adjusted R-squared:  0.05555 
+F-statistic: 4.471 on 1 and 58 DF,  p-value: 0.03879</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(student.survey<span class="sc">$</span>tv, student.survey<span class="sc">$</span>hi,</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"hours of TV watching"</span>,</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"high school GPA"</span>,</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>hi<span class="sc">~</span>student.survey<span class="sc">$</span>tv), <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW3_young_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ii-b" class="level2">
+<h2 class="anchored" data-anchor-id="ii-b">(ii-b)</h2>
+<p>As shown in the figure, there is a weak negative correlation, However, size of effect is small(R-squared is 0.0715). In this case, there could be a variable that distorts the size or direction of the effect between the variable of watching TV and performance. Therefore, it is necessary to further analyze the relationship with other variables.</p>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb67" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Homework 3"</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Young Soo Choi"</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "hw3"</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "04/11/2023"</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - hw3</span></span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-16"><a href="#cb67-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1</span></span>
+<span id="cb67-17"><a href="#cb67-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-20"><a href="#cb67-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-21"><a href="#cb67-21" aria-hidden="true" tabindex="-1"></a><span class="co"># data loading</span></span>
+<span id="cb67-22"><a href="#cb67-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span>
+<span id="cb67-23"><a href="#cb67-23" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UN11)</span>
+<span id="cb67-24"><a href="#cb67-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-25"><a href="#cb67-25" aria-hidden="true" tabindex="-1"></a><span class="co"># check data</span></span>
+<span id="cb67-26"><a href="#cb67-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(UN11)</span>
+<span id="cb67-27"><a href="#cb67-27" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(UN11)</span>
+<span id="cb67-28"><a href="#cb67-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-29"><a href="#cb67-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-30"><a href="#cb67-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## (a)</span></span>
+<span id="cb67-31"><a href="#cb67-31" aria-hidden="true" tabindex="-1"></a>Through the given problem, it can be seen that the research topic is the effect of ppgdp on the birth rate. In this research topic, the predictor is 'ppgdp' and the response is 'fertility'. </span>
+<span id="cb67-32"><a href="#cb67-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-33"><a href="#cb67-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## (b)</span></span>
+<span id="cb67-34"><a href="#cb67-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-35"><a href="#cb67-35" aria-hidden="true" tabindex="-1"></a>First of all, a regression model between the ppgdp and fertility of countries was derived.</span>
+<span id="cb67-36"><a href="#cb67-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-39"><a href="#cb67-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-40"><a href="#cb67-40" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>ppgdp))</span>
+<span id="cb67-41"><a href="#cb67-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-42"><a href="#cb67-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-43"><a href="#cb67-43" aria-hidden="true" tabindex="-1"></a>A regression model such as Fertility = 3.178-0.00003*ppGDP was derived. In other words, a single unit increase in ppgdp reduces the fertility rate by 0.00003.</span>
+<span id="cb67-44"><a href="#cb67-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-45"><a href="#cb67-45" aria-hidden="true" tabindex="-1"></a>Now, expressing this as a scatterplot is as follows.</span>
+<span id="cb67-46"><a href="#cb67-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-49"><a href="#cb67-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-50"><a href="#cb67-50" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb67-51"><a href="#cb67-51" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">scipen=</span><span class="dv">999</span>)</span>
+<span id="cb67-52"><a href="#cb67-52" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>ppgdp, UN11<span class="sc">$</span>fertility, </span>
+<span id="cb67-53"><a href="#cb67-53" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"ppGDP"</span>,</span>
+<span id="cb67-54"><a href="#cb67-54" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Fertility"</span>,</span>
+<span id="cb67-55"><a href="#cb67-55" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb67-56"><a href="#cb67-56" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>ppgdp), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb67-57"><a href="#cb67-57" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>ppgdp)<span class="sc">+</span><span class="dv">30000</span>, <span class="fu">mean</span>(UN11<span class="sc">$</span>fertility)<span class="sc">+</span><span class="fl">0.5</span>, <span class="st">"Fertility = 3.178-0.00003*ppGDP"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb67-58"><a href="#cb67-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-59"><a href="#cb67-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-60"><a href="#cb67-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-61"><a href="#cb67-61" aria-hidden="true" tabindex="-1"></a>Overall, the regression equation derived earlier seems reasonable at first glance as it shows a downward trend to the right, but it can also be seen that the distribution of ppgdp is quite biased to the right.</span>
+<span id="cb67-62"><a href="#cb67-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-65"><a href="#cb67-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-66"><a href="#cb67-66" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(UN11<span class="sc">$</span>ppgdp)</span>
+<span id="cb67-67"><a href="#cb67-67" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(UN11<span class="sc">$</span>ppgdp)</span>
+<span id="cb67-68"><a href="#cb67-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-69"><a href="#cb67-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-70"><a href="#cb67-70" aria-hidden="true" tabindex="-1"></a>This can also be seen from the comparison of the mean and the median, and the mean of ppgdp is 13011.95 and the median is 4684.5, indicating that the distribution of ppgdp is biased to the right. </span>
+<span id="cb67-71"><a href="#cb67-71" aria-hidden="true" tabindex="-1"></a>Therefore, a simple linear regression model that does not properly convert variables will have many limitations in explaining the variability of fertility.</span>
+<span id="cb67-72"><a href="#cb67-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-73"><a href="#cb67-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## (c)</span></span>
+<span id="cb67-74"><a href="#cb67-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-75"><a href="#cb67-75" aria-hidden="true" tabindex="-1"></a>First, a new objects with a value obtained by logarithms each variable is generated.</span>
+<span id="cb67-76"><a href="#cb67-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-79"><a href="#cb67-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-80"><a href="#cb67-80" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log_ppgdp<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>ppgdp)</span>
+<span id="cb67-81"><a href="#cb67-81" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log_fertility<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>fertility)</span>
+<span id="cb67-82"><a href="#cb67-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-83"><a href="#cb67-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-84"><a href="#cb67-84" aria-hidden="true" tabindex="-1"></a>Using these objects, the regression model was obtained in the same way as the problem (b) and a scatterplot was drawn.</span>
+<span id="cb67-85"><a href="#cb67-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-88"><a href="#cb67-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-89"><a href="#cb67-89" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log_ppgdp))</span>
+<span id="cb67-90"><a href="#cb67-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-91"><a href="#cb67-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-94"><a href="#cb67-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-95"><a href="#cb67-95" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>log_ppgdp, UN11<span class="sc">$</span>log_fertility, </span>
+<span id="cb67-96"><a href="#cb67-96" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Log(ppGDP)"</span>,</span>
+<span id="cb67-97"><a href="#cb67-97" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Log(Fertility)"</span>,</span>
+<span id="cb67-98"><a href="#cb67-98" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"chartreuse4"</span>)</span>
+<span id="cb67-99"><a href="#cb67-99" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log_ppgdp), <span class="at">col=</span><span class="st">"darkgreen"</span>)</span>
+<span id="cb67-100"><a href="#cb67-100" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>log_ppgdp<span class="fl">+1.2</span>), <span class="fu">mean</span>(UN11<span class="sc">$</span>log_fertility<span class="fl">+0.8</span>), <span class="st">"Log(Fertility) = 2.666-0.2072*Log(ppGDP)"</span>, <span class="at">col =</span> <span class="st">"darkgreen"</span>)</span>
+<span id="cb67-101"><a href="#cb67-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-102"><a href="#cb67-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-103"><a href="#cb67-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-104"><a href="#cb67-104" aria-hidden="true" tabindex="-1"></a>A regression line that reflects the data much better than when a regression line was derived without transforming variables was derived.</span>
+<span id="cb67-105"><a href="#cb67-105" aria-hidden="true" tabindex="-1"></a>The R-squared value is also higher than before transform.(0.19 -&gt; 0.53) In other words, the performance of the regression model improved by logarithms each variable.</span>
+<span id="cb67-106"><a href="#cb67-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-109"><a href="#cb67-109" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-110"><a href="#cb67-110" aria-hidden="true" tabindex="-1"></a><span class="co"># change base of logarithms</span></span>
+<span id="cb67-111"><a href="#cb67-111" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log10_ppgdp<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>ppgdp, <span class="at">base=</span><span class="fu">exp</span>(<span class="dv">10</span>))</span>
+<span id="cb67-112"><a href="#cb67-112" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>log10_fertility<span class="ot">&lt;-</span><span class="fu">log</span>(UN11<span class="sc">$</span>fertility, <span class="at">base=</span><span class="fu">exp</span>(<span class="dv">10</span>))</span>
+<span id="cb67-113"><a href="#cb67-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-114"><a href="#cb67-114" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log10_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log10_ppgdp))</span>
+<span id="cb67-115"><a href="#cb67-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-116"><a href="#cb67-116" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>log10_ppgdp, UN11<span class="sc">$</span>log10_fertility, </span>
+<span id="cb67-117"><a href="#cb67-117" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Log10(ppGDP)"</span>,</span>
+<span id="cb67-118"><a href="#cb67-118" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Log10(Fertility)"</span>,</span>
+<span id="cb67-119"><a href="#cb67-119" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"gray"</span>)</span>
+<span id="cb67-120"><a href="#cb67-120" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>log10_fertility<span class="sc">~</span>UN11<span class="sc">$</span>log10_ppgdp), <span class="at">col=</span><span class="st">"black"</span>)</span>
+<span id="cb67-121"><a href="#cb67-121" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>log10_ppgdp), <span class="fu">mean</span>(UN11<span class="sc">$</span>log10_fertility<span class="fl">+0.07</span>), <span class="st">"Log10(Fertility) = 0.2666-0.2072*Log10(ppGDP)"</span>, <span class="at">col =</span> <span class="st">"black"</span>)</span>
+<span id="cb67-122"><a href="#cb67-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-123"><a href="#cb67-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-124"><a href="#cb67-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-125"><a href="#cb67-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-126"><a href="#cb67-126" aria-hidden="true" tabindex="-1"></a>When base of logarithms changed to 10, there are no changes in distribution of data and shape of line. But scales of each axes are changed.</span>
+<span id="cb67-127"><a href="#cb67-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-128"><a href="#cb67-128" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb67-129"><a href="#cb67-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-132"><a href="#cb67-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-133"><a href="#cb67-133" aria-hidden="true" tabindex="-1"></a>UN11<span class="sc">$</span>pound_ppgdp<span class="ot">&lt;-</span>UN11<span class="sc">$</span>ppgdp<span class="sc">/</span><span class="fl">1.33</span></span>
+<span id="cb67-134"><a href="#cb67-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-135"><a href="#cb67-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-136"><a href="#cb67-136" aria-hidden="true" tabindex="-1"></a><span class="fu">## (a)</span></span>
+<span id="cb67-137"><a href="#cb67-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-140"><a href="#cb67-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-141"><a href="#cb67-141" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>pound_ppgdp))</span>
+<span id="cb67-142"><a href="#cb67-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-143"><a href="#cb67-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-146"><a href="#cb67-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-147"><a href="#cb67-147" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(UN11<span class="sc">$</span>pound_ppgdp, UN11<span class="sc">$</span>fertility, </span>
+<span id="cb67-148"><a href="#cb67-148" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"ppGDP(£)"</span>,</span>
+<span id="cb67-149"><a href="#cb67-149" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Fertility"</span>,</span>
+<span id="cb67-150"><a href="#cb67-150" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb67-151"><a href="#cb67-151" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(UN11<span class="sc">$</span>fertility<span class="sc">~</span>UN11<span class="sc">$</span>pound_ppgdp), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb67-152"><a href="#cb67-152" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">mean</span>(UN11<span class="sc">$</span>pound_ppgdp)<span class="sc">+</span><span class="dv">30000</span>, <span class="fu">mean</span>(UN11<span class="sc">$</span>fertility)<span class="sc">+</span><span class="fl">0.5</span>, <span class="st">"Fertility = 3.178-0.00004*ppGDP(£)"</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb67-153"><a href="#cb67-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-154"><a href="#cb67-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-155"><a href="#cb67-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-156"><a href="#cb67-156" aria-hidden="true" tabindex="-1"></a>When dollars are converted into pounds, the slope of the simple regression line changes.(from approx. 0.00003 to approx. 0.00004). But the intercept does not change.</span>
+<span id="cb67-157"><a href="#cb67-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-158"><a href="#cb67-158" aria-hidden="true" tabindex="-1"></a><span class="fu">## (b)</span></span>
+<span id="cb67-159"><a href="#cb67-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-160"><a href="#cb67-160" aria-hidden="true" tabindex="-1"></a>Even if the monetary unit is changed, the r-squared value remains unchanged (equivalent to 0.1936). That is, there is no change in the ratio at which the change in ppgdp explains the change in the facility.</span>
+<span id="cb67-161"><a href="#cb67-161" aria-hidden="true" tabindex="-1"></a>In the problem (a), the change in slope is simply caused by the unit conversion of the x variable. In fact, applying the exchange rate of 1.33, which is the changed slope, shows that it is the same as the slope calculated in dollars.</span>
+<span id="cb67-162"><a href="#cb67-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-165"><a href="#cb67-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-166"><a href="#cb67-166" aria-hidden="true" tabindex="-1"></a><span class="fl">0.000042575</span><span class="sc">/</span><span class="fl">1.33</span></span>
+<span id="cb67-167"><a href="#cb67-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-168"><a href="#cb67-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-169"><a href="#cb67-169" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 3</span></span>
+<span id="cb67-170"><a href="#cb67-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-173"><a href="#cb67-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-174"><a href="#cb67-174" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(water)</span>
+<span id="cb67-175"><a href="#cb67-175" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(water)</span>
+<span id="cb67-176"><a href="#cb67-176" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(water)</span>
+<span id="cb67-177"><a href="#cb67-177" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-180"><a href="#cb67-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-181"><a href="#cb67-181" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(BSAAM<span class="sc">~</span>APMAM<span class="sc">+</span>APSAB<span class="sc">+</span>APSLAKE<span class="sc">+</span>OPBPC<span class="sc">+</span>OPRC<span class="sc">+</span>OPSLAKE,water))</span>
+<span id="cb67-182"><a href="#cb67-182" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(water[,<span class="dv">2</span><span class="sc">:</span><span class="dv">8</span>])</span>
+<span id="cb67-183"><a href="#cb67-183" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(water[,<span class="dv">2</span><span class="sc">:</span><span class="dv">8</span>])</span>
+<span id="cb67-184"><a href="#cb67-184" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-185"><a href="#cb67-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-186"><a href="#cb67-186" aria-hidden="true" tabindex="-1"></a>A multiple regression model was derived to find out the relationship between the annual precipitation of the six sites presented in the problem and the stream runoff volume.</span>
+<span id="cb67-187"><a href="#cb67-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-188"><a href="#cb67-188" aria-hidden="true" tabindex="-1"></a>It was analyzed that 92.5% of the stream runoff volume fluctuation could be explained through the precipitation variation at six sites(R-squared is 0.9248). However, this analysis may overlook the problem of overfitting, an increase in explanatory power due to an increase in the number of variables.</span>
+<span id="cb67-189"><a href="#cb67-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-190"><a href="#cb67-190" aria-hidden="true" tabindex="-1"></a>There are also variables that show a fairly high correlation between the variables included in the model. It should be considered that these variables can also distort the explanatory power of the model.</span>
+<span id="cb67-191"><a href="#cb67-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-192"><a href="#cb67-192" aria-hidden="true" tabindex="-1"></a>In addition, it should be considered that a small number of extreme data can have a distorted effect on the entire data.</span>
+<span id="cb67-193"><a href="#cb67-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-194"><a href="#cb67-194" aria-hidden="true" tabindex="-1"></a>Overall, stream runoff volume can be predicted to some extent using various variables, but the relationship between variables and the existence of extreme values should be considered when creating this prediction model.</span>
+<span id="cb67-195"><a href="#cb67-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-196"><a href="#cb67-196" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 4</span></span>
+<span id="cb67-197"><a href="#cb67-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-200"><a href="#cb67-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-201"><a href="#cb67-201" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Rateprof"</span>)</span>
+<span id="cb67-202"><a href="#cb67-202" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Rateprof)</span>
+<span id="cb67-203"><a href="#cb67-203" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Rateprof)</span>
+<span id="cb67-204"><a href="#cb67-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-205"><a href="#cb67-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-208"><a href="#cb67-208" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-209"><a href="#cb67-209" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(Rateprof[,<span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>])</span>
+<span id="cb67-210"><a href="#cb67-210" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(Rateprof[,<span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>])</span>
+<span id="cb67-211"><a href="#cb67-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-212"><a href="#cb67-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-213"><a href="#cb67-213" aria-hidden="true" tabindex="-1"></a>First of all, it is easy to see that these three variables(quality, helpfulness, clarity) are highly correlated with each other and show a clear linear relationship.(All correlation coefficient 0.9 or higher)</span>
+<span id="cb67-214"><a href="#cb67-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-215"><a href="#cb67-215" aria-hidden="true" tabindex="-1"></a>Next, in the case of easiness, it shows a some positive correlation with the above three variables(correlation coefficient about 0.5). However, the correlation with the raterInterest appears weaker than them. In other words, it shows a weak positive correlation.</span>
+<span id="cb67-216"><a href="#cb67-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-217"><a href="#cb67-217" aria-hidden="true" tabindex="-1"></a>Finally, the rateInterest has a positive correlation coefficient of about 0.4 with the previous three variables(quality, helpfulness, clarity), and shows a positive correlation coefficient of about 0.2 with easiness.</span>
+<span id="cb67-218"><a href="#cb67-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-219"><a href="#cb67-219" aria-hidden="true" tabindex="-1"></a>In summary, since quality, helpfulness, clarity has a very strong correlation with each other, it is necessary to consider the method of excluding some variables in consideration of the advantages of statistical analysis including these variables.</span>
+<span id="cb67-220"><a href="#cb67-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-221"><a href="#cb67-221" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 5</span></span>
+<span id="cb67-222"><a href="#cb67-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-225"><a href="#cb67-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-226"><a href="#cb67-226" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(smss)</span>
+<span id="cb67-227"><a href="#cb67-227" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(student.survey)</span>
+<span id="cb67-228"><a href="#cb67-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-229"><a href="#cb67-229" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(student.survey)</span>
+<span id="cb67-230"><a href="#cb67-230" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(student.survey)</span>
+<span id="cb67-231"><a href="#cb67-231" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-232"><a href="#cb67-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-233"><a href="#cb67-233" aria-hidden="true" tabindex="-1"></a><span class="fu">## (i-a)</span></span>
+<span id="cb67-234"><a href="#cb67-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-235"><a href="#cb67-235" aria-hidden="true" tabindex="-1"></a>Looking at the data first, it is composed of nominal variables.</span>
+<span id="cb67-236"><a href="#cb67-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-239"><a href="#cb67-239" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-240"><a href="#cb67-240" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(student.survey<span class="sc">$</span>pi)</span>
+<span id="cb67-241"><a href="#cb67-241" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(student.survey<span class="sc">$</span>re)</span>
+<span id="cb67-242"><a href="#cb67-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-243"><a href="#cb67-243" aria-hidden="true" tabindex="-1"></a>Regression analysis such as logistic regression can also be performed for nominal variables. Here, regression analysis will be performed simply by assigning a number corresponding to each variable value. The level of the variable is a orderal variable, and in the case of religion, the higher the number, the more participation in religious activities, and in the case of political ideology, the higher the number, the more conservative it was.</span>
+<span id="cb67-244"><a href="#cb67-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-247"><a href="#cb67-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-248"><a href="#cb67-248" aria-hidden="true" tabindex="-1"></a><span class="co"># transform variables</span></span>
+<span id="cb67-249"><a href="#cb67-249" aria-hidden="true" tabindex="-1"></a>student.survey<span class="sc">$</span>pol_id<span class="ot">&lt;-</span></span>
+<span id="cb67-250"><a href="#cb67-250" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"very liberal"</span>, <span class="dv">1</span>,</span>
+<span id="cb67-251"><a href="#cb67-251" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"liberal"</span>, <span class="dv">2</span>,</span>
+<span id="cb67-252"><a href="#cb67-252" aria-hidden="true" tabindex="-1"></a>              <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"slightly liberal"</span>, <span class="dv">3</span>,</span>
+<span id="cb67-253"><a href="#cb67-253" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"moderate"</span>, <span class="dv">4</span>,</span>
+<span id="cb67-254"><a href="#cb67-254" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"slightly conservative"</span>, <span class="dv">5</span>,</span>
+<span id="cb67-255"><a href="#cb67-255" aria-hidden="true" tabindex="-1"></a>                                   <span class="fu">ifelse</span>(student.survey[,<span class="st">"pi"</span>]<span class="sc">==</span><span class="st">"conservative"</span>, <span class="dv">6</span>, <span class="dv">7</span>))))))</span>
+<span id="cb67-256"><a href="#cb67-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-257"><a href="#cb67-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-258"><a href="#cb67-258" aria-hidden="true" tabindex="-1"></a>student.survey<span class="sc">$</span>rel_fre<span class="ot">&lt;-</span></span>
+<span id="cb67-259"><a href="#cb67-259" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(student.survey[,<span class="st">"re"</span>]<span class="sc">==</span><span class="st">"never"</span>,<span class="dv">1</span>,</span>
+<span id="cb67-260"><a href="#cb67-260" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ifelse</span>(student.survey[,<span class="st">"re"</span>]<span class="sc">==</span><span class="st">"occasionally"</span>, <span class="dv">2</span>,</span>
+<span id="cb67-261"><a href="#cb67-261" aria-hidden="true" tabindex="-1"></a>                <span class="fu">ifelse</span>(student.survey[,<span class="st">"re"</span>]<span class="sc">==</span><span class="st">"most weeks"</span>, <span class="dv">3</span>, <span class="dv">4</span>)))</span>
+<span id="cb67-262"><a href="#cb67-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-263"><a href="#cb67-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-266"><a href="#cb67-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-267"><a href="#cb67-267" aria-hidden="true" tabindex="-1"></a><span class="co"># regression model</span></span>
+<span id="cb67-268"><a href="#cb67-268" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>pol_id<span class="sc">~</span>student.survey<span class="sc">$</span>rel_fre))</span>
+<span id="cb67-269"><a href="#cb67-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-270"><a href="#cb67-270" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb67-271"><a href="#cb67-271" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(student.survey<span class="sc">$</span>rel_fre, student.survey<span class="sc">$</span>pol_id, <span class="at">xaxt =</span> <span class="st">'n'</span>, <span class="at">yaxt=</span><span class="st">'n'</span>,</span>
+<span id="cb67-272"><a href="#cb67-272" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Religiosity"</span>,</span>
+<span id="cb67-273"><a href="#cb67-273" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"Political Ideology"</span>,</span>
+<span id="cb67-274"><a href="#cb67-274" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb67-275"><a href="#cb67-275" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="at">by =</span> <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"never"</span>, <span class="st">"occasionally"</span>, <span class="st">"most weeks"</span>, <span class="st">"every weeks"</span>))</span>
+<span id="cb67-276"><a href="#cb67-276" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">7</span>, <span class="at">by=</span><span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"very liberal"</span>, <span class="st">"liberal"</span>, <span class="st">"slightly liberal"</span>, <span class="st">"moderate"</span>, <span class="st">"slightly conservative"</span>, <span class="st">"conservative"</span>, <span class="st">"very conservative"</span>))</span>
+<span id="cb67-277"><a href="#cb67-277" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>pol_id<span class="sc">~</span>student.survey<span class="sc">$</span>rel_fre), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb67-278"><a href="#cb67-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-279"><a href="#cb67-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-280"><a href="#cb67-280" aria-hidden="true" tabindex="-1"></a><span class="fu">## (i-b)</span></span>
+<span id="cb67-281"><a href="#cb67-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-282"><a href="#cb67-282" aria-hidden="true" tabindex="-1"></a>The effect of religiosity on political ideology shows a positive correlation. In other words, the more often you participate in religious activities, the more conservative your political ideology becomes, and the more you do not participate in religious activities, the more liberal your political ideology tends to become.</span>
+<span id="cb67-283"><a href="#cb67-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-284"><a href="#cb67-284" aria-hidden="true" tabindex="-1"></a><span class="fu">## (ii-a)</span></span>
+<span id="cb67-285"><a href="#cb67-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-286"><a href="#cb67-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-287"><a href="#cb67-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-290"><a href="#cb67-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb67-291"><a href="#cb67-291" aria-hidden="true" tabindex="-1"></a><span class="co"># regression model</span></span>
+<span id="cb67-292"><a href="#cb67-292" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>hi<span class="sc">~</span>student.survey<span class="sc">$</span>tv))</span>
+<span id="cb67-293"><a href="#cb67-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-294"><a href="#cb67-294" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb67-295"><a href="#cb67-295" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(student.survey<span class="sc">$</span>tv, student.survey<span class="sc">$</span>hi,</span>
+<span id="cb67-296"><a href="#cb67-296" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"hours of TV watching"</span>,</span>
+<span id="cb67-297"><a href="#cb67-297" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">"high school GPA"</span>,</span>
+<span id="cb67-298"><a href="#cb67-298" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"cornflowerblue"</span>)</span>
+<span id="cb67-299"><a href="#cb67-299" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(student.survey<span class="sc">$</span>hi<span class="sc">~</span>student.survey<span class="sc">$</span>tv), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb67-300"><a href="#cb67-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-301"><a href="#cb67-301" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb67-302"><a href="#cb67-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-303"><a href="#cb67-303" aria-hidden="true" tabindex="-1"></a><span class="fu">## (ii-b)</span></span>
+<span id="cb67-304"><a href="#cb67-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-305"><a href="#cb67-305" aria-hidden="true" tabindex="-1"></a>As shown in the figure, there is a weak negative correlation, However, size of effect is small(R-squared is 0.0715). In this case, there could be a variable that distorts the size or direction of the effect between the variable of watching TV and performance. Therefore, it is necessary to further analyze the relationship with other variables.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
