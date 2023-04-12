@@ -1,0 +1,120 @@
+---
+title: "Homework 3"
+author: "Guanhua Tan"
+description: "Homework 3"
+date: "04/01/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - regression analysis
+---
+
+```{r}
+library(tidyverse)
+library(smss)
+library(alr4)
+data(UN11)
+```
+
+# Question 1
+```{r}
+glimpse(UN11)
+summary(UN11)
+```
+(1) the variable ppgdp is the predictor and the variable fertility is the response.
+
+(2)
+```{r}
+# scatterplot
+ggplot(UN11, aes(x=ppgdp, y=fertility))+
+  geom_point()+
+  geom_smooth(method = 'lm')
+
+```
+When ppgdp is lower than 25000, fertility surges. when ppgdp is greater than 25000, fertility maintains stable. I don't believe a stright-line mean function would be plausible for a summary of this graph.
+
+(3)
+```{r}
+# scatterplot log(data)
+ggplot(UN11, aes(x=log(ppgdp), y=fertility))+
+  geom_point()+
+  geom_smooth(method = 'lm')
+```
+
+Yes, the simple line regression model seem plausible for a summary of this graphic.
+
+# Question 2
+
+```{r}
+ggplot(UN11, aes(x=log(ppgdp), y=fertility))+
+  geom_point()+
+  geom_smooth(method="lm")
+cor(UN11$ppgdp,UN11$fertility)
+```
+
+```{r}
+UN11$income.pound=UN11$ppgdp*1.33
+ggplot(UN11, aes(x=log(income.pound), y=fertility))+
+  geom_point()+
+  geom_smooth(method = 'lm')
+cor.test(UN11$income.pound, UN11$fertility)
+```
+(a) the slopes of the prediction equation maintain the same.
+
+(b) the correlation doesn't change.
+
+# Question 3
+
+```{r}
+data("water")
+summary(water)
+pairs(~APMAM+APSAB+APSLAKE+OPBPC+OPRC+OPSLAKE+BSAAM, data=water)
+```
+The sctterplot martrix clearly demonstrates that there are positive correlations between any two sites.
+
+
+# Question 4
+
+```{r}
+data("Rateprof")
+summary(Rateprof)
+pairs(~quality+helpfulness+clarity+easiness+raterInterest, data=Rateprof)
+```
+The sccatterplot matrix suggests that there are positive correlations between quality and helpfulness, helpfulness and clarity, quality and clarity. It also indicates that there is no strong correlation between the rest of them.
+
+
+
+# Question 5
+
+```{r}
+data("student.survey")
+summary(student.survey)
+
+# (i)
+lm_ideology_religiosity <-lm(as.numeric(pi)~as.numeric(re), data=student.survey)
+summary(lm_ideology_religiosity)
+```
+
+```{r}
+# ii
+lm_hi_tv <- lm(hi~tv, data=student.survey)
+summary(lm_hi_tv)
+```
+
+
+```{r}
+ggplot(student.survey, aes(x=re, fill=pi))+
+  geom_bar(position="fill")
+ggplot(student.survey, aes(x=tv, y=log(hi)))+
+   geom_smooth(method="lm")
+  
+```
+For the first regression analysis, the people who are very conservative come to church every week. By contrast, the people who are liberal or very liberal come to church rarely. It indicates the close relationship between political ideology and religion.
+
+For the second regression analysis, the graphic demonstrates that students who spent more time watching TV achieve lower gpa. In other words, there is a negative association between gpa and hours of watching TV.
+
