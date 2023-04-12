@@ -1,0 +1,227 @@
+---
+title: "603Homework_Saisrinivas_Ambatipudi"
+author: "Saisrinivas Ambatipudi"
+date: "2023-04-12"
+output: html_document
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(stats)
+library(alr4)
+library(smss)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1:
+
+United Nations (Data file: UN11in alr4) The data in the file UN11 contains several variables,
+including ppgdp, the gross national product per person in U.S. dollars, and fertility, the birth
+rate per 1000 females, both from the year 2009. The data are for 199 localities, mostly UN
+member countries, but also other areas such as Hong Kong that are not independent countries.
+The data were collected from the United Nations (2011). We will study the dependence of
+fertility on ppgdp.
+(a) Identify the predictor and the response.
+(b) Draw the scatterplot of fertility on the vertical axis versus ppgdp on the horizontal axis
+and summarize the information in this graph. Does a straight-line mean function seem to
+be plausible for a summary of this graph?
+(c) Draw the scatterplot of log(fertility) versus log(ppgdp) using natural logarithms. Does
+the simple linear regression model seem plausible for a summary of this graph? If you use
+a different base of logarithms, the shape of the graph won’t change, but the values on the
+axes will change.
+
+## Answer:
+
+## (a)
+
+The dependence of fertility is examined in this study. Thus, the predictor (independent variable) is ppgdp (gross national product per person), and the response (dependent variable) is fertility (birth rate per 1000 females).
+
+## (b)
+
+```{r}
+data(UN11)
+UN11
+```
+
+```{r}
+plot(UN11$ppgdp, UN11$fertility,
+     main="Fertility vs PPGDP",
+     xlab="PPGDP (Gross National Product per Person)",
+     ylab="Fertility (Birth Rate per 1000 Females)")
+
+model <- lm(fertility ~ ppgdp, data = UN11)
+
+abline(model, col = "red", lwd = 2)
+```
+The graph first displays a severe negative association between a country's gross national product per person and fertility rate, but after this point, there appears to be no change in fertility in relation to ppgdp. A straight-line mean function does not appear to be an adequate metric for this graph's summary.
+
+## (c)
+
+```{r}
+plot(log(UN11$ppgdp), log(UN11$fertility),
+     main="Log(Fertility) vs Log(PPGDP)",
+     xlab="Log(PPGDP)",
+     ylab="Log(Fertility)")
+
+model <- lm(log(fertility) ~ log(ppgdp), data = UN11)
+
+abline(model, col = "red", lwd = 2)
+```
+Throughout the graph, the connection between the variables appears to be negative. For a description of this graph, basic linear regression is feasible.
+
+## Question 2:
+
+Annual income, in dollars, is an explanatory variable in a regression analysis. For a British
+version of the report on the analysis, all responses are converted to British pounds sterling (1 pound
+equals about 1.33 dollars, as of 2016).
+
+(a) How, if at all, does the slope of the prediction equation change?
+(b) How, if at all, does the correlation change?
+
+## Answer:
+
+## (a)
+
+```{r}
+UN11$british <- 1.33 * UN11$ppgdp
+summary(lm(fertility ~ british, UN11))
+summary(lm(fertility ~ ppgdp, UN11))
+```
+The slope of the prediction equation will change when income is converted from dollars to pounds sterling. Since 1 pound equals about 133. dollars (as of 2016), to convert the annual income to pounds, you will need to divide the annual income in dollars by 133. The slope of the equation in pounds will be the same as the original slope in dollars. The magnitude of the slope changes due to the change in units, but the relationship between the variables remains the same.
+
+## (b)
+
+```{r}
+cor(UN11$ppgdp, UN11$fertility)
+cor(UN11$british, UN11$fertility)
+```
+When converting from dollars to pounds sterling, the correlation between variables will not change. The correlation coefficients are only a measure of the relative relationship between the two variables, not the units they are measured in. The correlation coefficients of the variables remain the same since the conversion from dollars to pounds only involves a linear transformation.
+
+
+## Question 3:
+
+Water runoff in the Sierras (Data file: water in alr4) Can Southern California’s water
+supply in future years be predicted from past data? One factor affecting water availability is stream
+runoff. If runoff could be predicted, engineers, planners, and policy makers could do their jobs
+more efficiently. The data file contains 43 years’ worth of precipitation measurements taken at six
+sites in the Sierra Nevada mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and
+OPSLAKE) and stream runoff volume at a site near Bishop, California, labeled BSAAM. Draw
+the scatterplot matrix for these data and summarize the information available from these
+plots. (Hint: Use the pairs() function.)
+
+## Answer:
+
+```{r}
+data(water)
+water
+```
+
+
+```{r}
+pairs(water)
+```
+According to the above figure, the stream run-off variable has a link with the 'O' named lakes but no significant association with the 'A named lakes.
+
+## Question 4:
+
+Professor ratings (Data file: Rateprof in alr4) In the website and online forum
+RateMyProfessors.com, students rate and comment on their instructors. Launched in 1999, the site
+includes millions of ratings on thousands of instructors. The data file includes the summaries of
+the ratings of 364 instructors at a large campus in the Midwest (Bleske-Rechek and Fritsch, 2011).
+Each instructor included in the data had at least 10 ratings over a several year period. Students
+provided ratings of 1–5 on quality, helpfulness, clarity, easiness of instructor’s courses, and
+raterInterest in the subject matter covered in the instructor’s courses. The data file provides the
+averages of these five ratings. Create a scatterplot matrix of these five variables. Provide a
+brief description of the relationships between the five ratings.
+
+## Answer:
+
+```{r}
+data(Rateprof)
+Rateprof
+```
+
+```{r}
+selected_data <- Rateprof[, c("quality", "helpfulness", "clarity", "easiness", "raterInterest")]
+pairs(selected_data)
+```
+According to the scatter plot matrix of average professor evaluations for the themes of quality, clarity, helpfulness, easiness, and rater interest, the variables quality, clarity, and helpfulness appear to have substantial positive connections. Helpfulness, clarity, and quality appear to have a significantly less positive link with variable ease. Rater interest does not appear to be related to any of the other factors. As a result, we may conclude that Quality, helpfulness, and clarity have the most obvious linear links with one another, although Easiness and raterInterest do not appear to have linear ties with the other factors.
+
+
+## Question 5:
+
+For the student.survey data file in the smss package, conduct regression analyses relating
+(by convention, y denotes the outcome variable, x denotes the explanatory variable)
+(i) y = political ideology and x = religiosity,
+(ii) y = high school GPA and x = hours of TV watching.
+(You can use ?student.survey in the R console, after loading the package, to see what each variable
+means.)
+(a) Graphically portray how the explanatory variable relates to the outcome variable in
+each of the two cases
+(b) Summarize and interpret results of inferential analyses.
+
+## Answer:
+
+```{r}
+data(student.survey)
+student.survey
+```
+## (i)
+```{r}
+## plot(student.survey$re, student.survey$pi, main="Political Ideology vs Religiosity", xlab="Religiosity", ylab="Political Ideology")
+
+student.survey %>%
+  select(c(pi, re)) %>%
+  ggplot() + 
+  geom_bar(aes(x = re, fill = as.factor(pi)), position = "dodge") +
+  xlab("Religiosity") +
+  ylab("Political Ideology") +
+  scale_fill_manual(values = c("#FF0000", "#FF8000", "#FFFF00", "#80FF00", "#00FF00", "#00FF80", "#00FFFF", "#0080FF", "#0000FF", "#8000FF", "#FF00FF", "#FF0080")) +
+  labs(fill = "Political Ideology")
+
+
+
+```
+
+Religiosity and political ideology seem to have a positive relationship.
+
+## (ii)
+```{r}
+student.survey %>%
+  select(tv, hi) %>%
+  ggplot(aes(x = tv, y = hi)) +
+  geom_point(color = "steelblue", alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "red", linetype = "solid", size = 1) +
+  labs(title = "High School GPA vs Hours of TV Watching",
+       x = "Hours of TV Watching",
+       y = "High School GPA") +
+  theme_minimal() +
+  theme(panel.grid.major = element_line(color = "gray", linetype = "dotted"))
+
+
+```
+
+High school GPA and TV-watching appear to have a negative relationship.
+
+## (a)
+
+```{r}
+model1 <- lm(as.numeric(pi) ~ as.numeric(re), data=student.survey)
+summary(model1)
+```
+There is a statistically significant link between religion and political ideology at a significance level of 0.01. The association is modest and positive, implying that as weekly church attendance grows, political ideology shifts toward the right.
+
+## (b)
+
+```{r}
+model2 <- lm(as.numeric(hi) ~ as.numeric(tv), data=student.survey)
+summary(model2)
+
+```
+
+There is a negative relationship between weekly TV viewing hours and high school GPA, with a slope of -0.018, indicating that as weekly TV viewing hours increase, a student's GPA tends to fall. At a significance threshold of 0.05, there is a statistically significant association between weekly television viewing and GPA. The R-squared value, however, is close to zero, indicating that the regression model does not make a strong forecast for the observed variables. This is not surprising given that there does not appear to be a linear trend in the data when looking at the scatter plot with hours of television viewed and GPA.
