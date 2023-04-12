@@ -1,0 +1,204 @@
+---
+title: "Homework 3"
+author: "Christine Brydges"
+description: "Homework 3"
+date: "04/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+    categories:
+         - hw3
+         - christinebrydges
+         - scatterplot
+         - linearregression
+         - scatterplotmatrix
+---
+
+# Libraries
+
+```{r, echo=T, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(alr4)
+library(smss)
+
+```
+
+# Question 1
+
+United Nations (Data file: UN11in alr4) The data in the file UN11 contains several variables, including ppgdp, the gross national product per person in U.S. dollars, and fertility, the birth rate per 1000 females, both from the year 2009.
+
+The data are for 199 localities, mostly UN member countries, but also other areas such as Hong Kong that are not independent countries.
+
+The data were collected from the United Nations (2011). We will study the dependence of fertility on ppgdp.
+
+## a
+```{r}
+data(UN11)
+glimpse(UN11)
+```
+
+
+**Ppgdp** is the *predictor variable* and **Fertility** is the *response variable.*
+
+## b
+Draw the scatterplot of fertility on the vertical axis versus ppgdp on the horizontal axis and summarize the information in this graph. Does a straight-line mean function seem to be plausible for a summary of this graph?
+
+
+```{r, echo=T}
+ggplot(UN11, aes(ppgdp,fertility)) + 
+  geom_point() +
+labs(title = "The relationship between fertility and ppgpd", x = "Per capita gross domestic product (ppgpd) in US dollars", y = "Birth rate per 1000 females")
+
+```
+A straight-line mean function does not seem plausible as a summary for this graph because the data is significantly skewed right. Typically, with data that is significantly skewed we need to use a log-log model. 
+
+## c
+
+```{r, echo=T}
+ggplot(UN11, aes(log(ppgdp),log(fertility))) + 
+  geom_point() +
+labs(title = "The relationship between fertility and ppgpd", x = "Per capita gross domestic product (ppgpd) in US dollars", y = "Birth rate per 1000 females")
+
+```
+Now that we've taken the logs of both x and y, it does seem plausible that a simple regression model could be used on this graph, as it is evenly distributed across a linear formation, rather than skewed as it was before. 
+
+# Question 2
+
+Annual income, in dollars, is an explanatory variable in a regression analysis. For a British version of the report on the analysis, all responses are converted to British pounds sterling (1 pound equals about 1.33 dollars, as of 2016).
+
+## a 
+
+If units of measurement change for the explanatory variable, the slope of the equation will go from 1 to 1/1.33 (0.75) (because 1 dollar = 1. degrees Fahrenheit). The intercept would also change
+
+
+## b
+
+The correlation will not change because correlation will be preserved as long as the explanatory variable of one unit and the explanatory variable of another unit are equal to one another.
+
+# Question 3
+
+Water runoff in the Sierras (Data file: water in alr4) Can Southern California’s water supply in future years be predicted from past data? One factor affecting water availability is stream runoff. If runoff could be predicted, engineers, planners, and policy makers could do their jobs
+more efficiently. The data file contains 43 years’ worth of precipitation measurements taken at six sites in the Sierra Nevada mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and OPSLAKE) and stream runoff volume at a site near Bishop, California, labeled BSAAM. Draw the scatterplot matrix for these data and summarize the information available from these
+plots. (Hint: Use the pairs() function.)
+
+```{r, echo=T}
+
+pairs(water)
+
+```
+
+The sites that correlate the most with BSAAM are PSLAK, OPRC, and OPBPC, as can be seen with all of the points falling close to the line, showing a strong positive relationship to BSAAM.
+
+The APMAM, APSAB, and APSLAKE sites do not appear to have a strong relationship with BSAAM, as shown by scatterplots which are quite scattered and do not reveal a linear relationship.
+
+# Question 4
+
+Professor ratings (Data file: Rateprof in alr4) In the website and online forum RateMyProfessors.com, students rate and comment on their instructors. Launched in 1999, the site
+includes millions of ratings on thousands of instructors. The data file includes the summaries of the ratings of 364 instructors at a large campus in the Midwest (Bleske-Rechek and Fritsch, 2011). Each instructor included in the data had at least 10 ratings over a several year period. Students
+provided ratings of 1–5 on quality, helpfulness, clarity, easiness of instructor’s courses, and raterInterest in the subject matter covered in the instructor’s courses. The data file provides the averages of these five ratings. Create a scatterplot matrix of these five variables. Provide a
+brief description of the relationships between the five ratings.
+
+```{r, echo=T}
+
+Rateprofscatter <- Rateprof %>% 
+  select(c(quality, helpfulness, clarity, easiness, raterInterest))
+
+pairs(Rateprofscatter)
+
+```
+
+The above scatterplot matrix shows:
+- A strong positive relationship between quality, helpfulness, and clarity 
+- A weak positive relationship between easiness, quality, helpfulness, and clarity 
+- No obvious relationship between raterInterest and the other variables
+
+# Question 5
+
+For the student.survey data file in the smss package, conduct regression analyses relating
+(by convention, y denotes the outcome variable, x denotes the explanatory variable)
+(i) y = political ideology and x = religiosity,
+(ii) y = high school GPA and x = hours of TV watching.
+(You can use ?student.survey in the R console, after loading the package, to see what each variable
+means.)
+
+## 1
+
+Graphically portray how the explanatory variable relates to the outcome variable in each of the two cases
+
+```{r}
+data("student.survey")
+glimpse(student.survey)
+
+```
+
+First, we will graph the relationship between religiosity (re) (the explanatory variable) and political ideology (pi) (the outcome variable).
+
+```{r, echo=T}
+
+data("student.survey")
+glimpse(student.survey)
+
+ggplot(student.survey, aes(re,pi)) + 
+  geom_jitter() +
+labs(title = "The relationship between political ideology and religiosity",
+     x = "religiosity",
+     y = "political ideology") 
+
+```
+
+
+There is a weak positive correlation between how often someone attends religious services and how conservative they are.
+
+```{r}
+#Convert ordinal to numeric data for 
+student.survey.num <- student.survey %>% 
+  mutate("pi" = case_when(
+    pi == "very liberal" ~ 1, 
+    pi == "liberal" ~ 2,
+    pi == "slightly liberal" ~ 3,
+    pi == "moderate" ~ 4,
+    pi == "slightly conservative" ~ 5,
+    pi == "conservative" ~ 6, 
+    pi == "very conservative" ~ 7)) %>% 
+  mutate("re" = case_when(
+    re == "never" ~ 1,
+    re == "occasionally" ~ 2, 
+    re == "most weeks" ~ 3,
+    re == "every week" ~ 4))
+
+reg1 <- lm(pi ~ re, data = student.survey.num)
+summary(reg1)
+```
+The regression indicates that there is a significant and positive  relationship between religiosity and political ideology (p-value =  1.22e-06), with people who report being more conservative being more likely to attend religious services often. The R-squared in this model is high (0.33), meaning the model is a pretty good fit for the relationship.
+
+
+##2
+Next, we will graph the relationship between hours of TV watched (tv) (the explanatory variable) and high school GPA (hi) (the outcome variable).
+```{r}
+data("student.survey")
+glimpse(student.survey)
+```
+
+
+```{r}
+ggplot(student.survey, aes(tv,hi)) + 
+  geom_jitter() +
+labs( title = "The relationship between high school GPA and hour of TV watched",
+      x = "Average hrs of TV per week",
+      y = "High school GPA")
+
+```
+
+There does not appear to be a significant relationship between high school GPA and average hrs of TV per week, with a lot of the data skewed right.
+
+```{r}
+ summary(lm(hi~tv, data = student.survey))
+
+```
+This regression indicates that there is a significant and negative  relationship between hour of TV watched and a high GPA (p-value =  0.04), with people who watch TV having a lower GPA. However, the R-squared for this relationship is just 0.07, indicating that it is a poor fit for this relationship.
+
+
