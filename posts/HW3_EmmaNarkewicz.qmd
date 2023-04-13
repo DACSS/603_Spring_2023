@@ -1,0 +1,294 @@
+---
+title: "Homework 3"
+author: "Emma Narkewicz"
+description: "linear regression" 
+date: "04/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - scatterplot
+  - linear_regression
+  - emma_narkewicz
+---
+
+# Question 1
+
+United Nations (Data file: UN11in alr4) The data in the file UN11 contains several variables,
+including ppgdp, the gross national product per person in U.S. dollars, and fertility, the birth
+rate per 1000 females, both from the year 2009. The data are for 199 localities, mostly UN
+member countries, but also other areas such as Hong Kong that are not independent countries.
+The data were collected from the United Nations (2011). We will study the dependence of
+fertility on ppgdp.
+
+
+## a)
+ Identify the predictor and the response.
+ 
+If we are studying the dependence of fertility on ppgdp (gross national product per person) then:
+ 
+ Predictor = ppgdp
+ 
+ Response = fertility
+ 
+ 
+ 
+```{r}
+#load necessary packages
+library(tidyverse)
+library(alr4)
+library(smss)
+
+```
+ 
+ 
+(b) Draw the scatterplot of fertility on the vertical axis versus ppgdp on the horizontal axis
+and summarize the information in this graph. Does a straight-line mean function seem to
+be plausible for a summary of this graph?
+
+```{r}
+#linear graph
+
+library(alr4)
+
+ggplot(data = UN11, aes(x=ppgdp, y=fertility)) +   geom_point() +  geom_smooth(method = 'lm', se=F) + labs(title = "Scatterplot of Fertility vs. GDP per person (ppgdp)" )
+
+
+```
+
+The above scatter plot of fertility vs. GDP per person (ppgdp) shows that the relationship between the two variables is not linear, but instead a curvilinear relationship. Therefore a straight-line mean function does not seems plausible. Fertility steeply drops as the ppdgp first increases but then levels out. Most of the data is concentrated around the left side of the x-axis with lower ppgdp
+
+## c 
+
+
+(c) Draw the scatterplot of log(fertility) versus log(ppgdp) using natural logarithms. Does
+the simple linear regression model seem plausible for a summary of this graph? 
+
+```{r}
+#logarithmic graph
+ggplot(data = UN11, aes(x=log(ppgdp), y=log(fertility))) +   geom_point() +  geom_smooth(method = 'lm', se=F) + labs(title = "Scatterplot of Log of Fertility vs. Log of GDP per person (ppgdp)")  
+
+```
+A linear regression model of the natural logs of fertility vs. per person GDP (ppgdp) is a much better model of the relationship between the two variables than the prior model. As the log(ppgdp) increases, the log(fertility) decreases consistently. The data points are distributed consistently below and above the trendline. 
+
+
+```{r}
+## mathematical correlation test
+
+cor_lin <- cor.test(UN11$fertility, UN11$ppgdp)
+cor_log <- cor.test(log(UN11$fertility), log(UN11$ppgdp))
+cor_lin
+cor_log
+
+```
+
+Not only can that be seen visually in the scatter-plot above, but from the measure of Pearson's correlation. The Pearson's r correlation coefficient for for the linear regression model taking the natural logs of both variables (-.724) is a stronger correlation than for the linear regression model of the original data is (-0.440).
+
+# Question 2
+
+2. Annual income, in dollars, is an explanatory variable in a regression analysis. For a British
+version of the report on the analysis, all responses are converted to British pounds sterling (1 pound
+equals about 1.33 dollars, as of 2016).
+
+
+##a 
+
+How, if at all, does the slope of the prediction equation change?
+
+
+slope = (y2-y1)/(x2-x1)
+
+```{r}
+#slope hypothetical annual income dollars & pounds 
+annualincome_dollars = c(1, 2)
+annualincome_pounds = 1.33 * (annualincome_dollars)
+y = c(1,2)
+
+slope_dollars =  (2-1)/(2-1) 
+slope_dollars
+
+slope_pounds = (2-1)/(2.66 - 1.33)
+slope_pounds
+
+```
+
+Converting income in dollars to income in pounds in an analysis where income is the explanatory variable (y) would result in a less steep slope after the conversion.
+
+
+## b 
+
+How, if at all, does the correlation change?
+
+The correlation would not change after converting the units of income from dollars to British pounds. We learned in class that correlation is a standardized version of the slope, with its value not depending on units.
+
+
+# Question 3
+
+3. Water runoff in the Sierras (Data file: water in alr4) Can Southern California’s water
+supply in future years be predicted from past data? One factor affecting water availability is stream
+runoff. If runoff could be predicted, engineers, planners, and policy makers could do their jobs more efficiently. The data file contains 43 years’ worth of precipitation measurements taken at six
+sites in the Sierra Nevada mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and
+OPSLAKE) and stream runoff volume at a site near Bishop, California, labeled BSAAM. Draw
+the scatterplot matrix for these data and summarize the information available from these
+plots. (Hint: Use the pairs() function.)
+
+
+```{r}
+#create scatterplot matrix precipitation 
+head(water)
+pairs(water)
+```
+
+As shown in the scatter plot matrix above, the precipitation at APMAM, APSAB, & APSLAKE do not appear to be strongly correlated with run off in BSAAM, whereas the precipitation measured at OPBPC, OPRC, & OPSLAKE do appear to be more strongly & positively correlated with the run-off measured at BSAAM. The top left year variable does not appear to be correlated with any precipitation or runoff levels.
+
+Looking at the correlation between lake precipitation, the precipitation of the 3 lakes beginning with "AP" appear to be strongly positively correlated with one another. The precipitation level of the 3 lakes beginning with "OP" are also strongly positively correlated with one another. 
+
+From the scatter plot matrix above, the precipitation at the OPBC, OPRC, and OPSLAKE seem to be the best predictors (explanatory variables) for the runoff level at BSAAM.
+
+
+To test this, I created a linear regression model with all the lakes as the explanatory variable for runoff at BSAAM. The model with all lake participation as explanatory variables had a strong adjusted R-squared value of 0.9123, with the explanatory variables of OPRC & OPSLAKE both being statistically significant at the 0.05 level.
+
+
+```{r}
+#linear regression all lake precipitation
+water1 <-lm(BSAAM ~ APMAM + APSAB + APSLAKE + OPBPC + OPRC + OPSLAKE, data = water)
+summary(water1)
+```
+
+Running the linear regression with just the OP lakes as explanatory variables gave an adjusted R squared of 0.8941, suggesting the majority of the variation in BSAAM run off is indeed explained by the precipation at the OP lakes.
+
+```{r}
+#linear model of just OP lakes
+
+water2 <-lm(BSAAM ~  OPBPC + OPRC + OPSLAKE, data = water)
+summary(water2)
+```
+
+
+# Question 4
+
+4. Professor ratings (Data file: Rateprof in alr4) In the website and online forum
+RateMyProfessors.com, students rate and comment on their instructors. Launched in 1999, the site
+includes millions of ratings on thousands of instructors. The data file includes the summaries of
+the ratings of 364 instructors at a large campus in the Midwest (Bleske-Rechek and Fritsch, 2011).
+Each instructor included in the data had at least 10 ratings over a several year period. Students
+provided ratings of 1–5 on quality, helpfulness, clarity, easiness of instructor’s courses, and
+raterInterest in the subject matter covered in the instructor’s courses. The data file provides the
+averages of these five ratings. Create a scatterplot matrix of these five variables. Provide a
+brief description of the relationships between the five ratings.
+
+
+```{r}
+#RateMyProfessor
+head(Rateprof)
+
+Rateprof2 <- Rateprof %>%
+  select(c(quality, clarity, helpfulness, easiness, raterInterest))  
+
+pairs(Rateprof2)
+            
+```
+From the scatter plot matrix, it is shown there seems to be a strong positive correlation between an instructor's quality and clarity and  quality and helpfulness. The correlation between an instructor's clarity and helpfulness also appears relatively strong & positive. Easiness and raterInterest have a much weaker correlation with any other variables.
+
+
+# Question 5
+
+5. For the student.survey data file in the smss package, conduct regression analyses relating
+(by convention, y denotes the outcome variable, x denotes the explanatory variable)
+
+## a 
+Graphically portray how the explanatory variable relates to the outcome variable in
+each of the two cases
+
+
+```{r}
+#load & preview data
+library(smss)
+data("student.survey")
+head(student.survey)
+summary(student.survey)
+##?student.survey
+
+```
+
+(i) y = political ideology and x = religiosity,
+
+
+Political ideology and religiosity are currently coded as ordinal variables.
+
+There are 7 levels of political idealogy:
+ - very liberal    
+ - liberal 
+ - slightly liberal
+ - moderate
+ - slightly conservative
+ - conservative
+ - very conservative
+ 
+ There are 4 levels of religiosity:
+ - never
+ - occasionally
+ - most weeks
+ - every week
+
+```{r}
+#Scatterplot Religiousity vs. Political Ideology
+ggplot(data = student.survey, aes(x = re , y = pi)) +   geom_smooth(method = 'lm', se=F) +  geom_point() + labs(title = "Scatterplot: Religiousity vs. Political Ideology", x = "Religiousity", y = "Political Ideology")
+
+```
+From the scatter-plot there appears to be a fairly strong positive correlation between religiosity and political ideology, with the more often someone attends religious services the more conservative their political ideology. A scatter plot model suggests that both ordinal scales have a fixed distance between responses, which is not correct for either variable. 
+
+To supplement the scatter plot I also created a bar graph to 
+
+
+
+```{r}
+#Bargraph pi vs re
+
+ggplot(data = student.survey, aes(x = re, fill = pi)) + geom_bar(position = "fill") + labs(title = "Bar Graph: Religiousity vs. Political Ideology", x = "Religiousity", y = "Political Ideology")
+```
+ 
+ The bar graph shows a high concentration of people who never or occasionally attend religious services were mostly liberal (indigo-purple), whereas people who report attending religious services most weeks were more conservative (green). People who reported attending religious services every week had mostly conservative (green) and very conservative (yellow) political idealogies.
+ 
+
+  
+ (ii) y = high school GPA and x = hours of TV watching.
+
+
+```{r}
+#scatterplot hi vs. tv
+ggplot(data = df, aes(x = tv , y = hi)) +   geom_point() +  geom_smooth(method = 'lm', se=F) + labs(title = "Scatterplot Highschool GPA vs. Hours of tv watched", x = "TV(avg hours per week)", y = "High School GPA")
+```
+A scatter plot works well for modeling two numeric variables, high school GPA & avg hours of tv watched per week. Looking at the data fitted with a trend line association between most  data points are above of below the trend line and in the upper left corner of the scatter plot, suggesting most students watch been 0-10 hours of TV have a GPA of 3.0 or above. 
+
+It does not look like from the scatter plot there is an association between these variables. The trend line suggests if there is a correlation between the variables, it is  negative in nature, with more hours of TV correlating with lower high school GPA. This will be investigated further in part b.
+
+
+## b Summarize and interpret results of inferential analyses.
+
+
+(i) y = political ideology and x = religiosity,
+
+In order to create a linear regression model, both ordinal variables needed to be converted to numeric type. The resulting model suggests 
+
+```{r}
+#Linear regression of pi & re
+lm_pi <-lm(as.numeric(pi) ~ as.numeric(re) , data = student.survey)
+summary(lm_pi) 
+```
+The linear regression model has a positive coefficient of 0.97, suggesting for "one unit" increase in religiosity there is nearly a "one unit" increase in political ideology. One unit is in quotes because these variables are ordinal and there isn't actually fixed distance in units between them. Nonetheless, there is a positive, statistically significant correlation (p value < 0.001). The adjusted R-squared value is 0.3244 which is weak-moderate suggests there is a correlation between the two variables
+
+(ii) y = high school GPA and x = hours of TV watching.
+,
+```{r}
+#linear regression model gpa vs tv
+lm_gpa <-lm(hi ~ tv , data = student.survey) 
+summary(lm_gpa)
+
+```
+The linear regression shows a negative correlation between hours of tv watched and high school GPA that is statistically significant at the 0.05 level (p = 0.0388), with ever hour of tv watched a week resulting in a 0.018 reduction in high school GPA. Looking at the adjusted R-squared of 0.05555 is extremely low, suggesting that there is not strong association between the 2 variables. A linear model does not appear to be a good fit for this data.
+
