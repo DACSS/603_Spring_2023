@@ -1,0 +1,212 @@
+---
+title: "Homework 3"
+author: "Caitlin Rowley"
+description: "Homework 3"
+date: "04/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - desriptive statistics 
+  - probability
+---
+
+```{r}
+# load libraries
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(markdown)
+library(ggtext)
+library(readxl)
+```
+
+### Question 1
+
+| United Nations (Data file: UN11in alr4) The data in the file UN11 contains several variables,
+| including ppgdp, the gross national product per person in U.S. dollars, and fertility, the birth
+| rate per 1000 females, both from the year 2009. The data are for 199 localities, mostly UN
+| member countries, but also other areas such as Hong Kong that are not independent countries.
+| The data were collected from the United Nations (2011). We will study the dependence of
+| fertility on ppgdp.
+| (a) Identify the predictor and the response.
+| (b) Draw the scatterplot of fertility on the vertical axis versus ppgdp on the horizontal axis
+| and summarize the information in this graph. Does a straight-line mean function seem to
+| be plausible for a summary of this graph?
+| (c) Draw the scatterplot of log(fertility) versus log(ppgdp) using natural logarithms. Does
+| the simple linear regression model seem plausible for a summary of this graph? If you use
+| a different base of logarithms, the shape of the graph won't change, but the values on the
+| axes will change.
+
+```{r}
+# read in data:
+
+UN11 <- readRDS(url('https://github.com/omerfyalcin/colab-data/blob/main/UN.rds?raw=true'))
+head(UN11)
+```
+
+#### A)
+
+In studying the dependence of fertility on GDP, fertility is the predictor and GDP is the response.
+
+#### B)
+
+```{r}
+# generate scatterplot:
+
+scatter_1 <- ggplot(UN11, aes(x=ppgdp, y=fertility)) + 
+  geom_point( color="black")
+scatter_1
+ 
+# with linear trend
+scatter_2 <- ggplot(UN11, aes(x=ppgdp, y=fertility)) +
+  geom_point() +
+  geom_smooth(method=lm, se=TRUE)
+scatter_2
+```
+
+In viewing this scatterplot, we can see that higher rates of birth correlates with lower per-person GPD. A straight-line mean function does not seem plausible for this graph, as the line extends far beyond the range of data points.
+
+#### C)
+
+```{r}
+# generate scatterplot using natural logarithms:
+
+scatter_3 <- ggplot(UN11, aes(x=log(ppgdp), y=log(fertility))) +
+  geom_point() +
+  geom_smooth(method=lm, se=TRUE)
+scatter_3
+```
+
+Using natural logarithms, we see a much more plausible summary for this graph.
+
+### Question 2
+
+| Annual income, in dollars, is an explanatory variable in a regression analysis. For a British
+| version of the report on the analysis, all responses are converted to British pounds sterling (1 pound
+| equals about 1.33 dollars, as of 2016).
+| (a) How, if at all, does the slope of the prediction equation change?
+| (b) How, if at all, does the correlation change?
+
+#### A)
+
+The slope of the prediction will need to be divided by 1.33 to account for the conversion to British pounds.
+
+#### B)
+
+The correlation will not change.
+
+### Question 3
+
+| Water runoff in the Sierras (Data file: water in alr4) Can Southern California's water
+| supply in future years be predicted from past data? One factor affecting water availability is stream
+| runoff. If runoff could be predicted, engineers, planners, and policy makers could do their jobs
+| more efficiently. The data file contains 43 years' worth of precipitation measurements taken at six
+| sites in the Sierra Nevada mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and
+| OPSLAKE) and stream runoff volume at a site near Bishop, California, labeled BSAAM. Draw
+| the scatterplot matrix for these data and summarize the information available from these
+| plots. (Hint: Use the pairs() function.)
+
+```{r}
+library(alr4)
+head(water)
+```
+
+```{r}
+pairs(water)
+```
+
+Based on the scatterplot matrix, stream runoff near Bishop, California appears to be correlated with precipitation at "O" sites, but not with "A" sites or year.
+
+### Question 4
+
+| Professor ratings (Data file: Rateprof in alr4) In the website and online forum
+| RateMyProfessors.com, students rate and comment on their instructors. Launched in 1999, the site
+| includes millions of ratings on thousands of instructors. The data file includes the summaries of
+| the ratings of 364 instructors at a large campus in the Midwest (Bleske-Rechek and Fritsch, 2011).
+| Each instructor included in the data had at least 10 ratings over a several year period. Students
+| provided ratings of 1--5 on quality, helpfulness, clarity, easiness of instructor's courses, and
+| raterInterest in the subject matter covered in the instructor's courses. The data file provides the
+| averages of these five ratings. Create a scatterplot matrix of these five variables. Provide a
+| brief description of the relationships between the five ratings.
+
+```{r}
+head(Rateprof)
+```
+
+```{r}
+pairs(Rateprof[,8:12])
+```
+
+**Quality**: Based on the scatterplot matrix, we can see that there is a positive correlation between quality and helpfulness, as well as between quality and clarity (though we see one outlier in this data set that represents a comparitively higher rate of clarity linked with a lower rate of quality). There is a slightly positive correlation between quality and easiness, but no definitive correlation between quality and rater interest.
+
+**Helpfulness**: Based on the scatterplot matrix, we see (as mentioned) a positive correlation between helpfulness and quality, as well as between helpfulness and clarity (though the spread of data points is slightly larger). Similar to quality, there is a slightly positive correlation between helpfulness and easiness, but no definitive correlation between helpfulness and rater interest.
+
+**Clarity**: Based on the scatterplot, we see (as mentioned) a positive correlation between clarity and quality, as well as between clarity and helpfulness (though the spread of data points is slightly larger). Similarly to quality and helpfulness, there is no definitive correlation between clarity and easiness or clarity and rater interest.
+
+**Easiness**: There are slightly positive correlations between easiness and quality, easiness and helpfulness, and easiness and clarity. There is no definitive correlation between easiness and rater interest.
+
+**Rater Interest**: There are no definitive correlations between rater interest and any of the remaining four variables.
+
+Overall, quality, helpfulness, and clarity provide more insight related to professor rating than easiness and rater interest.
+
+### Question 5
+
+| For the student.survey data file in the smss package, conduct regression analyses relating
+| (by convention, y denotes the outcome variable, x denotes the explanatory variable)
+| (i) y = political ideology and x = religiosity,
+| (ii) y = high school GPA and x = hours of TV watching.
+| (You can use ?student.survey in the R console, after loading the package, to see what each variable
+| means.)
+| (a) Graphically portray how the explanatory variable relates to the outcome variable in
+| each of the two cases
+| (b) Summarize and interpret results of inferential analyses.
+
+#### A)
+
+```{r}
+library(smss)
+data(student.survey)
+head(student.survey)
+```
+
+```{r}
+library(dplyr)
+survey <- student.survey %>%
+  rename("poli_ideo"="pi", "relig"="re", "TV"="tv", "gpa_hs"="hi")
+
+lm(poli_ideo ~ relig, data=survey)
+
+ggplot(data = survey, aes(x = relig, fill = poli_ideo)) +
+    geom_bar(position = "fill") + scale_fill_brewer(palette="PiYG")
+```
+
+```{r}
+lm(gpa_hs ~ TV, data=survey)
+
+ggplot(data = survey, aes(x=TV, y=gpa_hs)) +
+    geom_point() + geom_smooth(method=lm, se=TRUE)
+```
+
+#### B)
+
+```{r}
+install.packages("stargazer")
+library(stargazer)
+
+poli_relig <- lm(as.numeric(poli_ideo) ~ as.numeric(relig), 
+         data = survey)
+
+gpa_tv <- lm(gpa_hs ~ TV, data = survey)
+
+stargazer(poli_relig, gpa_tv, type = 'text', dep.var.labels = c('Political Ideology', 'High School GPA'), covariate.labels = c('Religiosity', 'Hours of TV'))
+```
+
+Based on this inferential analysis, we can see that there is a statistically significant and positive correlation between religiosity and political ideology (p-value\<0.01). Specifically, there is for every "one unit of increase" in religiosity, there is a "0.970-unit increase" in political ideology. However, the adjusted R-squared value is 0.324, which suggests that a linear regression is not a very good fit for this model.
+
+However, we also see that there is a statistically significant negative correlation between hours of TV watch and high school GPA (p-value\<0.05). Specifically, for every one hour of TV watched, there is a 0.018-unit decline in GPA. However, the adjusted R-squared value is 0.056, which suggests that a linear regression is a very unreliable fit for this model.
