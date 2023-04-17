@@ -1,0 +1,450 @@
+---
+title: "Homework 2"
+author: "Darron Bunt"
+description: "Homework Assignment 2 - Darron Bunt"
+date: "04/16/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - hypothesistesting
+  - confidenceintervals
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+# Question 1
+
+*The time between the date a patient was recommended for heart surgery and the surgery date*
+*for cardiac patients in Ontario was collected by the Cardiac Care Network (“Wait Times Data*
+*Guide,” Ministry of Health and Long-Term Care, Ontario, Canada, 2006). The sample mean*
+*and sample standard deviation for wait times (in days) of patients for two cardiac* *procedures are given in the accompanying table. Assume that the sample is representative of* *the Ontario population*
+
+*Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?*
+
+```{r}
+#Create the data frame that matches the table that was provided.
+
+WaitTimes <- data.frame ("Surgical Procedure" = c("Bypass", "Angiography"),
+                  "Sample Size" = c(539, 847),
+                  "Mean Wait Time" = c(19, 18),
+                  "Standard Deviation" = c(10,9)
+                  )
+WaitTimes
+```
+####  Part 1
+*Construct the 90% confidence interval to estimate the actual mean wait time for the two procedures*
+
+Formula for Confidence Interval = (X bar) +/- (t x s/sqrt(n))
+
+```{r}
+# For Bypass - 
+
+#x-bar = mean wait time = 19
+smean_bypass <- 19 
+
+# standard deviation = 10
+ssd_bypass <- 10
+
+# sample size = 539
+n_bypass <- 539
+
+# standard error = standard deviation / sqrt(sample size) => 10/sqrt(539)
+sterror_bypass <- 10/sqrt(539) 
+sterror_bypass
+
+# confidence level = 0.9
+cl_bypass <- 0.1 
+
+# calculate t score that corresponds to confidence level/sample size
+t_score_bypass <- qt(1-cl_bypass/2, n_bypass-1)
+t_score_bypass
+
+#calculating the 90% confidence interval for bypass
+
+CI_bypass <- c(smean_bypass - (t_score_bypass * sterror_bypass), smean_bypass + (t_score_bypass * sterror_bypass))
+CI_bypass
+```
+
+The 90% Confidence Interval for Bypass is 18.3 to 19.7 days.
+
+```{r}
+
+# For Angiography - 
+
+#x-bar = mean wait time = 18
+smean_angio <- 18 
+
+# standard deviation = 9
+ssd_angio <- 9
+
+# sample size = 847
+n_angio <- 847
+
+# standard error = standard deviation / sqrt(sample size) => 9/sqrt(847)
+sterror_angio <- 9/sqrt(847) 
+sterror_angio
+
+# confidence level = 0.9
+cl_angio <- 0.1 
+
+# calculate t score that corresponds to confidence level/sample size
+t_score_angio <- qt(1-cl_angio/2, n_angio-1)
+t_score_angio
+
+#Calculating the 90% confidence interval for angio
+
+CI_angio <- c(smean_angio - (t_score_angio * sterror_angio), smean_angio + (t_score_angio * sterror_angio))
+CI_angio
+
+```
+The 90% Confidence Interval for Angiography is 17.5 to 18.5 days.
+
+####  Part 2
+
+*Is the confidence interval narrower for angiography or bypass surgery?*
+
+90% CI for Bypass: 18.3 to 19.7 days - this is 1.4 days.
+90% CI for Angiography: 17.5 to 18.5 days - this is 1 day.
+
+The CI is narrower for Angiography.
+
+# Question 2
+
+*A survey of 1,031 adult Americans was carried out by the National Center for Public*
+*Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success. Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success.*
+
+*Construct and interpret a 95% confidence interval for p.*
+
+#### Part 1 - 
+
+*Find the point estimate (p) of the proportion of all adult Americans who believe that a college education is essential for success.*
+
+The point estimate (p) is the proportion observed in this sample and is equal to the number of respondents who believe a college education is essential for success (567) divided by the total number of respondents (1,031)
+
+```{r}
+p_CollegeEd <- 567/1031
+p_CollegeEd
+```
+p = 0.55 - approximately 55% of the sampled adult Americans believe that a college education is essential for success. 
+
+#### Part 2 - 
+
+*Construct and interpret a 95% confidence interval for p.*
+
+We learned about prop.test() in Tutorial 5 - the Z-Test of Proportions with Continuity Correction. Similar to a t-test, it is suited for tests about proportions. 
+
+```{r}
+# to perform prop.test() we require three main arguments: x, n, and p
+
+#x = vector of counts of successes = 567
+x_CollegeEd <- 567
+
+#n = vector of counts of trials = 1031
+n_CollegeEd <- 1031
+
+#p = vector of probabilities of success = p_CollegeEd calculated above
+
+prop.test(x_CollegeEd, n_CollegeEd, p_CollegeEd)
+```
+Based on the prop.test results, the 95% Confidence Interval for the proportion of all adult Americans who believe that a college education is essential for success is 0.52 - 0.58 (or 52% to 58%)
+
+We can be 95% confident that the true population proportion falls within this range - if we were to take many random samples of the same size from the population and calculate the confidence intervals for each sample, 95% of these intervals would contain the true population proportion.
+
+# Question 3
+
+*Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost*
+*of textbooks per semester for students. The estimate will be useful if it is within $5 of the true population mean (i.e. they want the confidence interval to have a length of $10 or less).*
+
+*The financial aid office is pretty sure that the amount spent on books varies widely, with* *most values between $30 and $200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation).*
+
+*Assuming the significance level to be 5%, what should be the size of the sample?*
+
+If:
+Margin of Error = z* (standard deviation / square root of n)
+
+Then we can rearrange the formula in order to solve for n:
+n = ((z*sd)/MoE)^2
+
+```{r}
+# find value for z-score  
+z_Amherst <- qnorm(0.975)
+z_Amherst
+
+# find value for standard deviation
+
+# Most values betweeen $30-200 => range of 170
+range_Amherst <- 200-30
+
+# They think population standard deviation is about a quarter of this range => 170/4
+sd_Amherst <- range_Amherst/4
+sd_Amherst
+
+#Margin of Error = 5
+MOE_Amherst <- 5
+
+# Solving for n
+# n = ((z*sd)/MoE)^2
+
+n_Amherst <- ((z_Amherst*sd_Amherst)/MOE_Amherst)^2
+n_Amherst
+
+
+```
+We round up, so the sample size should be 278.
+
+# Question 4
+
+*According to a union agreement, the mean income for all senior-level workers in a large*
+*service company equals $500 per week. A representative of a women’s group decides to analyze* *whether the mean income μ for female employees matches this norm. For a random sample of* *nine female employees, ȳ = $410 and s = 90*
+
+*A. Test whether the mean income of female employees differs from $500 per week. Include*
+*assumptions, hypotheses, test statistic, and P-value. Interpret the result.*
+*B. Report the P-value for Ha: μ < 500. Interpret.*
+*C. Report and interpret the P-value for Ha: μ > 500.*
+*(Hint: The P-values for the two possible one-sided tests must sum to 1.*
+
+#### Part A
+
+*A. Test whether the mean income of female employees differs from $500 per week. Include*
+*assumptions, hypotheses, test statistic, and P-value. Interpret the result*
+
+In order to test this, we are going to need to do a one-sample t-test.
+
+**Assumptions** of a one-sample t-test:
+* normality: that the population distribution is normal
+* independence: that the observations in our sample are generated independently of one another.
+
+**Hypotheses:**
+
+Our null hypotheisis is that the mean income of female employees does not differ from $500 per week. 
+
+The alternative hypothesis is that the mean income of female employees DOES differ from $500 per week.
+
+Now we need to calculate the **test statistic** (t-score)
+
+t = (m - μ) / (s / sqrt(n))
+
+```{r}
+# t = (m - μ) / (s / sqrt(n)), where:
+
+# m = sample mean (female employees) 
+samplemean_Union <- 410
+
+# μ = population mean (reported for all employees)
+populationmean_Union <- 500
+
+# s = sample standard deviation (given - 90)
+samplesd_Union <- 90
+
+# n = sample size (given - 9 female employees)
+samplen_Union <- 9
+
+t_Union <- (samplemean_Union - populationmean_Union) / ((samplesd_Union) / (sqrt(samplen_Union)))
+t_Union
+```
+
+The t-score is -3.
+
+Now we need the **P-value**
+
+The P-value is the probability of obtaining test results at least as extreme as the result actually observed, under the assumption that the null hypothesis is correct.
+
+To find the p-value, we can use pt() in R. This requires the calculated t-statistic and the degrees of freedom. In a one-sample t-test, the degrees of freedom are n-1 (where n is the sample size).
+
+So in this case, the **degrees of freedom** are 9-1, or 8.
+
+```{r}
+# find p-value
+pvalueTwoTail_Union <- 2*pt(q=t_Union, df=8, lower.tail=TRUE)
+pvalueTwoTail_Union
+```
+The p-value is 0.017
+
+**Interpreting the result:**
+The p-value is less than 0.05, so accordingly we can reject the hypothesis that the . This suggests that the true mean salary of female workers is **not** equal to $500.
+
+#### Part B
+
+*B. Report the P-value for Ha: μ < 500. Interpret.*
+
+Null hypothesis is that mean income for female workers is greater than 500. The alternative hypothesis that the mean income for female workers is less than $500.
+
+```{r}
+# find lower tail of p-value
+pvalueLowerTail_Union <- pt(q=t_Union, df=8, lower.tail=TRUE)
+pvalueLowerTail_Union
+```
+**Interpreting the result:**
+The p-value is less than 0.05, so accordingly we can reject the null hypothesis. This suggests that the true mean salary of female workers is less than $500.
+
+#### Part C
+
+*C. Report and interpret the P-value for Ha: μ > 500.*
+
+Null hypothesis is that mean income for female workers is less than 500. The alternative hypothesis that the mean income for female workers is greater than $500.
+
+```{r}
+# find upper tail of p-value
+pvalueUpperTail_Union <- pt(q=t_Union, df=8, lower.tail=FALSE)
+pvalueUpperTail_Union
+```
+**Interpreting the result:**
+The p-value is greater than 0.05, so we fail to reject the null hypothesis that the mean income for female workers is less than 500. This suggests that the true mean salary of female workers is less than $500.
+
+# Question 5
+
+*5. Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each*
+*with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7,*
+*with se = 10.0.*
+
+*A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049*
+*for Smith.*
+
+*B. Using α = 0.05, for each study indicate whether the result is “statistically significant.”*
+
+*C. Using this example, explain the misleading aspects of reporting the result of a test as “P ≤ 0.05” versus “P > 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the actual P-value.*
+
+#### Part A
+
+*A. Show that t = 1.95 and P-value = 0.051 for Jones.* 
+*Show that t = 1.97 and P-value = 0.049 for Smith.*
+
+First we'll confirm the t scores. The equation for calculating t score when you have the standard error is:
+t = (ȳ - μ) / se
+
+```{r}
+# t = (ȳ - μ) / se
+
+# ȳ = 
+y_Jones <- 519.5
+y_Smith <- 519.7
+
+# μ = (from hypothesis)
+populationmean_JonesSmith <- 500
+
+# se = (given)
+se_Jones <- 10.0
+se_Smith <- 10.0
+
+# n - (given)
+n_JonesSmith <- 1000
+
+t_Jones <- (y_Jones - populationmean_JonesSmith) / se_Jones
+t_Jones
+
+t_Smith <- (y_Smith - populationmean_JonesSmith) / se_Smith
+t_Smith
+```
+
+This confirms that the respective t scores for Jones and Smith are 1.95 and 1.97. 
+
+Now we'll calculate the p-values. Both t-scores are positive, so we are going to look at the upper tail. 
+
+```{r}
+#find p-values
+p_Jones <- 2*pt(q=t_Jones, df=999, lower.tail=FALSE)
+p_Jones
+p_Smith <- 2*pt(q=t_Smith, df=999, lower.tail=FALSE)
+p_Smith
+```
+ This confirms that the p-values for Jones and Smith are 0.051 and 0.049 respectively.
+ 
+#### Part B
+
+*B. Using α = 0.05, for each study indicate whether the result is “statistically significant.”*
+
+For Jones' study, the p-value of 0.051 is greater than α = 0.05, therefore Jones' study is not statistically significant.
+
+For Smith's study, the p-value of 0.049 is less than α = 0.05, therefore Smith's study is statistically significant.
+
+#### Part C 
+
+*C. Using this example, explain the misleading aspects of reporting the result of a test as “P ≤ 0.05” versus “P > 0.05,” or as “reject H0” versus “Do not reject H0,” without reporting the actual P-value.*
+
+If only p ≤ 0.05 or p > 0.05 was reported (or similarly, only whether or not we can reject the null hypothesis) and not the actual p-values, we lose a lot of context. In the case of these two studies, the difference in Jones' and Smith's p-values are 0.002 apart, but that made the difference between one result having statistical significance at the α = 0.05 level and the other not. 
+
+# Question 6
+
+*A school nurse wants to determine whether age is a factor in whether children choose a*
+*healthy snack after school. She conducts a survey of 300 middle school students, with the results below. Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level.* 
+
+*What is the null hypothesis? Which test should we use? What is the conclusion?*
+
+```{r}
+# Replicate the data as a table
+HealthySnack <- matrix(c(31, 43, 51, 69, 57, 49), nrow=2, byrow=TRUE)
+colnames(HealthySnack) <- c('Grade 6', 'Grade 7', 'Grade 8')
+rownames(HealthySnack) <- c('Healthy', 'Unhealthy')
+HealthySnack <- as.table(HealthySnack)
+HealthySnack
+```
+*What is the null hypothesis?*
+
+We are interested in the effect of **grade level** on **snack choice**.
+
+The null hypothesis is that grade level does not impact whether students choose a healthy or unhealthy snack. 
+
+The alternative hypothesis is that grade level does impact whether students choose a healthy or unhealthy snack.
+
+*Which test should we use?*
+
+We should use the χ2 test of independence (or association), aka the chi-square test of independence/association, which is used to determine whether there is a significant association between two categorical variables.
+
+*What is the conclusion?*
+
+We now need to compare the observed frequencies to the expected frequencies that would be observed if the variables were independent. 
+
+```{r}
+# chi-square test to compare snack choice and grade level
+chisq.test(HealthySnack)
+```
+We are testing at α = 0.05 and the p-value is smaller than 0.05, which indicates that we can reject the null hypothesis that grade level does not impact snack choice; there is a relationship between grade level and choice of snack. 
+
+# Question 7
+
+*Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school*
+*districts in three areas are shown.*
+
+*Test the claim that there is a difference in means for the three areas, using an appropriate* *test. What is the null hypothesis? Which test should we use? What is the conclusion?*
+
+```{r}
+# Replicating the data
+Area <- c(rep("Area_1", 6), rep("Area_2", 6), rep("Area_3", 6))
+Cost <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3, 5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+CyberCharterCost <- data.frame(Area,Cost)
+CyberCharterCost
+```
+*What is the null hypothesis?*
+
+The null hypothesis is that there is no difference in means for the three areas.
+The alternative hypothesis is that there is a difference in means for the three areas.
+
+*Which test should we use?*
+
+We should use **ANOVA**, specifically a one-way ANOVA. ANOVA is used to investigate differences in means, and a one-way ANOVA is used when we have several different groups of observations and are interested in finding out whethter those groups differ in terms of some outcome variable of interest.
+
+In this case we are interested in whether Area 1, 2, and 3 differ in terms of per-pupil costs for cyber charter school tuition. 
+
+*Test the claim that there is a difference in means for the three areas*
+
+```{r}
+# Running ANOVA in R uses aov()
+# formula => argument to specify the outcome variable and the grouping variable 
+# data => the data frame that stores those variables
+# NOTE: Make sure the dependent variable is continuous and the independent variable is categorical.
+
+CyberCharterANOVA <- aov(formula = Cost ~ Area, data = CyberCharterCost)
+summary(CyberCharterANOVA)
+```
+*What is the conclusion?*
+
+The p-value of 0.00397 is less than α = 0.05, which means that we reject the null hypothesis that there is no difference in the means for the three areas. There does indeed appear to be a difference in the per-pupil cost for cyber charter school tuition by area. 
