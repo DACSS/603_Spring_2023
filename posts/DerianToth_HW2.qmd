@@ -1,0 +1,342 @@
+---
+title: "Homework 2"
+author: "Meredith Derian-Toth"
+description: "DACSS603_Homework 2"
+date: "04/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - confidence intervals 
+---
+
+### Question 1: Construct the 90% confidence interval to estimate the actual mean wait time for each of the two procedures. Is the confidence interval narrower for angiography or bypass surgery?
+
+|                    |             |                |                    |
+|--------------------|-------------|----------------|--------------------|
+| Surgical Procedure | Sample Size | Mean Wait Time | Standard Deviation |
+| Bypass             | 539         | 19             | 10                 |
+| Angiography        | 847         | 18             | 9                  |
+
+```{r}
+#90% CI for Bypass
+
+By_mean<-19
+By_sd<-10
+By_size<-539
+
+BySE<-By_sd/sqrt(By_size)
+
+Confidence_level1<-0.90
+
+tail_area<-(1-Confidence_level1)/2
+
+By_t_score<-qt(p = 1 - tail_area, df = By_size - 1)
+
+By_CI <- c(By_mean - By_t_score * BySE, By_mean + By_t_score * BySE)
+By_CI
+
+#Difference between the range average wait time for Bypass
+19.70971-18.29029
+```
+
+The average wait time for a Bypass ranges from 18.29 minutes to 19.71 minutes.
+
+```{r}
+#CI Angiography
+
+Ang_mean<-18
+Ang_sd<-9
+Ang_size<-847
+
+Ang_SE<- Ang_sd/sqrt(Ang_size)
+
+#Condifence level and tail area calculated in the code chunk above
+
+Ang_t_score <- qt(p = 1 - tail_area, df = Ang_size)
+
+Ang_CI <- c(Ang_mean - Ang_t_score * Ang_SE, Ang_mean + Ang_t_score * Ang_SE)
+Ang_CI
+
+#Difference between the range average wait time for Angiography
+18.50922-17.49078
+```
+
+The average wait time for an Angiography ranges from 17.5 minutes to 18.51 minutes.
+
+The difference in wait time for Bypass is 1.42 minutes, whereas the difference in wait time for Angiography is 1.02 minutes. Therefor the confidence interval is narrower for the Angiography wait time.
+
+### Question 2: Find the point estimate, p, of the proportion of all adult Americans who believe that a college education is essential for success. Construct and interpret a 95% confidence interval for p.
+
+*A survey of 1031 adult Americans was carried out by the National Center for Public Policy. Assume that the sample is representative of adult Americans. Among those surveyed, 567 believed that college education is essential for success.*
+
+```{r}
+NCPP_size<-1031
+CollegeSuc<-567
+#Calculating those who do not necessarily believe you need a college degree to be successful (1031-567)
+NotCollegeSuc<-464
+
+#Creating a dataframe to run a t-test to find the P value and confidence interval
+NCPP_DF<-data.frame(CollegeSuc, NotCollegeSuc)
+
+prop.test(NCPP_DF$CollegeSuc,1031)
+
+```
+
+The point of estimate (p value) for adult Americans who believe that you need a college degree to be successful is 0.5499515, meaning about 55% of adult Americans believe you need a college degree to be successful. The confidence interval (95%) shows a range of 0.5189682 to 0.5805580, meaning this belief could range from about 52% of adult Americans to 58% of adult Americans.
+
+### Question 3: Assuming the significance level to be 5%, what should be the size of the sample?
+
+*Suppose that the financial aid office of UMass Amherst seeks to estimate the mean cost of textbooks per semester for students. The estimate will be useful if it is within \$5 of the true population mean (i.e. they want the confidence interval to have a length of \$10 or less). The financial aid office is pretty sure that the amount spent on books varies widely, with most values between \$30 and \$200. They think that the population standard deviation is about a quarter of this range (in other words, you can assume they know the population standard deviation).*
+
+```{r}
+#Brainstorming:
+#.25*30
+#Pop_sd_Low<-7.5
+#.25*200
+#Pop_sd_High<-50
+#Confidence_level2<-0.95
+
+Pop_sd<-.25*(200-30)
+Pop_sd
+
+#Based on the formula for a 95% confidence interval:
+
+z <- qnorm(.95)
+s <- Pop_sd
+n <- ((z*s)/5)^2
+print(n)
+
+#Question - this drops the sample mean, how can we use this formula without the sample mean?
+```
+
+Due to the fact that the financial aid office believes that the amount spent on books varies widely, we can assume that the estimator value is not efficient. This means our sample mean should have a smaller variance than our sample median. Therefore, we need a higher sample size in order to reduce the variance.
+
+### **Question 4A - 4C:**
+
+*According to a union agreement, the mean income for all senior-level workers in a large service company equals \$500 per week. A representative of a women's group decides to analyze whether the mean income μ for female employees matches this norm. For a random sample of nine female employees, ȳ = \$410 and s = 90*
+
+**Hint:** *The P-values for the two possible one-sided tests must sum to 1.*
+
+#### A. Test whether the mean income of female employees differs from \$500 per week. Include assumptions, hypotheses, test statistic, and P-value. Interpret the result.
+
+```{r}
+#pop mean = 500
+#sample mean = 410
+#sample standard deviation = 90
+#sample size = 9
+
+SEM<- 90/sqrt(9)
+SEM
+
+#SEM = 30
+
+qnorm(0.025, mean = 500, sd = SEM)
+#qnorm(0.025)=$441.2011
+qnorm(0.975, mean = 500, sd = SEM)
+#qnorm(0.975)=$558.7989
+
+#Also
+500-1.96*SEM
+500+1.96*SEM
+
+
+s_mean<- 410
+s_sd<- 90
+s_size<-9
+confidence_level3<-0.975
+tail_area2<-(1-confidence_level3)/2
+t_score<-qt(p = 1-tail_area2, df = s_size-1)
+CI<- c(s_mean-t_score*s_sd/sqrt(s_size),
+s_mean+t_score*s_sd/sqrt(s_size))
+print(CI)
+
+t_statistic<-410-500/(30/sqrt(9))
+t_statistic
+p_value<- (1 - pt(t_statistic, df=8))*2
+p_value
+
+
+```
+
+Here we are working with a two-tailed test, because we want to know if female employees are making more or less than and average of \$500/ week. A normal distribution tells us that only 5% of the observations would be less than \$441.20 and more than \$558.80, 95% of the observations are expected to to be between this range (about \$441 - \$559).
+
+*Significance Testing*
+
+In this test, the null hypothesis is that female employees make on average \$500/ week.
+
+The p value is: 0
+
+The t value is: 360
+
+With a t value of 360, greater than the critical value of 5, we reject the null hypothesis that the population mean is 500.
+
+#### B. Report the P-value for Ha: μ \< 500. Interpret
+
+```{r}
+#pop mean = 500
+#sample mean = 410
+#sample standard deviation = 90
+#sample size = 9
+
+qnorm(0.05, mean = 500, sd = SEM)
+#qnorm(0.05)=$450.6544
+
+s_mean<- 410
+s_sd<- 90
+s_size<-9
+confidence_level4<-0.05
+tail_area3<-(1-confidence_level4)/1
+t_score<-qt(p = 1-tail_area3, df = s_size-1)
+CI<- c(s_mean-t_score*s_sd/sqrt(s_size),
+s_mean+t_score*s_sd/sqrt(s_size))
+print(CI)
+
+t_statistic2<-410-500/(30/sqrt(9))
+t_statistic2
+p_value2<- (1 - pt(t_statistic, df=8))*1
+p_value2
+```
+
+Here we are working with a one-tailed test, because we are asking whether female employees make an average of less than \$500/ week. A normal distribution tells us that 5% of the observations would be less than \$450.6544 and 95% of the observations would be more than that.
+
+*Significance Testing*
+
+p value = 0
+
+t value = 360
+
+With a critical value of 0, and a t value of 360 (larger than the critical value) we reject the null hypothesis that the population mean is less than 500.
+
+#### C. Report and interpret the P-value for Ha: μ \> 500.
+
+```{r}
+#pop mean = 500
+#sample mean = 410
+#sample standard deviation = 90
+#sample size = 9
+
+qnorm(0.95, mean = 500, sd = SEM)
+#qnorm(0.025)=$549.3456
+
+s_mean<- 410
+s_sd<- 90
+s_size<-9
+confidence_level5<-0.95
+tail_area4<-(1-confidence_level5)/1
+t_score<-qt(p = 1-tail_area4, df = s_size-1)
+CI<- c(s_mean-t_score*s_sd/sqrt(s_size),
+s_mean+t_score*s_sd/sqrt(s_size))
+print(CI)
+
+t_statistic3<-410+500/(30/sqrt(9))
+t_statistic3
+p_value3<- (1 - pt(t_statistic, df=8))*1
+p_value3
+```
+
+Here we are working with a one-tailed test, because we are asking whether female employees make an average of more than \$500/ week. A normal distribution tells us that 5% of the observations would be more than \$549.34 and 95% of the observations would be less than that.
+
+*Significance Testing*
+
+p value = 0
+
+t value = 460
+
+With a critical value of 0, and a t value of 460 (larger than the critical value) we reject the null hypothesis that the population mean is greater than 500.
+
+### Question 5A - 5C:
+
+*Jones and Smith separately conduct studies to test H0: μ = 500 against Ha: μ ≠ 500, each with n = 1000. Jones gets ȳ = 519.5, with se = 10.0. Smith gets ȳ = 519.7, with se = 10.0.*
+
+#### A. Show that t = 1.95 and P-value = 0.051 for Jones. Show that t = 1.97 and P-value = 0.049 for Smith.
+
+```{r}
+#H0: μ = 500
+#Ha: μ ≠ 500
+
+#Jones: 
+#n = 1000; y = 519.5; se = 10
+#t = 1.95 and P-value = 0.051
+#t_value = x1-x2/se
+Jones_t_value<-(519.5-500)/10
+Jones_t_value
+Jones_p_value<-(2*pt(Jones_t_value, df = 999, lower.tail=FALSE))
+Jones_p_value
+
+#Smith: 
+#n = 1000; y = 519.7; se = 10
+#t = 1.97 and P-value = 0.049
+Smith_t_value<-(519.7-500)/10
+Smith_t_value
+
+Smith_p_value<-(2*pt(Smith_t_value, df=999, lower.tail = FALSE))
+Smith_p_value
+```
+
+#### B. Using α = 0.05, for each study indicate whether the result is "statistically significant."
+
+Smith's results are statistically significant, as the p value is less than .05. However, Jone's results are not statistically significant since they are greater than .05.
+
+#### C. Using this example, explain the misleading aspects of reporting the result of a test as "P ≤ 0.05" versus "P \> 0.05," or as "reject H0" versus "Do not reject H0," without reporting the actual P-value.
+
+Reporting the actual p value provides context for how strong the results of the statistical analysis are. Without the context of the actual p value, it hides this context, and does not provide enough information to understand the validity of the results.
+
+### Question 6: Test at α = 0.05 the claim that the proportion who choose a healthy snack differs by grade level. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+*A school nurse wants to determine whether age is a factor in whether children choose a healthy snack after school. She conducts a survey of 300 middle school students, with the results below.*
+
+|                 |           |           |           |
+|-----------------|-----------|-----------|-----------|
+| Grade level     | 6th grade | 7th grade | 8th grade |
+| Healthy snack   | 31        | 43        | 51        |
+| Unhealthy snack | 69        | 57        | 49        |
+
+```{r}
+
+#n = 300
+
+grade_level<-(c(rep("6th Grade", 100), 
+                rep("7th Grade", 100), 
+                rep("8th Grade", 100)))
+snack_choice<-(c(rep("healthy snack", 31), 
+                 rep("unhealthy snack", 69), 
+                 rep("healthy snack", 43), 
+                 rep("unhealthy snack", 57), 
+                 rep("healthy snack", 51), 
+                 rep("unhealthy snack", 49)))
+MS_snack_choice<-data.frame(grade_level, snack_choice)
+
+chisq.test(MS_snack_choice$snack_choice, MS_snack_choice$grade_level, correct = FALSE)
+```
+
+I chose to use a chi-square test because we are comparing a categorical IV with a categorical DV. The results show a significant relationship between grade level and snack choice. We know it is significant because the p-value is less than .05 (p = 0.015).
+
+### Question 7: Test the claim that there is a difference in means for the three areas, using an appropriate test. What is the null hypothesis? Which test should we use? What is the conclusion?
+
+*Per-pupil costs (in thousands of dollars) for cyber charter school tuition for school districts in three areas are shown.*
+
+|        |     |     |     |     |     |     |
+|--------|-----|-----|-----|-----|-----|-----|
+| Area 1 | 6.2 | 9.3 | 6.8 | 6.1 | 6.7 | 7.5 |
+| Area 2 | 7.5 | 8.2 | 8.5 | 8.2 | 7.0 | 9.3 |
+| Area 3 | 5.8 | 6.4 | 5.6 | 7.1 | 3.0 | 3.5 |
+
+```{r}
+Area<-c(rep("Area1", 6), 
+        rep("Area2", 6), 
+        rep("Area3", 6))
+
+Cost<-c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3,
+          5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+Area_cost<-data.frame(Area, Cost)
+
+my.anova <- aov(Cost ~ Area, data = Area_cost)
+summary(my.anova)
+```
+
+I chose to run an ANOVA because we have a continuous DV and more than one categorical IV. According to the results, there is a significant relationship between area and cost because the p value is less than .05 (p = 0.00397). The null hypothesis for this test is that the means for each Area are equal. We reject the null hypothesis with a clear difference between the means.
