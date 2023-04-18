@@ -1,0 +1,124 @@
+---
+title: "Homework 3"
+author: "Meredith Derian-Toth"
+description: "DACSS603_Homework 2"
+date: "04/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - confidence intervals 
+---
+
+library("alr4")
+
+library("smss")
+
+```{r}
+library("alr4")
+library("smss")
+library("ggplot2")
+        
+data(UN11)
+head(UN11)
+```
+
+### Question 1:
+
+*Graph ppgdp with fertility and transform the data*
+
+a\) the predictor variable is the independent variable, this is per person gross national product (ppgdp). And the response is the dependent variable, this is fertility.
+
+```{r}
+
+ggplot(data = UN11, aes(x = ppgdp, y = fertility)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+
+```
+
+b\) The scatterplot above shows the level of fertility based on per person gdp across different countries. What we can see is that as the gdp person increases, the level of fertility decreases, until it reaches a specific point, and then it stays pretty level.
+
+```{r}
+ggplot(data = UN11, aes(x = log(ppgdp), y = log(fertility))) +
+  geom_point() +
+  geom_smooth()
+```
+
+c\) Now that we have transformed this data into a logarithm, a simple linear regression does seem plausible to summarize the graph.
+
+### Question 2:
+
+a\) When the independent variable is increased by 1.33, the slope of the prediction will increase by 1.33.
+
+b\) When the independent variable is increased by 1.33, the correlation will not change. The correlation is the standardized version of the slope and does not depend on unit of measurement.
+
+### Question 3:
+
+*Can Southern California's water supply in future years be predicted from past data?*
+
+```{r}
+
+data(water)
+head(water)
+
+ggplot(data = water, aes(x = Year, y = BSAAM)) +
+  geom_point() +
+  geom_smooth()
+```
+
+Due to the shape of this relationship, it is best to transform the data.
+
+```{r}
+pairs(water)
+```
+
+What we see in the scatterplot matrix above is a relationship between locations, but not necesarily location and year (looking at the top row of scatterplots). Therefore further analysis is necessary in order to attempt a prediction of water runoff.
+
+### Question 4:
+
+Professor Ratings Overtime
+
+```{r}
+data("Rateprof")
+pairs(~ quality + helpfulness + clarity + easiness + raterInterest, data=Rateprof)
+```
+
+From the scatterplot matrix above we can see that there is a positivie relationship between professor rating and quality of professor, helpfulness of professor, and their clarity. However the professor rating is not related to the easiness of their class or the rater interest in the material.
+
+### Question 5:
+
+### Regression Analysis
+
+```{r}
+data("student.survey")
+head(student.survey)
+
+#regression analysis i
+
+student_survey_reg_i<-lm(as.numeric(pi) ~ as.numeric(re), data = student.survey)
+summary(student_survey_reg_i)
+  
+ggplot(student.survey, aes(re, fill = pi)) +
+  geom_bar(position = "fill")
+```
+
+Above we can see the relationship between religiosity and political ideology. We see that the students who attend church more regularly also identify more as conservatives than liberals. According to the regression analysis, the relationship between political ideology and religiosity is significant with a p value very close to 0. From this we can see that as religiosity increases, political ideology leans conservative.
+
+```{r}
+
+#regression analysis (ii)
+
+student_survey_reg_ii <- lm(hi ~ tv, data = student.survey)
+summary(student_survey_reg_ii)
+
+ggplot(data = student.survey, aes(x = tv, y = hi)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+```
+
+Above we can see the relationship between average rate of tv watching per week and high school GPA. We see that the students who watch more TV on average have a lower GPS. According to the regression analysis, the relationship between average hours of tv watched per week and high school GPS is significant with a p value very close to 0.01. The adjusted R squared is quite low and the p value is not at a strong significance level. We can see that the relationship in the regression analysis above is stronger.
