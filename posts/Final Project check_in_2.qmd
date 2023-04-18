@@ -106,13 +106,15 @@ head(comments.data$written_at)
 comments.data <-comments.data%>%
               mutate(com.year = format(written_at,format = "%Y" ))
 range(comments.data$com.year)
-
+dim(comments.data)
 ```
 
 Second, loadng post-level data :
 ```{r, echo=T}
 
 merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\data.merged.csv"))
+# colnames(merged)
+# str(merged)
 ```
 
 
@@ -168,7 +170,7 @@ This is the most general engagement metric,  representing how many views the pos
 
 
 ```{r, echo=T}
-str(merged)
+# str(merged)
 merged$post.month <-as.numeric(merged$post.month)
 merged$year_month <- paste0(merged$post.year, "-", sprintf("%02d", merged$post.month))
 
@@ -178,9 +180,6 @@ ggplot( data=merged, mapping=aes(y=`Page views`, x=merged$year_month))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-
-
-
 ```
 From this graph we can see that the numbers of views is increasing with time
 
@@ -188,8 +187,7 @@ From this graph we can see that the numbers of views is increasing with time
 ### Number of comments
 
 ```{r, echo=T}
-
-merged$year_month 
+# merged$year_month 
 ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of comments per post ", y = "Number of comments" )+
@@ -202,17 +200,12 @@ ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
 ### Exit rate 
 
 ```{r, echo=T}
-str(merged)
+# str(merged)
 merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
-
-
 ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of `Exit rate` per post ", y = "Exit rate" , x="Month")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-
 ```
 
 ##Independent variables (IV):
@@ -222,18 +215,28 @@ To identify, how much the author of the bblog is engaged in the post,  I will cr
 
 
 ```{r, echo=T}
-str(merged)
+# str(merged)
 comments.data$user_name<-  ifelse (is.na(comments.data$user_name), 0, comments.data$user_name)
 comments.data$author<-  ifelse (comments.data$user_name=="MeredithGoldstein", 1, 0)
-class(comments.data$author)
 
 comments.grouped <-comments.data %>%
   group_by(post_id)%>%
-  summarize(author.sum = sum(author))%>%
-  select(post_id,author.sum )
-head(comments.grouped )
-class(comments.grouped$author.sum)
+  summarize(n.comments=n(),
+            author.sum = sum(author))
 
+# dim(comments.grouped )
+# colnames(comments.grouped )
+# class(comments.grouped$author.sum)
+
+# Comments data contains rows that dont actually reporesent posts, and were crearted by web support team for troubleshooting. I need to remove these rows. They typically have very low number of comments
+comments.grouped <-comments.grouped %>%
+filter(n.comments >100)  # removing invalid posts created by the  website management team.
+
+comments.grouped <-comments.grouped %>%
+  select(post_id, author.sum)
+ dim(comments.grouped)
+ 
+ 
 #adding author.sum to main data set: 
 merged <- merge( merged , comments.grouped, by = "post_id", all = TRUE)
 
@@ -251,10 +254,6 @@ ggplot(merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
 This is a numerical variable, calculated as percentage of "thumbs up" from all likes (both "thumbs up" and "thumbs down"). 
 
 ```{r, echo=T}
-class(merged$pct.positive )
-head(merged$pct.positive)
-  
-
 ggplot(merged, mapping = aes(x=year_month , y=pct.positive, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of Mood per post ", y = "Mood" , x="Month")+ 
@@ -274,12 +273,10 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
   labs(title = "Number Blocked comments  per post ", y = "Number of blocked comments per post" , x="Month")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-### Views vs visits:
+### Views vs visits vs users:
 Views - represent the number of times page was viewed by all users at all times.
-
 Visit - is an insance of a user engaging with bdc website. There can be many visits by the same viewer. Once th user is leaving the website, the visit is over. 
-
-To count unique viewers, we can use "Uniques" variable. It tells us how many unique users saw the post.
+To count unique viewers, we can use "Uniques" variable. It tells us how many unique users saw the post. 
 
 Lets review how these three variables correspond to each other, to better understand which variable  to use for our analysis: 
 
@@ -300,51 +297,111 @@ To get a better understanding of the dynamic of these metircs over time,  I will
 ```{r, echo=T}
   merged <- merged %>%
      mutate(uniques.ratio = Uniques / `Page views`)
-
-
+# str(merged)
 ```   
  Now I will plot this to see change over time: 
-
-
 ```{r, echo=T}
      ggplot(merged, aes( y = uniques.ratio, x =post.date, )) +
           geom_point(color ="blue" )    +
           labs(title = "Unique.ratio per post ", x = "Post.date", y = "Value") + 
           theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
 ```
-This plot shows some variability in values and overall trend upwards, meaning that the posts are viewed by larger percent of unique viewers. 
+Now I calculate ration of visits per post views:
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(visits.ratio = Visits / `Page views`)
+str(merged)
+
+ggplot(merged, aes( y = visits.ratio, x =post.date, )) +
+          geom_point(color ="purple" )    +
+          labs(title = "Uvisits.ratio per post ", x = "Post.date", y = "Value") + 
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+```
+
+And will see how these values correlate: 
+
+
+```{r, echo=T}
+correlation <- cor(merged$uniques.ratio, merged$visits.ratio)
+correlation
+plot(merged$uniques.ratio, merged$visits.ratio)
+
+```
+This graph shows the there are some posts that are visited once or very few times by unique users, and some posts are being re-visited by the repeated users. 
 
 
 
 ### Referral sources:
-The web analytics provides information on where the viewers are coming from  to the LL page. There  are 5 sources of referrals, each corrersponding with a variable in the dataset. 
-"Search + amp referral visits"
-"Direct (non-email) referral visits"
-"Social referral visits"
-"Visits when post was on LL HP" 
-"BDC referral visits"
+The web analytics provides information on where the viewers are coming from  to the LL page. There  are 5 sources of referrals, each corresponding with a variable in the data set.
+
+            "Search + amp referral visits"
+            "Direct (non-email) referral visits"
+            "Other website referral visits"
+            "Social referral visits"
+            "BDC referral visits"
+            "Visits when post was on LL HP" 
 
 ```{r, echo=T}
+merged<-merged%>%
+  rename(google ="Search + amp referral visits",
+         direct ="Direct (non-email) referral visits",
+         other.web = "Other website referral visits",
+          social= "Social referral visits",
+          bdc= "BDC referral visits",
+          ll= "Visits when post was on LL HP" )
 
-ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
-  geom_boxplot() +
-  labs(title = "Number Blocked comments  per post ", y = "Number of blocked comments per post" , x="Month")+ 
+ggplot(merged, mapping=aes(x=post.date))+
+  geom_point(aes(y=google), color="red")+
+  geom_point(aes(y=direct), color="green")+
+  geom_point(aes(y=other.web), color="yellow")+
+  geom_point(aes(y=social), color="purple")+
+  geom_point(aes(y=bdc), color="blue")+
+  geom_point(aes(y=ll), color="pink")
+  
+  +
+  labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 
 
 # Analysis 
-First,  I will use "page views"  as dependent variable and regress it agains all other independent variable: 
+First,  I will use "page views"  as dependent variable and regress it against all other independent variable: 
+
+##Page views as DV
+```{r, echo=T}
+colnames(merged)
+summary(lm(`Page views` ~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
+
+```
+
+## Number of comments as DV
+```{r, echo=T}
+colnames(merged)
+summary(lm(n.comments ~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
+
+```
+
+## Exit rate as DV
+```{r, echo=T}
+colnames(merged)
+summary(lm(`Exit rate`~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
+
+```
+##Page views as DV
+
 
 ```{r, echo=T}
 colnames(merged)
-x.lm<-lm(pct.positive ~ pct.negative, data = grouped)
-plot ( data = grouped, pct.negative ~ pct.positive )
-```
+summary(lm(google~ ll, data = merged))
+summary(lm(google~ n.comments, data = merged))
+summary(lm(google~ Uniques, data = merged))
 
-It falls perfectly on linear regression line, with positive and negative
-values strongly negatively correlated.
+
+```
 
 
 
@@ -370,42 +427,10 @@ summary(fit)
 
 This variable indicates the date of the comment. Using the range of the
 dates per post, I can estimate how long each post was in active
-discussion. Later I can compare it with the views of the same post
-coming from the third dataset.
+discussion. 
 
 ```{r, echo=T}
-# MG.comments<-comments.2022[grep("MeredithGoldstein", comments.2022$user_name, ignore.case = TRUE), ]
 
-comments.2022$user_name<-  ifelse (is.na(comments.2022$user_name), 0, comments.2022$user_name)
-comments.2022$mg.comment<-  ifelse (comments.2022$user_name=="MeredithGoldstein", 1, 0)
-
-dim(comments.2022)
-grouped<-comments.2022 %>%
-  group_by (post_id)%>%
-  summarise(n.comments=n(), 
-            post.month = format(first(written_at),format = "%m" ),
-            likes.sum = sum(absolute_likes), 
-            dislikes.sum=sum (absolute_dislikes),
-            blocked.sum= sum(approved=="blocked"), 
-            pct.positive =(sum(absolute_likes)/(sum(absolute_likes)+sum(absolute_dislikes)))*100,
-            pct.negative =(sum(absolute_dislikes)/(sum(absolute_likes)+sum(absolute_dislikes)))*100,
-            mg.post =sum(mg.comment)               
-  )
-grouped<-grouped%>%
-  mutate(mood.score = pct.positive/pct.negative)  
-grouped
-
-class(grouped$mg.post)
-
-ggplot(grouped, mapping = aes(mg.post))+
-  geom_boxplot()  +
-  labs(title = "Authors comments ", y = "comments per post .per month" )
-
-grouped$mg.com<-  ifelse (grouped$mg.post>0, 1, 0)
-
-grouped$mg.com <- as.factor(grouped$mg.com)
-ggplot(grouped, mapping = aes(y=mood.score, x=mg.com))+
-  geom_boxplot() 
 
 ```
 
@@ -416,6 +441,36 @@ Some posts demonstrate increased amount of views, coming from search engines. Th
 We are interested to find out, what characteristics of the post (prior to it being picked up by google), correlate with its appearance on google news. 
 
 
+Number of comments within 1st 10 hours from the post -> google wave 
+Number of unique commentors in first 10 hours -> google wave 
 
-Variable allowing me to connect this dataset with another one with the
-post informnation,
+
+```{r, echo=T}
+# MG.comments<-comments.2022[grep("MeredithGoldstein", comments.2022$user_name, ignore.case = TRUE), ]
+post.dates<-merged%>%
+  select(post_id,post.date)
+dim(comments.data)
+comments.data <- merge( comments.data , post.dates, by = "post_id", all = TRUE)
+
+
+class(comments.data$written_at)
+class(comments.data$post.date)
+
+comments.data <- comments.data %>%
+  ungroup()%>%
+  mutate (post_age= written_at - post.date)
+  
+colnames(comments.data)
+colnames(merged)
+```
+
+comments.data
+
+
+
+
+
+
+
+
+
