@@ -1,0 +1,187 @@
+---
+title: "DACSS 603 Homework 4"
+author: "Laura Collazo"
+description: "Homework 4 for DACSS 603"
+date: "04/18/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - regression
+---
+
+```{r, echo=T, warning = FALSE, message = FALSE}
+
+library(tidyverse)
+library(alr4)
+library(smss)
+
+```
+
+# Question 1
+
+## a
+
+```{r, echo=T}
+
+
+```
+
+## b
+
+```{r, echo=T}
+
+
+```
+
+## c
+
+```{r, echo=T}
+
+
+```
+
+# Question 2 
+
+This question uses the "salary" data from the alr4 package to examine salary and characteristics of faculty in the early 1980s at a small Mid-West college. 
+
+```{r, echo=T}
+
+data("salary")
+
+```
+
+## a
+
+The below tests the hypothesis that mean salary for men and women is the same.
+
+```{r, echo=T}
+
+fit_2a <- lm(salary ~ sex, data = salary)
+
+summary(fit_2a)
+
+```
+This model does not allow the null hypothesis to be rejected as the p-value is not less than 0.05. The adjusted R-squared is also low and indicates this model explains only 4.52% of the variation between `salary` and `sex`. This model also shows that being female results in being paid $3,340 less per year than male faculty.
+
+## b
+
+The below model adds in `degree`, `rank`, `year`, and `ysdeg` as additional predictors to the regression model.
+
+```{r, echo=T}
+
+fit_2b <- lm(salary ~ sex + degree + rank + year + ysdeg, data = salary)
+
+summary(fit_2b)
+
+```
+
+## c
+
+This section interprets the findings for each predictor variable in the above model.
+
+### sex 
+
+The variable `sex` is not statistically significant in this model. It indicates that when all predictors are held constant, females are paid $1,166.37 more per year more than males.
+
+### degree
+
+The variable `degree` is not statistically significant in this model. It indicates that when all predictors are held constant, those with a PhD earn $1,388.61 more than those with a Master's.
+
+### rank
+
+The variable `rank` is statistically significant in this model. It indicates that when all predictors are held constant, faculty with a title of Assoc earn $5,292.36 more per year than those with a title of Asst and those with a title of Prof earn $11,118.76 more per year than those with a title of Prof.
+
+### year
+
+The variable `year` is statistically significant in this model. It indicates that when all predictors are held constant, for every year increase in faculty's current rank, salary increases by $476.31.
+
+### ysdeg
+
+The variable `ysdeg` is not statistically significant in this model. It indicates that when all predictors are held constant, for every year increase since the highest degree was earned, salary decreases by -$124.57.
+
+## d
+
+Below the model is updated so that the baseline category for `rank` is "Prof."
+
+```{r}
+
+salary$rank <- relevel(salary$rank, ref = "Prof")
+
+fit_2d <- lm(salary ~ sex + degree + rank + year + ysdeg, data = salary)
+
+summary(fit_2d)
+
+```
+
+This change to the model does not affect its fit or the coefficients. Notice that rankAsst shows a decrease of -$11,118.76 in salary whereas in the previous model rankProf was an increase of $11,118.76 in salary.
+
+## e
+
+This next model removes the variable `rank` from the model.
+
+```{r}
+
+fit_2e <- lm(salary ~ sex + degree + year + ysdeg, data = salary)
+
+summary(fit_2e)
+
+```
+Removing `rank` leads to `ysdeg` and `degree` now being statistically significant. 
+
+## f
+
+This final model creates a new variable `new_hire` using `ysdeg`. Those who were hired within 15 years or less were coded as 1 and everyone else 0. To avoid multicollinearity, the variable year was removed from the model. This is because it's possible the years in faculty's current rank are the same as years since the highest degree was earned (or in other words, years since hired). 
+
+```{r}
+
+salary$new_hire <- ifelse(salary$ysdeg <= 15, 1, 0)
+
+fit_2f <- lm(salary ~ sex + degree + new_hire, data = salary)
+
+summary(fit_2f)
+
+```
+This model shows the null hypothesis should be rejected and indicates that faculty hired by the new dean are actually making a lower salary than those who were hired more than 15 years ago by the previous dean. 
+
+# Question 3
+
+```{r}
+
+data("house.selling.price")
+
+```
+
+This questions uses the dataset house.selling.price from the package smss. 
+
+## a
+
+```{r}
+
+fit_3a <- lm(Price ~ Size + New, data = house.selling.price)
+
+summary(fit_3a)
+
+```
+This first model examines how the size of a house and being new or not influences price. It reveals the variables are statistically significant. Further more we learn that a 1 unit change in size leads to a $116.13 increase in price and when a house is new, it will cost $57,736.28 more than a house that is old when the size is held constant. 
+
+## b
+
+## c
+
+## d
+
+## e
+
+## f
+
+## g
+
+## h
+
+
+
