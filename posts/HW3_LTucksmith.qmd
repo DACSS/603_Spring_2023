@@ -1,0 +1,137 @@
+---
+title: "HW3"
+author: "Liam Tucksmith"
+desription: "HW3"
+date: "04/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - Liam Tucksmith
+  - tidyverse
+  - readxl
+  - ggplot2
+  - dplyr
+  - tidyr
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo=T}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(alr4)
+library(smss)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. United Nations (Data file: UN11in alr4) The data in the file UN11 contains several variables,
+including ppgdp, the gross national product per person in U.S. dollars, and fertility, the birth
+rate per 1000 females, both from the year 2009. The data are for 199 localities, mostly UN
+member countries, but also other areas such as Hong Kong that are not independent countries.
+The data were collected from the United Nations (2011). We will study the dependence of
+fertility on ppgdp.
+
+(a) Identify the predictor and the response.
+
+ Predictor: ppgpd
+ Response: Fertility
+ 
+(b) Draw the scatter plot of fertility on the vertical axis versus ppgdp on the horizontal axis
+and summarize the information in this graph. Does a straight-line mean function seem to
+be plausible for a summary of this graph?
+
+No, a straight-line mean function doesn't seem plausible for this graph as ppgdp isn't evenly distributed across the x-asix, as seen in the scatter plot. As fewer data are found further along the x-axis, a straight-line mean function wouldn't accurately summarize the data.
+
+```{r}
+un <- data.frame(UN11)
+head(un)
+ggplot(un, aes(x=ppgdp, y=fertility)) + geom_point()
+```
+(c) Draw the scatterplot of log(fertility) versus log(ppgdp) using natural logarithms. Does
+the simple linear regression model seem plausible for a summary of this graph? If you use
+a different base of logarithms, the shape of the graph won’t change, but the values on the
+axes will change.
+
+Yes, a simple linear regression model seems plausible for this graph as the data is structured in linear fashion, showing that as fertility goes up, ppgpd goes down.
+```{r}
+un <- data.frame(UN11)
+head(un)
+ggplot(un, aes(x=log(ppgdp), y=log(fertility))) + geom_point()
+```
+2. Annual income, in dollars, is an explanatory variable in a regression analysis. For a British
+version of the report on the analysis, all responses are converted to British pounds sterling (1 pound
+equals about 1.33 dollars, as of 2016).
+
+(a) How, if at all, does the slope of the prediction equation change?
+
+The slope of the prediction equation would change as the currency conversion would change the range of income on the axis, which in turn the shape of the data and the regression line. 
+
+(b) How, if at all, does the correlation change?
+
+The correlation of the prediction equation wouldn't change as the currency conversion is a linear change, not affecting the magnitude of a correlation between the variables. 
+
+3. Water runoff in the Sierras (Data file: water in alr4) Can Southern California’s water
+supply in future years be predicted from past data? One factor affecting water availability is stream
+runoff. If runoff could be predicted, engineers, planners, and policy makers could do their jobs
+more efficiently. The data file contains 43 years’ worth of precipitation measurements taken at six
+sites in the Sierra Nevada mountains (labeled APMAM, APSAB, APSLAKE, OPBPC, OPRC, and
+OPSLAKE) and stream runoff volume at a site near Bishop, California, labeled BSAAM. Draw
+the scatterplot matrix for these data and summarize the information available from these
+plots. (Hint: Use the pairs() function.)
+
+From the below scatter plot matrix, the measurements for the sites don't change drastically as the years age, but many do take a similar decline in the more recent years, while the ones who don't decline in recent years have instead slightly inclined. Particularly, the APMAM, APSAB, APSLAKE, all trend upwards from ~1980 on, while OPBPC, OPRC, OPSLAKE, and BSAAM all trend downward in the same time period. We can also see from the matrix that the sites measurement comparisons within these two groups are clustered together and aligned seemingly linear, while sites comparisons across the two groups do not have a visable relationship, linear or otherwise. 
+
+```{r}
+water <- data.frame(water)
+head(water)
+pairs(water)
+```
+4. Professor ratings (Data file: Rateprof in alr4) In the website and online forum
+RateMyProfessors.com, students rate and comment on their instructors. Launched in 1999, the site
+includes millions of ratings on thousands of instructors. The data file includes the summaries of
+the ratings of 364 instructors at a large campus in the Midwest (Bleske-Rechek and Fritsch, 2011).
+Each instructor included in the data had at least 10 ratings over a several year period. Students
+provided ratings of 1–5 on quality, helpfulness, clarity, easiness of instructor’s courses, and
+raterInterest in the subject matter covered in the instructor’s courses. The data file provides the
+averages of these five ratings. Create a scatterplot matrix of these five variables. Provide a
+brief description of the relationships between the five ratings.
+
+Of the five variables, easiness and raterInterst appear to be the least correlated with the other three variables.We can see this as in the scatterplot matrix, the easiness and raterInterest plots are the least linear. On the other hand, the quality, helfulness, and clarity ratings appear to be strongly correlated as their scatterplots form a clearly linear shape. 
+```{r}
+rate <- data.frame(Rateprof)
+head(rate)
+ratings <- select(rate, c('quality','helpfulness','clarity', 'easiness', 'raterInterest'))
+pairs(ratings)
+```
+5. For the student.survey data file in the smss package, conduct regression analyses relating
+(by convention, y denotes the outcome variable, x denotes the explanatory variable)
+(i) y = political ideology and x = religiosity,
+(ii) y = high school GPA and x = hours of TV watching.
+(You can use ?student.survey in the R console, after loading the package, to see what each variable
+means.)
+(a) Graphically portray how the explanatory variable relates to the outcome variable in
+each of the two cases
+
+(b) Summarize and interpret results of inferential analyses.
+
+In the first grap, we are looking at a relationship between a categorical predictor and response variable. I used geom_count so that overlapping data points wouldn't affect the appearance of the relationship. From the graph, we can see that liberal and very liberal repsondents attend church the least frequently. Those who attended religious services most frequently have a range of political beliefs, a higher concentration of politically like-minded folks attending church more often isn't seen in this dataset.
+
+Looking at the other graph, I used geom_smooth as this graph looks at the relationship between two continuous variables. From the graph, there is not a strong linear pattern, indicating that the relationship between these two variables isn't linear. However, we can see that the most tv was watched by respondents with a GPA under 3.0, and respondents with a GPA above 3.0 watched the least tv. 
+
+```{r}
+ggplot(student.survey, aes(re, pi)) + geom_count()
+ggplot(student.survey, aes(hi, tv)) + geom_smooth()
+```
+
