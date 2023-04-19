@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Liam Tucksmith">
-<meta name="dcterms.date" content="2023-03-12">
+<meta name="dcterms.date" content="2023-03-21">
 
 <title>FinalPart1</title>
 <style>
@@ -216,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 12, 2023</p>
+      <p class="date">March 21, 2023</p>
     </div>
   </div>
   
@@ -244,260 +244,471 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(game_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "schedule_date"       "schedule_season"     "schedule_week"      
- [4] "schedule_playoff"    "team_home"           "score_home"         
- [7] "score_away"          "team_away"           "team_favorite_id"   
-[10] "spread_favorite"     "over_under_line"     "stadium"            
-[13] "stadium_neutral"     "weather_temperature" "weather_wind_mph"   
-[16] "weather_humidity"    "weather_detail"     </code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> game_scores[game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2021</span> <span class="sc">|</span> game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2022</span>, ]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(game_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(game_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code> schedule_date      schedule_season schedule_week      schedule_playoff
- Length:569         Min.   :2021    Length:569         Mode :logical   
- Class :character   1st Qu.:2021    Class :character   FALSE:543       
- Mode  :character   Median :2021    Mode  :character   TRUE :26        
-                    Mean   :2021                                       
-                    3rd Qu.:2022                                       
-                    Max.   :2022                                       
-                                                                       
-  team_home           score_home      score_away     team_away        
- Length:569         Min.   : 0.00   Min.   : 0.00   Length:569        
- Class :character   1st Qu.:17.00   1st Qu.:15.00   Class :character  
- Mode  :character   Median :23.00   Median :21.00   Mode  :character  
-                    Mean   :23.53   Mean   :21.52                     
-                    3rd Qu.:30.00   3rd Qu.:28.00                     
-                    Max.   :56.00   Max.   :51.00                     
-                                                                      
- team_favorite_id   spread_favorite   over_under_line   stadium         
- Length:569         Min.   :-20.000   Min.   :32.00   Length:569        
- Class :character   1st Qu.: -7.000   1st Qu.:42.00   Class :character  
- Mode  :character   Median : -4.000   Median :45.00   Mode  :character  
-                    Mean   : -5.452   Mean   :45.33                     
-                    3rd Qu.: -3.000   3rd Qu.:48.00                     
-                    Max.   : -1.000   Max.   :58.50                     
-                                                                        
- stadium_neutral weather_temperature weather_wind_mph weather_humidity
- Mode :logical   Min.   : 7.00       Min.   : 0.000   Min.   :  8.00  
- FALSE:558       1st Qu.:72.00       1st Qu.: 0.000   1st Qu.: 52.50  
- TRUE :11        Median :72.00       Median : 0.000   Median : 64.00  
-                 Mean   :64.57       Mean   : 2.411   Mean   : 66.11  
-                 3rd Qu.:72.00       3rd Qu.: 0.000   3rd Qu.: 81.00  
-                 Max.   :82.00       Max.   :33.000   Max.   :100.00  
-                 NA's   :334         NA's   :333      NA's   :506     
- weather_detail    
- Length:569        
- Class :character  
- Mode  :character  
-                   
-                   
-                   
-                   </code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.data.frame(x): object 'game_scores' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(game_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> game_scores[game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2021</span> <span class="sc">|</span> game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2022</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 569
-Columns: 17
-$ schedule_date       &lt;chr&gt; "9/9/2021", "9/12/2021", "9/12/2021", "9/12/2021",…
-$ schedule_season     &lt;int&gt; 2021, 2021, 2021, 2021, 2021, 2021, 2021, 2021, 20…
-$ schedule_week       &lt;chr&gt; "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", …
-$ schedule_playoff    &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
-$ team_home           &lt;chr&gt; "Tampa Bay Buccaneers", "Atlanta Falcons", "Buffal…
-$ score_home          &lt;int&gt; 31, 6, 16, 19, 27, 33, 37, 16, 33, 34, 16, 38, 13,…
-$ score_away          &lt;int&gt; 29, 32, 23, 14, 24, 41, 21, 28, 29, 14, 17, 3, 27,…
-$ team_away           &lt;chr&gt; "Dallas Cowboys", "Philadelphia Eagles", "Pittsbur…
-$ team_favorite_id    &lt;chr&gt; "TB", "ATL", "BUF", "CAR", "MIN", "SF", "JAX", "SE…
-$ spread_favorite     &lt;dbl&gt; -7.5, -3.5, -6.5, -5.0, -3.0, -7.5, -3.0, -2.5, -6…
-$ over_under_line     &lt;dbl&gt; 51.5, 48.0, 48.5, 44.5, 48.0, 46.0, 44.5, 48.5, 53…
-$ stadium             &lt;chr&gt; "Raymond James Stadium", "Mercedes-Benz Stadium", …
-$ stadium_neutral     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
-$ weather_temperature &lt;int&gt; NA, 72, NA, NA, NA, 72, 72, 72, NA, 72, NA, NA, NA…
-$ weather_wind_mph    &lt;int&gt; NA, 0, NA, NA, NA, 0, 0, 0, NA, 0, NA, NA, NA, NA,…
-$ weather_humidity    &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
-$ weather_detail      &lt;chr&gt; "", "indoor", "", "", "", "indoor", "indoor", "ind…</code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, envir, enclos): object 'game_scores' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(game_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in summary(game_scores): object 'game_scores' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(game_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in glimpse(game_scores): object 'game_scores' not found</code></pre>
 </div>
 </div>
 <p>The second dataset I will use is a combination of data from Google Trends. To collect this data I pulled weekly “News Search” scores for each of the 32 NFL teams over the 2020-21 and 2021-22 season. To populate these scores, Google determines the week with the highest volume of News Searches within the time frame for each team and assigns it a score of 100. From there, the other weeks of the time frame get assigned their score to be the percentage of news search volume in proportion to the week scored as 100. For example, if week 7 was scored at 100 and week 3 had 30% of the news search volume that week 7 did, week 3’s score would be 30.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import csv for each NFL team</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline.csv"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (1).csv"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (2).csv"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (3).csv"</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (4).csv"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>df6 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (5).csv"</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>df7 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (6).csv"</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>df8 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (7).csv"</span>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>df9 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (8).csv"</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>df10 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (9).csv"</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>df11 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (10).csv"</span>)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>df12 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (11).csv"</span>)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>df13 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (12).csv"</span>)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>df14 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (13).csv"</span>)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>df15 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (14).csv"</span>)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>df16 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (15).csv"</span>)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>df17 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (16).csv"</span>)</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>df18 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (17).csv"</span>)</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>df19 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (18).csv"</span>)</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>df20 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (19).csv"</span>)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>df21 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (20).csv"</span>)</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>df22 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (21).csv"</span>)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>df23 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (22).csv"</span>)</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>df24 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (23).csv"</span>)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>df25 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (24).csv"</span>)</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>df26 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (25).csv"</span>)</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>df27 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (26).csv"</span>)</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>df28 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (27).csv"</span>)</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>df29 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (28).csv"</span>)</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>df30 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (29).csv"</span>)</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>df31 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (30).csv"</span>)</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>df32 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (31).csv"</span>)</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co">#bind columns to create one data frame that holds all the scores for each team</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12,df13,df14,df15,</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>                          df16,df17,df18,df19,df20,df21,df22,df23,df24,df25,df26,df27,df28,df29,df30,df31,df32)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import csv for each NFL team</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>New names:
-* Category..All.categories -&gt; Category..All.categories...1
-* Category..All.categories -&gt; Category..All.categories...2
-* Category..All.categories -&gt; Category..All.categories...3
-* Category..All.categories -&gt; Category..All.categories...4
-* Category..All.categories -&gt; Category..All.categories...5
-* ...</code></pre>
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline.csv': No such file or
+directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create new column that holds the dates for each week, which R stored as the row names</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">rownames_to_column</span>(trend_scores, <span class="st">"Week"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#rename column names to be row one values so that each column is the team name</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> trend_scores <span class="sc">%&gt;%</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_to_names</span>(<span class="at">row_number =</span> <span class="dv">1</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(trend_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (1).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>     Week           Tennessee Titans: (United States)
- Length:83          Length:83                        
- Class :character   Class :character                 
- Mode  :character   Mode  :character                 
- Jacksonville Jaguars: (United States) Philadelphia Eagles: (United States)
- Length:83                             Length:83                           
- Class :character                      Class :character                    
- Mode  :character                      Mode  :character                    
- Kansas City Chiefs: (United States) Chicago Bears: (United States)
- Length:83                           Length:83                     
- Class :character                    Class :character              
- Mode  :character                    Mode  :character              
- Green Bay Packers: (United States) San Francisco 49ers: (United States)
- Length:83                          Length:83                           
- Class :character                   Class :character                    
- Mode  :character                   Mode  :character                    
- Minnesota Vikings: (United States) New York Giants: (United States)
- Length:83                          Length:83                       
- Class :character                   Class :character                
- Mode  :character                   Mode  :character                
- Las Vegas Raiders: (United States) Buffalo Bills: (United States)
- Length:83                          Length:83                     
- Class :character                   Class :character              
- Mode  :character                   Mode  :character              
- New England Patriots: (United States) Carolina Panthers: (United States)
- Length:83                             Length:83                         
- Class :character                      Class :character                  
- Mode  :character                      Mode  :character                  
- Miami Dolphins: (United States) Seattle Seahawks: (United States)
- Length:83                       Length:83                        
- Class :character                Class :character                 
- Mode  :character                Mode  :character                 
- Detroit Lions: (United States) Cincinnati Bengals: (United States)
- Length:83                      Length:83                          
- Class :character               Class :character                   
- Mode  :character               Mode  :character                   
- New Orleans Saints: (United States) Denver Broncos: (United States)
- Length:83                           Length:83                      
- Class :character                    Class :character               
- Mode  :character                    Mode  :character               
- Baltimore Ravens: (United States) New York Jets: (United States)
- Length:83                         Length:83                     
- Class :character                  Class :character              
- Mode  :character                  Mode  :character              
- Washington Commanders: (United States) Houston Texans: (United States)
- Length:83                              Length:83                      
- Class :character                       Class :character               
- Mode  :character                       Mode  :character               
- Tampa Bay Buccaneers: (United States) Indianapolis Colts: (United States)
- Length:83                             Length:83                          
- Class :character                      Class :character                   
- Mode  :character                      Mode  :character                   
- Cleveland Browns: (United States) Arizona Cardinals: (United States)
- Length:83                         Length:83                         
- Class :character                  Class :character                  
- Mode  :character                  Mode  :character                  
- Los Angeles Chargers: (United States) Los Angeles Rams: (United States)
- Length:83                             Length:83                        
- Class :character                      Class :character                 
- Mode  :character                      Mode  :character                 
- Atlanta Falcons: (United States) Dallas Cowboys: (United States)
- Length:83                        Length:83                      
- Class :character                 Class :character               
- Mode  :character                 Mode  :character               
- Pittsburgh Steelers: (United States)
- Length:83                           
- Class :character                    
- Mode  :character                    </code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (1).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(trend_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (2).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 83
-Columns: 33
-$ Week                                     &lt;chr&gt; "2021-08-01", "2021-08-08", "…
-$ `Tennessee Titans: (United States)`      &lt;chr&gt; "12", "29", "32", "41", "37",…
-$ `Jacksonville Jaguars: (United States)`  &lt;chr&gt; "10", "14", "17", "24", "16",…
-$ `Philadelphia Eagles: (United States)`   &lt;chr&gt; "17", "19", "15", "18", "16",…
-$ `Kansas City Chiefs: (United States)`    &lt;chr&gt; "6", "4", "14", "7", "10", "1…
-$ `Chicago Bears: (United States)`         &lt;chr&gt; "15", "26", "30", "21", "46",…
-$ `Green Bay Packers: (United States)`     &lt;chr&gt; "21", "18", "22", "17", "33",…
-$ `San Francisco 49ers: (United States)`   &lt;chr&gt; "11", "9", "18", "26", "31", …
-$ `Minnesota Vikings: (United States)`     &lt;chr&gt; "30", "29", "38", "36", "60",…
-$ `New York Giants: (United States)`       &lt;chr&gt; "18", "42", "31", "30", "54",…
-$ `Las Vegas Raiders: (United States)`     &lt;chr&gt; "15", "22", "39", "15", "46",…
-$ `Buffalo Bills: (United States)`         &lt;chr&gt; "2", "1", "1", "2", "3", "3",…
-$ `New England Patriots: (United States)`  &lt;chr&gt; "30", "26", "38", "32", "92",…
-$ `Carolina Panthers: (United States)`     &lt;chr&gt; "9", "20", "57", "38", "48", …
-$ `Miami Dolphins: (United States)`        &lt;chr&gt; "13", "22", "27", "19", "45",…
-$ `Seattle Seahawks: (United States)`      &lt;chr&gt; "22", "19", "19", "22", "28",…
-$ `Detroit Lions: (United States)`         &lt;chr&gt; "33", "32", "42", "39", "51",…
-$ `Cincinnati Bengals: (United States)`    &lt;chr&gt; "0", "1", "3", "4", "0", "2",…
-$ `New Orleans Saints: (United States)`    &lt;chr&gt; "26", "24", "23", "59", "46",…
-$ `Denver Broncos: (United States)`        &lt;chr&gt; "27", "34", "23", "33", "40",…
-$ `Baltimore Ravens: (United States)`      &lt;chr&gt; "6", "25", "47", "18", "70", …
-$ `New York Jets: (United States)`         &lt;chr&gt; "18", "29", "57", "29", "52",…
-$ `Washington Commanders: (United States)` &lt;chr&gt; "12", "31", "20", "40", "42",…
-$ `Houston Texans: (United States)`        &lt;chr&gt; "41", "48", "90", "12", "70",…
-$ `Tampa Bay Buccaneers: (United States)`  &lt;chr&gt; "7", "8", "18", "8", "29", "5…
-$ `Indianapolis Colts: (United States)`    &lt;chr&gt; "14", "45", "37", "16", "42",…
-$ `Cleveland Browns: (United States)`      &lt;chr&gt; "18", "14", "18", "20", "24",…
-$ `Arizona Cardinals: (United States)`     &lt;chr&gt; "19", "11", "0", "26", "21", …
-$ `Los Angeles Chargers: (United States)`  &lt;chr&gt; "3", "14", "4", "32", "8", "1…
-$ `Los Angeles Rams: (United States)`      &lt;chr&gt; "4", "8", "11", "12", "10", "…
-$ `Atlanta Falcons: (United States)`       &lt;chr&gt; "10", "47", "19", "33", "56",…
-$ `Dallas Cowboys: (United States)`        &lt;chr&gt; "26", "20", "24", "20", "42",…
-$ `Pittsburgh Steelers: (United States)`   &lt;chr&gt; "26", "23", "25", "31", "45",…</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (2).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (3).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (3).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (4).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (4).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df6 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (5).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (5).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df7 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (6).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (6).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df8 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (7).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (7).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>df9 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (8).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (8).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>df10 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (9).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (9).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df11 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (10).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (10).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df12 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (11).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (11).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df13 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (12).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (12).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>df14 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (13).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (13).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>df15 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (14).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (14).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df16 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (15).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (15).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>df17 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (16).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (16).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>df18 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (17).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (17).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>df19 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (18).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (18).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>df20 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (19).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (19).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>df21 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (20).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (20).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>df22 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (21).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (21).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>df23 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (22).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (22).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>df24 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (23).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (23).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>df25 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (24).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (24).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>df26 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (25).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (25).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>df27 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (26).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (26).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>df28 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (27).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (27).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>df29 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (28).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (28).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>df30 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (29).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (29).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>df31 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (30).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (30).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>df32 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (31).csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in file(file, "rt"): cannot open file '/Users/elisabethtucksmith/
+Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (31).csv': No such
+file or directory</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in file(file, "rt"): cannot open the connection</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co">#bind columns to create one data frame that holds all the scores for each team</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12,df13,df14,df15,</span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>                          df16,df17,df18,df19,df20,df21,df22,df23,df24,df25,df26,df27,df28,df29,df30,df31,df32)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in list2(...): object 'df1' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create new column that holds the dates for each week, which R stored as the row names</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">rownames_to_column</span>(trend_scores, <span class="st">"Week"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in rownames_to_column(trend_scores, "Week"): object 'trend_scores' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co">#rename column names to be row one values so that each column is the team name</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> trend_scores <span class="sc">%&gt;%</span> </span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_to_names</span>(<span class="at">row_number =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in unlist(dat[row_number, ], use.names = FALSE): object 'trend_scores' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(trend_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in summary(trend_scores): object 'trend_scores' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(trend_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in glimpse(trend_scores): object 'trend_scores' not found</code></pre>
 </div>
 </div>
 
@@ -807,100 +1018,100 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb14" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "FinalPart1"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Liam Tucksmith"</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="an">desription:</span><span class="co"> "FinalPart1"</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/21/2023"</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - Liam Tucksmith</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - tidyverse</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">  - readxl</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">  - ggplot2</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">  - dplyr</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">  - tidyr</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">  - janitor</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>The most profitable sports league in the world, the National Football League, generated $18 billion in revenue in 2021 according to sportico.com. This total represents national media rights, league sponsorships with gambling companies, news outlets, and other companies, and shared revenue and royalties from the league’s various affiliates and subsidiaries, such as NFL Enterprises, NFL Properties, and NFL International. While the 32 teams which make up the NFL have separate revenue streams stemming from merchandise and ticketing sales and various other endeavors, each team also receives a slice of shared revenue from the NFL from the games' national and local broadcasts and sponsorships. As money is what keeps the NFL afloat and allows teams to competitively pay for top players and coaches, NFL teams benefit from working with media outlets and appearing in media and news. What I plan to analyze is how the relationship between the NFL and media plays out in games, if it does at all. Can the relationship between media and game outcome be measured? Does a team's weekly media attention share affect their weekly game outcome? My analysis will attempt to measure this relationship by comparing Google Trends generated News Interest Over Time scores for the 2020-21 and 2021-22 for each match up that occurred in those two seasons. </span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>My hypothesis is that the highest scored weeks for each team will generate the highest probability of winning that same or next given week. In addition, I plan to analyze how the relationship between the media and game scores changes given the media score of the opposition team, and if the relationship between the media scores and the sports betting data differs from that of the media scores and game outcome. I hypothesize that the team with the higher media score will be favored and that the spread will widen if the individual media score is above a to be determined .</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>The first dataset is a collection of all the matchups and scores that occurred in the NFL since 1966. The matchup information includes the names of the two teams competing, home/away team status, the match site, the weather on game day, and the final score for each team. Sports betting data for each game since 1977 is also included, and includes who was favored, the point spread, and the over/under line. The dataset is from https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data and was created from a variety of sources including games and scores from public websites such as ESPN, NFL.com, and Pro Football Reference. Weather information is from NOAA data, cross-referenced with NFLweather.com. Betting data reflects lines available at sportsline.com and aussportsbetting.com. For the analysis, I will limit the data to the data collected from the 2020-21 and 2021-22 seasons. </span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv"</span>)</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(game_scores)</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> game_scores[game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2021</span> <span class="sc">|</span> game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2022</span>, ]</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(game_scores)</span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(game_scores)</span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>The second dataset I will use is a combination of data from Google Trends. To collect this data I pulled weekly "News Search" scores for each of the 32 NFL teams over the 2020-21 and 2021-22 season. To populate these scores, Google determines the week with the highest volume of News Searches within the time frame for each team and assigns it a score of 100. From there, the other weeks of the time frame get assigned their score to be the percentage of news search volume in proportion to the week scored as 100. For example, if week 7 was scored at 100 and week 3 had 30% of the news search volume that week 7 did, week 3's score would be 30.  </span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co">#import csv for each NFL team</span></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline.csv"</span>)</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (1).csv"</span>)</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (2).csv"</span>)</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (3).csv"</span>)</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (4).csv"</span>)</span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>df6 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (5).csv"</span>)</span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>df7 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (6).csv"</span>)</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>df8 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (7).csv"</span>)</span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>df9 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (8).csv"</span>)</span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>df10 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (9).csv"</span>)</span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>df11 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (10).csv"</span>)</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>df12 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (11).csv"</span>)</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>df13 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (12).csv"</span>)</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>df14 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (13).csv"</span>)</span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>df15 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (14).csv"</span>)</span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>df16 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (15).csv"</span>)</span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>df17 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (16).csv"</span>)</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>df18 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (17).csv"</span>)</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>df19 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (18).csv"</span>)</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>df20 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (19).csv"</span>)</span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>df21 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (20).csv"</span>)</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>df22 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (21).csv"</span>)</span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>df23 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (22).csv"</span>)</span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>df24 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (23).csv"</span>)</span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>df25 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (24).csv"</span>)</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>df26 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (25).csv"</span>)</span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>df27 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (26).csv"</span>)</span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>df28 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (27).csv"</span>)</span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>df29 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (28).csv"</span>)</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>df30 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (29).csv"</span>)</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>df31 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (30).csv"</span>)</span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>df32 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (31).csv"</span>)</span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="co">#bind columns to create one data frame that holds all the scores for each team</span></span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12,df13,df14,df15,</span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>                          df16,df17,df18,df19,df20,df21,df22,df23,df24,df25,df26,df27,df28,df29,df30,df31,df32)</span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="co">#create new column that holds the dates for each week, which R stored as the row names</span></span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">rownames_to_column</span>(trend_scores, <span class="st">"Week"</span>)</span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co">#rename column names to be row one values so that each column is the team name</span></span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> trend_scores <span class="sc">%&gt;%</span> </span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_to_names</span>(<span class="at">row_number =</span> <span class="dv">1</span>)</span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(trend_scores)</span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(trend_scores)</span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb119" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "FinalPart1"</span></span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Liam Tucksmith"</span></span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="an">desription:</span><span class="co"> "FinalPart1"</span></span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/21/2023"</span></span>
+<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb119-8"><a href="#cb119-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb119-9"><a href="#cb119-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb119-10"><a href="#cb119-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb119-11"><a href="#cb119-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb119-12"><a href="#cb119-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb119-13"><a href="#cb119-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
+<span id="cb119-14"><a href="#cb119-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - Liam Tucksmith</span></span>
+<span id="cb119-15"><a href="#cb119-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - tidyverse</span></span>
+<span id="cb119-16"><a href="#cb119-16" aria-hidden="true" tabindex="-1"></a><span class="co">  - readxl</span></span>
+<span id="cb119-17"><a href="#cb119-17" aria-hidden="true" tabindex="-1"></a><span class="co">  - ggplot2</span></span>
+<span id="cb119-18"><a href="#cb119-18" aria-hidden="true" tabindex="-1"></a><span class="co">  - dplyr</span></span>
+<span id="cb119-19"><a href="#cb119-19" aria-hidden="true" tabindex="-1"></a><span class="co">  - tidyr</span></span>
+<span id="cb119-20"><a href="#cb119-20" aria-hidden="true" tabindex="-1"></a><span class="co">  - janitor</span></span>
+<span id="cb119-21"><a href="#cb119-21" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb119-22"><a href="#cb119-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-23"><a href="#cb119-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb119-24"><a href="#cb119-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb119-25"><a href="#cb119-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb119-26"><a href="#cb119-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb119-27"><a href="#cb119-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb119-28"><a href="#cb119-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb119-29"><a href="#cb119-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb119-30"><a href="#cb119-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb119-31"><a href="#cb119-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb119-32"><a href="#cb119-32" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb119-33"><a href="#cb119-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb119-34"><a href="#cb119-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-35"><a href="#cb119-35" aria-hidden="true" tabindex="-1"></a>The most profitable sports league in the world, the National Football League, generated $18 billion in revenue in 2021 according to sportico.com. This total represents national media rights, league sponsorships with gambling companies, news outlets, and other companies, and shared revenue and royalties from the league’s various affiliates and subsidiaries, such as NFL Enterprises, NFL Properties, and NFL International. While the 32 teams which make up the NFL have separate revenue streams stemming from merchandise and ticketing sales and various other endeavors, each team also receives a slice of shared revenue from the NFL from the games' national and local broadcasts and sponsorships. As money is what keeps the NFL afloat and allows teams to competitively pay for top players and coaches, NFL teams benefit from working with media outlets and appearing in media and news. What I plan to analyze is how the relationship between the NFL and media plays out in games, if it does at all. Can the relationship between media and game outcome be measured? Does a team's weekly media attention share affect their weekly game outcome? My analysis will attempt to measure this relationship by comparing Google Trends generated News Interest Over Time scores for the 2020-21 and 2021-22 for each match up that occurred in those two seasons. </span>
+<span id="cb119-36"><a href="#cb119-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-37"><a href="#cb119-37" aria-hidden="true" tabindex="-1"></a>My hypothesis is that the highest scored weeks for each team will generate the highest probability of winning that same or next given week. In addition, I plan to analyze how the relationship between the media and game scores changes given the media score of the opposition team, and if the relationship between the media scores and the sports betting data differs from that of the media scores and game outcome. I hypothesize that the team with the higher media score will be favored and that the spread will widen if the individual media score is above a to be determined .</span>
+<span id="cb119-38"><a href="#cb119-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-39"><a href="#cb119-39" aria-hidden="true" tabindex="-1"></a>The first dataset is a collection of all the matchups and scores that occurred in the NFL since 1966. The matchup information includes the names of the two teams competing, home/away team status, the match site, the weather on game day, and the final score for each team. Sports betting data for each game since 1977 is also included, and includes who was favored, the point spread, and the over/under line. The dataset is from https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data and was created from a variety of sources including games and scores from public websites such as ESPN, NFL.com, and Pro Football Reference. Weather information is from NOAA data, cross-referenced with NFLweather.com. Betting data reflects lines available at sportsline.com and aussportsbetting.com. For the analysis, I will limit the data to the data collected from the 2020-21 and 2021-22 seasons. </span>
+<span id="cb119-42"><a href="#cb119-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb119-43"><a href="#cb119-43" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv"</span>)</span>
+<span id="cb119-44"><a href="#cb119-44" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(game_scores)</span>
+<span id="cb119-45"><a href="#cb119-45" aria-hidden="true" tabindex="-1"></a>game_scores <span class="ot">&lt;-</span> game_scores[game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2021</span> <span class="sc">|</span> game_scores<span class="sc">$</span>schedule_season <span class="sc">==</span> <span class="dv">2022</span>, ]</span>
+<span id="cb119-46"><a href="#cb119-46" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(game_scores)</span>
+<span id="cb119-47"><a href="#cb119-47" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(game_scores)</span>
+<span id="cb119-48"><a href="#cb119-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb119-49"><a href="#cb119-49" aria-hidden="true" tabindex="-1"></a>The second dataset I will use is a combination of data from Google Trends. To collect this data I pulled weekly "News Search" scores for each of the 32 NFL teams over the 2020-21 and 2021-22 season. To populate these scores, Google determines the week with the highest volume of News Searches within the time frame for each team and assigns it a score of 100. From there, the other weeks of the time frame get assigned their score to be the percentage of news search volume in proportion to the week scored as 100. For example, if week 7 was scored at 100 and week 3 had 30% of the news search volume that week 7 did, week 3's score would be 30.  </span>
+<span id="cb119-50"><a href="#cb119-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-53"><a href="#cb119-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb119-54"><a href="#cb119-54" aria-hidden="true" tabindex="-1"></a><span class="co">#import csv for each NFL team</span></span>
+<span id="cb119-55"><a href="#cb119-55" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline.csv"</span>)</span>
+<span id="cb119-56"><a href="#cb119-56" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (1).csv"</span>)</span>
+<span id="cb119-57"><a href="#cb119-57" aria-hidden="true" tabindex="-1"></a>df3 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (2).csv"</span>)</span>
+<span id="cb119-58"><a href="#cb119-58" aria-hidden="true" tabindex="-1"></a>df4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (3).csv"</span>)</span>
+<span id="cb119-59"><a href="#cb119-59" aria-hidden="true" tabindex="-1"></a>df5 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (4).csv"</span>)</span>
+<span id="cb119-60"><a href="#cb119-60" aria-hidden="true" tabindex="-1"></a>df6 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (5).csv"</span>)</span>
+<span id="cb119-61"><a href="#cb119-61" aria-hidden="true" tabindex="-1"></a>df7 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (6).csv"</span>)</span>
+<span id="cb119-62"><a href="#cb119-62" aria-hidden="true" tabindex="-1"></a>df8 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (7).csv"</span>)</span>
+<span id="cb119-63"><a href="#cb119-63" aria-hidden="true" tabindex="-1"></a>df9 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (8).csv"</span>)</span>
+<span id="cb119-64"><a href="#cb119-64" aria-hidden="true" tabindex="-1"></a>df10 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (9).csv"</span>)</span>
+<span id="cb119-65"><a href="#cb119-65" aria-hidden="true" tabindex="-1"></a>df11 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (10).csv"</span>)</span>
+<span id="cb119-66"><a href="#cb119-66" aria-hidden="true" tabindex="-1"></a>df12 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (11).csv"</span>)</span>
+<span id="cb119-67"><a href="#cb119-67" aria-hidden="true" tabindex="-1"></a>df13 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (12).csv"</span>)</span>
+<span id="cb119-68"><a href="#cb119-68" aria-hidden="true" tabindex="-1"></a>df14 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (13).csv"</span>)</span>
+<span id="cb119-69"><a href="#cb119-69" aria-hidden="true" tabindex="-1"></a>df15 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (14).csv"</span>)</span>
+<span id="cb119-70"><a href="#cb119-70" aria-hidden="true" tabindex="-1"></a>df16 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (15).csv"</span>)</span>
+<span id="cb119-71"><a href="#cb119-71" aria-hidden="true" tabindex="-1"></a>df17 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (16).csv"</span>)</span>
+<span id="cb119-72"><a href="#cb119-72" aria-hidden="true" tabindex="-1"></a>df18 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (17).csv"</span>)</span>
+<span id="cb119-73"><a href="#cb119-73" aria-hidden="true" tabindex="-1"></a>df19 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (18).csv"</span>)</span>
+<span id="cb119-74"><a href="#cb119-74" aria-hidden="true" tabindex="-1"></a>df20 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (19).csv"</span>)</span>
+<span id="cb119-75"><a href="#cb119-75" aria-hidden="true" tabindex="-1"></a>df21 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (20).csv"</span>)</span>
+<span id="cb119-76"><a href="#cb119-76" aria-hidden="true" tabindex="-1"></a>df22 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (21).csv"</span>)</span>
+<span id="cb119-77"><a href="#cb119-77" aria-hidden="true" tabindex="-1"></a>df23 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (22).csv"</span>)</span>
+<span id="cb119-78"><a href="#cb119-78" aria-hidden="true" tabindex="-1"></a>df24 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (23).csv"</span>)</span>
+<span id="cb119-79"><a href="#cb119-79" aria-hidden="true" tabindex="-1"></a>df25 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (24).csv"</span>)</span>
+<span id="cb119-80"><a href="#cb119-80" aria-hidden="true" tabindex="-1"></a>df26 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (25).csv"</span>)</span>
+<span id="cb119-81"><a href="#cb119-81" aria-hidden="true" tabindex="-1"></a>df27 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (26).csv"</span>)</span>
+<span id="cb119-82"><a href="#cb119-82" aria-hidden="true" tabindex="-1"></a>df28 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (27).csv"</span>)</span>
+<span id="cb119-83"><a href="#cb119-83" aria-hidden="true" tabindex="-1"></a>df29 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (28).csv"</span>)</span>
+<span id="cb119-84"><a href="#cb119-84" aria-hidden="true" tabindex="-1"></a>df30 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (29).csv"</span>)</span>
+<span id="cb119-85"><a href="#cb119-85" aria-hidden="true" tabindex="-1"></a>df31 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (30).csv"</span>)</span>
+<span id="cb119-86"><a href="#cb119-86" aria-hidden="true" tabindex="-1"></a>df32 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Documents/GitHub/603_Spring_2023/posts/_data/multiTimeline (31).csv"</span>)</span>
+<span id="cb119-87"><a href="#cb119-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-88"><a href="#cb119-88" aria-hidden="true" tabindex="-1"></a><span class="co">#bind columns to create one data frame that holds all the scores for each team</span></span>
+<span id="cb119-89"><a href="#cb119-89" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12,df13,df14,df15,</span>
+<span id="cb119-90"><a href="#cb119-90" aria-hidden="true" tabindex="-1"></a>                          df16,df17,df18,df19,df20,df21,df22,df23,df24,df25,df26,df27,df28,df29,df30,df31,df32)</span>
+<span id="cb119-91"><a href="#cb119-91" aria-hidden="true" tabindex="-1"></a><span class="co">#create new column that holds the dates for each week, which R stored as the row names</span></span>
+<span id="cb119-92"><a href="#cb119-92" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> <span class="fu">rownames_to_column</span>(trend_scores, <span class="st">"Week"</span>)</span>
+<span id="cb119-93"><a href="#cb119-93" aria-hidden="true" tabindex="-1"></a><span class="co">#rename column names to be row one values so that each column is the team name</span></span>
+<span id="cb119-94"><a href="#cb119-94" aria-hidden="true" tabindex="-1"></a>trend_scores <span class="ot">&lt;-</span> trend_scores <span class="sc">%&gt;%</span> </span>
+<span id="cb119-95"><a href="#cb119-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_to_names</span>(<span class="at">row_number =</span> <span class="dv">1</span>)</span>
+<span id="cb119-96"><a href="#cb119-96" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(trend_scores)</span>
+<span id="cb119-97"><a href="#cb119-97" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(trend_scores)</span>
+<span id="cb119-98"><a href="#cb119-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
