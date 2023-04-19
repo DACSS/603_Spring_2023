@@ -57,6 +57,9 @@ The aim of this research paper is to provide a comprehensive understanding of ho
 
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tidyverse))
+library(formattable)
+suppressPackageStartupMessages(library(kableExtra))
+library(ggplot2)
 
 # Reading the data.
 
@@ -76,16 +79,9 @@ str(burn)
 ```
 The dataset contain 9 variables and 22750 observations.
 
-Four of the variables are categorical and five are numeric (including one as date)
+Four of the variables are categorical and five are numeric (including one as date).
 
-Let's see a Summary for each variable.
-
-```{r}
-summary(burn)
-
-```
-
-According to the source of the data, here is an explanation of each variable:
+According to the source of the data, here is an definition of each variable:
 
 Employee ID: The unique ID allocated for each employee.
 
@@ -97,13 +93,57 @@ Company Type: The type of company where the employee is working
 
 WFH Setup Available: Is the work from home facility available for the employee
 
-Designation: The designation of the employee of work in the organization. In the range of \[0.0, 5.0\] bigger is higher designation.
+Designation: The designation (designations refer to the expertise and qualifications a person must complete certain jobs) of the employee of work in the organization. In the range of \[0.0, 5.0\] bigger is higher designation.
 
 Resource Allocation: The amount of resource allocated to the employee to work, ie. number of working hours.In the range of \[1.0, 10.0\] (higher means more resource)
 
 Mental Fatigue Score: The level of fatigue mentally the employee is facing.In the range of \[0.0, 10.0\] where 0.0 means no fatigue and 10.0 means completely fatigue.
 
 Burn Rate: The value we need to predict for each employee telling the rate of Bur out while working.In the range of \[0.0, 1.0\] where the higher the value is more is the burn out.
+
+Let's see a Summary for each variable.
+
+```{r}
+
+#simplify some variable names and transforming date
+burn <- rename(burn, fatigue = Mental.Fatigue.Score, hours = Resource.Allocation, WFH = WFH.Setup.Available, doh = Date.of.Joining, id = Employee.ID, business = Company.Type, designation = Designation, burn.rate = Burn.Rate, gender = Gender)
+
+summary(burn)
+
+```
+
+Let's visualize the data:
+
+```{r}
+
+counts <- table(burn$Gender, burn$Company.Type)
+barplot(counts, main="Gender Distribution vs Type of business",
+  xlab="Type of Business", col=c("#eb8060","#a1e9f0"),
+  legend = rownames(counts), beside=TRUE)
+  
+counts2 <- table
+ggplot(burn, aes(Gender, "Count", fill = Company.Type)) +
+  geom_bar(stat="identity", position = "dodge") +
+  labs(title="Multiple Bar plots")
+
+```
+
+
+```{r}
+
+hist(burn$burn.rate, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Burnout Rate", xlab = "Values", ylab = "Density")
+lines(density(burn$burn.rate, na.rm=TRUE), col = "blue", lwd = 2)
+
+hist(burn$fatigue, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Mental Fatigue", xlab = "Values", ylab = "Density")
+lines(density(burn$fatigue, na.rm=TRUE), col = "blue", lwd = 2)
+
+hist(burn$hours, freq = FALSE, col="#a1e9f0", main = "Histogram of hours allocated", xlab = "Values", ylab = "Count")
+
+hist(burn$designation, freq = FALSE, col="#a1e9f0", main = "Histogram of Designation", xlab = "Values", ylab = "Density")
+```
+
+
+
 
 
 ### **References**:
