@@ -79,6 +79,13 @@ fit_2b <- lm(salary ~ sex + degree + rank + year + ysdeg, data = salary)
 summary(fit_2b)
 
 ```
+The 95% confidence interval for the difference in salary between males and females is below.
+
+```{r}
+
+confint(fit_2b)
+
+```
 
 ## c
 
@@ -131,7 +138,7 @@ fit_2e <- lm(salary ~ sex + degree + year + ysdeg, data = salary)
 summary(fit_2e)
 
 ```
-Removing `rank` leads to `ysdeg` and `degree` now being statistically significant. 
+Removing `rank` leads to `ysdeg` and `degree` now being statistically significant in the model. However, the adjusted R-square is lower than in the previous 2 models and the residual standard error is greater making this model not the best fit.  
 
 ## f
 
@@ -146,7 +153,7 @@ fit_2f <- lm(salary ~ sex + degree + new_hire, data = salary)
 summary(fit_2f)
 
 ```
-This model shows the null hypothesis should be rejected and indicates that faculty hired by the new dean are actually making a lower salary than those who were hired more than 15 years ago by the previous dean. 
+This model shows the null hypothesis should be rejected and indicates that faculty hired by the new dean are actually making a lower salary than those who were hired more than 15 years ago. 
 
 # Question 3
 
@@ -171,17 +178,101 @@ This first model examines how the size of a house and being new or not influence
 
 ## b
 
+The equation for the predicted selling price when the home is new is `price = -40230.867 + 116.132Size + 57736.283New`
+
+```{r}
+
+```
+
 ## c
+
+The predicted selling price for a home of 3000 square feed that is new is below.
+
+```{r}
+
+df_new <- data.frame(Size = 3000, New = 1)
+
+predict(fit_3a, newdata = df_new)
+
+```
+
+The predicted selling price for a home of 3000 square feed that is not new is below.
+
+```{r}
+
+df_not_new <- data.frame(Size = 3000, New = 0)
+
+predict(fit_3a, newdata = df_not_new)
+
+```
 
 ## d
 
+The next model includes an interaction term with size and new.
+
+```{r}
+
+fit_3d <- lm(Price ~ Size * New, data = house.selling.price)
+
+summary(fit_3d)
+
+```
+
 ## e
+
+```{r}
+
+ggplot(house.selling.price,aes(y=Price,x=Size,color=factor(New)))+
+  geom_point()+
+  stat_smooth(method="lm",se=TRUE)
+
+```
 
 ## f
 
+The predicted selling price, using the model with interaction terms, for a home of 3000 square feed that is new is below.
+
+```{r}
+
+predict(fit_3d, newdata = df_new)
+
+```
+
+The predicted selling price, using the model with interaction terms, for a home of 3000 square feed that is not new is below.
+
+```{r}
+
+predict(fit_3d, newdata = df_not_new)
+
+```
+
 ## g
+
+
+The predicted selling price, using the model with interaction terms, for a home of 1500 square feed that is new is below.
+
+```{r}
+
+df_new <- data.frame(Size = 1500, New = 1)
+
+predict(fit_3d, newdata = df_new)
+
+```
+
+The predicted selling price, using the model with interaction terms, for a home of 1500 square feed that is not new is below.
+
+```{r}
+
+df_not_new <- data.frame(Size = 1500, New = 0)
+
+predict(fit_3d, newdata = df_not_new)
+
+```
+
+In comparing the predictions for part F and G of question 3, it can be observed that the difference in selling price between a new and not new home increases as the the size of the home increases.
 
 ## h
 
+I believe the model with the interaction term best represents the relationship of size and new to the outcome price. I've come to this conclusion as the model with the interaction term has a higher adjusted R-squared and lower residual standard error than the model without the interaction term.
 
 
