@@ -24,24 +24,37 @@ library(smss)
 
 # Question 1
 
+For this question the prediction equation is `Price = -10,536 + 53.8HomeSize + 2.84LotSize`.
+
 ## a
+
+When HomeSize = 1240 and LotSize= 18,000, the predicted Price is:
 
 ```{r, echo=T}
 
+sum(-10,536 + (53.8*1240) + (2.84*1800))
+
+```
+
+Since this home actually sold for $145,000, the residual is:
+
+```{r, echo=T}
+
+sum(72350-145000)
 
 ```
 
 ## b
 
-```{r, echo=T}
-
-
-```
+When the lot size remains fixed, the price is predicted to increase $53.80 for every one-square foot increase in size.
 
 ## c
 
+Given this same equation, if home size remains fixed, the lot size would need to increase by the below in order to have the same impact on price as a one-square foot increase in home size:
+
 ```{r, echo=T}
 
+sum(53.8/2.84)
 
 ```
 
@@ -174,11 +187,11 @@ fit_3a <- lm(Price ~ Size + New, data = house.selling.price)
 summary(fit_3a)
 
 ```
-This first model examines how the size of a house and being new or not influences price. It reveals the variables are statistically significant. Further more we learn that a 1 unit change in size leads to a $116.13 increase in price and when a house is new, it will cost $57,736.28 more than a house that is old when the size is held constant. 
+This first model examines how the size of a house and being new or not influences price. It reveals the variables are statistically significant. Furthermore, we learn that a 1 unit change in size leads to a $116.13 increase in price and when a house is new, it will cost $57,736.28 more than a house that is old when the size is held constant. 
 
 ## b
 
-The equation for the predicted selling price when the home is new is `price = -40230.867 + 116.132Size + 57736.283New`
+The equation for the predicted selling price when the home is new is: `price = -40230.867 + 116.132Size + 57736.283New`
 
 ```{r}
 
@@ -208,7 +221,7 @@ predict(fit_3a, newdata = df_not_new)
 
 ## d
 
-The next model includes an interaction term with size and new.
+The next model includes an interaction term between size and new.
 
 ```{r}
 
@@ -269,7 +282,7 @@ predict(fit_3d, newdata = df_not_new)
 
 ```
 
-In comparing the predictions for part F and G of question 3, it can be observed that the difference in selling price between a new and not new home increases as the the size of the home increases.
+In comparing the predictions for part F and G, it can be observed that the difference in selling price between a new and not new home increases as the the size of the home increases.
 
 ## h
 
