@@ -10,11 +10,12 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - finalpart1
+  - finalpart2
   - final project
   - burnout
   - employee burnout
   - descriptives
+  - regression
   - Research question
   - hyphoteses
 ---
@@ -26,10 +27,7 @@ categories:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-
-### **Burnout in the workplace**.
-
-DACSS 603, Spring 2023
+### **Burnout in the workplace - Research Question**.
 
 Burnout is a pervasive issue in many professions, and its consequences can be significant for individuals and organizations alike. According to Maslach and Leiter (2016), burnout is characterized by emotional exhaustion, despersonalization, and reduced personal accomplishment. It is prevalent in a variety of fields, including healthcare (West et al., 2016), among other professions. Burnout can have serious consequences, including decreased job satisfaction, increased absenteeism, and turnover (West et al., 2016).
 
@@ -37,9 +35,11 @@ There is a growing body of research exploring the causes and consequences of bur
 
 Lee & Eissenstat (2017), for instance, affirm that psychological job demands and work-to-family conflict, as well as control over working hours/schedule, decision-making authority, and role clarity, have significant effects on burnout.
 
-The aim of this research paper is to provide a comprehensive understanding of how type of business, and seniority level explain the level of burnout.
+The aim of this research paper is to provide a comprehensive understanding of **how type of business, and seniority level explain the level of burnout.**
 
-**Null hypothesis**: The type of business, and seniority does not affect the burnout rate.
+### Hypothesis
+
+**Null Hypothesis**: The type of business, and seniority does not affect the burnout rate.
 
 **Alternative hypotheses**:
 
@@ -49,14 +49,15 @@ The aim of this research paper is to provide a comprehensive understanding of ho
 
 3.  The numbers of work hours allocated affect the burnout rate significantly in WFH setup (vs on site).
 
-
-### **About the Data**
+### About the Data
 
 ```{r}
 # Loading packages
-
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(psych))
+library(lattice)
 library(formattable)
 suppressPackageStartupMessages(library(kableExtra))
 library(ggplot2)
@@ -71,12 +72,13 @@ The dataset was obtained from:
 
 https://www.kaggle.com/datasets/blurredmachine/are-your-employees-burning-out
 
-Let's check the strucutre of the dataset:
+Let's see the strucutre of the dataset:
 
 ```{r}
 #Structure
 str(burn)
 ```
+
 The dataset contain 9 variables and 22750 observations.
 
 Four of the variables are categorical and five are numeric (including one as date).
@@ -103,46 +105,126 @@ Burn Rate: The value we need to predict for each employee telling the rate of Bu
 
 Let's see a Summary for each variable.
 
+But first let's simplify the name of the variables and transform the Date of hire into tenure in months.
+
 ```{r}
 
 #simplify some variable names and transforming date
 burn <- rename(burn, fatigue = Mental.Fatigue.Score, hours = Resource.Allocation, WFH = WFH.Setup.Available, doh = Date.of.Joining, id = Employee.ID, business = Company.Type, designation = Designation, burn.rate = Burn.Rate, gender = Gender)
 
-summary(burn)
-
-```
-
-Let's visualize the data:
-
-```{r}
-
-counts <- table(burn$Gender, burn$Company.Type)
-barplot(counts, main="Gender Distribution vs Type of business",
-  xlab="Type of Business", col=c("#eb8060","#a1e9f0"),
-  legend = rownames(counts), beside=TRUE)
-  
-counts2 <- table
-ggplot(burn, aes(Gender, "Count", fill = Company.Type)) +
-  geom_bar(stat="identity", position = "dodge") +
-  labs(title="Multiple Bar plots")
+burn$doh <- as.Date(burn$doh)
+burn$tenure <- difftime("2023-4-20", burn$doh, units = "weeks")
+burn$tenure <- burn$tenure/52
+burn$tenure <- as.numeric(burn$tenure)
 
 ```
 
 
+#### Descriptives and exploratory visualization:
+
 ```{r}
 
-hist(burn$burn.rate, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Burnout Rate", xlab = "Values", ylab = "Density")
+#creating a df with only continuous variables
+burn2 <- burn %>%
+  dplyr::select(-gender, -doh, -id, -WFH, -business)
+
+describe_data <- describe(x=burn2) %>% 
+  select(c(vars, n, mean, sd, median, min, max, range))
+
+kable(describe_data) %>% 
+  kable_styling("striped")
+
+
+```
+
+Let's visualize the data.
+
+Gender and Type of Business:
+
+```{r}
+
+#Let's start with Gender and Type of Business
+
+counts <- table(burn$gender, burn$business)
+counts
+
+tb.df <- as.data.frame(counts)
+names(tb.df) <- c("Gender", "Business", "Frequency")
+
+ggplot(tb.df, aes(x=Business, y=Frequency, fill=Gender)) + geom_col()
+
+
+```
+
+Business and Work From Home setup:
+
+```{r}
+
+#Let's start with Gender and Type of Business
+
+counts2 <- table(burn$WFH, burn$business)
+counts2
+
+tb.df2 <- as.data.frame(counts2)
+names(tb.df2) <- c("WFH", "Business", "Frequency")
+
+ggplot(tb.df2, aes(x=Business, y=Frequency, fill=WFH)) + geom_col()
+
+
+```
+
+Gender and Work From Home setup:
+
+```{r}
+
+#Let's start with Gender and Type of Business
+
+counts3 <- table(burn$WFH, burn$gender)
+counts3
+
+#tb.prop3 <- prop.table(counts3, 1)
+
+tb.df3 <- as.data.frame(counts3)
+names(tb.df3) <- c("WFH", "Gender", "Frequency")
+
+ggplot(tb.df3, aes(x=Gender, y=Frequency, fill=WFH)) + geom_col()
+
+#tp.df3 <- as.data.frame(tb.prop3)
+#names(tp.df3) <- c("WFH", "Gender", "Proportion")
+#tp.df3
+
+#ggplot(tp.df3, aes(x=Gender, y=Proportion, fill=WFH)) + geom_col()
+```
+
+Histograms for Burn Rate, mental Fatigue, Work hours allocated and Designation Level.
+```{r}
+
+hist(burn$burn.rate, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Burnout Rate", xlab = "Burn Rate", ylab = "Density")
 lines(density(burn$burn.rate, na.rm=TRUE), col = "blue", lwd = 2)
 
 hist(burn$fatigue, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Mental Fatigue", xlab = "Values", ylab = "Density")
 lines(density(burn$fatigue, na.rm=TRUE), col = "blue", lwd = 2)
 
-hist(burn$hours, freq = FALSE, col="#a1e9f0", main = "Histogram of hours allocated", xlab = "Values", ylab = "Count")
+hist(burn$hours, freq = TRUE, col="#a1e9f0", main = "Histogram of hours allocated", xlab = "Work Hours allocated", ylab = "Frequency")
 
-hist(burn$designation, freq = FALSE, col="#a1e9f0", main = "Histogram of Designation", xlab = "Values", ylab = "Density")
+hist(burn$designation, freq = TRUE, col="#a1e9f0", main = "Histogram of Designation", xlab = "Designation Level", ylab = "Frequency")
 ```
 
 
+#### Explore relationships
+
+```{r}
+
+round(cor(na.omit(burn2)),
+  digits = 2)
+
+t.test(burn$burn.rate ~ burn$gender, var.equal = FALSE)
+t.test(burn$burn.rate ~ burn$WFH, var.equal = FALSE)
+t.test(burn$burn.rate ~ burn$business, var.equal = FALSE)
+
+```
+
+It looks like the 
 
 
 
@@ -155,8 +237,3 @@ Lee, Y., Eissenstat, S. (2017). A longitudinal examination of the causes and eff
 Maslach, C., & Leiter, M. P. (2016). Understanding the burnout experience: Recent research and its implications for psychiatry. World Psychiatry, 15(2), 103--111.
 
 West, C. P., Dyrbye, L. N., Erwin, P., Shanafelt, T. D., (2016). Interventions to promote physician well-being and mitigate burnout: A systematic review and meta-analysis. The Lancet, 388(10057), 2272--228
-
-
-
-
-
