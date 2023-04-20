@@ -1,0 +1,114 @@
+---
+title: "Final Project Part 1"
+author: "Hannah Rosenbaum"
+format: pdf
+editor: visual
+---
+
+## Background
+
+Fifty years after the passage of the Title IX Amendment, collegial sports equity has shown relatively minimal change. Allocations of sports budgets often highlight pay discrepancies in participants being "spent \[on\] \$4,285 per men's participant versus \$2,588 per women's participant." (Feinberg, D., & Hunzinger, E) With these vast differences in individual spending by gender, we see this phenomenon only heightened in the NCAA with women's basketball. Women's basketball not only fares having lower budgets from the NCAA but also, per an ESPN report, "is underpaying the NCAA for the tournament rights for 29 championships causing the association to lose out on substantial and crucial revenue\... denoting that the current budget of \$81 million to \$112 million multiples more than what the network currently gives." (Zimmbalist) Thus, there is not only a discrepancy in budget allocations among the participants by gender but also amongst large broadcast networks.
+
+Significant systemic issues occur within the gendered branding of 'March Madness.' This can be seen with differentiated treatment of male versus female brackets due to the lack of general awareness of when the women's bracket games even occur. Largely the inequity of the 'March Madness' tournament derives from a differentiation from the NCAA in "distribution agreements, corporate sponsorships, distribution of revenue, organizational structure and culture all to prioritize Division I men's basketball over everything else\... to perpetuate gender inequities." (Blinder) Likewise, this institutional creation of a high investment in TV rights for men's basketball and minimal airtime for the women's bracket has led to smaller budgeting and fewer avenues to earn revenue. This has led women's teams to be "starved of a starring role in the national discourse." (Blinder) Thus, it creates a circular effect in women's basketball, deriding fewer resources even within facilities at the NCAA tournament in 2021 and in general awareness of TV times.
+
+I am primarily interested in discussing sports equity in women's basketball due to my own personal experience at UF of wanting to watch NCAA basketball for women but having no general knowledge of when women play. I believe that the discussion of equity in sports for women is essential because of the common dismissal of watching women's sports as a pastime.
+
+## 
+
+**Research Questions**
+
+1\. Is there a relationship between a higher percentage of female students in post-secondary education and a portion of female athletes at those institutions?
+
+2\. In NCAA sports, is there a relationship between expenditure on university sports programs and the percentage of females in university sports programs?
+
+3\. In NCAA sports, is there a relationship between revenue from university sports programs and the percentage of females in university sports programs?
+
+## Hypothesis Testing
+
+1\. **Ho:** There is no relationship between a higher percentage of female students in post-secondary education and the percentage of female athletes.
+
+**Ha:** There is a relationship between a higher percentage of female students in post-secondary education and percentage of female athletes.
+
+2\. **Ho:** There is no relationship between expenditure on university sports programs and the percentage of females in university sports programs.
+
+**Ha:** There is a relationship between expenditure on university sports programs and the percentage of females in university sports programs.
+
+3**. Ho:** There is no relationship between revenue from university sports programs and the percentage of females in sports programs.
+
+**Ha:** There is a relationship between revenue from university sports programs and the percentage of females in sports programs.
+
+## Descriptive Statistics
+
+The Equity in Athletics Disclosures Act requires the full financial disclosure of total expenditures, revenue, staffing, and recruiting efforts by men's and women's athletic programs (Mock, J.T.). Data provided by the Equity in Sports project is from all postsecondary programs that receive government funding from Title IV funding and is an online database of funding expenses from 2015-2019.
+
+There are 132,327 rows and a total of 28 columns.
+
+### Read in Sports Equity data-set
+
+```{r}
+sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-29/sports.csv')
+```
+
+### Create data-frames: Critical dimensions, Attendance specific, Basketball specific
+
+```{r}
+data <- as.data.frame(sports[, c("year", "institution_name", "sports", "ef_male_count", "ef_female_count", "sum_partic_men", "sum_partic_women", 'rev_men', 'rev_women', 'exp_men', 'exp_women')])
+attendance_data <- sports[,c("institution_name", "sports", "ef_male_count", "ef_female_count", "sum_partic_men", "sum_partic_women")] %>% group_by(institution_name, sports) %>% summarise(across(everything(), mean), .groups='drop')
+basketball <- filter(sports, sports=='Basketball')
+```
+
+### Scatter plots comparing Expenditures against Revenue by Gender
+
+```{r}
+plot(data$exp_men, data$rev_men)
+plot(data$exp_women, data$rev_women)
+```
+
+### Descriptive Statistics
+
+```{r}
+glimpse(data)
+summary(data)
+```
+
+### Scatter plots comparing Institution Attendance against Participation by Gender
+
+```{r}
+plot(attendance$ef_male_count, attendance$sum_partic_men)
+plot(attendance$ef_female_count, attendance$sum_partic_women)
+```
+
+### Scatter plots comparing basketball Participation against Expenditures by Gender
+
+```{r}
+plot(basketball$sum_partic_men, basketball$exp_men)
+plot(basketball$sum_partic_women, basketball$exp_women)
+```
+
+```         
+For the dataset, I could extrapolate my variables of interest as seen here: <https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-03-29/readme.md>.
+```
+
+My critical variables of interest are the following items:
+
+-   year: Period year
+
+-   institution name: School name
+
+-   sports: Sport name
+
+-   ef_male_count: Total male count
+
+-   ef_female_count: Total female count
+
+-   sum_partic_men: Total male participation
+
+-   sum_partic_women: Total female participation
+
+-   rev_men: Revenue in USD for men
+
+-   rev_women: Revenue in USD for women
+
+-   exp_men: Expenditures in USD for men
+
+-   exp_women: Expenditures in USD for women
