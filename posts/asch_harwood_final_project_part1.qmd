@@ -1,8 +1,8 @@
 ---
-title: "Estimating National Food Waste with State/Local Waste Characterization Studies in the United States"
+title: "Estimating Per Capita Food Waste in the United States"
 author: "Asch Harwood"
-description: "Final Project Part 1: Proposal"
-date: "03/20/23"
+description: "Final Project Part 2: Proposal"
+date: "04/20/23"
 format:
   html:
     toc: true
@@ -10,7 +10,7 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - finalpart1
+  - finalpart2
 editor: 
   markdown: 
     wrap: 72
@@ -317,10 +317,13 @@ ggplot(data = x_y_controls_df, aes(x=log(ibis_grcy_revenue_usd_m_per_capita_stat
 
 # Model Comparison
 
-I fit several different models.
+I fit several different models. Given the small size of the dataset and
+the counterintuitive finding around the climate change trend discussed
+below, I'm withholding judgement about which is the 'better' model until
+I have increased the number of training observations for V2.
 
-Model 1:
-`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights`
+**Model 1**:
+`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population`
 
 -   Uses
     `log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term +ibis_grcy_revenue_usd_m_per_capita_state`
@@ -337,46 +340,82 @@ Model 1:
     decrease in total food per capita, holding all other variables
     constant. This is a negative relationship, indicating that as
     interest in sustainability increases, total food waste per capita
-    decreases. This finding is statistically significant.
+    decreases. This finding is statistically significant. Therefore, we
+    can reject the null hypothesis in favor of the alternative that
+    Google search volume about 'sustainability' is negatively correlated
+    with per capita food waste.
 
 2.  **`log(gt_abs_cc_per_capita)`**: A 1% increase in log(climate change
     search volume) is associated with a 0.11% increase in total food
     waste per capita, holding all other variables constant. This
-    positive relationship is counterintutive. However, the results are
-    not statistically significant.
+    positive relationship is counterintuitive. However, the results are
+    not statistically significant. There, we cannot reject the null
+    hypothesis that Google search volume about 'climate change' is not
+    correlated with per capita food waste.
 
 3.  **`interaction_term`**: The interaction term captures the combined
-    effect of climate change and sustainabilty search volume on total
-    food per capita. A 1-unit increase in the interaction term is
+    effect of climate change and sustainability search volume on total
+    food waste per capita. A 1-unit increase in the interaction term is
     associated with a 0.001-unit increase in the log total food waste
-    per capita, holding all other variables constant
+    per capita, holding all other variables constant. This finding is
+    also counter intutitive. Nevertheless, while the effect is
+    statistically significant, its an incredibly small effect.
 
-Model 2:
-`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, weights=x_y_controls_df$weights`
+4.  **`ibis_grcy_revenue_usd_m_per_capita_state`**: A 1-unit increase in
+    grocery revenue per capita is associated with a 0.05-unit increase
+    in the log of total food waste per capita, holding all other
+    variables constant. This indicates a positive relationship between
+    grocery revenue per capita and total food per capita. This finding
+    is significant. Therefore, we can reject the null hypothesis in
+    favor of the alternative that increased supermarket revenue is
+    correlated with increased per capita food waste
+
+5.  Adjusted R-squared is 0.86, meaning that approximately 86% of the
+    variation in the log of total food waste per capita can be explained
+    by the included independent variables.
+
+**Model 2**:
+`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population`
 
 -   Uses
-    `log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) +ibis_grcy_revenue_usd_m_per_capita_state`
-    as explanatory variables and drops the interaction term
+    `log(gt_abs_sustain_per_capita) +ibis_grcy_revenue_usd_m_per_capita_state`
+    as explanatory variables and drops climate change search volume and
+    interaction term
 
 -   Controls for year and population
 
 -   Uses weighted least squares
 
-```{r}
-fit_no_int_no_cc <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
-summary(fit)
-```
+**Interpretation/Hypothesis Testing**
 
+1.  `log(gt_abs_sustain_per_capita)`: A 1% increase in
+    log(sustainability search volume) is associated with -0.15%
+    reduction in per capita food waste. This is a negative relationship,
+    indicating that as interest in sustainability increases, total food
+    waste per capita decreases. This finding is statistically
+    significant. Therefore, we can reject the null hypothesis in favor
+    of the alternative that Google search volume about 'sustainability'
+    is negatively correlated with per capita food waste.
+
+2.  `ibis_grcy_revenue_usd_m_per_capita_state`: A 1-unit increase in
+    grocery revenue per capita is associated with a 0.04-unit increase
+    in the log of total food waste per capita, holding all other
+    variables constant. This indicates a positive relationship between
+    grocery revenue per capita and total food per capita. This finding
+    is significant. Therefore, we can reject the null hypothesis in
+    favor of the alternative that increased supermarket revenue is
+    correlated with increased per capita food waste.
+
+3.  The adjusted R-squared value is 0.81, meaning that approximately 81%
+    of the variation in the log of total food waste per capita can be
+    explained by the included independent variables.
 
 ```{r model_comparison}
-
 x_y_controls_df$interaction_term <- x_y_controls_df$gt_abs_cc_per_capita * x_y_controls_df$gt_abs_sustain_per_capita
 
 fit_inter_pop <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
 
-fit_no_interaction <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
-
-fit_no_weights <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df)
+fit_no_int_no_cc <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
 ```
 
 ```{r warning=FALSE}
@@ -384,12 +423,17 @@ fit_no_weights <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita)
 stargazer(fit_inter_pop, fit_no_int_no_cc,type = "text",
           title = "Food Waste Estimation Model Comparison",
           align = TRUE,
-          column.labels = c("M1:Interact/Pop", "M2:NoInteract"),
+          column.labels = c("M1:Interact/Pop", "M2:NoInteractCC"),
           ci = TRUE, # Show confidence intervals
           digits = 2) 
 ```
 
-# Model Diagnostics
+# Model 1 Diagnostics
+
+- Overall, while the residuals plot seem promising in that errors are appear to be normally distributed, all but two of our explainatory and control variables have VIFs over 10, which suggests high multicollinearity in the model. Likewise, the InfluencePlot shows several, potentially influential outliers. Given the very small size of the dataset, these issues are to be expect and I suspect will be resolved by:
+
+1. Setting 2005 as the baseline for our data, removing the need to fill missing values
+2. Increasing the number of observations in the data set
 
 ```{r}
 summary(fit_inter_pop)
@@ -420,6 +464,45 @@ vif(fit_inter_pop)
 ```
 
 ```{r}
-par(mfrow=c(2,3))
-plot(fit_inter_pop)
+influencePlot(fit_inter_pop)
 ```
+# Model 2 Diagnostics
+
+An inspection of residuals suggests a poorer fit than the previous model. This model clearly has several influence outliers. However, multicollinearity, while still high, is lower than with the previous model.
+
+```{r}
+summary(fit_no_int_no_cc)
+```
+```{r}
+# Get the residuals and fitted values from the model
+residuals <- residuals(fit_no_int_no_cc)
+fitted_values <- fitted(fit_no_int_no_cc)
+
+# Add the residuals and fitted values as new columns in the dataframe
+x_y_controls_df$residuals <- residuals
+x_y_controls_df$fitted_values <- fitted_values
+
+
+ggplot(data = x_y_controls_df, aes(x=fitted_values, y=residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+```{r}
+qqnorm(residuals, main="Q-Q Plot of Residuals")
+qqline(residuals)
+```
+
+
+```{r}
+vif(fit_no_int_no_cc)
+```
+
+```{r}
+influencePlot(fit_no_int_no_cc)
+```
+
+
+
+
+```
+
