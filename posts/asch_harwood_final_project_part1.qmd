@@ -103,9 +103,22 @@ and residential sectors.
 
 - As a proxy for corporate knowledge/concern about climate changed, I extracted state-level search volume for the topic, "Sustainability", using Google Trends Supercharged. I then converted this measure to a state per capita basis. To fill missing years 2000 - 2003, I also fit a linear regression to serve as placeholder. Again, for future iterations, I plan to use a baseline of 2005.
 
+**Consumer Corporate Knowledge Interaction**
+
+- I included an interaction term between sustainability and climate change search volume. My argument for doing so is that they are meant to represent the 'supply' and 'demand', which hypothetically influence each other. While the sustainabilty search was the only statistically significant of the two search variables, adding the interaction term increased the overall R-squared as well as the adjusted r-squared.
+
 **Food Waste**
 
 - For the dependant variable, food waste per capita, I extracted absolute food waste weights from 20 state-level municipal solid waste characterization studies as well as the sample sizes collected to produce each of those calculations. I then calculated food waste per captia. Give the small size of this dataset, I mutiplied the sample size for each observation by the population in the respective state, which I then used as weights in the model.
+
+### Control Variables
+
+**Year**
+- I wanted to control for the impact of change over time because estimates from other models (i.e. ReFED) show a general increase in food waste over time.
+
+**Population**
+
+- I control for population in two different ways - using per capita measures and including population as a control variable. Per capita metrics do not fully capture the influence of population, which hypotehtically should correlate with changes in food waste. Controlling for population increased the coefficients for my two statisitcally significant explanaotry variables as well as the multiple and adjusted r-squared.
 
 ### Hypothesis
 
@@ -194,6 +207,25 @@ kable(data_dictionary)
 ggplot(data = x_y_controls_df, aes(x=log(total_food_per_capita))) +
   geom_histogram(bins=10)
 ```
+```{r}
+
+# Reshape the data to long format without the year variable
+long_data <- x_y_controls_df %>%
+  select(total_food_per_capita, ibis_grcy_revenue_usd_m_per_capita_state, gt_abs_sustain_per_capita, gt_abs_cc_per_capita) %>%
+  gather(key = "variable", value = "value")
+
+# Create box and whisker plot for multiple variables without year
+ggplot(data = long_data, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot() +
+  ggtitle("Box and Whisker Plot for X and Y Variables") +
+  xlab("Variable") +
+  ylab("Value") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)) +
+  scale_fill_discrete(name = "Variable", labels = c("Total Food Per Capita", "Revenue Per Capita", "Sustainability Per Capita", "CC Per Capita")) +
+  theme(legend.position = "none") +
+  scale_x_discrete(labels = c("Total Food Per Capita", "Revenue Per Capita", "Sustainability Per Capita", "CC Per Capita"))
+```
+
 
 
 ```{r}
@@ -203,29 +235,21 @@ ggplot(data = x_y_controls_df, aes(x=log(gt_abs_sustain_per_capita), y=log(total
   theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
 ```
 
-
+```{r}
+ggplot(data = x_y_controls_df, aes(x=log(gt_abs_cc_per_capita), y=log(total_food_per_capita))) +
+  geom_point() +
+  ggtitle("Climate Change Search Volume vs. Total Food Per Capita") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+```
 
 ```{r}
-# Load required packages
-library(ggplot2)
-
-
-# Reshape the data to long format
-long_data <- x_y_controls_df %>%
-  select(year, total_food_per_capita, ibis_grcy_revenue_usd_m_per_capita_state, gt_abs_sustain_per_capita, gt_abs_cc_per_capita) %>%
-  gather(key = "variable", value = "value", -year)
-
-# Create box and whisker plot for multiple variables
-ggplot(data = long_data, aes(x = factor(year), y = value, fill = variable)) +
-  geom_boxplot() +
-  ggtitle("Box and Whisker Plot for Multiple Variables by Year") +
-  xlab("Year") +
-  ylab("Value") +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)) +
-  scale_fill_discrete(name = "Variable", labels = c("Total Food Per Capita", "Revenue Per Capita", "Sustainability Per Capita", "CC Per Capita")) +
-  theme(legend.position = "bottom")
-
+ggplot(data = x_y_controls_df, aes(x=log(ibis_grcy_revenue_usd_m_per_capita_state), y=log(total_food_per_capita))) +
+  geom_point() +
+  ggtitle("Grocery Revenue Per Capita vs. Total Food Per Capita") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
 ```
+
+
 
 
 
