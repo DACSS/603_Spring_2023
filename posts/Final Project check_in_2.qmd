@@ -135,7 +135,7 @@ good measure for this study.
 
 ### Page views
 
-This is the most general engagement metric, representing how many views
+This is the most general metric, representing how many views
 the post received. Views do not distinguish repeated views by the same
 person.
 
@@ -258,9 +258,7 @@ ggplot(merged, mapping = aes(x=year_month , y=comments.ratio, fill=year_month ))
    
 
 ```
-Overal trend of comments is different. While the first four variables seemed to increase over time, this variable overall decreases.  If we compare absolute values fo comments and ration of comments per page views,  we see the decrease in both cases, while the ratio's decrease is more dramatic. 
-
-
+The trend of comments is different. While the first four variables seemed to increase over time, this variable  decreases.  If we compare absolute values fo comments and ratio of comments per page views,  we see the decrease in both cases, while the ratio's decrease is more dramatic. 
 
 It is important to note, that commenting on the platform  requires logging in from a user, which is an indicator of greater engagement of an individual user. 
 
@@ -272,10 +270,10 @@ It is also more likely that the users who logged and commented in are likely to 
 # merged$year_month 
 str(merged)
   merged <- merged %>%
-     mutate(likes.ratio = post.total.likes / `Page views`)
+     mutate(reactions.ratio = post.total.likes / `Page views`)
   
 # str(merged)
-ggplot(merged, mapping = aes(x=year_month , y=likes.ratio, fill=year_month ))+
+ggplot(merged, mapping = aes(x=year_month , y=reactions.ratio, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of reactions ", y = "Percentage of reactions " )+
   scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
@@ -283,7 +281,211 @@ ggplot(merged, mapping = aes(x=year_month , y=likes.ratio, fill=year_month ))+
    
 
 ```
-Distributions of reactions appears to decrease over time. To like/dislike the comment, user doesn't have to log in. 
+Number of reactions appears to decrease over time. To like/dislike the comment, user doesn't have to log in. 
+
+
+
+##Page views : relationship between popularity and engagement. 
+
+```{r, echo=T}
+# colnames(merged)
+
+ merged <- merged %>%
+     mutate(adj.page.views =`Page views` / 10000)
+
+summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio , data = merged))
+
+```
+
+The model is showing  significant correlation between all of engagement metrics we have identified and popularity (page views). Some of them having negative correlation with the page views.
+
+Unique ratio significance means that more unique users correspond with more views. 
+
+Negative correlation with visits.ratio means that repeated views within one visit correspond with more overall views. 
+
+Also "Exite rate: positively correspond with the number of views, meaning people are more likely to bounce when there are more views. 
+I need to point out, that there are three possible scenarios when a user visiting the page: 
+1. They view once, then leave the website - > bounce 
+2. They view once, then go to different page on the website ->  (1-bounce - not reported in my dataset) 
+3. They view, then go to different page on the website, then return (visits ratio goes down: +1 view, while "visit" is the same) 
+
+Therefore # 1 and #3 are not necessarily negatively correlated. In our data we can see that scenarios 1 and 3 are increasing  as overall page views increase. Likes ratio shows significant  no correlation with total views, indicating no connection between reactions frequency and amount of views. 
+
+Correlation with comments ratio is significant and negative. We can conclude, that while more popular posts are much less commented on.
+
+
+
+To summarize the review ofr relationship between post popularity and engagement mentric, we see consistent pattern of decreased engagement with increased popularity. To explore this connectyion further, lets review Sources of users that are coming to the website. 
+
+### Referral sources:
+
+The website analytics provides information on where the viewers are coming
+from to the blog page. for example, if people clicked on the blog link posted on FaceBook, that would be referral from social media. If people clicked on the blog link within BDC website, that would be "BDC referral visit".
+
+There are 5 sources of referrals, each corresponding with a variable in the data set. Variable's value is a number of visits from this referral source. 
+
+        "Search + amp referral visits"
+        "Direct (non-email) referral visits"
+        "Other website referral visits"
+        "Social referral visits"
+        "BDC referral visits"
+        "Visits when post was on LL HP" 
+
+
+```{r, echo=T}
+#renaming variables for convenience: 
+merged<-merged%>%
+  rename(google ="Search + amp referral visits",
+         direct ="Direct (non-email) referral visits",
+         other.web = "Other website referral visits",
+          social= "Social referral visits",
+          bdc= "BDC referral visits",
+          ll= "Visits when post was on LL HP" )
+
+ggplot(merged, mapping=aes(x=post.date))+
+  geom_point(aes(y=google), color="red")+
+  geom_point(aes(y=direct), color="green")+
+  geom_point(aes(y=other.web), color="yellow")+
+  geom_point(aes(y=social), color="purple")+
+  geom_point(aes(y=bdc), color="blue")+
+  geom_point(aes(y=ll), color="pink")  +
+  labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+This graph clearly demonstrates increase of "Search + amp referral visits" after December 2021, while other referral sources maintain the same level over time. This increase matches changes observed in popularity ( Page Views), and  engagement metrics that are highly correlated with popularity.  It also doubles views of the posts in many cases and might significanly influence our model and conclusions. 
+
+
+
+
+### Second wave causes:
+
+Some posts demonstrate increased amount of views, coming from search
+engines. Some data shows, that these views are coming 2-3 days after the post date (ADD DATA
+HERE ). 
+
+--------- Unfortunately, since views data is at the post level, and not distributed by date
+
+We are interested to find out, what characteristics of the post (prior
+to it being picked up by google), correlate with its appearance on
+google news.
+
+Number of comments within 1st 10 hours from the post -\> google wave
+
+```{r, echo=T}
+#  calculating number of comments within first 10 hours 
+
+# date and time of the post 
+post.date  <-comments.data %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(post.dt = first(written_at), 
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, post.dt, n.coms)%>%
+arrange(desc(post_id))
+head(post.date )
+
+# Calculating age of the post 
+comments.data.1 <- merge( comments.data , post.date , by = "post_id", all = TRUE)
+comments.data.1 <-comments.data.1 %>%
+  mutate (age = difftime(  written_at,post.dt, units = "hours"), 
+          early = ifelse(age<10, 1, 0))
+
+early.coms  <-comments.data.1 %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(early.sum = sum(early), 
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, early.sum)%>%
+arrange(desc(post_id))
+
+# Adding number of early comments to merged dataset:
+merged.1 <- merge( merged, early.coms , by = "post_id", all = TRUE)
+
+head(merged.1 )
+```
+
+Now, as I calculated number of early comments for all posts, I can see
+if that number correlated with google referrals
+
+```{r, echo=T}
+
+merged.2<-merged.1 %>%
+  filter(google>10000)
+
+correlation.2 <- cor(merged.2$early.sum, merged.2$google)
+correlation.2
+plot(merged.2$early.sum, merged.2$google)
+
+summary(lm(google ~early.sum, data=merged.2))
+
+```
+
+We can see significant connection between early comments and google
+referrals above 10000 visits. Howeve, R\^2 is low in this model, whic
+suggests that there are other factors that are not considered in this
+model. I will explore how days of the week and time of the post
+contribute to this relationship.
+
+```{r, echo=T}
+# calculating day of the week for the post: 
+colnames(comments.data)
+# Calculating age of the post 
+library(lubridate)
+comments.data.1 <-comments.data.1 %>%
+  mutate (weekday = wday(post.dt, label = TRUE), 
+          weekend = ifelse(weekday =="Fri" | weekday == "Sat", 1, 0))
+
+# class(week.days$weekday)
+# levels(week.days$weekday) 
+# week.days$weekend
+
+weekdays <-comments.data.1 %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(post.weekday = first(weekday), 
+            post.weekend =first(weekend),
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, post.weekday,post.weekend )%>%
+arrange(desc(post_id))
+
+# Adding number of early comments to merged dataset:
+merged.weekdays <- merge( merged.2, weekdays , by = "post_id", all = TRUE)
+colnames(merged.weekdays)
+
+levels(merged.weekdays$post.weekday)
+```
+
+
+### Adding weekdays to the model
+
+
+```{r, echo=T}
+
+merged.2<-merged.1 %>%
+  filter(google>10000)
+
+# correlation.2 <- cor(merged.weekdays$early.sum, merged.weekdays$google)
+# correlation.2
+ plot(merged.weekdays$post.weekday ,   merged.weekdays$google)
+
+summary(lm(google ~early.sum +post.weekday , data=merged.weekdays))
+
+# table(merged.weekdays$post.weekday)
+
+ggplot (merged.weekdays, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "Google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+```
+
+Our hypothesis that large amount of early comments triggers google referrals did not stand on its own. We can see some significant correlation between early comments and google referrals, but low coefficient and high deviation from predicated vlaues (low R^2) suggest that there are other , more influencial, factors that were not considered. 
+To look for other factors, lets review other available variables in the dataset. 
 
 
 ##Independent variables (IV):
@@ -343,9 +545,6 @@ ggplot(merged, mapping = aes(x=year_month , y=pct.positive, fill=year_month ))+
 
 
 ```
-Thes appears as downward trend, however,nees to be tested for significance. 
-
-
 
 ### Blocked comments per post.
 
@@ -361,79 +560,46 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
 
 
 
-### Referral sources:
 
-The website analytics provides information on where the viewers are coming
-from to the blog page. for example, if people clicked on the blog link posted on FaceBook, that would be referral from social media. If people clicked on the blog link within BDC website, that would be "BDC referral visit".
-
-There are 5 sources of referrals, each corresponding with a variable in the data set. Variable's value is a number of visits from this referral source. 
-
-        "Search + amp referral visits"
-        "Direct (non-email) referral visits"
-        "Other website referral visits"
-        "Social referral visits"
-        "BDC referral visits"
-        "Visits when post was on LL HP" 
-
+#Adding  IVs to the model
+Now as we reviewed Independent variables, I am adding them to my model to see if any of these can explain trigger of google referrals. 
 
 ```{r, echo=T}
-#renaming variables for convenience: 
-merged<-merged%>%
-  rename(google ="Search + amp referral visits",
-         direct ="Direct (non-email) referral visits",
-         other.web = "Other website referral visits",
-          social= "Social referral visits",
-          bdc= "BDC referral visits",
-          ll= "Visits when post was on LL HP" )
+summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
 
-ggplot(merged, mapping=aes(x=post.date))+
-  geom_point(aes(y=google), color="red")+
-  geom_point(aes(y=direct), color="green")+
-  geom_point(aes(y=other.web), color="yellow")+
-  geom_point(aes(y=social), color="purple")+
-  geom_point(aes(y=bdc), color="blue")+
-  geom_point(aes(y=ll), color="pink")  +
-  labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+
+summary(lm(adj.page.views ~early.sum +post.weekday , data=merged.weekdays))
+
+
+
+
+
+
+summary(lm(visits.ratio ~ comments.ratio+  reactions.ratio  , data = merged))
+
+summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
+
+
+summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
+
+
+
+
+
 ```
-This graph clearly demonstrates increase of "Search + amp referral visits" after December 2021, while other referral sources maintain the same level over time. This increase matches changes observed in Page Views, visits and uniques and might be associated with the trend of less engaged users, observed in  uvisits and uniques ratios. Overall decrease of author's comments might also correspond to this. 
 
 
-# Analysis
-
-First, I will use "page views" as dependent variable and regress it against all other variables representing engagement: 
-
-##Page views as DV
+### Influence of IV on engagement metrics (not populatiry) 
 
 ```{r, echo=T}
-# colnames(merged)
 
- merged <- merged %>%
-     mutate(adj.page.voiews =`Page views` / 10000)
+# summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio , data = merged))
+# summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
 
-summary(lm(adj.page.voiews ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  likes.ratio , data = merged))
-summary(lm(adj.page.voiews ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  likes.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
-```
-The model is showing  significant correlation between all of engagement metrics we have identified. Some of them having negative correlation with the page view, they are still significant indicator of POPULARITY.
-
-Unique ratio significance means that more unique users correspond with more views. 
-
-Negative correlation with visits.ratio means that repeated views within one visit correspond with more overall views. 
-
-Also "Exite rate: positively correspond with the number of views, meaning people are more likely to bounce when there are more views. 
-I need to point out, that there are three possible scenarios when a user visiting the page: 
-1. They view once, then leave the website - > bounce 
-2. They view once, then go to different page on the website ->  (1-bounce - not reported in my dataset) 
-3. They view, then go to different page on the website, then return (visits ratio goes down: +1 view, while "visit" is the same) 
-
-Therefore # 1 and #3 are not necessarily negatively correlated. In our data we can see that scenarios 1 and 3 are increasing  as overall page views increase. 
-
-Correlation with comments rationis is significant and negative. We can conclude, that while more popularposts are much less commented.
-
-Likes ratio shows significant  negative correlation with total views, indicating that users are less likely to react to comments of posts with larger amount of views. 
-```{r, echo=T}
-
-summary(lm(adj.page.voiews ~ likes.ratio + n.comments+ author.sum  + blocked.sum , data = merged))
+summary(lm(comments.ratio ~  author.sum  +pct.positive+ blocked.sum , data = merged))
 
 ```
 
@@ -486,143 +652,3 @@ discussion.
 
 ```
 
-### Second wave causes:
-
-Some posts demonstrate increased amount of views, coming from search
-engines. These views are coming 2-3 days after the post date (ADD DATA
-HERE ).
-
-We are interested to find out, what characteristics of the post (prior
-to it being picked up by google), correlate with its appearance on
-google news.
-
-Number of comments within 1st 10 hours from the post -\> google wave
-
-```{r, echo=T}
-#  calculating number of comments within first 10 hours 
-
-# date and time of the post 
-post.date  <-comments.data %>%
-  group_by(post_id)%>%
-  arrange(written_at)%>%
-  summarize(post.dt = first(written_at), 
-            n.coms =n())%>%
-  filter (n.coms>100)%>%
-  select(post_id, post.dt, n.coms)%>%
-arrange(desc(post_id))
-head(post.date )
-
-# Calculating age of the post 
-comments.data.1 <- merge( comments.data , post.date , by = "post_id", all = TRUE)
-comments.data.1 <-comments.data.1 %>%
-  mutate (age = difftime(  written_at,post.dt, units = "hours"), 
-          early = ifelse(age<10, 1, 0))
-
-early.coms  <-comments.data.1 %>%
-  group_by(post_id)%>%
-  arrange(written_at)%>%
-  summarize(early.sum = sum(early), 
-            n.coms =n())%>%
-  filter (n.coms>100)%>%
-  select(post_id, early.sum)%>%
-arrange(desc(post_id))
-
-# Adding number of early comments to merged dataset:
-merged.1 <- merge( merged, early.coms , by = "post_id", all = TRUE)
-
-```
-
-Now, as I calculated number of early comments for all posts, I can see
-if that number correlated with google referrals
-
-```{r, echo=T}
-
-merged.2<-merged.1 %>%
-  filter(google>10000)
-
-correlation.2 <- cor(merged.2$early.sum, merged.2$google)
-correlation.2
-plot(merged.2$early.sum, merged.2$google)
-
-summary(lm(google ~early.sum, data=merged.2))
-
-```
-
-We can see significant connection between early comments and google
-referrals above 10000 visits. Howeve, R\^2 is low in this model, whic
-suggests that there are other factors that are not considered in this
-model. I will explore how days of the week and time of the post
-contribute to this relationship.
-
-```{r, echo=T}
-# calculating day of the week for the post: 
-
-# Calculating age of the post 
-library(lubridate)
-comments.data.1 <-comments.data.1 %>%
-  mutate (weekday = wday(post.dt, label = TRUE), 
-          weekend = ifelse(weekday =="Fri" | weekday == "Sat", 1, 0))
-  
-
-# class(week.days$weekday)
-# levels(week.days$weekday) 
-# 
-# week.days$weekend
-
-weekdays <-comments.data.1 %>%
-  group_by(post_id)%>%
-  arrange(written_at)%>%
-  summarize(post.weekday = first(weekday), 
-            post.weekend =first(weekend),
-            n.coms =n())%>%
-  filter (n.coms>100)%>%
-  select(post_id, post.weekday,post.weekend )%>%
-arrange(desc(post_id))
-
-
-# Adding number of early comments to merged dataset:
-merged.weekdays <- merge( merged.2, weekdays , by = "post_id", all = TRUE)
-colnames(merged.weekdays)
-
-levels(merged.weekdays$post.weekday)
-```
-
-### Adding IV to the model
-
-Now, as I have necessary variables to run a regression, I will build the
-model again with more independent variables:
-
-```{r, echo=T}
-
-merged.2<-merged.1 %>%
-  filter(google>10000)
-
-# correlation.2 <- cor(merged.weekdays$early.sum, merged.weekdays$google)
-# correlation.2
- plot(merged.weekdays$post.weekday ,   merged.weekdays$google)
-
-summary(lm(google ~early.sum +post.weekday , data=merged.weekdays))
-
-table(merged.weekdays$post.weekday)
-
-ggplot (merged.weekdays, mapping =aes(x=early.sum, y=google, color =post.weekday))+
-  geom_point( ) +
-  geom_smooth(method="lm")+
-  labs(title = "Google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-  facet_wrap(~post.weekday)
-
-
-# ggplot(merged, mapping=aes(x=post.date))+
-#   geom_point(aes(y=google), color="red")+
-#   geom_point(aes(y=direct), color="green")+
-#   geom_point(aes(y=other.web), color="yellow")+
-#   geom_point(aes(y=social), color="purple")+
-#   geom_point(aes(y=bdc), color="blue")+
-#   geom_point(aes(y=ll), color="pink")  +
-#   labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
-#      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-
-```
