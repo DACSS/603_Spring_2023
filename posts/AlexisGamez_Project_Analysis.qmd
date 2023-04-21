@@ -1,0 +1,544 @@
+---
+title: "Project Analysis"
+author: "Alexis Gamez"
+description: "DACSS 603 Project Analysis"
+date: "04/12/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart2
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(plyr)
+library(tidyverse)
+library(readr)
+library(summarytools)
+library(psych)
+library(lattice)
+library(FSA)
+library(kableExtra)
+
+knitr::opts_chunk$set(echo = T)
+```
+
+```{r, warning = F, message = F}
+# reading in our data set
+Video_Game_Sales <- read_csv("_data/final_project/Video_Game_Sales_as_of_Jan_2017.csv")
+head(Video_Game_Sales)
+```
+
+# Feedback from Part 1
+
+From my previous project proposal post, I was able to receive valuable feedback from Professor Pang. That feedback applying to my selection of variables and their classifications, which then applies to my hypothesis. Acknowledging the feedback, I'd like to address some changes to my analysis from my previous post. 
+
+The following list of variables was shown in my previous post along with an acknowledgment that this would be the list of variables that I was to work with throughout the duration of my project, and that remains true.   
+
+The variables are as follows:
+
+- Name [game's name]
+- Platform [platform of game release]
+- Year of Release [game's release date]
+- Genre [genre of game]
+- Publisher [publisher of game]
+- NA Sales [sales in North America in millions]
+- EU Sales [sales in Europe in millions]
+- JPN Sales [sales in Japan in millions]
+- Other Sales [sales in rest of the world in millions]
+- Global Sales [total worldwide sales in millions]
+- Critic Score [aggregate score compiled by Metacritic staff]
+- Critic Count [the number of critis used in creating the critic score]
+- User Score [score according to Metacritic subscribers]
+- User Count [number of users who gave the user score]
+- Rating [ESRB rating for the game]
+
+However, the feedback I received applied more directly to my classification of independent and dependent variables. I originally listed that I would be utilizing 6 independent and 5 dependent variables throughout my analysis. *See below for classifications* 
+
+The 6 independent variables are as follows:
+
+- Platform
+- Genre
+- Publisher
+- Rating
+- Critic Scores
+- User Scores
+
+The 5 dependent variables are:
+
+- NA Sales
+- EU Sales
+- JPN Sales
+- Other Sales
+- Global Sales
+
+While not entirely untrue, it's definitely incorrect. The nature of this project requires the analysis of exploratory and explanatory variables using a combination of different regression and alternative analysis models. Therefore, an over saturation of exploratory (independent) variables could lead to an overly complex model. Knowing this now, I've reclassified the variables appropriately below.
+
+The 2 main independent variables are as follows:
+
+- Platform
+- Genre
+
+The 4 confounding variables are as follows:
+
+- Publisher
+- Rating
+- Critic Scores
+- User Scores
+
+The 5 dependent variables are:
+
+- NA Sales
+- EU Sales
+- JPN Sales
+- Other Sales
+- Global Sales
+
+A confounding variable is a variable that influences both the dependent and independent variable, which causes a spurious association within the model. It must meet 2 conditions in order to be considered a true confounder.
+
+1. It must be correlated to the independent variable, we'll be testing this at the beginning of the analysis. 
+
+2. It must be causally related to the dependent variable. Again, to be tested at the start of my analysis.
+
+Also, note that our list of dependent variable did not change. That is because my goal for this project is to test my hypothesis within each individual region and compare their models side by side to see if my results are any more true or false in varying regions. My final results should include 5 total models, each one corresponding to a respective dependent variable. Thus, each model will contain 1 dependent variable, 2 independent variable and a varying number of confounders.
+
+My last mention of feedback for this post will be acknowledging a shift in my original hypothesis for which I wrote, "As of 2017, independent variables “Platform” and “Genre” will have the most significant impact on Global sales". While believe what I wrote was representative of my hypothesis, I don't believe it was conducive to analysis and understanding from those reading this. As a result, I've decided to reorganize my hypothesis into a format that is a bit easier follow. I will also be rewording my research question to better reflect the changes made to my project's structure.  
+
+H1: Platform and Genre significantly impact Global Sales 
+
+H2: Platform and Genre significantly impact US and EU Sales
+
+H3: Platform and Genre will not significantly impact JPN sales
+
+**Of the two selected independent variables (Platform & Genre), what impact does each have on the commercial success of a video game and does that impact vary by region?**
+
+With the corrections made to my hypothesis and research question, I believe I've acknowledged all the feedback I received from my first post.
+
+# Expanding the Description of my Data
+
+Picking up where I left off from the last post, my goal in this section is to acknowledge the steps I didn't get the opportunity to execute before. To start, I want to summarize my data and get a visual representation of the numbers to refresh my memory of what I'm working with.
+
+```{r, warning = F, message = F}
+dfSummary(Video_Game_Sales)
+```
+
+Looking at the data, I know there were a couple of adjustments I wanted to make following my last final project post. The first being a couple of adjustments to the platform variable. First, I'm going to extract all unique platform values to get a complete list of included platforms.
+
+```{r, warning = F, message = F}
+Plat_List <- unique(select(Video_Game_Sales, "Platform"))
+as.list(Plat_List, sorted = T)
+```
+
+Next, I'll duplicate the `Platform` column and re-code the values so that they pertain to their respective manufacturer. This will clean up the data a bit and make analysis easier in the future.
+
+```{r, warning = F, message = F}
+VGS <- Video_Game_Sales
+VGS$Manufacturer <- VGS$Platform
+
+VGS <- VGS %>% 
+    mutate(Manufacturer=recode(Manufacturer, 
+                         'PS4'='Sony',
+                         'PS3'='Sony',
+                         'PS2'='Sony',
+                         'PS'='Sony',
+                         'PSV'='Sony',
+                         'PSP'='Sony',
+                         'NES'='Nintendo',
+                         'SNES'='Nintendo',
+                         'N64'='Nintendo',
+                         'GC'='Nintendo',
+                         'DS'='Nintendo',
+                         'Wii'='Nintendo',
+                         'WiiU'='Nintendo',
+                         'GBA'='Nintendo',
+                         '3DS'='Nintendo',
+                         'G'='Nintendo',
+                         'GEN'='Sega',
+                         'SCD'='Sega',
+                         'GG'='Sega',
+                         'SAT'='Sega',
+                         'DC'='Sega',
+                         'X'='Microsoft',
+                         'X360'='Microsoft',
+                         'XOne'='Microsoft',
+                         'TG16'='NEC',
+                         'PCFX'='NEC'))
+```
+
+Below, it can be seen that the re-coding worked! Now, we'll draw out a list of unique values for the rest of the categorical variables we have at our disposal
+
+```{r, warning = F, message = F}
+Manuf_List <- unique(select(VGS, "Manufacturer"))
+as.list(Manuf_List, sorted = T)
+```
+
+```{r, warning = F, message = F}
+Genre_List <- unique(select(VGS, "Genre"))
+list(Genre_List)
+```
+
+```{r, warning = F, message = F}
+Rating_List <- na.omit(unique(select(VGS, "Rating")))
+list(Rating_List)
+```
+
+I'd like to better visualize my descriptive statistics from last time, so again I'm going to do some re-coding. This time, I will be re-coding the `Manufacturer`, `Genre` and `Rating` variables so that each unique value corresponds to a number. Again, this makes it easier to draw up our numbers.
+
+```{r, warning = F, message = F}
+VGS <- VGS %>% 
+  mutate(Manufacturer = recode(Manufacturer,
+                            `1` = "Sony",
+                            `2` = "Nintendo",
+                            `3` = "Sega",
+                            `4` = "Microsoft",
+                            `5` = "PC",
+                            `6` = "Neo Geo",
+                            `7` = "WS",
+                            `8` = "3DO",
+                            `9` = "NEC",
+                            `10` = "2600"))
+
+VGS <- VGS %>% 
+  mutate(Genre = recode(Genre,
+                            `1` = "Sports",
+                            `2` = "Platform",
+                            `3` = "Racing",
+                            `4` = "Role-Playing",
+                            `5` = "Puzzle",
+                            `6` = "Misc",
+                            `7` = "Shooter",
+                            `8` = "Simulation",
+                            `9` = "Action",
+                            `10` = "Fighting",
+                            `11` = "Adventure",
+                            `12` = "Strategy"))
+
+VGS <- VGS %>% 
+  mutate(Rating = recode(Rating,
+                            `1` = "E",
+                            `2` = "M",
+                            `3` = "T",
+                            `4` = "E10+",
+                            `5` = "K-A",
+                            `6` = "AO",
+                            `7` = "EC",
+                            `8` = "RP"))
+
+VGS_select <- VGS %>% 
+  select(Genre, Manufacturer, Rating, Global_Sales, NA_Sales, EU_Sales, JP_Sales, Other_Sales)
+
+VGS_Desc <- describe(x=VGS_select) %>% 
+  select(c(vars, n, mean, sd, median, min, max, range))
+
+kable(VGS_Desc) %>% 
+  kable_styling("striped")
+```
+
+Our data is looking good! Next, I'd like to draw up our explanatory and control variable to see if there's any further cleaning we can do.
+
+```{r, warning = F, message = F}
+x_Manufacturer <- xtabs(~Manufacturer, data = VGS)
+
+kable(x_Manufacturer) %>% 
+  kable_styling("striped")
+
+barplot(x_Manufacturer, 
+        xlab = "Manufacturer",
+        ylab = "Frequency")
+```
+
+It looks like the data I have for 2600, 3DO, NEC, NG and WS is so small in comparison to the other manufacturers that it's practically negligible. I don't want this to adversely affect my analysis so I'm remove those rows from the data frame.
+
+```{r, warning = F, message = F}
+VGS2 <- VGS[VGS$Manufacturer %in% c("Sony", "2600", "Microsoft", "Nintendo", "PC", "Sega"),]
+```
+
+Now it's time to draw up the `Genre` variable.
+
+```{r, warning = F, message = F}
+x_Genre <- xtabs(~Genre, data = VGS)
+
+kable(x_Genre) %>% 
+  kable_styling("striped")
+
+barplot(x_Genre, 
+        xlab = "Genre",
+        ylab = "Frequency")
+```
+
+In this case, it seems all genres have adequate data and no changes need to be made.
+
+The last variable I want to draw up is `Rating`
+
+```{r, warning = F, message = F}
+x_Rating <- xtabs(~Rating, data = VGS)
+
+kable(x_Rating) %>% 
+  kable_styling("striped")
+
+barplot(x_Rating, 
+        xlab = "Rating",
+        ylab = "Frequency")
+```
+
+Similar to manufacturer, there are some irrelevant pieces of data that I think my analysis could do without. In this situation, I'll be eliminating any rows containing ratings AO, EC, K-A and RP.
+
+```{r, warning = F, message = F}
+VGS3 <- VGS2[VGS2$Rating %in% c("E", "E10+", "M", "T"),]
+```
+
+# Hypothesis Testing
+
+To start the hypothesis testing section I'd like to introduce my list of Explanatory, Response and Control Variables.
+
+## Explanatory Variables
+
+1. Genre
+2. Platform/Manufacturer
+
+## Response Varibles
+
+1. Global Sales
+2. NA Sales
+3. JPN Sales
+4. EU Sales
+5. Other Sales
+
+## Control Varibles
+
+1. Publisher
+2. Year of Release
+3. Name
+4. Critic Score
+5. Critic Count
+6. User Score
+7. User Count
+8. Rating
+
+## ANOVA
+
+In this section we'll be testing the explanatory variables, `Genre` & `Manufacturer`, against the main response variable `Global Sales`. We're also going to be testing a control variable `Rating` against sales to see if there is any significance. It's important to note that all 3 variables we will be testing are categorical, where as `Global Sales` is continuous.
+
+First up is the `Manufacturer` variable.
+
+```{r, warning = F, message = F}
+M_aov <- aov(Global_Sales ~ Manufacturer, data = VGS3)
+
+summary(M_aov)
+```
+
+Here we see that our Pr(>F) value is very small, allowing us to reject the null at a significance level of 0.001. This means the `Manufacturer` means are significantly different.
+
+```{r, warning = F, message = F}
+ggplot(VGS3, mapping = aes(x=Manufacturer, y=Global_Sales, color=Manufacturer))+
+    geom_boxplot() +
+    labs(title = "Distribution of Global Sales per Manufacturer", y = "Global Sales (millions)") 
+
+limit <- c(0, 1)
+
+ggplot(VGS3, mapping = aes(x=Manufacturer, y=Global_Sales, color=Manufacturer))+
+    geom_boxplot() +
+    labs(title = "Distribution of Global Sales per Manufacturer", y = "Total Worlwide Sales (millions)") +
+    scale_y_continuous(breaks = seq(from =0, to = 1, by = .25),
+                       limits = limit)
+```
+
+Next we'll be testing whether the population means among the category `Genre` are significantly different as well.
+
+```{r, warning = F, message = F}
+G_aov <- aov(Global_Sales ~ Genre, data = VGS3)
+
+summary(G_aov)
+```
+
+Once again, we receive an extremely small F-value telling us that the `Genre` means are significantly different.
+
+```{r, warning = F, message = F}
+ggplot(VGS3, mapping = aes(x=Genre, y=Global_Sales, color=Genre))+
+    geom_boxplot() +
+    labs(title = "Distribution of Global Sales per Genre", y = "Global Sales (millions)") 
+
+ggplot(VGS3, mapping = aes(x=Genre, y=Global_Sales, color=Genre))+
+    geom_boxplot() +
+    labs(title = "Distribution of Global Sales per Genre", y = "Total Worlwide Sales (millions)") +
+    scale_y_continuous(breaks = seq(from =0, to = 1, by = .25),
+                       limits = limit)
+```
+
+Finally, the last test will decided whether the `Rating` means are significantly different as well.
+
+```{r, warning = F, message = F}
+R_aov <- aov(Global_Sales ~ Rating, data = VGS3)
+
+summary(R_aov)
+```
+
+And again it looks like we receive another small F-value telling us that the `Rating` means are significantly different.
+
+```{r, warning = F, message = F}
+ggplot(VGS3, mapping = aes(x=Rating, y=Global_Sales, color=Rating))+
+    geom_boxplot() +
+    labs(title = "Distribution of Global Sales per Rating", y = "Global Sales (millions)") 
+
+ggplot(VGS3, mapping = aes(x=Rating, y=Global_Sales, color=Rating))+
+    geom_boxplot() +
+    labs(title = "Distribution of Global Sales per Rating", y = "Total Worlwide Sales (millions)") +
+    scale_y_continuous(breaks = seq(from =0, to = 1, by = .25),
+                       limits = limit)
+```
+
+## Chi-Square Test
+
+The point of a Chi-Square test is to determine whether there is any association between two categorical variables that may or may not be independent. As such, I'll be testing my explanatory variables against each other and, individually against the control variable `Rating`. All variables tested must be categorical in the case of Chi-Square tests. 
+
+First, I'll test `Genre` against the control.
+
+```{r, warning = F, message = F}
+chisq.test(VGS3$Genre, VGS3$Rating, correct = F)
+```
+
+Here we receive a very low p-value, telling me that I can reject the null and that `Genre` is not independent of `Rating`.
+
+```{r, warning = F, message = F}
+table1 <- data.frame(with(VGS3, table(Genre,Rating)))
+
+ggplot(table1, aes(x=Genre,y=Freq, fill=Rating))+
+  geom_bar(stat="identity",position="dodge")+
+  scale_fill_discrete(name = "Rating",labels = Rating_List)
+```
+
+Next, I'll be testing `Manufacturer` against `Rating`.
+
+```{r, warning = F, message = F}
+chisq.test(VGS3$Manufacturer, VGS3$Rating, correct = F)
+```
+
+Yet again, I received a low p-value and I know that these 2 variables are also not independent of each other 
+
+```{r, warning = F, message = F}
+table2 <- data.frame(with(VGS3, table(Manufacturer,Rating)))
+
+ggplot(table2, aes(x=Manufacturer,y=Freq, fill=Rating))+
+  geom_bar(stat="identity",position="dodge")+
+  scale_fill_discrete(name = "Rating",labels = Rating_List)
+```
+
+Lastly, I will be testing our explanatory variables against each other
+
+```{r, warning = F, message = F}
+chisq.test(VGS3$Genre, VGS3$Manufacturer, correct = F)
+```
+
+Even with my last test, I again receive a small p-value telling me the results are, yet again, statistically significant. 
+
+```{r, warning = F, message = F}
+table3 <- data.frame(with(VGS3, table(Genre,Manufacturer)))
+
+ggplot(table3, aes(x=Genre,y=Freq, fill=Manufacturer))+
+  geom_bar(stat="identity",position="dodge")+
+  scale_fill_discrete(name = "Rating",labels = Manuf_List)
+```
+
+# Model Comparisons
+
+The first model I'll be fitting takes into consideration the `Global Sales` and `Manufacturer` variables.
+
+```{r, warning = F, message = F}
+M_fit <- lm(Global_Sales ~ Manufacturer, data = VGS3)
+summary(M_fit)
+```
+
+From this model I receive a very small p-value, giving it statistical significance. However, the Adjusted R-Squared value is close to 0. This indicates response variable `Global Sales` is not explained by explanatory variable `Manufacturer`. The model does tell me however that releasing as a Nintendo or PC game leads to a higher likelihood of a decrease in worldwide sales, with PC being harshest at a decrease of -0.39851(million) .
+
+The next model I create takes into consideration the `Global Sales`, `Manufacturer` & `Rating` variables. In this case, `Rating` serves as a control variable. From the model, I again score a very low p-value along with a low Adjusted R-squared. Even so, from it I can still gather that `Rating` is statistically significant. I know that games released with ratings of E10+ or T are more likely to negatively sell worldwide, with a decrease in -0.14225(million) `Global Sales` for games released with an E10+ rating. However, it seems as though rated M games have the opposite reaction and tend to sell better globally with an increase of 0.35798(million) in `Global Sales`. 
+
+```{r, warning = F, message = F}
+MR_fit <- lm(Global_Sales ~ Manufacturer + Rating, data = VGS3)
+summary(MR_fit)
+```
+
+The last model I'll fit involving the `Manufacturer` variable is similar to the last, in the sense that it includes the `Rating` variable. This time, instead of using `Rating` as a control variable, I'd like to see how it interacts with `Manufacturer` in the model. We saw in previous tests that the variables were not considered independent and I'd like to see the their product. 
+
+```{r, warning = F, message = F}
+M_R_fit <- lm(Global_Sales ~ Manufacturer*Rating, data = VGS3)
+summary(M_R_fit)
+```
+
+Once again, I receive a small p-value and Adjusted R-Squared, meaning statistical significance but that our response variable is not explained by the predictors. According to the numbers, rated M Nintendo & PC games are the least likely to sell well Globally. Nintendo's decrease being the harshest with -0.98213(million).
+
+The next set of models I'll be fitting at their foundation must include the `Global Sales` and `Genre` variables. Eventually, I'll be working in the `Rating` variable as I did with the previous models.
+
+```{r, warning = F, message = F}
+G_fit <- lm(Global_Sales ~ Genre, data = VGS3)
+summary(G_fit)
+```
+
+Like previous models, small p-value and Adjusted R-squared. Again we have statistical significance, but no noteworthy predictor. I can still see that the Shooter genre is the most likely to sell well globally with an increase of 0.225707(million), with an opposite reaction occurring for the Adventure, Puzzle and Strategy. Strategy games being the least likely to sell well with a decrease of -0.389677(million).
+
+Like with the `Manufacturer` models, I will be introducing `Rating` as a control variable here. Again, I received a low p-value and Adjusted R-squared, so the predictors don't explain the response variable. It's important to note that the resulting estimates are nearly identical to those from the model that included `Manufacturer` as an explanatory value.
+
+```{r, warning = F, message = F}
+GR_fit <- lm(Global_Sales ~ Genre + Rating, data = VGS3)
+summary(GR_fit)
+```
+
+The last model now introduces the interaction between `Genre` and `Rating`. Even on this last model, I get a low p-value and Adjusted R-squared, giving statistical significance, but no explanation.
+
+```{r, warning = F, message = F}
+G_R_fit <- lm(Global_Sales ~ Genre*Rating, data = VGS3)
+summary(G_R_fit)
+```
+
+According to the data, Platform games rated E10+ & T along with rated M Racing & Sports games are all the least likely to sell well globally. Rated M Sports games are most likely to sell the least with a decrease in -0.98580(million). 
+
+Although all models presented similar results, the one I will be using to perform my diagnostics will be the one including the interaction between `Manufacturer` and `Rating`. This model seemed to have the highest R-squared value and presented some interesting data. Therefore, the regression model being used will be `lm(Global_Sales ~ Manufacturer*Rating, data=VGS3)`.
+
+# Diagnostics
+
+The first plot I'll draw out is the Residuals vs. Fitted plot. In it we can see that the linearity assumption is held up, but the constant variance assumption is violated. This is portrayed by the points not being evenly  distributed around the origin, or 0. Additionally, there are still some very notable outliers.
+
+```{r, warning = F, message = F}
+plot(lm(Global_Sales ~ Manufacturer*Genre, data = VGS3), which = 1)
+```
+
+The next plot I'll be looking at is a Normal Q-Q which is easy to tell at a glance that a violation has been made. I can see that the plot starts off relatively linear but there is a skew as it reaches the end, meaning the Normality assumption has been violated.
+
+```{r, warning = F, message = F}
+plot(lm(Global_Sales ~ Manufacturer*Genre, data = VGS3), which = 2)
+```
+
+The next plot is a Scale-Location plot. From the results I can see that there is an increasing trend, a direct violation of the Constant Variance assumption.
+
+```{r, warning = F, message = F}
+plot(lm(Global_Sales ~ Manufacturer*Genre, data = VGS3), which = 3)
+```
+
+With the last plot that I'll draw up, it's easy to see the violation here immediately. In the graph, it's clear that we have values greater than 4/n. This is a violation of the Influential Observation assumption.
+
+```{r, warning = F, message = F}
+plot(lm(Global_Sales ~ Manufacturer*Genre, data = VGS3), which = 4)
+```
+
+# Next Steps
+
+Unfortunately, I wasn't able to introduce all the control variables I would've liked to before this assignment was due. I had trouble re-coding the Publisher control variable as there are so many different ones and the process would've have overly tedious for the time that I had. If possible, I'd also like to introduce the critic and user score control variables as well.
+
+Additionally, I'd  like to introduce regional sales as alternative response variables as opposed to global sales to see if any significance can be drawn from that data as well.
+
+### References
+
+Egenfeldt-Nielsen, Simon, et al. Understanding Video Games : The Essential Introduction, Taylor & Francis Group, 2012. ProQuest Ebook Central, https://ebookcentral.proquest.com/lib/uma/detail.action?docID=1181119.
+
+Etchells, Pete. Lost in a Good Game: Why We Play Video Games and What They Can Do for Us. Icon Books, 2019. 
+
+McCullough, Hayley. (2019). From Zelda to Stanley: Comparing the Integrative Complexity of Six Video Game Genres. Press Start. 5. 137-149.
+
+Gillies, Kendall. “Video Game Sales and Ratings.” Kaggle, 25 Jan. 2017, https://www.kaggle.com/datasets/kendallgillies/video-game-sales-and-ratings?resource=download.
+
+
