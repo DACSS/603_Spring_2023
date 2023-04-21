@@ -35,9 +35,9 @@ library(stargazer)
 ReFED, a national nonprofit that advocates for the reduction of food
 waste, maintains several models to estimate the amount of wasted food
 and its greenhouse gas emissions in the United States. Collectively,
-U.S. residents and businesses throw out roughly 90 million tons of food
-annually, contributing nearly 5 percent of the total net US greenhouse
-gas emissions.
+U.S. residents and businesses throw out roughly 91 million tons of food
+annually, contributing 6 percent of the total net US greenhouse gas
+emissions, and compromising 22% of our total fresh waste use.
 
 Creating system-level estimates in the food supply chain is notoriously
 difficult. To produce these estimates, ReFED employs a 'mass balance'
@@ -62,41 +62,39 @@ My goal is to develop a cost-effective and maintainable model to
 estimate per capita food waste in the United States in a given year. I
 hypothesize that per capita food waste is a function of the current
 supply of available food combined with corporate and consumer knowledge,
-attitude, and beliefs about climate change. I believe food supply is an
-important explanatory variable for two reasons: 1)food waste is always a
-share of food supply and there is always a minimum amount of food needed
-to feed the population, and 2)it is standard at food business to have on
-hand more food than meets demand, which means that supply frequent
-outstrips demand, leading to food waste. However, I also believe that
-conern about climate-related issues is an important predictor. In
-particular, I hypothesize that greater concern for climate-related
-issues correlates with reduced food waste when controlling for issue
-like population. The logic is that if folks are more concerned with
-climate-issues, then they are more likely to try and 'right-size' the
-amount of food that is produced on the supply chain side and purchased
-on the consumer side.
+attitude, and beliefs about climate change.
+
+Food supply is an important explanatory variable for two reasons: 1)food
+waste is always a share of food supply and there is always a minimum
+amount of food needed to feed the population, and 2)it is standard
+practice at food business to produce/stock more food than needed. As a
+result, supply almost always outstrips demand, leading to food waste.
+
+However, I also believe that concern about climate-related issues
+influences food production/purchasing decisions. In particular, I
+hypothesize that greater concern for climate-related issues correlates
+with reduced food waste when controlling for issues like population. If
+folks are more concerned with climate-related issues, then they are more
+likely to try and 'right-size' the amount of food that is produced on
+the supply chain side or purchased on the consumer side.
 
 To test this hypothesis, we need a ground truth of food waste. The best
 publicly available direct measurement of food waste tends to be waste
 characterization studies. State and local governments periodically
 conduct inferential waste characterization studies, where they randomly
-select typically a series of 200 - 300 lb samples from landfills and
-other waste management facilities across several seasons in a year, and
-separate the garbage to determine the weight and composition of
-municipal solid waste in a particular area over a predetermined time.
-These studies are then used to set waste management budgets,
-'right-size' landfill capacity, and create/evaluate programs meant to
-divert recyclable and compostable materials from landfills. These
-studies are some of the best sources 'direct measurement
+select a series of 200 - 300 lb samples from landfills and other waste
+management facilities across several seasons in a year, which they
+separate and weigh. These studies are then used to set waste management
+budgets, 'right-size' landfill capacity, and create/evaluate programs
+meant to divert recyclable and compostable materials from landfills.
 
-However, they are not conducted regularly or consistently (or at all in
-many places), and, to my knowledge, there are no
-nationally-representative waste characterization studies. The dominant
-approach, employed by the Environment Protection Agency and the United
-States Department of Agriculture use these studies to produce national
-food waste estimates. But they approach is to simply take just a handful
-of these publicly available studies, calculate a per capita estimate for
-the study, and then scale that number by the current calendar year
+But waste characterization studies are not conducted regularly or
+consistently (or at all in many places), and, to my knowledge, there are
+no nationally-representative waste characterization studies. The
+dominant approach, employed by the Environment Protection Agency and the
+United States Department of Agriculture, is to use just a handful
+publicly available studies, calculate a per capita estimate for the
+study, and then scale that number by the current calendar year
 population size.
 
 Nevertheless, I believe there is the potential to creatively use these
@@ -113,27 +111,24 @@ and residential sectors.
 2.  What factors explain differences in waste between states and over
     time?
 
-3.  How do food waste estimates produced using a bottom-up method
-    proposed here compare to top-down, mass balanced-based approaches?
-
 ### Independent/Dependent Variables
 
 **Food Supply**
 
--   As a proxy for food supply, which is quite difficult to measure, I'm
-    utilizing supermarket revenue data by state from the years 2005 -
-    2021, which I extracted from Ibisworld State Industry reports. I
-    then converted this measure to a state per capita basis. Note that
-    in order to cover the missing years from 2000 - 2005, I fit a linear
-    regression based on state, population, and year. However, this is
-    meant to be a placeholder for the sack of this exercise. In future
-    iterations, I plan to use data from 2005 to present.
+-   As a proxy for food supply, which is quite difficult to measure, I
+    use supermarket revenue data by state from the years 2005 - 2021,
+    which I extracted from Ibisworld State Industry reports. I then
+    converted this measure to a state per capita basis. In order to fill
+    the missing years from 2000 - 2005, I fit a linear regression based
+    on state, population, and year. However, this is meant to be a
+    placeholder for the sack of this exercise. In future iterations, I
+    plan to use data from 2005 to present.
 
 **Consumer Knowledge**
 
 -   As a proxy for consumer knowledge, I extracted state-level search
     volume for the topic, "Climate Change", using Google Trends
-    Supercharged, which provides absolute search volumne from 2004 to
+    Supercharged, which provides absolute search volumn from 2004 to
     present. I then converted this measure to a state per capita basis.
     To fill missing years 2000 - 2003, I also fit a linear regression to
     serve as placeholder. Again, for future iterations, I plan to use a
@@ -148,40 +143,32 @@ and residential sectors.
     fit a linear regression to serve as placeholder. Again, for future
     iterations, I plan to use a baseline of 2005.
 
-**Consumer Corporate Knowledge Interaction**
-
--   I included an interaction term between sustainability and climate
-    change search volume. My argument for doing so is that they are
-    meant to represent the 'supply' and 'demand', which hypothetically
-    influence each other. While the sustainabilty search was the only
-    statistically significant of the two search variables, adding the
-    interaction term increased the overall R-squared as well as the
-    adjusted r-squared.
-
 **Food Waste**
 
--   For the dependant variable, food waste per capita, I extracted
+-   For the dependent variable, food waste per capita, I extracted
     absolute food waste weights from 20 state-level municipal solid
     waste characterization studies as well as the sample sizes collected
     to produce each of those calculations. I then calculated food waste
-    per captia. Give the small size of this dataset, I mutiplied the
+    per capita. Given the small size of this dataset, I multiplied the
     sample size for each observation by the population in the respective
     state, which I then used as weights in the model.
 
 ### Control Variables
 
-**Year** - I wanted to control for the impact of change over time
-because estimates from other models (i.e. ReFED) show a general increase
-in food waste over time.
+**Year**
+
+-   I wanted to control for the impact of change over time because
+    estimates from other models (i.e. ReFED) show a general increase in
+    food waste over time.
 
 **Population**
 
 -   I control for population in two different ways - using per capita
     measures and including population as a control variable. Per capita
     metrics do not fully capture the influence of population, which
-    hypotehtically should correlate with changes in food waste.
+    hypothetically should correlate with changes in food waste.
     Controlling for population increased the coefficients for my two
-    statisitcally significant explanaotry variables as well as the
+    statistically significant explanatory variables as well as the
     multiple and adjusted r-squared.
 
 ### Hypothesis
@@ -212,7 +199,7 @@ with per capita food waste
 ### Exploratory Data Analysis
 
 Currently, no comprehensive aggregate municipal solid waste
-characterization datasets exisit for the United States in the public
+characterization datasets exist for the United States in the public
 domain. To address this, I have compiled roughly 300 waste
 characterization studies, of which I have parsed and coded roughly 50 to
 date, based on the following (rough) criteria[^1]. To be eligible to be
@@ -317,10 +304,10 @@ ggplot(data = x_y_controls_df, aes(x=log(ibis_grcy_revenue_usd_m_per_capita_stat
 
 # Model Comparison
 
-I fit several different models. Given the small size of the dataset and
-the counterintuitive finding around the climate change trend discussed
-below, I'm withholding judgement about which is the 'better' model until
-I have increased the number of training observations for V2.
+Given the small size of the dataset and the counter intuitive finding
+around the climate change trend discussed below, I'm withholding
+judgement about which is the 'better' model until I have increased the
+number of training observations for V2.
 
 **Model 1**:
 `log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population`
@@ -348,7 +335,7 @@ I have increased the number of training observations for V2.
 2.  **`log(gt_abs_cc_per_capita)`**: A 1% increase in log(climate change
     search volume) is associated with a 0.11% increase in total food
     waste per capita, holding all other variables constant. This
-    positive relationship is counterintuitive. However, the results are
+    positive relationship is counter intuitive. However, the results are
     not statistically significant. There, we cannot reject the null
     hypothesis that Google search volume about 'climate change' is not
     correlated with per capita food waste.
@@ -358,7 +345,7 @@ I have increased the number of training observations for V2.
     food waste per capita. A 1-unit increase in the interaction term is
     associated with a 0.001-unit increase in the log total food waste
     per capita, holding all other variables constant. This finding is
-    also counter intutitive. Nevertheless, while the effect is
+    also counter intuitive. Nevertheless, while the effect is
     statistically significant, its an incredibly small effect.
 
 4.  **`ibis_grcy_revenue_usd_m_per_capita_state`**: A 1-unit increase in
@@ -430,10 +417,16 @@ stargazer(fit_inter_pop, fit_no_int_no_cc,type = "text",
 
 # Model 1 Diagnostics
 
-- Overall, while the residuals plot seem promising in that errors are appear to be normally distributed, all but two of our explainatory and control variables have VIFs over 10, which suggests high multicollinearity in the model. Likewise, the InfluencePlot shows several, potentially influential outliers. Given the very small size of the dataset, these issues are to be expect and I suspect will be resolved by:
+-   Overall, while the residuals plots below seem promising in that
+    errors are appear to be normally distributed, all but two of our
+    explanatory and control variables have VIFs over 10, which suggests
+    high multicollinearity in the model. Likewise, the InfluencePlot
+    shows several, potentially influential outliers. Given the very
+    small size of the dataset, these issues are to be expected and I
+    suspect will be resolved by:
 
-1. Setting 2005 as the baseline for our data, removing the need to fill missing values
-2. Increasing the number of observations in the data set
+1.  Setting 2005 as the baseline for our data
+2.  Increasing the number of observations in the data set
 
 ```{r}
 summary(fit_inter_pop)
@@ -466,13 +459,18 @@ vif(fit_inter_pop)
 ```{r}
 influencePlot(fit_inter_pop)
 ```
+
 # Model 2 Diagnostics
 
-An inspection of residuals suggests a poorer fit than the previous model. This model clearly has several influence outliers. However, multicollinearity, while still high, is lower than with the previous model.
+An inspection of residuals suggests a poorer fit than the previous
+model. This model clearly has several influential outliers. However,
+multicollinearity, while still high, is lower than with the previous
+model.
 
 ```{r}
 summary(fit_no_int_no_cc)
 ```
+
 ```{r}
 # Get the residuals and fitted values from the model
 residuals <- residuals(fit_no_int_no_cc)
@@ -487,11 +485,11 @@ ggplot(data = x_y_controls_df, aes(x=fitted_values, y=residuals)) +
   geom_point() +
   geom_hline(yintercept = 0)
 ```
+
 ```{r}
 qqnorm(residuals, main="Q-Q Plot of Residuals")
 qqline(residuals)
 ```
-
 
 ```{r}
 vif(fit_no_int_no_cc)
@@ -501,11 +499,7 @@ vif(fit_no_int_no_cc)
 influencePlot(fit_no_int_no_cc)
 ```
 
-
 ### Next Steps
 
-```{r}
-Many of the problems in this model were expect given the incomplete 'toy' dataset I choose to use. That was an international decision. Before I devoted significant time to parsing 100 to 1000 page waste characterization pdfs files, I wanted to see if there was any promise to this approach. Based on this initial analysis, I do think there is enough evidence to move forward with creating a robust dataset. The most important first step will be to increase the number of waste charaterization observation. there is also an opportunity to build 'upstream' and 'downstream' models. I used total aggregate per capita food waste as my dependent variable but nearly all waste characterization studies make a distinction between residential and commerical waste.
-```
-
+Many of the problems in this model were expected given the incomplete 'toy' dataset I choose to use. That was an international decision. Before I devoted significant time to parsing 100 to 1000 page waste characterization pdf files, I wanted to see if I wanted to evaluate whether this approach might have merit. Based on this initial analysis, I do think there is enough evidence to move forward with creating a more robust dataset. The most important first step will be to increase the number of waste characterization observation. There is also an opportunity to build 'upstream' and 'downstream' models. I used total aggregate per capita food waste as my dependent variable but nearly all waste characterization studies make a distinction between residential and commercial waste.
 
