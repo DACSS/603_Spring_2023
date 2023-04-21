@@ -181,7 +181,7 @@ ggplot(merged, aes(x =post.date )) +
 ```
 This graph also shows increase in all three  metrics in 2022-2023. To see how these metrics crrespond to each other,  I will calculate "visits ratio" and "unique.ratio".
 
-### Pagevisit and unique ratios: 
+### Page visit and unique ratios: 
 "visits ratio"  isnumber of visits per total vies. this metric telss us how offten the page being re-viewed. The lower the ratio means more people viwed page more than once during their visit. 
 
 "unique ratio" - number of unique users per total views is telling uys how often unique viewers re-visited the page. Lower ratio indicate more views by the same individual. 
@@ -201,7 +201,7 @@ Both ratios are always in the range of 0 - 1.
 
       ggplot(merged, aes( y = visits.ratio, x =post.date, )) +
           geom_point(color ="blue" )    +
-          labs(title = "Unique.ratio per post ", x = "Post.date", y = "Value") + 
+          labs(title = "Visits.ratio per post ", x = "Post.date", y = "Value") + 
           theme(axis.text.x = element_text(angle = 45, hjust = 1))
      
 ```
@@ -235,28 +235,62 @@ ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-### Number of comments
+### Number of comments: absolute and  per views. 
 
 ```{r, echo=T}
 # merged$year_month 
+  merged <- merged %>%
+     mutate(comments.ratio = n.comments/ `Page views`)
+
 ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of comments per post ", y = "Number of comments" )+
   scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(merged, mapping = aes(x=year_month , y=comments.ratio, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of comments ratio (comments/page views) ", y = "Number of comments" )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
    
 
 ```
-It is interesting to mention that overal trend of comments is different from Views, visits and uniques trend. While the first tree seemded to increase over time, this variable overall decreased.  It si important to note, that commenting on the platform  requires logging in from a user, which is an indicator of engagement. 
-It is also more likely that the user who logged in would return to the post (=add views or visits while not changing "uniques" count). If that assumption holds, an increase of first three variables (vies, visits and uniques) is consistent with decrease of comments. 
+Overal trend of comments is different. While the first four variables seemed to increase over time, this variable overall decreases.  If we compare absolute values fo comments and ration of comments per page views,  we see the decrease in both cases, while the ratio's decrease is more dramatic. 
 
+
+
+It is important to note, that commenting on the platform  requires logging in from a user, which is an indicator of greater engagement of an individual user. 
+
+It is also more likely that the users who logged and commented in are likely to return to the post (=add views or visits while not changing "uniques" count). If that assumption holds, an increase of first for variables (vies, visits and uniques) implies with decrease of comments, which is so far supported by the data. 
+
+### Number of reactions 
+
+```{r, echo=T}
+# merged$year_month 
+str(merged)
+  merged <- merged %>%
+     mutate(likes.ratio = post.total.likes / `Page views`)
+  
+# str(merged)
+ggplot(merged, mapping = aes(x=year_month , y=likes.ratio, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of reactions ", y = "Percentage of reactions " )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+   
+
+```
+Distributions of reactions appears to decrease over time. To like/dislike the comment, user doesn't have to log in. 
 
 
 ##Independent variables (IV):
 
 #### Authors comments
 
-To identify, how much the author of the bblog is engaged in the post, I
+To identify, how much the author of the blog is engaged in the post, I
 will create an additional variable derived from a user_name field.
 
 ```{r, echo=T}
@@ -292,6 +326,10 @@ ggplot(merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
 
 ```
 
+This graph shows, that majority of posts have no author's comments. However, if we look at the boxplots' upper ranges, we can see a trend of having overall less author's comments with time.
+
+
+
 ### Mood of the post.
 
 This is a numerical variable, calculated as percentage of "thumbs up"
@@ -305,6 +343,9 @@ ggplot(merged, mapping = aes(x=year_month , y=pct.positive, fill=year_month ))+
 
 
 ```
+Thes appears as downward trend, however,nees to be tested for significance. 
+
+
 
 ### Blocked comments per post.
 
@@ -318,22 +359,25 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+
+
 ### Referral sources:
 
-The web analytics provides information on where the viewers are coming
-from to the LL page. There are 5 sources of referrals, each
-corresponding with a variable in the data set.
+The website analytics provides information on where the viewers are coming
+from to the blog page. for example, if people clicked on the blog link posted on FaceBook, that would be referral from social media. If people clicked on the blog link within BDC website, that would be "BDC referral visit".
 
-```         
+There are 5 sources of referrals, each corresponding with a variable in the data set. Variable's value is a number of visits from this referral source. 
+
         "Search + amp referral visits"
         "Direct (non-email) referral visits"
         "Other website referral visits"
         "Social referral visits"
         "BDC referral visits"
         "Visits when post was on LL HP" 
-```
+
 
 ```{r, echo=T}
+#renaming variables for convenience: 
 merged<-merged%>%
   rename(google ="Search + amp referral visits",
          direct ="Direct (non-email) referral visits",
@@ -352,27 +396,47 @@ ggplot(merged, mapping=aes(x=post.date))+
   labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+This graph clearly demonstrates increase of "Search + amp referral visits" after December 2021, while other referral sources maintain the same level over time. This increase matches changes observed in Page Views, visits and uniques and might be associated with the trend of less engaged users, observed in  uvisits and uniques ratios. Overall decrease of author's comments might also correspond to this. 
+
 
 # Analysis
 
-First, I will use "page views" as dependent variable and regress it
-against all other independent variable:
+First, I will use "page views" as dependent variable and regress it against all other variables representing engagement: 
 
 ##Page views as DV
 
 ```{r, echo=T}
-colnames(merged)
-summary(lm(`Page views` ~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
+# colnames(merged)
 
+ merged <- merged %>%
+     mutate(adj.page.voiews =`Page views` / 10000)
+
+summary(lm(adj.page.voiews ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  likes.ratio , data = merged))
+summary(lm(adj.page.voiews ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  likes.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
 ```
+The model is showing  significant correlation between all of engagement metrics we have identified. Some of them having negative correlation with the page view, they are still significant indicator of POPULARITY.
 
-## Number of comments as DV
+Unique ratio significance means that more unique users correspond with more views. 
 
+Negative correlation with visits.ratio means that repeated views within one visit correspond with more overall views. 
+
+Also "Exite rate: positively correspond with the number of views, meaning people are more likely to bounce when there are more views. 
+I need to point out, that there are three possible scenarios when a user visiting the page: 
+1. They view once, then leave the website - > bounce 
+2. They view once, then go to different page on the website ->  (1-bounce - not reported in my dataset) 
+3. They view, then go to different page on the website, then return (visits ratio goes down: +1 view, while "visit" is the same) 
+
+Therefore # 1 and #3 are not necessarily negatively correlated. In our data we can see that scenarios 1 and 3 are increasing  as overall page views increase. 
+
+Correlation with comments rationis is significant and negative. We can conclude, that while more popularposts are much less commented.
+
+Likes ratio shows significant  negative correlation with total views, indicating that users are less likely to react to comments of posts with larger amount of views. 
 ```{r, echo=T}
-colnames(merged)
-summary(lm(n.comments ~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
+
+summary(lm(adj.page.voiews ~ likes.ratio + n.comments+ author.sum  + blocked.sum , data = merged))
 
 ```
+
 
 ## Exit rate as DV
 
