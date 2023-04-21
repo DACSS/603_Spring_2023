@@ -322,11 +322,51 @@ I fit several different models.
 Model 1:
 `log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights`
 
+-   Uses
+    `log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term +ibis_grcy_revenue_usd_m_per_capita_state`
+    as explanatory variables
+
+-   Controls for year and population
+
+-   Uses weighted least squares
+
+    **Interpretation**
+
+1.  **`log(gt_abs_sustain_per_capita)`**: A 1% increase in
+    log(sustainability search volume)is associated with a -0.31%
+    decrease in total food per capita, holding all other variables
+    constant. This is a negative relationship, indicating that as
+    interest in sustainability increases, total food waste per capita
+    decreases. This finding is statistically significant.
+
+2.  **`log(gt_abs_cc_per_capita)`**: A 1% increase in log(climate change
+    search volume) is associated with a 0.11% increase in total food
+    waste per capita, holding all other variables constant. This
+    positive relationship is counterintutive. However, the results are
+    not statistically significant.
+
+3.  **`interaction_term`**: The interaction term captures the combined
+    effect of climate change and sustainabilty search volume on total
+    food per capita. A 1-unit increase in the interaction term is
+    associated with a 0.001-unit increase in the log total food waste
+    per capita, holding all other variables constant
+
 Model 2:
 `log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, weights=x_y_controls_df$weights`
 
-Model 3:
-`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population`
+-   Uses
+    `log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) +ibis_grcy_revenue_usd_m_per_capita_state`
+    as explanatory variables and drops the interaction term
+
+-   Controls for year and population
+
+-   Uses weighted least squares
+
+```{r}
+fit_no_int_no_cc <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
+summary(fit)
+```
+
 
 ```{r model_comparison}
 
@@ -341,12 +381,12 @@ fit_no_weights <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita)
 
 ```{r warning=FALSE}
 # Create a side-by-side table of the models using stargazer
-stargazer(fit_no_interaction, fit_inter_pop, fit_no_weights, type = "text",
+stargazer(fit_inter_pop, fit_no_int_no_cc,type = "text",
           title = "Food Waste Estimation Model Comparison",
           align = TRUE,
-          column.labels = c("NoInteract", "Interact/Pop", "NoWeights"),
+          column.labels = c("M1:Interact/Pop", "M2:NoInteract"),
           ci = TRUE, # Show confidence intervals
-          digits = 4) 
+          digits = 2) 
 ```
 
 # Model Diagnostics
