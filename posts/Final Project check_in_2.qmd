@@ -386,12 +386,12 @@ arrange(desc(post_id))
 head(post.date )
 
 # Calculating age of the post 
-comments.data.1 <- merge( comments.data , post.date , by = "post_id", all = TRUE)
-comments.data.1 <-comments.data.1 %>%
+comments.data <- merge( comments.data , post.date , by = "post_id", all = TRUE)
+comments.data <-comments.data %>%
   mutate (age = difftime(  written_at,post.dt, units = "hours"), 
           early = ifelse(age<10, 1, 0))
 
-early.coms  <-comments.data.1 %>%
+early.coms  <-comments.data%>%
   group_by(post_id)%>%
   arrange(written_at)%>%
   summarize(early.sum = sum(early), 
@@ -401,9 +401,9 @@ early.coms  <-comments.data.1 %>%
 arrange(desc(post_id))
 
 # Adding number of early comments to merged dataset:
-merged.1 <- merge( merged, early.coms , by = "post_id", all = TRUE)
+merged <- merge( merged, early.coms , by = "post_id", all = TRUE)
 
-head(merged.1 )
+head(merged )
 ```
 
 Now, as I calculated number of early comments for all posts, I can see
@@ -411,7 +411,7 @@ if that number correlated with google referrals
 
 ```{r, echo=T}
 
-merged.2<-merged.1 %>%
+merged.2<-merged%>%
   filter(google>10000)
 
 correlation.2 <- cor(merged.2$early.sum, merged.2$google)
@@ -433,7 +433,7 @@ contribute to this relationship.
 colnames(comments.data)
 # Calculating age of the post 
 library(lubridate)
-comments.data.1 <-comments.data.1 %>%
+comments.data <-comments.data %>%
   mutate (weekday = wday(post.dt, label = TRUE), 
           weekend = ifelse(weekday =="Fri" | weekday == "Sat", 1, 0))
 
@@ -441,7 +441,7 @@ comments.data.1 <-comments.data.1 %>%
 # levels(week.days$weekday) 
 # week.days$weekend
 
-weekdays <-comments.data.1 %>%
+weekdays <-comments.data %>%
   group_by(post_id)%>%
   arrange(written_at)%>%
   summarize(post.weekday = first(weekday), 
@@ -452,30 +452,29 @@ weekdays <-comments.data.1 %>%
 arrange(desc(post_id))
 
 # Adding number of early comments to merged dataset:
-merged.weekdays <- merge( merged.2, weekdays , by = "post_id", all = TRUE)
-colnames(merged.weekdays)
+merged <- merge( merged, weekdays , by = "post_id", all = TRUE)
+colnames(merged)
 
-levels(merged.weekdays$post.weekday)
+levels(merged$post.weekday)
 ```
 
 
-### Adding weekdays to the model
-
+### Adding weekdays to the model - BROKEN HERE 
 
 ```{r, echo=T}
 
-merged.2<-merged.1 %>%
+merged.2<-merged %>%
   filter(google>10000)
 
 # correlation.2 <- cor(merged.weekdays$early.sum, merged.weekdays$google)
 # correlation.2
- plot(merged.weekdays$post.weekday ,   merged.weekdays$google)
+ plot(merged$post.weekday ,   merged$google)
 
 summary(lm(google ~early.sum +post.weekday , data=merged.weekdays))
 
 # table(merged.weekdays$post.weekday)
 
-ggplot (merged.weekdays, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+ggplot (merged, mapping =aes(x=early.sum, y=google, color =post.weekday))+
   geom_point( ) +
   geom_smooth(method="lm")+
   labs(title = "Google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
@@ -521,7 +520,8 @@ comments.grouped <-comments.grouped %>%
 #adding author.sum to main data set: 
 merged <- merge( merged , comments.grouped, by = "post_id", all = TRUE)
 
-ggplot(merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
+
+ggplot(data=merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of Author's comments by months", y = "Author's comments" , x="Month")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -565,29 +565,10 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
 Now as we reviewed Independent variables, I am adding them to my model to see if any of these can explain trigger of google referrals. 
 
 ```{r, echo=T}
-summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
 
-
-
-
-
-summary(lm(adj.page.views ~early.sum +post.weekday , data=merged.weekdays))
-
-
-
-
-
-
-summary(lm(visits.ratio ~ comments.ratio+  reactions.ratio  , data = merged))
-
-summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
-
-
-summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
-
-
-
-
+# summary(lm(visits.ratio ~ comments.ratio+  reactions.ratio  , data = merged))
+# summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
+# summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
 
 ```
 
@@ -595,6 +576,9 @@ summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
 ### Influence of IV on engagement metrics (not populatiry) 
 
 ```{r, echo=T}
+summary(lm(adj.page.views ~  early.sum +post.weekday +author.sum +pct.positive+ blocked.sum , data=merged.2))
+
+
 
 # summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio , data = merged))
 # summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
