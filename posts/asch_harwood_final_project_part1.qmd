@@ -21,6 +21,11 @@ library("dplyr")
 library("knitr")
 library(kableExtra)
 library(xtable)
+library(ggplot2)
+library(GGally)
+library(lme4)
+library(car)
+library(dplyr)
 ```
 
 # Background
@@ -124,8 +129,6 @@ H1: Google search volume about 'sustainability' is negatively correlated with pe
 food waste
 
 
-
-
 ### Exploratory Data Analysis
 
 Currently, no comprehensive aggregate municipal solid waste
@@ -148,30 +151,45 @@ included in my dataset, each study must be:
     each
 
 ```{r}
-waste <- read.csv(url("https://raw.githubusercontent.com/AschHarwood/603_Spring_2023/asch_603_spring_2023/posts/_data/wasteCharacterizationStudies_v1.csv"))
-waste$percent_food <- round(waste$percent_food, digits=4)
-table <- na.omit(waste) %>%
-  sample_n(10)
-kable(table, caption = "Waste Characterization Dataset", format = "html") %>%
-  kable_styling(bootstrap_options = "striped", full_width = F) %>%
-  row_spec(0:nrow(table), font_size = 12)
+waste = read.csv('/Users/aschharwood/Desktop/intro_quant_spring_2023/quant_project_research_analysis/quant_project_env/data/x_y_state/x_y_state_waste.csv')
+
+#create lists to filter waste to x, y and controls
+y_col <- "total_food_per_capita"
+x_cols <- c("gt_abs_sustain_per_capita","gt_abs_cc_per_capita" )
+control_cols <- c('year',"state","sample_size","ibis_grcy_revenue_usd_m_per_capita_state","population")
+drop_cols <- c('total_food',"total_waste_weight_per_capita","gt_norm_cc", "ibis_grcy_revenue_usd_m_state","gt_norm_sustain", "gt_norm_cc_per_capita", "total_waste_weight","gt_abs_sustain", "gt_abs_cc", "sample_size_per_capita", "coincident_index")
+x_y_cols <- append(x_cols, y_col)
+x_y_control_cols <- c(x_y_cols, control_cols)
 
 
+#filter dataset
+x_y_controls_df <- subset(waste, select = x_y_control_cols )
+
+# Reorder columns
+desired_order <- c("state", "year", "total_food_per_capita", "gt_abs_sustain_per_capita", "gt_abs_cc_per_capita", "ibis_grcy_revenue_usd_m_per_capita_state", "sample_size", "population")
+x_y_controls_df <- x_y_controls_df[, desired_order]
+str(x_y_controls_df)
 ```
-
 ```{r}
-cat("Summary of Waste Characterization\n")
-cat('\n')
-summary(waste)
-
+# Create a data frame with the data dictionary
+data_dictionary <- data.frame(
+  `col_name` = c("state", "year", "total_food_per_capita", "gt_abs_sustain_per_capita", "gt_abs_cc_per_capita", "ibis_grcy_revenue_usd_m_per_capita_state", "sample_size", "population"),
+  `d_type` = c("chr", "int", "dbl", "dbl", "dbl", "dbl", "num", "int"),
+  description = c(
+    "U.S. state where the study was conducted",
+    "Year when the study was conducted",
+    "Total food per capita in the studied area",
+    "Per capita absolute Google search volume for sustainability",
+    "Per capita absolute Google search volume for climate change",
+    "Per capita supermarket revenue (in USD million) for the state",
+    "Number of samples from original waste characterization study",
+    "Population of the studied area"
+  )
+)
+kable(data_dictionary)
 
 ```
 
-```{r}
-cat('Summary of Waste Characterization\n')
-cat('\n')
-str(waste)
-```
 
 ```{r}
 # Create a data frame with the data dictionary
