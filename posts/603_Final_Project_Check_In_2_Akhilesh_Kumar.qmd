@@ -1,0 +1,114 @@
+---
+title: "603_Final_Project_Check_In_2_Akhilesh_KUmar"
+author: "Akhilesh Kumar"
+date: "2023-04-20"
+Project Title: Investigating Factors Affecting Blood Donation Frequency and Building a Donor Retention Strategy
+Team Members: Akhilesh Kumar, Sai Srinivas
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(stats)
+```
+
+## Data Description:
+
+The blood transfusion dataset contain 748 samples with 5 input features:
+Input Features:
+•	Recency (number of months since the last donation)
+•	Frequency (total number of donations)
+•	Monetary (total blood donated in c.c.)
+•	Time (number of months since the first donation)
+•	Age (age of the donor)
+
+Source: https://www.kaggle.com/datasets/ninalabiba/blood-transfusion-dataset 
+
+This summary function presents a statistical description of a dataset related to blood donation, with five variables: Recency, Frequency, Monetary, Time, and whether the individual donated blood in March 2007. Here's a breakdown of each variable:
+
+Recency (months): This variable represents the number of months since the last blood donation. The minimum value is 0 months, indicating that some individuals donated blood very recently. The mean is 9.507 months, suggesting that, on average, people donated blood around 9.5 months ago. The maximum value is 74 months, which means the longest gap between donations is 74 months.
+
+Frequency (times): This variable shows the total number of times an individual has donated blood. The minimum value is 1, meaning that at least one person has only donated blood once. The mean is 5.515 times, indicating that people, on average, have donated blood about 5.5 times. The maximum value is 50 times, showing that some individuals have donated blood quite frequently.
+
+Monetary (c.c. blood): This variable represents the total volume of blood donated by an individual, measured in cubic centimeters (c.c.). The minimum value is 250 c.c., which corresponds to the minimum single donation volume. The mean is 1379 c.c., suggesting that, on average, individuals have donated around 1.379 liters of blood. The maximum value is 12,500 c.c., indicating that the highest total volume donated by a person is 12.5 liters.
+
+Time (months): This variable measures the length of time an individual has been donating blood. The minimum value is 2 months, suggesting that some individuals are relatively new to blood donation. The mean is 34.28 months, indicating that, on average, people have been donating blood for about 34.3 months. The maximum value is 98 months, showing that some individuals have been donating blood for a long time.
+
+Whether he/she donated blood in March 2007: This is a binary variable that indicates if an individual donated blood in March 2007. The mean is 0.238, which means that about 23.8% of the individuals in the dataset donated blood in that specific month.
+
+The summary function provides an overview of the dataset's key statistics, such as minimum, 1st quartile, median, mean, 3rd quartile, and maximum values for each variable. This information helps to understand the distribution, central tendency, and spread of the data.
+
+
+```{r}
+BD <- read_csv("C:/603_Spring_2023_new/posts/_data/transfusion.csv")
+data(BD)
+BD
+```
+```{r}
+summary(BD)
+```
+## EDA:
+
+Exploratory Data Analysis would be performed along with graphs, including the variables (Dependent and Independent Variables) in the Blood Transfusion Dataset (Recency (months), Frequency (times), Monetary (c.c. blood), Time (months), whether he/she donated blood in March 2007)
+
+## Detailed Research Statement:
+
+1.	Hypothesis 1: There is a significant difference in the past frequency of blood donations between donors who have donated in March 2007 and those who have not.
+
+Confounding variables recency of blood donations, Monetary Value of blood donations, Time (months) of blood donations
+
+2.	Hypothesis 2: There is a significant difference in the Recency of blood donations between donors who have donated in March 2007 and those who have not.
+
+Confounding variables: Past frequency of blood donations, Monetary Value of blood donations, Time (months) of blood donations
+
+3.	Hypothesis 3: There is a significant difference in the Monetary Value of blood donations between donors who have donated in March 2007 and those who have not.
+
+Confounding variables: Past frequency of blood donations, Recency of blood donations, Time (months) of blood donations
+
+4.	Hypothesis 4: There is a significant difference in the Time (months) of blood donations between donors who have donated in March 2007 and those who have not.
+
+Confounding variables: Past frequency of blood donations, Recency of blood donations, Monetary Value of blood donations
+
+5.	Hypothesis 5: Donors who have donated blood more frequently in the past (i.e. a higher average number of donations per month) are more likely to donate again in March 2007.
+
+6.	Hypothesis 6: Donors who have donated higher average Monetary (c.c. blood) (per month) are more likely to donate again in March 2007.
+
+7.	Hypothesis 7: Donors who have donated blood more recently (Recency (months)) and with higher frequency (Frequency (times)) are more likely to donate again in March 2007.
+
+8.	Hypothesis 8: Donors who have donated blood more recently (Recency (months)) and with higher blood donation in past (Monetary (c.c. blood)) are more likely to donate again in March 2007.
+
+9.	Hypothesis 9: Donors who have donated blood more recently (Recency (months)) and with Time (months) are more likely to donate again in March 2007.
+
+## Demographic Data: 
+
+We have considered removing demographic data from the scope, as we couldn’t find any relevant data resources on internet. So confounding variables are limited to the variable available in the blood transfusion dataset.
+
+## Graphs: 
+
+Wherever necessary bar graph, scatter plot, correlation, regression, logistic regression graphs would be included for the hypothesis mentioned above.
+
+## Building a Donor Retention Strategy:
+
+Use the insights gained to develop a donor retention strategy for the blood donation center. Identify factors that are associated with donor churn (i.e., donors who stop donating blood), and develop a plan to mitigate these factors. This can help healthcare and blood donation organizations to develop strategies to retain donors over the long term.
+
+## Expected Contribution:
+
+Sai Srinivas: Exploratory Analysis, Research Question 1-4
+
+Akhilesh Kumar: and Research Question 6-9, Donor Retention Strategy
+
+
+## References:
+
+Kaggle: https://www.kaggle.com/datasets/ninalabiba/blood-transfusion-dataset 
+
+Original Owner and Donor: Prof. I-Cheng Yeh, Department of Information Management, Chung-Hua University,
+Hsin Chu, Taiwan 30067, R.O.C., e-mail:icyeh '@' chu.edu.tw, TEL:886-3-5186511, Date Donated: October 3, 2008
+
+
+
+
