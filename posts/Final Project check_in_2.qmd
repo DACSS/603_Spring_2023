@@ -24,19 +24,23 @@ It is well known that online engagement with the web resource is a
 highly valuable metric and is driving site revenue. However, engagement
 and popularity might also be associated with other factors, that
 websties are trying to avoid, such as online violence, inappropriate
-behavior and misinformation.This research project is exploring whith
-factos impact readers engagement in social media conversations.
+behavior and misinformation. This research project is exploring how
+these factos impact readers' engagement in social media conversations
+and what are main forces of site popularity.
 
 To do that I will use the data from an online blog on the news website.
-The author of this blog is posting weekly articles about interpersonal
-relationships, that are formulated as a letter to to the author, where
-the author gives an advice about the situation. Readers are free to
-comment under each post, but cannot make their own posts.
+The author of this blog is posting articles about interpersonal
+relationships every work day (Mon- Fri). The posts are formulated as a
+letter from a reader with the situation and a question about
+relationships. The author gives an advice about the situation. Website
+readers are free to comment under each post, but cannot make their own
+posts.
 
-Using this data set, I will explore how engagement of readers of a news
-blog connected with variety of factors, such blogs's author engagement ,
-topic of the post, source of readers and readers inappropriate online
-behavior.
+All post methadata and comments are public. They are saved by the
+website and available for the analysis. Using this data set, I will
+explore how readers' engagement connected with blogs's author
+engagement, site comments', web source of readers and negative behaviors
+online.
 
 My research question is: Does the authors engagement in the conversation
 around the post makes readers more engaged and promotes positive
@@ -44,15 +48,19 @@ interactions among them?
 
 **DV:** My dependent construct is **"user's engagement**", I will
 measure users' engagement at the level of individual post, using the
-following variables
+following metrics:
 
-L1 - page viewers View page
+1.  Page views
+2.  Page visits (one visit can contain a few views, if the person visits
+    other pages on the site)
+3.  Unique users. One person can visit the same page a few times (it is
+    calculated for all time since the page was posted).
+4.  Number of votes: "thums up" or "thumbs down"
+5.  Number of comments
+6.  Exit rate or "bounces". When the visitor is coming to the page and
+    then leaving, i.e. not opening other pages on this website.
 
 L2 - page readers \* Reveal letter \* Reveal comments
-
-L3 - logged in \* Login / sign up \* Up / down vote
-
-L4 - commenter Comment
 
 **IV:** My main independent variable is **Blog's author engagement.** I
 will measure authors engagement as the factor variable, with the
@@ -110,6 +118,7 @@ dim(comments.data)
 ```
 
 Second, loadng post-level data :
+
 ```{r, echo=T}
 
 merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\data.merged.csv"))
@@ -117,57 +126,18 @@ merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massac
 # str(merged)
 ```
 
-
 \# Variable description
 
-To begin, I will review available variables and describe how I will use
-them to measure my constructs.
+To begin, I will review available variables and evaluate whether it is a
+good measure for this study.
 
-\### Dependent variable. User engagement.
-
-My dependent construct is \*\*user's engagement\*\*, I will measure
-users
-
-engagement at the level of individual post. There are following metrics
-that I could use for engagement. Each of them represent a different
-aspect of eaders engagement. I will review existing data on these
-measures and , based on their variability , will select which one is to
-use as DV for my hypothesis.
-
-Engagement metrics
-
-The levels below could be used to describe individual user's engagement
-at the time of the viusit of the site.
-
-L1 - page viewers View page
-
-L2 - page readers
-
-\\\* Reveal letter
-
-\\\* Reveal comments
-
-L3 - logged in
-
-\\\* Login / sign up
-
-\\\* Up / down vote
-
-L4 - commenter Comments
-
-the following metrics could lso be considered a way to measure ngagement
-at the post level:
-
-Exit rate per post: represents number of people who visited the page
-only and then left the website (oppsed to staying on the website and
-reading other articles).
-
-
-# Engagement (DV) metrics: 
+# Engagement (DV) metrics:
 
 ### Page views
-This is the most general engagement metric,  representing how many views the post received. 
 
+This is the most general engagement metric, representing how many views
+the post received. Views do not distinguish repeated views by the same
+person.
 
 ```{r, echo=T}
 # str(merged)
@@ -181,8 +151,89 @@ ggplot( data=merged, mapping=aes(y=`Page views`, x=merged$year_month))+
 
 
 ```
-From this graph we can see that the numbers of views is increasing with time
 
+From this graph we can see that the numbers of views is increased over
+time. To get a better understanding of it, lets review other metrics.
+
+### Page visits and unique users
+
+Views - represent the number of times page was viewed by all users at
+all times. 
+Visit - is an instance of a user engaging with bdc website.
+There can be many visits by the same viewer. Once th user is leaving the
+website, the visit is over. 
+To count unique viewers, we can use "Uniques" variable. It tells us how many unique users saw the post.
+
+The relationship will always be that Unique < Visits < Views, so we will plot them together:
+
+```{r, echo=T}
+# str(merged)
+ggplot(merged, aes(x =post.date )) +
+     geom_bar(aes(y = `Page views`, fill = "Page views"), stat = "identity", position = "dodge", width = 0.6) +
+     geom_bar(aes(y = Visits, fill = "Visits"), stat = "identity", position = "dodge", width = 0.6) +
+     geom_bar(aes(y = Uniques, fill = "Unique users"), stat = "identity", position = "dodge", width = 0.6)    +
+     labs(title = "Views, visits and unique users per month", x = "Post.date", y = "Value") + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+
+```
+This graph also shows increase in all three  metrics in 2022-2023. To see how these metrics crrespond to each other,  I will calculate "visits ratio" and "unique.ratio".
+
+### Pagevisit and unique ratios: 
+"visits ratio"  isnumber of visits per total vies. this metric telss us how offten the page being re-viewed. The lower the ratio means more people viwed page more than once during their visit. 
+
+"unique ratio" - number of unique users per total views is telling uys how often unique viewers re-visited the page. Lower ratio indicate more views by the same individual. 
+
+Both ratios are always in the range of 0 - 1. 
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(uniques.ratio = Uniques / `Page views`)%>%
+      mutate(visits.ratio = Visits / `Page views`)
+# str(merged)
+
+     ggplot(merged, aes( y = uniques.ratio, x =post.date, )) +
+          geom_point(color ="green" )    +
+          labs(title = "Unique.ratio per post ", x = "Post.date", y = "Value") + 
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+      ggplot(merged, aes( y = visits.ratio, x =post.date, )) +
+          geom_point(color ="blue" )    +
+          labs(title = "Unique.ratio per post ", x = "Post.date", y = "Value") + 
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))
+     
+```
+From the two  graphs below we can see that the two variables are distributed very similarly. 
+
+If we plot them against each other and calculate their correlation, we can see that they highly correlated especially in higher values. 
+```{r, echo=T}
+      plot(merged$uniques.ratio, merged$visits.ratio)
+correlation <- cor(merged$uniques.ratio, merged$visits.ratio)
+correlation
+```
+
+Density of the distribution also showing that there are more posts that are visited once and by unique users, i.w post is read once by each user. 
+
+```{r, echo=T}
+# DENSITY DISTRIBUTION HERE 
+     
+```
+
+### Exit rate
+
+This variable is measuring how many people visited the page and then left the website after the first view. We can also see consistent increase of this value, similar to the trend seen before: over time, there are more of less engaged users. 
+
+
+```{r, echo=T}
+# str(merged)
+merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
+ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of `Exit rate` per post ", y = "Exit rate" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 ### Number of comments
 
@@ -196,23 +247,17 @@ ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
    
 
 ```
+It is interesting to mention that overal trend of comments is different from Views, visits and uniques trend. While the first tree seemded to increase over time, this variable overall decreased.  It si important to note, that commenting on the platform  requires logging in from a user, which is an indicator of engagement. 
+It is also more likely that the user who logged in would return to the post (=add views or visits while not changing "uniques" count). If that assumption holds, an increase of first three variables (vies, visits and uniques) is consistent with decrease of comments. 
 
-### Exit rate 
 
-```{r, echo=T}
-# str(merged)
-merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
-ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
-  geom_boxplot() +
-  labs(title = "distribution of `Exit rate` per post ", y = "Exit rate" , x="Month")+ 
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
 
 ##Independent variables (IV):
 
 #### Authors comments
-To identify, how much the author of the bblog is engaged in the post,  I will create an additional variable derived from a user_name field. 
 
+To identify, how much the author of the bblog is engaged in the post, I
+will create an additional variable derived from a user_name field.
 
 ```{r, echo=T}
 # str(merged)
@@ -247,11 +292,10 @@ ggplot(merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
 
 ```
 
-
-
 ### Mood of the post.
 
-This is a numerical variable, calculated as percentage of "thumbs up" from all likes (both "thumbs up" and "thumbs down"). 
+This is a numerical variable, calculated as percentage of "thumbs up"
+from all likes (both "thumbs up" and "thumbs down").
 
 ```{r, echo=T}
 ggplot(merged, mapping = aes(x=year_month , y=pct.positive, fill=year_month ))+
@@ -273,76 +317,21 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
   labs(title = "Number Blocked comments  per post ", y = "Number of blocked comments per post" , x="Month")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-### Views vs visits vs users:
-Views - represent the number of times page was viewed by all users at all times.
-Visit - is an insance of a user engaging with bdc website. There can be many visits by the same viewer. Once th user is leaving the website, the visit is over. 
-To count unique viewers, we can use "Uniques" variable. It tells us how many unique users saw the post. 
-
-Lets review how these three variables correspond to each other, to better understand which variable  to use for our analysis: 
-
-```{r, echo=T}
-
- ggplot(merged, aes(x =post.date )) +
-     geom_bar(aes(y = `Page views`, fill = "Page views"), stat = "identity", position = "dodge", width = 0.6) +
-     geom_bar(aes(y = Visits, fill = "Visits"), stat = "identity", position = "dodge", width = 0.6) +
-     geom_bar(aes(y = Uniques, fill = "Unique users"), stat = "identity", position = "dodge", width = 0.6)    +
-     labs(title = "Views, visits and unique users per month", x = "Post.date", y = "Value") + 
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-```
-
-To get a better understanding of the dynamic of these metircs over time,  I will calculate the ratio of unique users per page views. 
-   # Calculation relation of views/unique users. Lower value of unique.ratio indicates that more posts were re-viewed by repeated users.
- 
-```{r, echo=T}
-  merged <- merged %>%
-     mutate(uniques.ratio = Uniques / `Page views`)
-# str(merged)
-```   
- Now I will plot this to see change over time: 
-```{r, echo=T}
-     ggplot(merged, aes( y = uniques.ratio, x =post.date, )) +
-          geom_point(color ="blue" )    +
-          labs(title = "Unique.ratio per post ", x = "Post.date", y = "Value") + 
-          theme(axis.text.x = element_text(angle = 45, hjust = 1))  
-
-```
-Now I calculate ration of visits per post views:
-
-```{r, echo=T}
-  merged <- merged %>%
-     mutate(visits.ratio = Visits / `Page views`)
-str(merged)
-
-ggplot(merged, aes( y = visits.ratio, x =post.date, )) +
-          geom_point(color ="purple" )    +
-          labs(title = "Uvisits.ratio per post ", x = "Post.date", y = "Value") + 
-          theme(axis.text.x = element_text(angle = 45, hjust = 1))  
-
-```
-
-And will see how these values correlate: 
-
-
-```{r, echo=T}
-correlation <- cor(merged$uniques.ratio, merged$visits.ratio)
-correlation
-plot(merged$uniques.ratio, merged$visits.ratio)
-
-```
-This graph shows the there are some posts that are visited once or very few times by unique users, and some posts are being re-visited by the repeated users. 
-
-
 
 ### Referral sources:
-The web analytics provides information on where the viewers are coming from  to the LL page. There  are 5 sources of referrals, each corresponding with a variable in the data set.
 
-            "Search + amp referral visits"
-            "Direct (non-email) referral visits"
-            "Other website referral visits"
-            "Social referral visits"
-            "BDC referral visits"
-            "Visits when post was on LL HP" 
+The web analytics provides information on where the viewers are coming
+from to the LL page. There are 5 sources of referrals, each
+corresponding with a variable in the data set.
+
+```         
+        "Search + amp referral visits"
+        "Direct (non-email) referral visits"
+        "Other website referral visits"
+        "Social referral visits"
+        "BDC referral visits"
+        "Visits when post was on LL HP" 
+```
 
 ```{r, echo=T}
 merged<-merged%>%
@@ -359,19 +348,18 @@ ggplot(merged, mapping=aes(x=post.date))+
   geom_point(aes(y=other.web), color="yellow")+
   geom_point(aes(y=social), color="purple")+
   geom_point(aes(y=bdc), color="blue")+
-  geom_point(aes(y=ll), color="pink")
-  
-  +
+  geom_point(aes(y=ll), color="pink")  +
   labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+# Analysis
 
-
-# Analysis 
-First,  I will use "page views"  as dependent variable and regress it against all other independent variable: 
+First, I will use "page views" as dependent variable and regress it
+against all other independent variable:
 
 ##Page views as DV
+
 ```{r, echo=T}
 colnames(merged)
 summary(lm(`Page views` ~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
@@ -379,6 +367,7 @@ summary(lm(`Page views` ~ pct.positive+author.sum +uniques.ratio +visits.ratio +
 ```
 
 ## Number of comments as DV
+
 ```{r, echo=T}
 colnames(merged)
 summary(lm(n.comments ~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
@@ -386,24 +375,23 @@ summary(lm(n.comments ~ pct.positive+author.sum +uniques.ratio +visits.ratio +bl
 ```
 
 ## Exit rate as DV
+
 ```{r, echo=T}
 colnames(merged)
 summary(lm(`Exit rate`~ pct.positive+author.sum +uniques.ratio +visits.ratio +blocked.sum, data = merged))
 
 ```
-##Page views as DV
 
+##Page views as DV
 
 ```{r, echo=T}
 colnames(merged)
 summary(lm(google~ ll, data = merged))
 summary(lm(google~ n.comments, data = merged))
 summary(lm(google~ Uniques, data = merged))
-
+summary(lm(google~ Uniques + n.comments +ll, data = merged))
 
 ```
-
-
 
 ### Blocked comments and Post mood:
 
@@ -427,7 +415,7 @@ summary(fit)
 
 This variable indicates the date of the comment. Using the range of the
 dates per post, I can estimate how long each post was in active
-discussion. 
+discussion.
 
 ```{r, echo=T}
 
@@ -436,41 +424,141 @@ discussion.
 
 ### Second wave causes:
 
-Some posts demonstrate increased amount of views, coming from search engines. These views are coming 2-3 ays after the post date (ADD DATA HERE ). 
+Some posts demonstrate increased amount of views, coming from search
+engines. These views are coming 2-3 days after the post date (ADD DATA
+HERE ).
 
-We are interested to find out, what characteristics of the post (prior to it being picked up by google), correlate with its appearance on google news. 
+We are interested to find out, what characteristics of the post (prior
+to it being picked up by google), correlate with its appearance on
+google news.
 
-
-Number of comments within 1st 10 hours from the post -> google wave 
-Number of unique commentors in first 10 hours -> google wave 
-
+Number of comments within 1st 10 hours from the post -\> google wave
 
 ```{r, echo=T}
-# MG.comments<-comments.2022[grep("MeredithGoldstein", comments.2022$user_name, ignore.case = TRUE), ]
-post.dates<-merged%>%
-  select(post_id,post.date)
-dim(comments.data)
-comments.data <- merge( comments.data , post.dates, by = "post_id", all = TRUE)
+#  calculating number of comments within first 10 hours 
 
+# date and time of the post 
+post.date  <-comments.data %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(post.dt = first(written_at), 
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, post.dt, n.coms)%>%
+arrange(desc(post_id))
+head(post.date )
 
-class(comments.data$written_at)
-class(comments.data$post.date)
+# Calculating age of the post 
+comments.data.1 <- merge( comments.data , post.date , by = "post_id", all = TRUE)
+comments.data.1 <-comments.data.1 %>%
+  mutate (age = difftime(  written_at,post.dt, units = "hours"), 
+          early = ifelse(age<10, 1, 0))
 
-comments.data <- comments.data %>%
-  ungroup()%>%
-  mutate (post_age= written_at - post.date)
-  
-colnames(comments.data)
-colnames(merged)
+early.coms  <-comments.data.1 %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(early.sum = sum(early), 
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, early.sum)%>%
+arrange(desc(post_id))
+
+# Adding number of early comments to merged dataset:
+merged.1 <- merge( merged, early.coms , by = "post_id", all = TRUE)
+
 ```
 
-comments.data
+Now, as I calculated number of early comments for all posts, I can see
+if that number correlated with google referrals
+
+```{r, echo=T}
+
+merged.2<-merged.1 %>%
+  filter(google>10000)
+
+correlation.2 <- cor(merged.2$early.sum, merged.2$google)
+correlation.2
+plot(merged.2$early.sum, merged.2$google)
+
+summary(lm(google ~early.sum, data=merged.2))
+
+```
+
+We can see significant connection between early comments and google
+referrals above 10000 visits. Howeve, R\^2 is low in this model, whic
+suggests that there are other factors that are not considered in this
+model. I will explore how days of the week and time of the post
+contribute to this relationship.
+
+```{r, echo=T}
+# calculating day of the week for the post: 
+
+# Calculating age of the post 
+library(lubridate)
+comments.data.1 <-comments.data.1 %>%
+  mutate (weekday = wday(post.dt, label = TRUE), 
+          weekend = ifelse(weekday =="Fri" | weekday == "Sat", 1, 0))
+  
+
+# class(week.days$weekday)
+# levels(week.days$weekday) 
+# 
+# week.days$weekend
+
+weekdays <-comments.data.1 %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(post.weekday = first(weekday), 
+            post.weekend =first(weekend),
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, post.weekday,post.weekend )%>%
+arrange(desc(post_id))
+
+
+# Adding number of early comments to merged dataset:
+merged.weekdays <- merge( merged.2, weekdays , by = "post_id", all = TRUE)
+colnames(merged.weekdays)
+
+levels(merged.weekdays$post.weekday)
+```
+
+### Adding IV to the model
+
+Now, as I have necessary variables to run a regression, I will build the
+model again with more independent variables:
+
+```{r, echo=T}
+
+merged.2<-merged.1 %>%
+  filter(google>10000)
+
+# correlation.2 <- cor(merged.weekdays$early.sum, merged.weekdays$google)
+# correlation.2
+ plot(merged.weekdays$post.weekday ,   merged.weekdays$google)
+
+summary(lm(google ~early.sum +post.weekday , data=merged.weekdays))
+
+table(merged.weekdays$post.weekday)
+
+ggplot (merged.weekdays, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "Google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+# ggplot(merged, mapping=aes(x=post.date))+
+#   geom_point(aes(y=google), color="red")+
+#   geom_point(aes(y=direct), color="green")+
+#   geom_point(aes(y=other.web), color="yellow")+
+#   geom_point(aes(y=social), color="purple")+
+#   geom_point(aes(y=bdc), color="blue")+
+#   geom_point(aes(y=ll), color="pink")  +
+#   labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
+#      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
 
-
-
-
-
-
-
+```
