@@ -26,6 +26,7 @@ library(GGally)
 library(lme4)
 library(car)
 library(dplyr)
+library(tidyverse)
 ```
 
 # Background
@@ -187,24 +188,44 @@ data_dictionary <- data.frame(
   )
 )
 kable(data_dictionary)
+```
 
+```{r}
+ggplot(data = x_y_controls_df, aes(x=log(total_food_per_capita))) +
+  geom_histogram(bins=10)
 ```
 
 
 ```{r}
-# Create a data frame with the data dictionary
-data_dictionary <- data.frame(
-  `col_name` = c("year", "state", "geographic_scope", "geographic_scope_name", "sector_scope", "sample_size", "percent_food"),
-  `d_type` = c("int", "chr", "chr", "chr", "chr", "int", "dbl"),
-  description = c(
-    "The year when the study was conducted",
-    "The U.S. state where the study was conducted",
-    "The scope of the geographic area covered by the study (e.g., state, county, or city)",
-    "The name of the specific geographic area covered by the study (e.g., state name or city name)",
-    "The sector scope of the study (e.g., commercial, residential, or transfer-truck)",
-    "The number of samples included in the study",
-    "The percentage of food waste in the studied area"
-  )
-)
-kable(data_dictionary)
+ggplot(data = x_y_controls_df, aes(x=log(gt_abs_sustain_per_capita), y=log(total_food_per_capita))) +
+  geom_point() +
+  ggtitle("Sustainability Search Volume vs. Total Food Per Capita") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
 ```
+
+
+
+```{r}
+# Load required packages
+library(ggplot2)
+
+
+# Reshape the data to long format
+long_data <- x_y_controls_df %>%
+  select(year, total_food_per_capita, ibis_grcy_revenue_usd_m_per_capita_state, gt_abs_sustain_per_capita, gt_abs_cc_per_capita) %>%
+  gather(key = "variable", value = "value", -year)
+
+# Create box and whisker plot for multiple variables
+ggplot(data = long_data, aes(x = factor(year), y = value, fill = variable)) +
+  geom_boxplot() +
+  ggtitle("Box and Whisker Plot for Multiple Variables by Year") +
+  xlab("Year") +
+  ylab("Value") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14)) +
+  scale_fill_discrete(name = "Variable", labels = c("Total Food Per Capita", "Revenue Per Capita", "Sustainability Per Capita", "CC Per Capita")) +
+  theme(legend.position = "bottom")
+
+```
+
+
+
