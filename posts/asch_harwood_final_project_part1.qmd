@@ -83,55 +83,47 @@ and residential sectors.
 4.  How do food waste estimates produced using a bottom-up method
     proposed here compare to top-down, mass balanced-based approaches?
 
+
 ### Hypothesis
-
-
 
 **Food Supply**
 
 H0: Food supply is not correlated with percent food waste
 
-H1: Food supply is correlated with percent food waste
-
-**GDP**
-
-H0: GDP growth is not correlated with percent food waste
-
-H1: GDP growth is positively correlated with percent food waste
-
-**Unemployment**
-
-H0: Unemployment is not correlated with percent food waste
-
-H1: Unemployment is negatively correlated with percent food waste
-
-**Food Prices**
-
-H0: Food prices are not correlated with percent food waste
-
-H1: Food prices are negatively correlated with percent food waste
-
-**Consumer Confidence**
-
-H0: Consumer confidence is not correlated with percent food waste
-
-H1: Consumer confidence is positively correlated with percent food waste
+H1: Higher food supply is correlated with increased per capita food waste
 
 **Consumer Knowledge**
 
 H0: Consumer knowledge/concern about climate change is not correlated
 with percent food waste
 
-H1: Consumer knowledge/concern is negatively correlated with percent
+H1: Consumer knowledge/concern is negatively correlated with per capita food waste
+
+**Corporate Knowledge**
+
+H0: Corporate knowledge/concern about climate change is not correlated
+with per capita food waste
+
+H1: Corporate knowledge/concern is negatively correlated with per capita
 food waste
 
-**Investment**
+### Operationalizing the Hypothesis
 
-H0: Investment in food waste reduction technologies is not correlated
-with percent food waste
+**Food Supply**
 
-H1: Investment in food waste reduction technologies is positively
-correlated with percent food waste
+- As a proxy for food supply, which is quite difficult to measure, I'm utilizing supermarket sales data by state from the years 2005 - 2021, which I extracted from Ibisworld State Industry reports. I then converted this measure to a state per capita basis. Note that in order to cover the missing years from 2000 - 2005, I fit a linear regression based on state, population, and year. However, this is meant to be a placeholder for the sack of this exercise. In future iterations, I plan to use data from 2005 to present.
+
+**Consumer Knowledge**
+
+- As a proxy for consumer knowledge, I extracted state-level search volume for the topic, "Climate Change", using Google Trends Supercharged, which provides absolute search volumne from 2004 to present. I then converted this measure to a state per capita basis. To fill missing years 2000 - 2003, I also fit a linear regression to serve as placeholder. Again, for future iterations, I plan to use a baseline of 2005.
+
+**Corporate Knowledge**
+
+- As a proxy for corporate knowledge/concern about climate changed, I extracted state-level search volume for the topic, "Sustainability", using Google Trends Supercharged. I then converted this measure to a state per capita basis. To fill missing years 2000 - 2003, I also fit a linear regression to serve as placeholder. Again, for future iterations, I plan to use a baseline of 2005.
+
+**Food Waste**
+
+- For the dependant variable, food waste per capita, I extracted absolute food waste weights from 20 state-level municipal solid waste characterization studies as well as the sample sizes collected to produce each of those calculations. I then calculated food waste per captia. Give the small size of this dataset, I mutiplied the sample size for each observation by the population in the respective state, which I then used as weights in the model.
 
 ### Exploratory Data Analysis
 
@@ -148,7 +140,7 @@ included in my dataset, each study must be:
     professional life.
 
 -   conducted in the United States and be representative of the state,
-    county, or local level between the years of 1999 and 2023
+    county, or local level between the years of 2000 and 2021
 -   infer the amount of total food as a share of the total amount of
     municipal solid waste for an entire year
 -   report the number of samples, which need to be between 200 - 300 lbs
