@@ -27,6 +27,7 @@ library(lme4)
 library(car)
 library(dplyr)
 library(tidyverse)
+library(stargazer)
 ```
 
 # Background
@@ -57,22 +58,46 @@ the food waste behaviors.
 
 # Proposal
 
-My goal is to develop a cost-effective and maintainable model to estimate per capita food waste in the United States in a given year. I hypothesize that per capita food waste is a function of the current supply of available food combined with corporate and consumer knowledge, attitude, and beliefs about climate change. I believe food supply is an important explanatory variable for two reasons: 1)food waste is always a share of food supply and there is always a minimum amount of food needed to feed the population, and 2)it is standard at food business to have on hand more food than meets demand, which means that supply frequent outstrips demand, leading to food waste. However, I also believe that conern about climate-related issues is an important predictor. In particular, I hypothesize that greater concern for climate-related issues correlates with reduced food waste when controlling for issue like population. The logic is that if folks are more concerned with climate-issues, then they are more likely to try and 'right-size' the amount of food that is produced on the supply chain side and purchased on the consumer side.  
+My goal is to develop a cost-effective and maintainable model to
+estimate per capita food waste in the United States in a given year. I
+hypothesize that per capita food waste is a function of the current
+supply of available food combined with corporate and consumer knowledge,
+attitude, and beliefs about climate change. I believe food supply is an
+important explanatory variable for two reasons: 1)food waste is always a
+share of food supply and there is always a minimum amount of food needed
+to feed the population, and 2)it is standard at food business to have on
+hand more food than meets demand, which means that supply frequent
+outstrips demand, leading to food waste. However, I also believe that
+conern about climate-related issues is an important predictor. In
+particular, I hypothesize that greater concern for climate-related
+issues correlates with reduced food waste when controlling for issue
+like population. The logic is that if folks are more concerned with
+climate-issues, then they are more likely to try and 'right-size' the
+amount of food that is produced on the supply chain side and purchased
+on the consumer side.
 
-To test this hypothesis, we need a ground truth of food waste. The best publicly available direct measurement of food waste tends to be waste characterization studies. State and local governments periodically conduct inferential waste
-characterization studies, where they randomly select typically a series of 200 - 300
-lb samples from landfills and other waste management facilities across several seasons in a year, and
-separate the garbage to determine the weight and composition of municipal solid
-waste in a particular area over a predetermined time. These studies are
-then used to set waste management budgets, 'right-size' landfill
-capacity, and create/evaluate programs meant to divert recyclable and
-compostable materials from landfills. These studies are some of the best sources 'direct measurement
+To test this hypothesis, we need a ground truth of food waste. The best
+publicly available direct measurement of food waste tends to be waste
+characterization studies. State and local governments periodically
+conduct inferential waste characterization studies, where they randomly
+select typically a series of 200 - 300 lb samples from landfills and
+other waste management facilities across several seasons in a year, and
+separate the garbage to determine the weight and composition of
+municipal solid waste in a particular area over a predetermined time.
+These studies are then used to set waste management budgets,
+'right-size' landfill capacity, and create/evaluate programs meant to
+divert recyclable and compostable materials from landfills. These
+studies are some of the best sources 'direct measurement
 
-
-However, they are not conducted
-regularly or consistently (or at all in many places), and, to my
-knowledge, there are no nationally-representative waste characterization
-studies. The dominant approach, employed by the Environment Protection Agency and the United States Department of Agriculture use these studies to produce national food waste estimates. But they approach is to simply take just a handful of these publicly available studies, calculate a per capita estimate for the study, and then scale that number by the current calendar year population size. 
+However, they are not conducted regularly or consistently (or at all in
+many places), and, to my knowledge, there are no
+nationally-representative waste characterization studies. The dominant
+approach, employed by the Environment Protection Agency and the United
+States Department of Agriculture use these studies to produce national
+food waste estimates. But they approach is to simply take just a handful
+of these publicly available studies, calculate a per capita estimate for
+the study, and then scale that number by the current calendar year
+population size.
 
 Nevertheless, I believe there is the potential to creatively use these
 studies to estimate the share of food waste in landfills at the
@@ -82,43 +107,82 @@ and residential sectors.
 
 ### Research Questions
 
-1.  How much food is currently wasted on a per capita basis in the United States?
+1.  How much food is currently wasted on a per capita basis in the
+    United States?
 
-2.  What factors explain differences in waste between states and over time?
+2.  What factors explain differences in waste between states and over
+    time?
 
-4.  How do food waste estimates produced using a bottom-up method
+3.  How do food waste estimates produced using a bottom-up method
     proposed here compare to top-down, mass balanced-based approaches?
 
 ### Independent/Dependent Variables
 
 **Food Supply**
 
-- As a proxy for food supply, which is quite difficult to measure, I'm utilizing supermarket revenue data by state from the years 2005 - 2021, which I extracted from Ibisworld State Industry reports. I then converted this measure to a state per capita basis. Note that in order to cover the missing years from 2000 - 2005, I fit a linear regression based on state, population, and year. However, this is meant to be a placeholder for the sack of this exercise. In future iterations, I plan to use data from 2005 to present.
+-   As a proxy for food supply, which is quite difficult to measure, I'm
+    utilizing supermarket revenue data by state from the years 2005 -
+    2021, which I extracted from Ibisworld State Industry reports. I
+    then converted this measure to a state per capita basis. Note that
+    in order to cover the missing years from 2000 - 2005, I fit a linear
+    regression based on state, population, and year. However, this is
+    meant to be a placeholder for the sack of this exercise. In future
+    iterations, I plan to use data from 2005 to present.
 
 **Consumer Knowledge**
 
-- As a proxy for consumer knowledge, I extracted state-level search volume for the topic, "Climate Change", using Google Trends Supercharged, which provides absolute search volumne from 2004 to present. I then converted this measure to a state per capita basis. To fill missing years 2000 - 2003, I also fit a linear regression to serve as placeholder. Again, for future iterations, I plan to use a baseline of 2005.
+-   As a proxy for consumer knowledge, I extracted state-level search
+    volume for the topic, "Climate Change", using Google Trends
+    Supercharged, which provides absolute search volumne from 2004 to
+    present. I then converted this measure to a state per capita basis.
+    To fill missing years 2000 - 2003, I also fit a linear regression to
+    serve as placeholder. Again, for future iterations, I plan to use a
+    baseline of 2005.
 
 **Corporate Knowledge**
 
-- As a proxy for corporate knowledge/concern about climate changed, I extracted state-level search volume for the topic, "Sustainability", using Google Trends Supercharged. I then converted this measure to a state per capita basis. To fill missing years 2000 - 2003, I also fit a linear regression to serve as placeholder. Again, for future iterations, I plan to use a baseline of 2005.
+-   As a proxy for corporate knowledge/concern about climate changed, I
+    extracted state-level search volume for the topic, "Sustainability",
+    using Google Trends Supercharged. I then converted this measure to a
+    state per capita basis. To fill missing years 2000 - 2003, I also
+    fit a linear regression to serve as placeholder. Again, for future
+    iterations, I plan to use a baseline of 2005.
 
 **Consumer Corporate Knowledge Interaction**
 
-- I included an interaction term between sustainability and climate change search volume. My argument for doing so is that they are meant to represent the 'supply' and 'demand', which hypothetically influence each other. While the sustainabilty search was the only statistically significant of the two search variables, adding the interaction term increased the overall R-squared as well as the adjusted r-squared.
+-   I included an interaction term between sustainability and climate
+    change search volume. My argument for doing so is that they are
+    meant to represent the 'supply' and 'demand', which hypothetically
+    influence each other. While the sustainabilty search was the only
+    statistically significant of the two search variables, adding the
+    interaction term increased the overall R-squared as well as the
+    adjusted r-squared.
 
 **Food Waste**
 
-- For the dependant variable, food waste per capita, I extracted absolute food waste weights from 20 state-level municipal solid waste characterization studies as well as the sample sizes collected to produce each of those calculations. I then calculated food waste per captia. Give the small size of this dataset, I mutiplied the sample size for each observation by the population in the respective state, which I then used as weights in the model.
+-   For the dependant variable, food waste per capita, I extracted
+    absolute food waste weights from 20 state-level municipal solid
+    waste characterization studies as well as the sample sizes collected
+    to produce each of those calculations. I then calculated food waste
+    per captia. Give the small size of this dataset, I mutiplied the
+    sample size for each observation by the population in the respective
+    state, which I then used as weights in the model.
 
 ### Control Variables
 
-**Year**
-- I wanted to control for the impact of change over time because estimates from other models (i.e. ReFED) show a general increase in food waste over time.
+**Year** - I wanted to control for the impact of change over time
+because estimates from other models (i.e. ReFED) show a general increase
+in food waste over time.
 
 **Population**
 
-- I control for population in two different ways - using per capita measures and including population as a control variable. Per capita metrics do not fully capture the influence of population, which hypotehtically should correlate with changes in food waste. Controlling for population increased the coefficients for my two statisitcally significant explanaotry variables as well as the multiple and adjusted r-squared.
+-   I control for population in two different ways - using per capita
+    measures and including population as a control variable. Per capita
+    metrics do not fully capture the influence of population, which
+    hypotehtically should correlate with changes in food waste.
+    Controlling for population increased the coefficients for my two
+    statisitcally significant explanaotry variables as well as the
+    multiple and adjusted r-squared.
 
 ### Hypothesis
 
@@ -126,22 +190,24 @@ and residential sectors.
 
 H0: Supermarket revenue is not correlated with per capita food waste
 
-H1: Increased supermarket revenue is correlated with increased per capita food waste
+H1: Increased supermarket revenue is correlated with increased per
+capita food waste
 
 **Consumer Knowledge**
 
-H0: Google search volume about 'climate change' is not correlated with per capita food waste
+H0: Google search volume about 'climate change' is not correlated with
+per capita food waste
 
-H1: Google search volume about 'climate change' is negatively correlated with per capita food waste
+H1: Google search volume about 'climate change' is negatively correlated
+with per capita food waste
 
 **Corporate Knowledge**
 
-H0: Google search volume about 'sustainability' is not correlated
+H0: Google search volume about 'sustainability' is not correlated with
+per capita food waste
+
+H1: Google search volume about 'sustainability' is negatively correlated
 with per capita food waste
-
-H1: Google search volume about 'sustainability' is negatively correlated with per capita
-food waste
-
 
 ### Exploratory Data Analysis
 
@@ -184,6 +250,7 @@ desired_order <- c("state", "year", "total_food_per_capita", "gt_abs_sustain_per
 x_y_controls_df <- x_y_controls_df[, desired_order]
 str(x_y_controls_df)
 ```
+
 ```{r}
 # Create a data frame with the data dictionary
 data_dictionary <- data.frame(
@@ -207,6 +274,7 @@ kable(data_dictionary)
 ggplot(data = x_y_controls_df, aes(x=log(total_food_per_capita))) +
   geom_histogram(bins=10)
 ```
+
 ```{r}
 
 # Reshape the data to long format without the year variable
@@ -225,8 +293,6 @@ ggplot(data = long_data, aes(x = variable, y = value, fill = variable)) +
   theme(legend.position = "none") +
   scale_x_discrete(labels = c("Total Food Per Capita", "Revenue Per Capita", "Sustainability Per Capita", "CC Per Capita"))
 ```
-
-
 
 ```{r}
 ggplot(data = x_y_controls_df, aes(x=log(gt_abs_sustain_per_capita), y=log(total_food_per_capita))) +
@@ -249,7 +315,71 @@ ggplot(data = x_y_controls_df, aes(x=log(ibis_grcy_revenue_usd_m_per_capita_stat
   theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
 ```
 
+# Model Comparison
+
+I fit several different models.
+
+Model 1:
+`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights`
+
+Model 2:
+`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, weights=x_y_controls_df$weights`
+
+Model 3:
+`log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population`
+
+```{r model_comparison}
+
+x_y_controls_df$interaction_term <- x_y_controls_df$gt_abs_cc_per_capita * x_y_controls_df$gt_abs_sustain_per_capita
+
+fit_inter_pop <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
+
+fit_no_interaction <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df, weights=x_y_controls_df$weights)
+
+fit_no_weights <- lm(log(total_food_per_capita) ~ log(gt_abs_sustain_per_capita) + log(gt_abs_cc_per_capita) + interaction_term + year + ibis_grcy_revenue_usd_m_per_capita_state + population, data=x_y_controls_df)
+```
+
+```{r warning=FALSE}
+# Create a side-by-side table of the models using stargazer
+stargazer(fit_no_interaction, fit_inter_pop, fit_no_weights, type = "text",
+          title = "Food Waste Estimation Model Comparison",
+          align = TRUE,
+          column.labels = c("NoInteract", "Interact/Pop", "NoWeights"),
+          ci = TRUE, # Show confidence intervals
+          digits = 4) 
+```
+
+# Model Diagnostics
+
+```{r}
+summary(fit_inter_pop)
+```
+
+```{r}
+# Get the residuals and fitted values from the model
+residuals <- residuals(fit_inter_pop)
+fitted_values <- fitted(fit_inter_pop)
+
+# Add the residuals and fitted values as new columns in the dataframe
+x_y_controls_df$residuals <- residuals
+x_y_controls_df$fitted_values <- fitted_values
 
 
+ggplot(data = x_y_controls_df, aes(x=fitted_values, y=residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
 
+```{r}
+qqnorm(residuals, main="Q-Q Plot of Residuals")
+qqline(residuals)
+```
 
+```{r}
+vif(fit_inter_pop)
+```
+
+```{r}
+par(mfrow=c(2,3))
+plot(fit_inter_pop)
+```
