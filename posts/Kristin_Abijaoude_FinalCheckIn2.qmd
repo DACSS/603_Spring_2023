@@ -1,0 +1,433 @@
+---
+title: "Final Project Check in 2"
+author: "Kristin Abijaoude"
+editor: visual
+date: "04/21/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart1
+  - kristinabijaoude
+  - bullying
+---
+
+```{r}
+# load packages
+packages <- c("readr", "readxl", "summarytools", "tidyverse", "dplyr", "cars")
+lapply(packages, require, character.only = TRUE)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+
+Bullying continues to be a persistent problem in schools.
+
+Types of bullying faced by those affected include physical fights, exclusion, rumors, snarky "jokes", and name-calling. Every bullied student dreads going to school because they have to face their bullies, who would find any reason, or no reason at all, to target them. Bullying can happen outside of school, especially with today's advanced technology and near-universal access to the Internet. While students are always encouraged to tell a trusted adult, such as a teacher, trusted adults in authority have a spotty record when it comes to tackling this epidemic.
+
+In the US alone, one of every five students report being bullied on school grounds, including name-calling (`13%` among those who reported bullying), being pushed or shoved (`5%`), or have property destroyed on purpose (`1%`). `15%` of students who reported bullying were cyberbullied [^1]. Globally, one in three students report bullying, from as low as 7% in the Central Asian country of Tajikistan to as high as 74% in Samoa.[^2]
+
+[^1]: https://www.stopbullying.gov/resources/facts
+
+[^2]: http://uis.unesco.org/en/news/new-sdg-4-data-bullying
+
+The negative effects on bullying include low self-esteem, feeling angry or isolated, and distress, as well as physical effects like loss of sleep, headaches, and disordered eating. Bullying can be so detrimental to the victim that they take their own life to escape the pain.[^3]
+
+[^3]: https://www.ncbi.nlm.nih.gov/books/NBK390414/
+
+When discussing ways to combat bullying, it's too simplistic to say that "kids are just cruel". My purpose is to find why some students are more vulnerable to being targets of bullying, and how we can use those parameters to create solutions to end bullying once and for all.
+
+## Hypotheses and Proposed Models
+
+I will specify which model to test out each of my hypotheses. In this project, I will use these variables to explore a relationship between those variables and bullying.
+
+-   H~a~: Students who report loneliness and fewer friends are more vulnerable of being targets or bullying.
+
+-   H~a~: Male students are more likely than female students to face physical abuse by bullies.
+
+-   H~a~: More female students who report bullying are targeted for being underweight, while male students who report bullying are targeted for being overweight.
+
+-   H~a~: Students who face more physical attacks on school grounds are more likely to miss school.
+
+## Data Summary
+
+```{r}
+bullying <- read_xlsx("_data/Bullying.xlsx",
+                   range = cell_rows(2:56982))
+bullying
+```
+
+This 2018 study was conducted by Global School-Based Student Health Survey (GSHS), where 56,981 students from Argentina participated by filling out the questionnaire in regards to their mental health and behavior.[^4]
+
+[^4]: https://www.kaggle.com/datasets/leomartinelli/bullying-in-schools?datasetId=2952457
+
+```{r}
+dim(bullying) # 56980 rows and 18 columns
+```
+
+```{r}
+print(dfSummary(bullying,
+                        varnumbers = FALSE,
+                        plain.ascii  = FALSE, 
+                        style        = "grid", 
+                        graph.magnif = 0.70, 
+                        valid.col    = FALSE),
+      method = 'render',
+      table.classes = 'table-condensed')
+```
+
+# Tidying Dataset
+
+```{r}
+# shortening variable names
+bully <- bullying %>%
+  rename("bullied_at_school" = Bullied_on_school_property_in_past_12_months,
+         "bullied_outside_school" = Bullied_not_on_school_property_in_past_12_months,
+         "cyberbullied" = Cyber_bullied_in_past_12_months,
+         "grade" = Custom_Age,
+         "missed_school" = Miss_school_no_permission,
+         "help_from_peers" = Other_students_kind_and_helpful,
+         "parents_help" = Parents_understand_problems,
+         "underweight" = Were_underweight,
+         "overweight" = Were_overweight) # for the purpose of this project, I will conflate overweight with obese
+
+# removing repetitive and unneeded variables
+bully <- bully %>%
+  select(-c("Were_obese", "Missed_classes_or_school_without_permission", "Most_of_the_time_or_always_felt_lonely"))
+```
+
+There are a lot of missing data in the dataset, with some variables having about 40% missing data. For easier management, I will convert the binary variables into dummy variables, with `NAs` being treated as `no` or `0`.
+
+```{r}
+# replace NAs with 0
+bully$`bullied_at_school`[is.na(bully$`bullied_at_school`)] <-0
+bully$bullied_outside_school[is.na(bully$bullied_outside_school)] <- 0
+bully$cyberbullied[is.na(bully$cyberbullied)] <- 0
+bully$grade[is.na(bully$grade)] <- 0
+bully$Sex[is.na(bully$Sex)] <- 0
+bully$Physically_attacked[is.na(bully$Physically_attacked)] <- 0
+bully$Physical_fighting[is.na(bully$Physical_fighting)] <- 0
+bully$Felt_lonely[is.na(bully$Felt_lonely)] <- 0
+bully$Close_friends[is.na(bully$Close_friends)] <- 0
+bully$missed_school[is.na(bully$missed_school)] <- 0
+bully$help_from_peers[is.na(bully$help_from_peers)] <- 0
+bully$parents_help[is.na(bully$parents_help)] <- 0
+bully$underweight[is.na(bully$underweight)] <- 0
+bully$overweight[is.na(bully$overweight)] <- 0
+
+# let's count the amount of missing data by variable
+colSums(is.na(bully))
+```
+
+For the purpose of this project, `1` means `Yes` or more than `0`, and `0` means `No` or `0`.
+
+```{r}
+# Were you bullied on school grounds at one point in the past 12 months?
+bully$bullied_at_school <- ifelse(bully$bullied_at_school == "Yes", 1, 0)
+
+# Were you bullied outside of school at one point in the last 12 months?
+bully$bullied_outside_school <- ifelse(bully$bullied_outside_school == "Yes", 1, 0)
+
+# Were you cyberbullied at one point in the past 12 months?
+bully$cyberbullied <- ifelse(bully$cyberbullied == "Yes", 1,0)
+
+# Are you underweight?
+bully$underweight <- ifelse(bully$underweight == "Yes", 1,0)
+
+# Are you overweight or obese?
+bully$overweight <- ifelse(bully$overweight == "Yes", 1,0)
+
+# Are you Male or Female?
+bully$Sex <- ifelse(bully$Sex == "Male", 1,0) # Male is 1, female is 0
+```
+
+As one notices, not all variables have binary responses. For the same reason I converted binary variables into dummy variables, I will code the values accordingly.
+
+```{r}
+# How often are fellow students are helpful towards you?
+bully <- bully %>% 
+       mutate(help_from_peers = case_when(
+         help_from_peers == "Never" ~ 0,
+         help_from_peers == "Rarely" ~ 1,
+         help_from_peers == "Sometimes" ~ 2,
+         help_from_peers == "Most of the time" ~ 3,
+         help_from_peers == "Always" ~ 4,
+         TRUE ~ 0)) 
+
+# How often have you felt lonely?
+bully <- bully %>% 
+       mutate(Felt_lonely = case_when(
+         Felt_lonely == "Never" ~ 0,
+         Felt_lonely == "Rarely" ~ 1,
+         Felt_lonely == "Sometimes" ~ 2,
+         Felt_lonely == "Most of the time" ~ 3,
+         Felt_lonely == "Always" ~ 4,
+         TRUE ~ 0)) 
+
+#   How helpful and understanding are your parents?
+bully <- bully %>% 
+       mutate(parents_help = case_when(
+         parents_help == "Never" ~ 0,
+         parents_help == "Rarely" ~ 1,
+         parents_help == "Sometimes" ~ 2,
+         parents_help == "Most of the time" ~ 3,
+         parents_help == "Always" ~ 4,
+         TRUE ~ 0)) 
+
+# How many times were you physically attacked?
+bully <- bully %>% 
+       mutate(Physically_attacked = case_when(
+         Physically_attacked == "0 times" ~ 0,
+         Physically_attacked == "1 time" ~ 1,
+         Physically_attacked == "2 or 3 times" ~ 2,
+         Physically_attacked == "4 or 5 times" ~ 3,
+         Physically_attacked == "6 or 7 times" ~ 4,
+         Physically_attacked == "8 or 9 times" ~ 5,
+         Physically_attacked == "10 or 11 times" ~ 6,
+         Physically_attacked == "12 or more times" ~ 7,
+         TRUE ~ 0)) 
+
+# How many times were you involved in some form of physical fighting?
+bully <- bully %>% 
+       mutate(Physical_fighting = case_when(
+         Physical_fighting == "0 times" ~ 0,
+         Physical_fighting == "1 time" ~ 1,
+         Physical_fighting == "2 or 3 times" ~ 2,
+         Physical_fighting == "4 or 5 times" ~ 3,
+         Physical_fighting == "6 or 7 times" ~ 4,
+         Physical_fighting == "8 or 9 times" ~ 5,
+         Physical_fighting == "10 or 11 times" ~ 6,
+         Physical_fighting == "12 or more times" ~ 7,
+         TRUE ~ 0)) 
+
+# How many close friends do you have?
+bully <- bully %>% 
+       mutate(Close_friends = case_when(
+         Close_friends == "0" ~ 0,
+         Close_friends == "1" ~ 1,
+         Close_friends == "2" ~ 2,
+         Close_friends == "3 or more" ~ 3,
+         TRUE ~ 0)) 
+
+# How many days have you missed school?
+bully <- bully %>% 
+       mutate(missed_school = case_when(
+         missed_school == "0" ~ 0,
+         missed_school == "1 or 2 days" ~ 1,
+         missed_school == "3 to 5 days" ~ 2,
+         missed_school == "6 to 9 days" ~ 3,
+         missed_school == "10 or more days" ~ 4,
+         TRUE ~ 0)) 
+```
+
+For this project, I decided to turn the custom age variable into a dummy variable for students who went to either primary school or secondary school. In Argentina, students age 6-14 years old attend primary school, while students older attend secondary school and beyond[^5]. `0` means secondary school, while `1` means primary school.
+
+[^5]: https://en.wikipedia.org/wiki/Education_in_Argentina
+
+```{r}
+# create another variable
+bully <- bully %>%
+    mutate(primary_school = as.integer(grade %in% 
+                                  c("13 years old", "14 years old", "12 years old", "11 years old or younger")),
+           secondary = as.integer(!primary_school)) %>%
+  select(-c(secondary, grade))
+
+colnames(bully)
+```
+
+Above, we have all the relevant variables on hand, which is the next step towards effectively testing my hypotheses.
+
+# Variables
+
+The dependent variables will be the following:
+
+1.  `bullied_at_school`: Were you bullied on school grounds at one point in the past 12 months?
+2.  `bullied_outside_school`: Were you bullied outside of school at one point in the last 12 months?
+3.  `cyberbullied`: Were you cyberbullied at one point in the past 12 months?
+
+The independent variables are the following:
+
+1.  `Physically_attacked`: How many times were you physically attacked?
+2.  `Physical_fighting`: How many times were you involved in some form of physical fighting?
+3.  `missed_school`: How many times have you missed school?
+4.  `Felt_lonely`: How often have you felt lonely?
+5.  `Close_friends`: How many close friends do you have?
+6.  `help_from_peers`: How often are fellow students are helpful towards you?
+7.  `parents_help`: How helpful and understanding are your parents?
+8.  `underweight`: Are you underweight?
+9.  `overweight`: Are you overweight or obese?
+
+The controlled variables are the following:
+
+1.  `Sex`: Male or Female
+2.  `primary_school`: Are you in primary or secondary school?
+
+# Visualizations
+
+Before I test the hypotheses, I thought I would visualize the data distribution for each variable.
+
+```{r}
+# Visualize the dataset
+# trim dataset first
+bully_set <- bully[,2:14]
+
+# make a loop
+for (i in 2:ncol(bully_set)){
+  hist(bully_set[[i]], main=names(bully_set[i]), xlab = paste("Frequency",i), col = 'lightblue') 
+  box(lty = "solid")
+}
+```
+
+# Testing My Hypotheses
+
+::: callout-note
+## Hypothesis #1 Loneliness and Bullying
+
+H~a~: Students who report loneliness and fewer friends are more vulnerable of being targets of bullying.
+:::
+
+Since I am dealing with more than one independent variables, I'm going to use the multiple linear regression, as well as the Pearson's Correlation to calculate the statistical significance and correlation between the two variables of `felt_lonely` and `close_friends`.
+
+#### Bullying on School Grounds
+
+```{r}
+# Multiple Regression
+lonely_fit <- lm(bullied_at_school ~ Felt_lonely + Close_friends, data = bully)
+summary(lonely_fit)
+
+# Pearson's Correlation
+y_hat <- lonely_fit$fitted.values
+y <- lonely_fit$model$bullied_at_school
+print(cor.test(y_hat, y)$estimate)
+```
+
+Given the three asterisks next to the calculations, I can conclude that there is a significant correlation between the number of close friends, loneliness, and bullying. In fact, the P-value is so small that R doesn't completely compute how small the number is.
+
+```{r}
+plot(lonely_fit)
+```
+
+#### Outside of Schoool
+
+```{r}
+# Multiple Regression
+lonely_fit2 <- lm(bullied_outside_school ~ Felt_lonely + Close_friends, data = bully)
+summary(lonely_fit2)
+
+# Pearson's Correlation
+y_hat2 <- lonely_fit2$fitted.values
+y2 <- lonely_fit2$model$bullied_outside_school
+print(cor.test(y_hat2, y2)$estimate)
+```
+
+```{r}
+plot(lonely_fit2)
+```
+
+#### Cyberbullying
+
+```{r}
+# Multiple Regression
+lonely_fit3 <- lm(cyberbullied ~ Felt_lonely + Close_friends, data = bully)
+summary(lonely_fit3)
+
+# Pearson's Correlation
+y_hat3 <- lonely_fit3$fitted.values
+y3 <- lonely_fit3$model$cyberbullied
+print(cor.test(y_hat3, y3)$estimate)
+```
+
+```{r}
+plot(lonely_fit3)
+```
+Unsurprisingly, the outcomes across the board are similar . In other words, bullying and loneliness are not restricted to school property, or even in real life, which is a grave concern that schools need to address.
+
+::: callout-note
+## Hypothesis #2 Sex and Physical Bullying
+
+H~a~: Male students are more likely than female students to face physical abuse by bullies.
+:::
+
+I use the Chi-square test because I am dealing with two independent variables, `sex` and `physically_attacked`, to determine if there is an association between the two.
+
+```{r}
+bully$Sex <- as.character(bully$Sex)
+bully$Physically_attacked <- as.character(bully$Physically_attacked)
+
+abuse <- table(bully$Sex, bully$Physically_attacked)
+
+print(chisq.test(abuse, correct = FALSE))
+```
+
+From my results, there appears to be a significant association between sex and how often a student faces physical attacks. In other words, I prove my hypothesis that male students are more likely than female students to face physical abuse by bullies. Here is a graph to demostrate that:
+
+```{r}
+table <- data.frame(with(bully, table(Sex,Physically_attacked)))
+
+ggplot(table, aes(x=Sex,y=Freq, fill=Physically_attacked))+
+  geom_bar(stat="identity",position="dodge")+
+  scale_fill_discrete(name = "Physically_attacked",labels = c('0 times','1 time', "2 or 3 times", "4 or 5 times",  "6 or 7 times", "8 or 9 times", "10 or 11 times", "12 or more times")) +
+  xlab("Sex (0 - Female and 1 - Male)") +
+  ylab("Number of student responses")+
+  ggtitle("How often were you physically attacked?")
+```
+
+::: callout-note
+## Hypothesis #3 Size and Bullying
+
+H~a~: More female students who report bullying are targeted for being underweight, while male students who report bullying are targeted for being overweight.
+:::
+
+#### Bullying on School Grounds
+
+```{r}
+bullyANOVA <- aov(bullied_at_school ~ overweight + underweight + Sex + overweight:underweight, data = bully)
+print(summary(bullyANOVA))
+```
+
+```{r}
+plot(bullyANOVA)
+```
+
+#### Outside of School
+
+```{r}
+bullyANOVA2 <- aov(bullied_outside_school ~ overweight + underweight + Sex + overweight:underweight, data = bully)
+print(summary(bullyANOVA2))
+```
+
+```{r}
+plot(bullyANOVA2)
+```
+
+#### Cyberbullying
+
+```{r}
+bullyANOVA3 <- aov(cyberbullied ~ overweight + underweight + Sex + overweight:underweight, data = bully)
+print(summary(bullyANOVA3))
+```
+
+```{r}
+plot(bullyANOVA3)
+```
+
+::: callout-note
+## Hypothesis #4 Physical Attacks and Missing School
+
+H~a~: Students who face more physical attacks on school grounds are more likely to miss school.
+:::
+
+```{r}
+attacks <- select(bully, c(Physically_attacked))
+school <-  select(bully, c(missed_school))
+
+attacks <- as.numeric(unlist(attacks))
+school <- as.numeric(unlist(school))
+
+missed <- t.test(school, attacks, var.equal = FALSE, alternative = "two.sided")
+print(missed)
+```
