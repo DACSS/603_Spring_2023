@@ -47,7 +47,7 @@ The aim of this research paper is to provide a comprehensive understanding of **
 
 2.  Less years of experience (lower seniority) is significantly related to higher burnout rate.
 
-3.  The numbers of work hours allocated affect the burnout rate significantly in WFH setup (vs on site).
+3.  The numbers of work hours allocated affect the burnout rate significantly in employees working from home setup (vs on site).
 
 ### About the Data
 
@@ -57,6 +57,7 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(psych))
+suppressPackageStartupMessages(library(scales))
 library(lattice)
 library(formattable)
 suppressPackageStartupMessages(library(kableExtra))
@@ -105,126 +106,140 @@ Burn Rate: The value we need to predict for each employee telling the rate of Bu
 
 Let's see a Summary for each variable.
 
-But first let's simplify the name of the variables and transform the Date of hire into tenure in months.
+But first let's do some data wranglin:
+
+- simplify the name of the variables
+- transform the Date of hire into tenure in months
+- eliminate ID form the df as it is not relevant for the analysis
+- create new variables for categorical variables as numeric to simplify analysis: Gender (1= Male, 2=Female), WFH (1=Yes, 2=No), Type of Business (1=Service, 2=Product)
 
 ```{r}
 
 #simplify some variable names and transforming date
 burn <- rename(burn, fatigue = Mental.Fatigue.Score, hours = Resource.Allocation, WFH = WFH.Setup.Available, doh = Date.of.Joining, id = Employee.ID, business = Company.Type, designation = Designation, burn.rate = Burn.Rate, gender = Gender)
 
+#transforming date of hire to tenure
 burn$doh <- as.Date(burn$doh)
 burn$tenure <- difftime("2023-4-20", burn$doh, units = "weeks")
 burn$tenure <- burn$tenure/52
 burn$tenure <- as.numeric(burn$tenure)
 
+#eliminate ID as it's not relevant for the analysis. They are just the identification for each individual
+burn2 <- burn %>%
+  dplyr::select(-id)
+
+
+burn2 <- burn2%>%
+  mutate(gender.n = case_when(
+        gender == "Male" ~ 1,
+         gender == "Female" ~ 2,
+        )) %>%
+  mutate(business.n = case_when(
+         business == "Service" ~ 1,
+         business == "Product" ~ 2,
+         )) %>%
+  mutate(WFH.n = case_when(
+         WFH == "Yes" ~ 1,
+         WFH == "No" ~ 2,
+         ))
+
 ```
 
 
-#### Descriptives and exploratory visualization:
+#### Descriptives and exploratory visualization.
+
 
 ```{r}
 
 #creating a df with only continuous variables
-burn2 <- burn %>%
-  dplyr::select(-gender, -doh, -id, -WFH, -business)
+burn3 <- burn2 %>%
+  dplyr::select(-gender, -doh, -WFH, -business)
 
-describe_data <- describe(x=burn2) %>% 
-  select(c(vars, n, mean, sd, median, min, max, range))
+describe_data <- describe(x=burn3) %>% 
+  select(c(vars, n, mean, sd, median, min, max))
 
 kable(describe_data) %>% 
   kable_styling("striped")
 
-
 ```
 
-Let's visualize the data.
 
-Gender and Type of Business:
+Histograms for Burn Rate, mental Fatigue, Work hours allocated, Designation Level and tenure.
+```{r}
+
+hist(burn2$burn.rate, freq = TRUE, col="#a1e9f0", main = "Histogram for Burnout Rate", xlab = "Burn Rate", ylab = "Frequency")
+
+hist(burn2$fatigue, freq = TRUE, col="#a1e9f0", main = "Histogram for Mental Fatigue", xlab = "Values", ylab = "Frequency")
+
+hist(burn2$hours, freq = TRUE, col="#a1e9f0", main = "Histogram of hours allocated", xlab = "Work Hours allocated", ylab = "Frequency")
+
+hist(burn2$designation, freq = TRUE, col="#a1e9f0", main = "Histogram of Designation", xlab = "Designation Level", ylab = "Frequency")
+
+hist(burn2$tenure, freq = TRUE, col="#a1e9f0", main = "Histogram of Tenure", xlab = "Tenure", ylab = "Frequency")
+```
+
+
+Gender, Type of Business and Work setting (WFH):
 
 ```{r}
 
-#Let's start with Gender and Type of Business
-
-counts <- table(burn$gender, burn$business)
-counts
-
-tb.df <- as.data.frame(counts)
-names(tb.df) <- c("Gender", "Business", "Frequency")
-
-ggplot(tb.df, aes(x=Business, y=Frequency, fill=Gender)) + geom_col()
-
+ggplot(burn) +
+  geom_bar(aes(x=business, fill=gender),
+           position = "dodge") +
+  facet_wrap(~WFH)
 
 ```
 
-Business and Work From Home setup:
-
-```{r}
-
-#Let's start with Gender and Type of Business
-
-counts2 <- table(burn$WFH, burn$business)
-counts2
-
-tb.df2 <- as.data.frame(counts2)
-names(tb.df2) <- c("WFH", "Business", "Frequency")
-
-ggplot(tb.df2, aes(x=Business, y=Frequency, fill=WFH)) + geom_col()
-
-
-```
-
-Gender and Work From Home setup:
-
-```{r}
-
-#Let's start with Gender and Type of Business
-
-counts3 <- table(burn$WFH, burn$gender)
-counts3
-
-#tb.prop3 <- prop.table(counts3, 1)
-
-tb.df3 <- as.data.frame(counts3)
-names(tb.df3) <- c("WFH", "Gender", "Frequency")
-
-ggplot(tb.df3, aes(x=Gender, y=Frequency, fill=WFH)) + geom_col()
-
-#tp.df3 <- as.data.frame(tb.prop3)
-#names(tp.df3) <- c("WFH", "Gender", "Proportion")
-#tp.df3
-
-#ggplot(tp.df3, aes(x=Gender, y=Proportion, fill=WFH)) + geom_col()
-```
-
-Histograms for Burn Rate, mental Fatigue, Work hours allocated and Designation Level.
-```{r}
-
-hist(burn$burn.rate, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Burnout Rate", xlab = "Burn Rate", ylab = "Density")
-lines(density(burn$burn.rate, na.rm=TRUE), col = "blue", lwd = 2)
-
-hist(burn$fatigue, freq = FALSE, col="#a1e9f0", main = "Histogram of Probability Density for Mental Fatigue", xlab = "Values", ylab = "Density")
-lines(density(burn$fatigue, na.rm=TRUE), col = "blue", lwd = 2)
-
-hist(burn$hours, freq = TRUE, col="#a1e9f0", main = "Histogram of hours allocated", xlab = "Work Hours allocated", ylab = "Frequency")
-
-hist(burn$designation, freq = TRUE, col="#a1e9f0", main = "Histogram of Designation", xlab = "Designation Level", ylab = "Frequency")
-```
-
+Seems that there are more females working from home than males regardless the business.
 
 #### Explore relationships
 
 ```{r}
 
-round(cor(na.omit(burn2)),
-  digits = 2)
+box2 <- ggplot(burn2, aes(x=business, y=burn.rate, fill=gender)) + 
+    geom_boxplot(alpha=0.7, outlier.shape = NA) +
+  labs(title="Box Plot - Burn Rate by Gender, Type of business and Work From home (yes or no)",
+        x ="Type Of Business", y = "Burn Rate")+
+    facet_wrap(~WFH, scale="free")
 
-t.test(burn$burn.rate ~ burn$gender, var.equal = FALSE)
-t.test(burn$burn.rate ~ burn$WFH, var.equal = FALSE)
-t.test(burn$burn.rate ~ burn$business, var.equal = FALSE)
+box2
 
 ```
 
-It looks like the 
+It looks like the Burn rate is higher in the employees working on site compared to employees working from home, and males shows higher rate compared to females in both type of businesses but it seems a higher difference among employees working from home.
+
+```{r}
+
+scatter1 <- ggplot(burn2, aes(designation,burn.rate))+
+  geom_point(aes(color=WFH))+
+  geom_smooth(method="lm")+
+  labs(title="Scatter Plot - Burn Rate vs Designation and Gender",
+        x ="Designation", y = "Burn Rate")
+scatter1
+
+scatter2 <- ggplot(burn2, aes(hours,burn.rate))+
+  geom_point(aes(color=gender))+
+  labs(title="Scatter Plot - Burn Rate vs Hours allocated and Gender",
+        x ="Hours allocation", y = "Burn Rate")
+scatter2
+
+
+scatter3 <- ggplot(burn2, aes(fatigue,burn.rate))+
+  geom_point(aes(color=WFH))+
+  geom_smooth(method="gam")+
+  labs(title="Scatter Plot - Burn Rate vs Mental Fatigue grouped by Gender and WFH setup",
+        x ="Mental Fatigue", y = "Burn Rate")+
+  facet_wrap(~gender)
+scatter3
+
+scatter4 <- ggplot(burn2, aes(hours,fatigue))+
+  geom_point(aes(color=WFH))+
+  geom_smooth(method="glm")+
+  labs(title="Scatter Plot - Hours allocated vs Mental Fatigue",
+        x ="hours allocated", y = "Mental fatigue")
+scatter4
+
+```
 
 
 
