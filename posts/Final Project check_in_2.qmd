@@ -18,14 +18,14 @@ editor:
 
 ## Final Project check-in 2, Diana Rinker.
 
-# Online engagement
+# Introduction. Online engagement
 
 It is well known that online engagement and popularity with the web
 resource is a highly valuable metric and is driving site revenue. This
 research project is exploring which factors contribute to users online
 engagement.
 
-To do that I will use the data from an online blog on the news website.
+To do that I will use the data of an online blog on the news website.
 The author of this blog is posting articles about interpersonal
 relationships every work day (Mon- Fri). The posts are formulated as a
 letter from a reader with the situation and a question about
@@ -89,7 +89,7 @@ library(ggplot2)
 library(tidyverse)
 ```
 
-# Data
+### Data source and description. 
 
 To answer my research question I will use two datasets. the first data
 set has information about all comments associated with each post by post
@@ -98,37 +98,36 @@ one post per row and variables describe each post as a whole without
 breaking down to the comment level.
 
 In this project I will analyze posts for January 2021 - February 2023.
-
-First, I will load the data set with the comment level data:
-
+Here is the list of variables in each dataset: 
+Post-level data:
 ```{r, echo=T}
 getwd()
+# First, I will load the data set with the comment level data:
 raw <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\ data.2021.plus.csv"))
-
 comments.data<-raw 
 colnames (comments.data)
 head(comments.data$written_at)
 comments.data <-comments.data%>%
               mutate(com.year = format(written_at,format = "%Y" ))
-range(comments.data$com.year)
-dim(comments.data)
+# range(comments.data$com.year)
+# dim(comments.data)
+str(comments.data)
 ```
-
-Second, loadng post-level data :
-
+Comment data: 
 ```{r, echo=T}
-
+# Second, loadng post-level data :
 merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\data.merged.csv"))
 # colnames(merged)
-# str(merged)
+str(merged)
 ```
 
-\# Variable description
+Be
 
 To begin, I will review available variables and evaluate whether it is a
 good measure for this study.
 
-#1. Post characteristics: #1.1.Popularity
+# 1.Post characteristics: 
+## 1.1.Popularity
 
 ### Page views
 
@@ -214,9 +213,9 @@ ggplot( data=merged, mapping=aes(y=Uniques, x=merged$year_month))+
 
 ```
 
-# 1.2.Engagement metrics:
+## 1.2. Engagement metrics:
 
-## Visit ratio and unique ratio:
+### Visit ratio and unique ratio:
 
 "visits ratio" is the number of visits per total viwes. This metric
 tells us how often the page being re-viewed. The lower the ratio means
@@ -268,7 +267,7 @@ once and by unique users, i.e. post is read once by each user.
      
 ```
 
-##Exit rate
+### Exit rate
 
 This variable is measuring how many people visited the page and then
 left the website after the first view. This metric is the best measure
@@ -296,7 +295,7 @@ ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-## Number of reactions
+### Number of reactions
 
 This represents total amount of likes and dislikes of comments per
 post.To like/dislike the comment, user doesn't have to log in.
@@ -330,7 +329,7 @@ ggplot(merged, mapping = aes(x=year_month , y=reactions.ratio, fill=year_month )
 The absolute number of reactions and the ratio appear to decrease over
 time.
 
-## Number of comments: engagement metric for subset of readers. Absolute and per views.
+### Number of comments: engagement metric for subset of readers. Absolute and per views.
 
 To comment on the requires logging in from a user, which is an indicator
 of greater engagement of an individual user. Therefore this variable
@@ -392,11 +391,13 @@ ggplot(merged, mapping = aes(x=year_month , y=post.total.likes, fill=year_month 
   
 ```
 
-#1.3 Impact of post popularity on engagement.
+## 1.3 Impact of post popularity on engagement.
 
 As we saw in the distributions of variables above, the popularity of the
-post might significantly influence its engagement. \#### Exit rate as
-engagement Lets review how it is impacting exit rate :
+post might significantly influence its engagement. 
+
+#### Exit rate as engagement
+ets review how it is impacting exit rate :
 
 ```{r, echo=T}
 ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
@@ -428,7 +429,7 @@ ggplot(merged, mapping=aes(x=log(Uniques), y=visits.ratio ))+
 summary(lm(visits.ratio~ + log(Uniques) , data = merged))
 ```
 
-#1.3.1 Page views as derivative from popularity and not engagement:
+### 1.3.1 Page views as derivative from popularity and not engagement:
 
 ```{r, echo=T}
 # colnames(merged)
@@ -440,7 +441,7 @@ summary(lm(adj.page.views ~ `Exit rate`+ Uniques, data = merged))
 This model tells us that the page.views are mostly driven by post
 popularity and not impacted by user engagement.
 
-###3
+###  
 
 <!-- The model is showing  significant correlation between all of engagement metrics we have identified and popularity .  -->
 
@@ -465,7 +466,7 @@ engagement metric, we see consistent pattern of decreased engagement
 with increased popularity. To explore this connection further, lets
 review Sources of users that are coming to the website.
 
-#1.3.2. How popularity impacts engagement: Referral sources.
+### 1.3.2. How popularity impacts engagement: Referral sources.
 
 The website analytics provides information on where the viewers are
 coming from to the blog page. for example, if people clicked on the blog
@@ -668,7 +669,7 @@ that there are other , more influencial, factors that were not
 considered. To look for other factors, lets review other available
 variables in the dataset.
 
-#1.Conclusion
+## 1.4.Conclusion
 
 As we reviewed a variety of engagement metric, I found 1. that they are
 all strongly correlated to each other and influenced by post popularity:
@@ -689,7 +690,7 @@ The difference in types of readers must be considered when addressing
 our main hypothesis whether authors engagement and other factors impacts
 reader's engagement.
 
-##2. Independent variables (IV):
+# 2. Independent variables (IV):
 
 #### Authors comments
 
@@ -760,8 +761,12 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-#Adding IVs to the model Now as we reviewed Independent variables,I will
-create a model : ##2.1 Engagement of all viewers
+# 3. Creating the model for main hypothesis testing
+
+Now as we reviewed Independent variables,I will
+create a model : 
+
+## 3.1 Engagement of all viewers
 
 ```{r, echo=T}
 # colnames(merged)
@@ -772,8 +777,9 @@ This shows that engagement is decreasing with popularity and someone
 increasing with author's comments. However, the contribution of authors
 comments is very small.
 
-##2.2 Engagement of loyal viewers viewers Now we will use loyal's
-readers engagement as DV:
+## 3.2 Engagement of loyal viewers 
+
+Now we will use loyal readers engagement as DV:
 
 ```{r, echo=T}
 summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive, data = merged))
@@ -789,7 +795,7 @@ three independent variables, but this moder has low R\^2 , which
 suggests that there are other factors impacting loyal reader's
 engagement that a re not considered in this model.
 
-## Adding a weekday:
+### Adding a weekday:
 
 Adding the weekday of the post ad additional IV increases R\^2 and shows
 significance for one of the levels:
@@ -799,9 +805,9 @@ summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum +p
 summary(lm(`Exit rate` ~ log(Uniques) + author.sum + pct.positive+blocked.sum +post.weekday, data = merged))
 ```
 
-## Adding early comments:
+### Adding early comments:
 
-Measuring how early comments impact emgagement:
+Measuring how early comments impact engagement:
 
 ```{r, echo=T}
 merged<- merged %>%
@@ -820,7 +826,23 @@ dramatically:
 summary(lm(e.rate ~ author.sum+early.sum, data = merged))
 ```
 
-##\*\*\* not sure what to dowith this:
+
+# 4. Conlusion
+
+This study explored the connection between user's online engagement and bolg's author engagement.  To do so, we also analyzed the impact of post popularity on engagement. 
+
+
+```{r, echo=T}
+knitr::include_graphics("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP diagram .png")
+```
+
+The results showed that the post popularity is the major factor for online engagement and is negatively correlated with it. i.e. more popular posts tend to be less engaging.    
+
+We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is no significant impact of authors engagement on users engagement.  Such characteristics, as post mood and blocked comments also showed no connection with engagement of either groups of users. 
+
+
+# For discussion: 
+not sure what to do with this:
 
 I will add other variables in the model to see if any other metrics also
 contribute:
