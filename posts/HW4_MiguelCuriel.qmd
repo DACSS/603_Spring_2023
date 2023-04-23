@@ -1,0 +1,386 @@
+---
+title: "Homework 4"
+author: "Miguel Curiel"
+description: "Multiple linear regression for DACSS 603."
+date: "04/25/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - linear regression
+  - multiple linear regression
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, eval=TRUE, echo=TRUE}
+# load necessary packages
+library(tidyverse)
+library(alr4)
+library(smss)
+```
+
+# Question 1
+
+For recent data in Jacksonville, Florida, on y = selling price of home
+(in dollars), x1 = size of home (in square feet), and x2 = lot size (in
+square feet), the prediction equation is
+
+ŷ = −10,536 + 53.8x1 + 2.84x2.
+
+A.  A particular home of 1240 square feet on a lot of 18,000 square feet
+    sold for \$145,000. Find the predicted selling price and the
+    residual, and interpret.
+
+    a.  If ŷ = −10536 + 53.8x1 + 2.84x2, then by replacing the given
+        values we have ŷ = -10536 + (53.8\*1240) + (2.84\*18000).
+        Solving for that, the predicted selling price is \$107,296 and
+        the residual is \$37,704. This means that the actual selling
+        price was more than what the model would have predicted.
+
+B.  For fixed lot size, how much is the house selling price predicted to
+    increase for each square-foot increase in home size? Why?
+
+    a.  Selling price increases by 53.8 dollars for each square-foot
+        increase because that is the coefficient assigned to x1. In
+        other words, x1 is the effect of home size on the selling price
+        when holding other factors constant.
+
+C.  According to this prediction equation, for fixed home size, how much
+    would lot size need to increase to have the same impact as a
+    one-square-foot increase in home size?
+
+    a.  Lot size would need to increase 18.94 times to have the same
+        impact as a one-square-foot increase in home size. This can be
+        found by dividing x1 over x2, i.e. 53.8 / 2.84 = 18.94366.
+
+# Question 2
+
+(Data file: salary in **alr4** R package). The data file concerns salary
+and other characteristics of all faculty in a small Midwestern college
+collected in the early 1980s for presentation in legal proceedings for
+which discrimination against women in salary was at issue. All persons
+in the data hold tenured or tenure track positions; temporary faculty
+are not included. The variables include degree, a factor with levels PhD
+and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor
+with levels Male and Female; Year, years in current rank; ysdeg, years
+since highest degree, and salary, academic year salary in dollars.
+
+```{r, eval=TRUE, echo=TRUE}
+data("salary", package = "alr4")
+salary <- salary
+head(salary)
+```
+
+A.  Test the hypothesis that the mean salary for men and women is the
+    same, without regard to any other variable but sex. Explain your
+    findings.
+
+    a.  Since we are dealing with the mean of numerical data (salary)
+        between two groups (male and female), we can run a two-sample
+        t-test. As seen from the results below, even though the mean
+        salary of men is higher, according to the p-value (0.09), it is
+        not statistically significant, therefore we fail to reject the
+        null hypothesis. In other words, we do not have enough evidence
+        to say that male salaries are greater than female salaries.
+
+```{r, eval=TRUE, echo=TRUE}
+# extract the salary data and sex variable
+salary <- alr4::salary
+sex <- salary$sex
+
+# calculate the mean salaries for men and women
+male_salaries <- salary$salary[sex == "Male"]
+female_salaries <- salary$salary[sex == "Female"]
+mean_male_salary <- mean(male_salaries)
+mean_female_salary <- mean(female_salaries)
+
+# perform the t-test
+t_test <- t.test(male_salaries, female_salaries)
+
+# print the results
+cat("Mean salary for men:", mean_male_salary, "\n")
+cat("Mean salary for women:", mean_female_salary, "\n")
+cat("p-value:", t_test$p.value, "\n")
+```
+
+B.  Run a multiple linear regression with salary as the outcome variable
+    and everything else as predictors, including sex. Assuming no
+    interactions between sex and the other predictors, obtain a 95%
+    confidence interval for the difference in salary between males and
+    females.
+
+```{r, eval=TRUE, echo=TRUE}
+# fit a multiple linear regression model
+model <- lm(salary ~ ., data = salary)
+
+# print the model summary
+summary(model)
+```
+
+```{r, echo=TRUE, eval=TRUE}
+# obtain a 95% confidence interval for the difference in salary between males and females
+confint(model, "sexFemale", level = 0.95)
+```
+
+C.  Interpret your finding for each predictor variable; discuss (a)
+    statistical significance, (b) interpretation of the coefficient /
+    slope in relation to the outcome variable and other variables.
+
+    a.  Statistical significance of each variable. There are several
+        variables that turn out to be statistically significant, in
+        particular rank and year. This makes sense as it is commonly
+        assumed that people with higher ranking positions have better
+        salaries. Similarly, people with more tenure or years in a
+        company should correlate to greater salaries. We had already
+        determined that gender does not play a significant role, but it
+        is interesting to see that neither level of education or years
+        since graduation play a significant role.
+
+    b.  Coefficient / slope of each predictor variable in relation to
+        the outcome variable and other variables. Some variables that
+        immediately draw attention are rank and years since graduation -
+        rank has a high coefficient, meaning that it plays an important
+        role in increasing salary. Years, on the other side, has a
+        negative coefficient, meaning that more years actually equates
+        to less salary (which is a positive outcome for recent grads,
+        but not for people that have several years in the workforce).
+        The remaining variables - gender, degree, and years in a
+        position - have positive relations, however they are not as high
+        as rank.
+
+D.  Change the baseline category for the rank variable. Interpret the
+    coefficients related to rank again.
+
+    a.  After experimenting with the three possible ranks, coefficients
+        do not change - what can change is the direction of the
+        relationship. For example, if you use "Prof" as the baseline,
+        now assistants and associates have a negative relationship,
+        meaning that professors see an increase in salary but assistants
+        and associates do not.
+
+```{r, eval=TRUE, echo=TRUE}
+# change the baseline category for the rank variable to "Asst"
+salary$rank <- relevel(salary$rank, ref = "Prof")
+
+# fit a new multiple linear regression model with a different baseline category for rank
+model2 <- lm(salary ~ ., data = salary)
+
+# print the model summary
+summary(model2)
+```
+
+E.  Finkelstein (1980), in a discussion of the use of regression in
+    discrimination cases, wrote, "\[a\] variable may reflect a position
+    or status bestowed by the employer, in which case if there is
+    discrimination in the award of the position or status, the variable
+    may be 'tainted.'"Thus, for example, if discrimination is at work in
+    promotion of faculty to higher ranks, using rank to adjust salaries
+    before comparing the sexes may not be acceptable to the courts.
+    (Exclude the variable rank, refit, and summarize how your findings
+    changed, if they did.)
+
+    a.  This results in significant changes. With this new model, all
+        variables included are statistically significant. This means
+        that gender, degree, and years since graduation do play an
+        important role in salary. In particular, females see a decrease
+        in salary, as do PhD graduates, while years since graduation is
+        the only variable with a positive influence on salary.
+
+```{r, echo=TRUE, eval=TRUE}
+# fit a new multiple linear regression model without rank
+model3 <- lm(salary ~ sex + degree + ysdeg, data = salary)
+
+# print the model summary
+summary(model3)
+```
+
+F.  Everyone in this dataset was hired the year they earned their
+    highest degree. It is also known that a new Dean was appointed 15
+    years ago, and everyone in the dataset who earned their highest
+    degree 15 years ago or less than that has been hired by the new
+    Dean. Some people have argued that the new Dean has been making
+    offers that are a lot more generous to newly hired faculty than the
+    previous one and that this might explain some of the variation in
+    Salary. (Create a new variable that would allow you to test this
+    hypothesis and run another multiple regression model to test this.
+    Select variables carefully to make sure there is no
+    multicollinearity. Explain why multicollinearity would be a concern
+    in this case and how you avoided it. Do you find support for the
+    hypothesis that the people hired by the new Dean are making higher
+    than those that were not?)
+
+    a.  I created a new binary variable to distinguish between people
+        hired before and after the new dean. To check for
+        multicollinearity, I created a correlation matrix - and, as
+        expected, years since graduation is somewhat correlated. This
+        makes sense as people with more recent graduation dates are more
+        likely to have been hired by the new dean - therefore, "ysdeg"
+        was removed from the model. After fitting the model, most
+        variables remain relatively the same and the people hired
+        before/after the new dean do not seem to have a statistically
+        significant salary difference.
+
+```{r, eval=TRUE, echo=TRUE}
+# Create a new variable indicating whether the person was hired by the new Dean or not
+salary$newDean <- ifelse(salary$year >= 15, 0, 1)
+```
+
+```{r, eval=TRUE, echo=TRUE}
+# Calculate the correlation matrix
+cor(salary[, c("salary", "ysdeg", "newDean")])
+```
+
+```{r, eval=TRUE, echo=TRUE}
+# Fit the multiple regression model
+model4 <- lm(salary ~ sex + rank + degree + year + newDean, data=salary)
+
+# Check the summary of the model
+summary(model4)
+```
+
+# Question 3
+
+(Data file: house.selling.price in **smss** R package)
+
+```{r, eval=TRUE, echo=TRUE}
+data("house.selling.price", package = "smss")
+prices <- house.selling.price
+head(prices)
+```
+
+A.  Using the house.selling.price data, run and report regression
+    results modeling y = selling price (in dollars) in terms of size of
+    home (in square feet) and whether the home is new (1 = yes; 0 = no).
+    In particular, for each variable; discuss statistical significance
+    and interpret the meaning of the coefficient.
+
+    a.  After running the model, both variables are statistically
+        significant, although size is much more significant than new
+        status (2e-16 \> 0.00257). However, the coefficient is much
+        higher for new status than it is fore size (57736 \>116).
+
+```{r, eval=TRUE, echo=TRUE}
+# Fit the multiple regression model
+model5 <- lm(Price ~ Size + New, data=prices)
+
+# Check the summary of the model
+summary(model5)
+```
+
+A.  Report and interpret the prediction equation, and form separate
+    equations relating selling price to size for new and for not new
+    homes.
+
+    a.  The equation would be ŷ = -40230.867 + 116.132\*size +
+        57736.283\*new. What this means is that, if a house is new, it's
+        selling price will increase by \$57,736.
+
+B.  Find the predicted selling price for a home of 3000 square feet that
+    is (i) new, (ii) not new.
+
+    a.  Using the above equation and replacing for the values given, we
+        have the two following equations: ŷ(new) = -40230.867 +
+        116.132\*3000 + 57736.283\*1 and ŷ(not new) = -40230.867 +
+        116.132\*3000 + 57736.283\*0. This results in a selling price of
+        \$365,901.4 for the new home and \$308,165.1 for one that is not
+        new.
+
+C.  Fit another model, this time with an interaction term allowing
+    interaction between size and new, and report the regression results.
+
+```{r, eval=TRUE, echo=TRUE}
+# Fit the multiple regression model
+model6 <- lm(Price ~ Size * New, data=prices)
+
+# Check the summary of the model
+summary(model6)
+```
+
+D.  Report the lines relating the predicted selling price to the size
+    for homes that are (i) new (ii) not new.
+
+    a.  The new formula would be ŷ = -22227.808 + 104.438\*size -
+        78527.502\*new + 61.916\*size\*new. We would have to replace
+        with a 1 or 0 depending where it says "new" in the previous
+        equation depending on a house's status.
+
+E.  Find the predicted selling price for a home of 3000 square feet that
+    is (i) new, (ii) not new.
+
+    a.  Replacing the given values in the previous equation, we would
+        have the two following formulas: ŷ(new)= -22227.808 +
+        104.438\*3000 - 78527.502\*1 + 61.916\*3000\*1 and ŷ(not new)=
+        -22227.808 + 104.438\*3000 - 78527.502\*0 + 61.916\*3000\*0.
+        This results in a selling price of \$398,306.7 for the new house
+        and \$291,086.2 for one that is not new.
+
+F.  Find the predicted selling price for a home of 1500 square feet that
+    is (i) new, (ii) not new. Comparing to (F), explain how the
+    difference in predicted selling prices changes as the size of home
+    increases.
+
+    a.  Following the same steps, we now have these formulas: ŷ(new)=
+        -22227.808 + 104.438\*1500 - 78527.502\*1 + 61.916\*1500\*1 and
+        ŷ(not new)= -22227.808 + 104.438\*1500 - 78527.502\*0 +
+        61.916\*1500\*0. This results in a selling price of \$148,775.7
+        for the new house and \$134,429.2 for one that is not new.
+        Compared to the prices in (F), there seems to be an
+        exponentiation effect on the selling price as houses increase in
+        size.
+
+G.  Do you think the model with interaction or the one without it
+    represents the relationship of size and new to the outcome price?
+    What makes you prefer one model over another?
+
+    a.  Even though it is tempting to say the the model without
+        interaction performs better because of the lower R-squared, when
+        comparing across other metrics (Root Mean Squared Error, Mean
+        Absolute Error, and Akaike Information Criterion), it turns out
+        the model with interaction performs better. Additionally, from
+        the examples above, the prices predicted by the model with
+        interaction does seem to be closer to the predicted prices.
+        Therefore, I would chose the model with interaction.
+
+```{r, eval=TRUE, echo=TRUE}
+# Create a function to calculate the evaluation metrics
+eval_metrics <- function(model) {
+  # Calculate the R-squared value
+  rsq <- summary(model)$r.squared
+  
+  # Calculate the RMSE value
+  predicted <- predict(model, newdata = house.selling.price)
+  actual <- house.selling.price$Price
+  rmse <- sqrt(mean((predicted - actual)^2))
+  
+  # Calculate the MAE value
+  mae <- mean(abs(predicted - actual))
+  
+  # Calculate the AIC value
+  aic <- AIC(model)
+  
+  # Return a data frame with the evaluation metrics
+  data.frame(R2 = rsq, RMSE = rmse, MAE = mae, AIC = aic)
+}
+
+# Calculate the evaluation metrics for each model
+metrics1 <- eval_metrics(model5)
+metrics2 <- eval_metrics(model6)
+
+# Combine the metrics into a table
+metrics_table <- rbind(metrics1, metrics2)
+rownames(metrics_table) <- c("Model without Interaction"
+                             , "Model with Interaction")
+
+# Print the table
+metrics_table
+```
