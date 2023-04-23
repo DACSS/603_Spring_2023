@@ -131,16 +131,21 @@ merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massac
 To begin, I will review available variables and evaluate whether it is a
 good measure for this study.
 
-# Engagement (DV) metrics:
+#1. Post characteristics: 
+#1.1.Popularity
 
 ### Page views
 
-This is the most general metric, representing how many views
-the post received. Views do not distinguish repeated views by the same
-person.
+This is the most general metric, representing how many views the post received. It is derivative number, resulting  from popularity of the post as well as engagement. Views do not distinguish repeated views by the same person, therefore page views itself is not as informative as other metrics. 
 
 ```{r, echo=T}
 # str(merged)
+ggplot(data=merged, mapping=aes(x=`Page views`))+
+  geom_histogram()
+```
+
+
+```{r, echo=T}
 merged$post.month <-as.numeric(merged$post.month)
 merged$year_month <- paste0(merged$post.year, "-", sprintf("%02d", merged$post.month))
 
@@ -150,6 +155,10 @@ ggplot( data=merged, mapping=aes(y=`Page views`, x=merged$year_month))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
+
+# ggplot(data=merged, mapping=aes(x=log(`Page views`)))+
+#   geom_histogram()
+
 ```
 
 From this graph we can see that the numbers of views is increased over
@@ -157,14 +166,13 @@ time. To get a better understanding of it, lets review other metrics.
 
 ### Page visits and unique users
 
-Views - represent the number of times page was viewed by all users at
-all times. 
-Visit - is an instance of a user engaging with bdc website.
-There can be many visits by the same viewer. Once th user is leaving the
-website, the visit is over. 
-To count unique viewers, we can use "Uniques" variable. It tells us how many unique users saw the post.
+Views - represent the number of times page was viewed by all users at all times. This is important metric, that drives website revenue, as it increases advertisement exposure.
 
-The relationship will always be that Unique < Visits < Views, so we will plot them together:
+Visit - is an instance of a user engaging with bdc website. The user can visit a few pages of the site and re-visit the same page a few times during the visit. There can be many visits by the same viewer. Once th user left the website, the visit is over. 
+
+To count unique viewers, "Uniques" variable. It tells us how many unique users saw the post.
+
+The relationship will always be that Uniques < Visits < Views, so we will plot them together:
 
 ```{r, echo=T}
 # str(merged)
@@ -174,17 +182,38 @@ ggplot(merged, aes(x =post.date )) +
      geom_bar(aes(y = Uniques, fill = "Unique users"), stat = "identity", position = "dodge", width = 0.6)    +
      labs(title = "Views, visits and unique users per month", x = "Post.date", y = "Value") + 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
-
-
 ```
 This graph also shows increase in all three  metrics in 2022-2023. To see how these metrics crrespond to each other,  I will calculate "visits ratio" and "unique.ratio".
 
-### Page visit and unique ratios: 
-"visits ratio"  isnumber of visits per total vies. this metric telss us how offten the page being re-viewed. The lower the ratio means more people viwed page more than once during their visit. 
+### Page unique viewers.
 
-"unique ratio" - number of unique users per total views is telling uys how often unique viewers re-visited the page. Lower ratio indicate more views by the same individual. 
+Uniques variable represents number of uniuqe people who came to the page and viewed it at least once. This metric represents popularity of the post. It's distributions shows us that not all posts are equally popular:
+
+
+```{r, echo=T}
+colnames(merged)
+ggplot(data=merged, mapping=aes(x=Uniques))+
+  geom_histogram()
+```
+
+Thereis clearly a long tail on the right, showing that there is a number of posts who are way more popular. 
+If we look at the distribution of this variable over time, we will see significant increase of average popularity after December 2021.  
+```{r, echo=T}
+ggplot( data=merged, mapping=aes(y=Uniques, x=merged$year_month))+
+          geom_boxplot()+
+  labs(title="Number of unique viewers per month", x="Month", y="Number of unique viewers")+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+#1.2.Engagement metrics: 
+##Visit ratio and unique ratio:
+
+"visits ratio"  is the number of visits per total viwes. This metric tells us how often the page being re-viewed.
+The lower the ratio means that the page was viewed more times  during single visit. Since repeated view can be considered a higher engagement, the lower visit ratio indicates higher engagement. 
+
+"unique ratio" - number of unique users per total views. It  is telling us how often the same person re-visited the post. Lower ratio indicates repeated users, therefore higher engagement.  
 
 Both ratios are always in the range of 0 - 1. 
 
@@ -221,32 +250,61 @@ Density of the distribution also showing that there are more posts that are visi
      
 ```
 
-### Exit rate
+##Exit rate
 
-This variable is measuring how many people visited the page and then left the website after the first view. We can also see consistent increase of this value, similar to the trend seen before: over time, there are more of less engaged users. 
+This variable is measuring how many people visited the page and then left the website after the first view. We can also see consistent increase of this value, similar to the trend seen before: over time, there are more of less engaged users.  This metric is the best measure of engagement for all users, as it represents the first step after being exposed to the post - either quitting the site or remaining on the site. 
 
-
+WE can see the distribution of this variable : 
 ```{r, echo=T}
 # str(merged)
 merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
+
+ggplot(data=merged, mapping=aes(x=`Exit rate`))+
+  geom_histogram()
+
+# +
+#   geom_density()
+```
+
+And how it changes over time:
+```{r, echo=T}
 ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of `Exit rate` per post ", y = "Exit rate" , x="Month")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-### Number of comments: absolute and  per views. 
+## Number of comments: engagement metric for s ubset of readers. Absolute and  per views.
+
+To comment on the requires logging in from a user, which is an indicator of greater engagement of an individual user. Therefore this variable represents engagement of a subset of users - more loyal readers who have created an account. 
 
 ```{r, echo=T}
 # merged$year_month 
-  merged <- merged %>%
-     mutate(comments.ratio = n.comments/ `Page views`)
+ggplot(data=merged, mapping=aes(x=n.comments))+
+  geom_histogram()
+```
 
+
+And change in the distribution over time: 
+
+
+```{r, echo=T}
 ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
   geom_boxplot() +
   labs(title = "distribution of comments per post ", y = "Number of comments" )+
   scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+The trend in amount of comments over time is different. While previously reviewed variables seemed to increase over time, this variable  decreases.  
+
+We can calculate the ratio of comments per 
+If we compare absolute values fo comments and ratio of comments per page views,  we see the decrease in both cases, while the ratio's decrease is more dramatic: 
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(comments.ratio = n.comments/ `Page views`)
 
 ggplot(merged, mapping = aes(x=year_month , y=comments.ratio, fill=year_month ))+
   geom_boxplot() +
@@ -254,21 +312,36 @@ ggplot(merged, mapping = aes(x=year_month , y=comments.ratio, fill=year_month ))
   scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-
-   
-
 ```
-The trend of comments is different. While the first four variables seemed to increase over time, this variable  decreases.  If we compare absolute values fo comments and ratio of comments per page views,  we see the decrease in both cases, while the ratio's decrease is more dramatic. 
+WE can see that with an increase of views (mostly driven by post popularity), comments ratio decreeases. So, newly added viewers are not adding to the engaged subset of readers. 
+<!-- It is also more likely that the users who logged and commented will return to the post page , which would correspond with the decrased in visits.ratio and uniques.ratio).  -->
 
-It is important to note, that commenting on the platform  requires logging in from a user, which is an indicator of greater engagement of an individual user. 
-
-It is also more likely that the users who logged and commented in are likely to return to the post (=add views or visits while not changing "uniques" count). If that assumption holds, an increase of first for variables (vies, visits and uniques) implies with decrease of comments, which is so far supported by the data. 
-
-### Number of reactions 
+##Number of reactions 
 
 ```{r, echo=T}
 # merged$year_month 
-str(merged)
+colnames(merged)
+
+ggplot(data=merged, mapping=aes(x=post.total.likes))+
+  geom_histogram()+
+  labs(title=" Number of all reactions per post")
+```
+
+The distribution of comments per post over time: 
+```{r, echo=T}
+
+# str(merged)
+ggplot(merged, mapping = aes(x=year_month , y=post.total.likes, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of reactions over time  ", y = "Percentage of reactions " )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+```
+
+Since we already saw the distribution of total post views,  we calculate reactions ratio to account for post views:
+
+```{r, echo=T}
   merged <- merged %>%
      mutate(reactions.ratio = post.total.likes / `Page views`)
   
@@ -278,22 +351,62 @@ ggplot(merged, mapping = aes(x=year_month , y=reactions.ratio, fill=year_month )
   labs(title = "distribution of reactions ", y = "Percentage of reactions " )+
   scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-   
 
 ```
-Number of reactions appears to decrease over time. To like/dislike the comment, user doesn't have to log in. 
+The absolute number of reactions appears to decrease over time. To like/dislike the comment, user doesn't have to log in.  
 
+#1.3 Impact of post popularity on engagement. 
 
-
-##Page views : relationship between popularity and engagement. 
+As we saw in the distributions of variables above, the popularity of the post might significantly influence its engagement. 
+#### Exit rate as engagement 
+Lets review how it is impacting exit rate :
 
 ```{r, echo=T}
-# colnames(merged)
+ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
+  geom_point()
+summary(lm(`Exit rate`~ + log(Uniques) , data = merged))
+```
+#### Uniques.ratio as engagement 
+Since unique ratio is also engagement measure, lets see how its impacted by popularity: 
 
- merged <- merged %>%
+```{r, echo=T}
+colnames(merged)
+ggplot(merged, mapping=aes(x=log(Uniques), y=uniques.ratio ))+
+  geom_point()
+summary(lm(uniques.ratio~ + log(Uniques) , data = merged))
+```
+#### Visits ratio as engagement 
+Visits ratio is also engagement measure, lets see how its impacted by popularity: 
+
+```{r, echo=T}
+colnames(merged)
+ggplot(merged, mapping=aes(x=log(Uniques), y=visits.ratio ))+
+  geom_point()
+summary(lm(visits.ratio~ + log(Uniques) , data = merged))
+```
+
+#1.4 Page views as derivative from popularity and engagement: 
+
+```{r, echo=T}
+colnames(merged)
+merged <- merged %>%
      mutate(adj.page.views =`Page views` / 10000)
+summary(lm(adj.page.views ~ `Exit rate`+ Uniques, data = merged))
 
-summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio , data = merged))
+```
+This model tells us that the page.views are mostly driven by post popularity and not impacted by user engagement.
+
+```{r, echo=T}
+
+summary(lm(adj.page.views ~ `Exit rate`+  Uniques +comments.ratio+ author.sum +pct.positive , data = merged))
+```
+
+
+
+
+
+```{r, echo=T}
+summary(lm(`Exit rate`~ + Uniques  +visits.ratio  +comments.ratio+  reactions.ratio , data = merged))
 
 ```
 
@@ -357,7 +470,7 @@ This graph clearly demonstrates increase of "Search + amp referral visits" after
 
 
 
-### Second wave causes:
+### "Second wave" causes:
 
 Some posts demonstrate increased amount of views, coming from search
 engines. Some data shows, that these views are coming 2-3 days after the post date (ADD DATA
@@ -406,8 +519,36 @@ merged <- merge( merged, early.coms , by = "post_id", all = TRUE)
 head(merged )
 ```
 
+#if I use bounce/views as engagement metric 
+
+ggplot (merged, mapping =aes( x=`Exit rate`)+
+  geom_histogram( ) 
+
+ggplot (merged, mapping =aes( y=`Exit rate`, x=google))+
+  geom_point( ) 
+ggplot (merged, mapping =aes( y=`Exit rate`, x=log(google)))+
+  geom_point( ) 
+
+  geom_smooth(method="lm")+
+  labs(title = "All google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+
+
+summary(lm(`Exit rate` ~ adj.page.views + author.sum + pct.positive +post.weekday, data = merged))
+
 Now, as I calculated number of early comments for all posts, I can see
 if that number correlated with google referrals
+
+
+
+
+
+
+
+
 
 ```{r, echo=T}
 
@@ -423,7 +564,7 @@ summary(lm(google ~early.sum, data=merged.2))
 ```
 
 We can see significant connection between early comments and google
-referrals above 10000 visits. Howeve, R\^2 is low in this model, whic
+referrals above 10000 visits. Howeve, R\^2 is low in this model, which
 suggests that there are other factors that are not considered in this
 model. I will explore how days of the week and time of the post
 contribute to this relationship.
@@ -455,31 +596,53 @@ arrange(desc(post_id))
 merged <- merge( merged, weekdays , by = "post_id", all = TRUE)
 colnames(merged)
 
-levels(merged$post.weekday)
+# levels(merged$post.weekday)
 ```
+ 
 
-
-### Adding weekdays to the model - BROKEN HERE 
+### Adding weekdays to the model 
 
 ```{r, echo=T}
 
 merged.2<-merged %>%
   filter(google>10000)
 
+merged.3<-merged %>%
+  filter(post.date>01/01/2022)
+
+
+
 # correlation.2 <- cor(merged.weekdays$early.sum, merged.weekdays$google)
 # correlation.2
- plot(merged$post.weekday ,   merged$google)
+ plot(merged$post.weekday, merged$google)
 
-summary(lm(google ~early.sum +post.weekday , data=merged.weekdays))
+summary(lm(google ~early.sum +post.weekday , data=merged.2))
 
 # table(merged.weekdays$post.weekday)
 
 ggplot (merged, mapping =aes(x=early.sum, y=google, color =post.weekday))+
   geom_point( ) +
   geom_smooth(method="lm")+
-  labs(title = "Google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
+  labs(title = "All google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   facet_wrap(~post.weekday)
+
+ggplot (merged.3, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "Google referraps by erarly comments. After 1/1/2022", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+ggplot (merged.2, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "Google referrals over 10K and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+
 
 ```
 
@@ -487,7 +650,20 @@ Our hypothesis that large amount of early comments triggers google referrals did
 To look for other factors, lets review other available variables in the dataset. 
 
 
-##Independent variables (IV):
+#1.Conclusion 
+
+As we reviewed a variety of engagement metric,  I found that they are all strongly correlated to each other and influenced by post popularit: Engagement overal decreases as popularity increases. 
+In our further analysis I will need to
+A. Include post.views in the model to control for popularity, 
+B. Measure engagement as a ratio of the absolute variable value to the total post views.
+
+
+Also as a result of exploration of enaggement metric, we can distinguish two types of users: superficial visitors and loyal readers. The main difference is that loyal readers have created accounts and therefore can comment. 
+The propotyion of two groups of readers might significantlkew our fundings. Such, as supervisial readers amount increases, the impact of engagement of loyal readers becomes invidible in the model. 
+
+## check with log() here !! 
+
+##2. Independent variables (IV):
 
 #### Authors comments
 
@@ -528,7 +704,7 @@ ggplot(data=merged, mapping = aes(x=year_month , y=author.sum, fill=year_month )
 
 ```
 
-This graph shows, that majority of posts have no author's comments. However, if we look at the boxplots' upper ranges, we can see a trend of having overall less author's comments with time.
+This graph shows, that majority of posts have no author's comments. However, if we look at the box plots' upper ranges, we can suggest a trend of decrease in author's comments with time.
 
 
 
@@ -559,32 +735,68 @@ ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
 ```
 
 
-
-
 #Adding  IVs to the model
 Now as we reviewed Independent variables, I am adding them to my model to see if any of these can explain trigger of google referrals. 
 
+exit rate is the most {...} variable,  I wil use it as DV metric for engagement. 
+
+
 ```{r, echo=T}
-
-# summary(lm(visits.ratio ~ comments.ratio+  reactions.ratio  , data = merged))
-# summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
-# summary(lm(visits.ratio ~ n.comments+  reactions.ratio  , data = merged))
-
+colnames(merged)
+summary(lm(`Exit rate` ~ adj.page.views + author.sum + pct.positive, data = merged))
+summary(lm(`Exit rate` ~ log(adj.page.views) + author.sum + pct.positive, data = merged))
+summary(lm(`Exit rate` ~ log(adj.page.views) + author.sum + pct.positive +blocked.sum, data = merged))
 ```
 
+POPULARITY SEEMS TO BE THE BIGGEST DRIVER OF ENGAGEMENT, even when controlled for
+
+
+
+
+
+Adding  the weekday of the post ad additional IV increases R^2 and  shows significance for one of the levels:
+
+Measuring how early comments impact emhgagement: 
+
+```{r, echo=T}
+summary(lm(`Exit rate` ~ adj.page.views + author.sum + pct.positive +post.weekday +early.sum, data = merged))
+
+blocked.sum
+```
+Adding blocked comments to the model: 
+
+```{r, echo=T}
+summary(lm(`Exit rate` ~ adj.page.views + author.sum + pct.positive +post.weekday + log(early.sum) +blocked.sum, data = merged))
+
+summary(lm(`Exit rate` ~ adj.page.views + author.sum + pct.positive +post.weekday + early.sum +blocked.sum, data = merged))
+
+
+colnames(merged)
+# different DV metric: 
+summary(lm(n.comments ~ adj.page.views + author.sum + pct.positive +post.weekday + early.sum +blocked.sum, data = merged))
+summary(lm(comments.ratio ~ adj.page.views + author.sum + pct.positive +post.weekday + early.sum +blocked.sum, data = merged))
+
+
+
+
+
+
+
+
+```
 
 ### Influence of IV on engagement metrics (not populatiry) 
 
 ```{r, echo=T}
 summary(lm(adj.page.views ~  early.sum +post.weekday +author.sum +pct.positive+ blocked.sum , data=merged.2))
 
-
+colnames(merged)
 
 # summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio , data = merged))
 # summary(lm(adj.page.views ~ `Exit rate`+  uniques.ratio +visits.ratio  +comments.ratio+  reactions.ratio +  pct.positive+ author.sum  + blocked.sum , data = merged))
 
-summary(lm(comments.ratio ~  author.sum  +pct.positive+ blocked.sum , data = merged))
-
+summary(lm(comments.ratio ~ log(adj.page.views)+ author.sum  +pct.positive+ blocked.sum , data = merged))
+summary(lm(n.comments ~ log(adj.page.views)+ author.sum  +pct.positive+ blocked.sum , data = merged))
 ```
 
 
@@ -610,16 +822,11 @@ summary(lm(google~ Uniques + n.comments +ll, data = merged))
 ### Blocked comments and Post mood:
 
 ```{r, echo=T}
-
 plot(blocked.sum ~ mood.score, data= grouped )
-  
-  
+
 summary(grouped)  
-
 fit <- lm(blocked.sum ~ mood.score, data = grouped)
-
 sum(is.na(grouped$mood.score))
-
 summary(fit)
 
   
