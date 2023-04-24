@@ -1,0 +1,347 @@
+---
+title: "Homework 4"
+author: "Justine Shakespeare"
+description: "Homework 4 for DACSS 603 Spring 2023"
+date: "04/24/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - multiple linear regression
+  - Justine Shakespeare
+---
+
+
+```{r, results=FALSE , message=FALSE}
+library(tidyverse)
+library(alr4)
+library(smss)
+library(stargazer)
+```
+# Question 1
+
+ŷ = −10,536 + 53.8x1 + 2.84x2
+
+x1 = size of home
+
+x2 = size of lot
+
+## A
+
+*A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000. Find the predicted selling price and the residual, and interpret.*
+
+x1 = 1240
+x2 = 18000
+y = 145000
+
+```{r}
+x1 = 1240
+x2 = 18000
+
+-10536 + (53.8*x1) + (2.84*x2)
+```
+
+The predicted selling point is \$107,296 for this house. Given that the actual selling value is \$145,000, this model underpredicts the value of the house. 
+
+The residual for this data point is the difference between y_hat and y. In this case, that is \$145,000 - \$107,296, which is \$37,704. This house sold for \$37,704 more than the predicted value. 
+
+```{r}
+145000 - 107296
+```
+
+## B 
+
+*For fixed lot size, how much is the house selling price predicted to increase for each square-foot increase in home size? Why?*
+
+The house selling price is predicted to increase \$53.80 for each square-foot increase, controlling for lot size. 53.80 is the slope or coefficient of the house size.  
+
+ŷ = −10,536 + 53.8x1 + 2.84x2
+
+## C
+
+*According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size?*
+
+A one square foot increase in the size of the home would lead to a \$53.80 increase in the sales prices, and a one square foot increase in the size of the lot would lead to a \$2.84 increase in the sales price. The find how much the lot size would need to increase to have the same impact as a one square foot increase in home size we can this equation 53.8=x*2.84 and solve for x.
+
+```{r}
+53.8/2.84
+```
+The lot would need to increase by over 18.94 square feet to increase the sales price as much as one square foot increase in home size. 
+
+# Question 2
+
+```{r}
+data(salary)
+
+glimpse(salary)
+```
+
+## A
+
+*Test the hypothesis that the mean salary for men and women is the same, without regard to
+any other variable but sex. Explain your findings.*
+
+To test that hypothesis that the mean salary for men and women is the same, we'll run a two sample t-test.
+
+```{r}
+t.test(formula = salary ~ sex, data = salary)
+```
+The p-value of this test is larger than 0.05, so if we choose that for our alpha value then we should retain the null hypothesis that the mean salary for men and women is the same. The 95% confidence interval also spans from -567.8539 to 7,247.1471, which includes 0 and indicates that the means are not significantly different from one another. 
+
+## B
+
+*Run a multiple linear regression with salary as the outcome variable and everything else as
+predictors, including sex. Assuming no interactions between sex and the other predictors,
+obtain a 95% confidence interval for the difference in salary between males and females.*
+
+```{r}
+QbLM <- (lm(formula = salary ~ degree + rank + sex + year + ysdeg, data = salary))
+
+stargazer(QbLM, data = salary, type = 'text')
+```
+
+After running the multiple linear regression and using the stargazer() function we see in the results that the coefficient for the `sex` variable is 1166.37 for sex Female with a standard error of 925.569. We can also see from these results that there are 52 observations, so n = 52. With these figures we can calculate the 95% confidence interval.
+
+```{r}
+# CI = (X bar) ± (t × s/sqrt(n)) = CI = (X bar) ± (t × se)
+
+t_score <- qt(.025, df = 45)
+
+1166.373 + (t_score * 925.569)
+1166.373 - (t_score * 925.569)
+```
+
+Or we can use the `confint()` function in R:
+
+```{r}
+  confint(QbLM) 
+```
+## C
+
+*Interpret your finding for each predictor variable; discuss (a) statistical significance, (b)
+interpretation of the coefficient / slope in relation to the outcome variable and other variables*
+
+In this regression analysis the `sex`, `ysdeg`, and `degree` variables are not statistically significant. Because these variables are not significant I will not interpret the coefficients.
+
+The `rank` and `year` variables were found to be statistically significant at the level of 0.01 (1%). The coefficients indicate that with the "Assoc" rank, a person will make \$5,292.361 more than a person with the "Asst" rank (since the "Assoc" rank was not included in the regression output we know it was the baseline). With the rank "Prof" a person will make \$11,118.760 more than a person with "Asst" rank. 
+
+With each unit increase of the `year` variable a person will make \$476.309 more in salary. 
+
+## D
+
+*Change the baseline category for the rank variable. Interpret the coefficients related to rank
+again.*
+
+```{r}
+salary$rank <- relevel(salary$rank, ref = "Prof")
+
+summary(lm(formula = salary ~ degree + rank + sex + year + ysdeg, data = salary))
+```
+I used the `relevel()` function to change the baseline value for the `rank` variable to "Prof". Now the results tell us that people with a "Asst" rank make \$11,118.76 less than people with a "Prof" rank, and people with an "Assoc" rank make \$5,826.40 than those with a "Prof" rank. Both of these findings are statistically significant. 
+
+## E
+
+...
+*Exclude the variable rank, refit, and summarize how your findings changed, if they did.*
+
+```{r}
+QbLM <- (lm(formula = salary ~ degree + rank + sex + year + ysdeg, data = salary))
+
+QbLM_noRank <- (lm(formula = salary ~ degree + sex + year + ysdeg, data = salary))
+
+stargazer(QbLM, QbLM_noRank, data = salary, type = 'text')
+```
+Removing the `rank` variable from the analysis changes the significance of some variables. With the `rank` variable included in the model the variables `degree` and `ysdeg` were not significant and the variable `year` was significant at the 0.01 (1%) level. With the `rank` variable removed both the `degree` and `ysdeg` variables are now statistically significant, with `degree` at the 0.05 (5%) level and `ysdeg` at the 0.01 (1%) level. The `year` variable also dropped one significance level, from 0.01 (1%) to 0.05 (5%).
+
+The sign also flipped for the variables `ysdeg`, `sexFemale`, and `degreePhD`.
+
+## F
+
+*Everyone in this dataset was hired the year they earned their highest degree. It is also
+known that a new Dean was appointed 15 years ago, and everyone in the dataset who
+earned their highest degree 15 years ago or less than that has been hired by the new Dean.
+Some people have argued that the new Dean has been making offers that are a lot more
+generous to newly hired faculty than the previous one and that this might explain some of
+the variation in Salary.*
+
+*Create a new variable that would allow you to test this hypothesis and run another multiple
+regression model to test this. Select variables carefully to make sure there is no
+multicollinearity. Explain why multicollinearity would be a concern in this case and how
+you avoided it. Do you find support for the hypothesis that the people hired by the new
+Dean are making higher than those that were not?*
+
+
+```{r}
+Q2F <- salary %>% 
+  mutate("new_dean" = case_when(
+    ysdeg <=15 ~ 1, 
+    ysdeg >15 ~ 0))
+
+summary(lm(salary ~ new_dean + degree + rank + sex + year, data = Q2F))
+```
+Since the new variable, `new_dean`, was built from the `ysdeg` variable, to avoid multicollinearity I did not include the `ysdeg` variable in the regression model (since the `new_dean` variable was included). We can confirm that these two variables would likely cause multicollinearity by checking that their correlation is high. 
+
+```{r}
+cor.test(Q2F$new_dean, Q2F$ysdeg)
+
+```
+It appears that these two variables have a high negative correlation. 
+
+The output of the regression with the `new_dean` variable shows that if a person was hired by the new dean they would earn \$2,163.46 more in salary than if they were hired by the old dean. This finding is significant at the 0.05 (5%) level. 
+
+
+# Question 3
+
+## A
+
+*Using the house.selling.price data, run and report regression results modeling y = selling price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 = yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the
+meaning of the coefficient.*
+
+```{r}
+data(house.selling.price)
+glimpse(house.selling.price)
+```
+```{r}
+houseData <- (lm(Price ~ Size + New, data = house.selling.price))
+summary(houseData)
+```
+The regression output indicates that both the `Size` and the `New` variable are significant (Size at the .1% level and New at the 1% level.) The coefficients tell use that with an increase in size, the price will increase by \$116.132, and that the price for new houses will be \$57,736.283 more than old houses. 
+
+## B
+
+*Report and interpret the prediction equation, and form separate equations relating selling price to size for new and for not new homes.*
+
+E(price) = -40,230.867 + 116.132 * Size + 57736.283 * New
+
+*New home:*
+E(price) = -40,230.867 + 116.132 * Size + 57736.283 * 1
+
+We use 1 for x1 with a new home and get the following equation: 
+E(price) = 17,505.42 + 116.132 * Size
+
+*Old home:*
+E(price) = -40,230.867 + 116.132 * Size + 57736.283 * 0
+
+We use 0 for x1 with an old home and get the following equation:  
+E(price) = -40,230.867 + 116.132 * Size
+
+## C
+
+*Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.*
+
+```{r}
+# Equation: -40,230.867 + 116.132 * size + 57736.283 * new
+
+# new home
+size <- 3000
+new <- 1
+-40230.867 + 116.132 * size + 57736.283 * new
+
+# old home
+size <- 3000
+new <- 0
+-40230.867 + 116.132 * size + 57736.283 * new
+```
+
+The predicted price of a new 3,000 square foot home is \$365,901.40 and the predicted price of an old 3,000 square foot home is \$308,165.10.
+
+## D
+
+*Fit another model, this time with an interaction term allowing interaction between size and new, and report the regression results*
+
+```{r}
+summary(lm(Price ~ Size + New + Size*New, data = house.selling.price))
+```
+The regression results indicate that the `Size` variable is still significant at the 0.001 (.1%) level, but the `New` variable is no longer significant. The interaction term `Size*New` is significant at the 0.01 (1%) level.
+
+## E
+
+*Report the lines relating the predicted selling price to the size for homes that are (i) new, (ii) not new.*
+
+I assume by "report the lines" we mean interpret the coefficients here...
+
+equation: E(price) = -40230.867 + 104.438 * size - 78527.502 * new + 61.916(size*new)
+
+*New house:*
+We replace "new" with 1. 
+-22227.808 + 104.438 * size - 78527.502 * 1 + 61.916(size*1)
+
+-100755.3 + 166.354 * size 
+
+*Old house:*
+We replace "new" with 0
+-22227.808 + 104.438 * size - 78527.502 * 0 + 61.916(size*0)
+
+-22227.808 + 104.438 * size
+
+
+## F
+
+*Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.*
+
+```{r}
+# new house
+size <- 3000
+new <- 1
+-22227.808 + 104.438 * size - 78527.502 * new + 61.916*(size*new)
+
+# old house
+new <- 0
+-22227.808 + 104.438 * size - 78527.502 * new + 61.916*(size*new)
+```
+
+(i)
+The predicted price for a new house that is 3,000 square feet is \$398,306.70.
+
+(ii) 
+The predicted price for an old house of 3,000 square feet is \$291,086.20.
+
+## G
+
+*Find the predicted selling price for a home of 1500 square feet that is (i) new, (ii) not new. Comparing to (F), explain how the difference in predicted selling prices changes as the size of home increases.*
+
+
+```{r}
+# new house
+size <- 1500
+new <- 1
+-22227.808 + 104.438 * size - 78527.502 * new + 61.916*(size*new)
+
+# old house
+new <- 0
+-22227.808 + 104.438 * size - 78527.502 * new + 61.916*(size*new)
+```
+
+(i)
+The predicted price for a new house that is 1,500 square feet is \$148,775.70.
+
+(ii) 
+The predicted price for an old house of 1,500 square feet is \$134,429.20.
+
+```{r}
+# F
+398306.7 - 291086.2
+
+# G
+148775.7 - 134429.2
+```
+
+The price difference between old and new houses is greater for larger houses (\$107,220.50) than for smaller houses (\$14,346.50). This is captured in the interaction term. 
+
+## H
+
+*Do you think the model with interaction or the one without it represents the relationship of size and new to the outcome price? What makes you prefer one model over another?*
+
+```{r}
+HSPmodel <- (lm(Price ~ Size + New, data = house.selling.price))
+
+HSPmodel_ia <- (lm(Price ~ Size + New + Size*New, data = house.selling.price))
+
+stargazer(HSPmodel, HSPmodel_ia, type = 'text')
+```
+
+I prefer the model with the interaction term because the interaction term is significant and both the R^2 and adjusted R^2 figures are higher than for the model without the interaction term. The residual standard errors are also smaller for the model with the interaction term. 
