@@ -1,0 +1,127 @@
+---
+title: "Final Project Check 2"
+author: "Guanhua Tan"
+description: "Final Project Check 2"
+date: "April 4 2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - fpc2
+  - research question
+  - desriptive statistics
+  - model
+---
+
+My final project will be a further investigation on digital devices in schools that I have submitted as the final project for DACSS 601. I still explore the data from the survey "Programme for International Student Assessment" in 2018. In this assignment, I will propose my hypothesis, and present the descriptive statistics with minor changes base on my last project.
+
+```{r, echo=T}
+library(tidyverse)
+library(ggplot2)
+library(dbplyr)
+library(stargazer)
+library(misty)
+pisa <- read_csv('_data/CY07_MSU_SCH_QQQ.csv')
+```
+
+# Research Questions
+
+My final project will probe into what factors contribute to the accessibility to and human resources' support for digital devices in schools. Additionally, I will explore if there is a correlations between career guidance and digital devices? I will conduct this research based on the data "Programme for International Student Assessment" (PISA) collected by the The Organization for Economic Co-operation and Development (OECD) in 2018.
+
+# Hpyotheis
+
+I propose that the size of urban population primarily contributes to the conditions of digital device. "OECD or Non-OECD" and "public or private schools" may be two cofounders, which is suppose to be incorporated into the regression analysis. Also, I hypothesize that the higher score a school report regarding career guidance, the higher score a school reports in terms of digital divices.
+
+```{r, echo=TRUE, results='hide'}
+# create a data frame
+#view(pisa)
+# select related variable
+pisa_selected <- select(pisa,starts_with(c("SC001", "SC013", "SC016", "SC161","SC155")))
+pisa2018_joint <-cbind(pisa[, 1:12], pisa_selected)
+# pisa_SC155
+pisa2018_joint$Digitals=rowMeans(pisa2018_joint[,c("SC155Q01HA","SC155Q02HA",                                                  "SC155Q03HA","SC155Q04HA","SC155Q05HA","SC155Q06HA", "SC155Q07HA","SC155Q08HA","SC155Q09HA", "SC155Q10HA", "SC155Q11HA")])
+pisa2018_joint$Career_Guidance=rowSums(pisa2018_joint[, c("SC161Q02SA","SC161Q03SA","SC161Q04SA","SC161Q04SA")])
+pisa_SC155 <- pisa2018_joint %>%
+  select(CNT, STRATUM, OECD, Career_Guidance,Digitals, SC001Q01TA, SC013Q01TA) %>%
+  mutate(Urban=SC001Q01TA, Public_or_Private=SC013Q01TA) %>%
+  select(-c(SC001Q01TA, SC013Q01TA)) %>%
+  select(c(CNT,STRATUM,OECD,Urban, Public_or_Private,Career_Guidance,Digitals))
+pisa_SC155
+
+```
+
+# Descriptive Statistics
+
+This original OECD PISA 2018 School Questionnaire Dataset is one part of PISA 2018 dataset with a focus on schools. It covers 80 countries and regions all over the world. The dataset documents 21,903 schools' responses regarding 187 questions.After cleaning the data, the dataset includes 8 variables: CNT identifies countries. STRATUM identifies schools. OECD indicates if a school locates in a OECD country or not. Urban describes different conditions of urban communities where a school locates. Public_or_Private presents if a school is public or private. Career_Guidance demonstrates the score a school reports in terms of career guidance. Accessibility demonstrates the score a school reports in terms of accessibility to digital devices. Human_Resource_Support suggests the score a school reports in terms of human ressource support for digital devices.
+
+After using the summary function and visualization, I have already show the descriptive statistics. A large number of NA stands out. I will figure out how to deal with them properly.
+
+```{r, echo=TRUE}
+summary(pisa_SC155)
+
+pisa_SC155_boxplot<-pisa_SC155 %>%
+  select(STRATUM, Career_Guidance, Digitals) %>% 
+  pivot_longer(cols=c(Career_Guidance, Digitals), 
+               names_to = "Group", values_to = "Evaluation")
+
+ggplot(pisa_SC155_boxplot,aes(Evaluation, fill=Group))+
+  stat_boxplot(geom = "errorbar", # Error bars
+               width = 0.2)+
+  geom_boxplot()+
+  facet_wrap(~Group)+
+  labs(title="Pisa2018 Evaluation")+
+  coord_flip()
+  
+```
+# Analysis
+
+```{r}
+summary(pisa_SC155)
+```
+
+## model evaluation
+```{r}
+model_1 <-lm(Career_Guidance~Urban+Public_or_Private+Digitals+Urban*Digitals, data = pisa_SC155)
+summary(model_1)
+
+model_2 <-lm(Career_Guidance~Urban+Public_or_Private+Public_or_Private*Digitals, data = pisa_SC155)
+summary(model_2)
+
+model_3 <-lm(Career_Guidance~Urban+Public_or_Private+Digitals, data = pisa_SC155)
+summary(model_3)
+
+
+stargazer(model_1,model_2, model_3,  type = 'text')
+
+```
+
+
+
+After the model comparison, model_3 presents statistical significance on all independent variables. The career gudience depends on urban situations, school styles and the access to digital devices.
+
+```{r}
+fit<-lm(Career_Guidance~Urban+Public_or_Private+Digitals, data = pisa_SC155)
+par(mfrow=c(2,3))
+plot(fit, which= 1:6)
+
+
+```
+
+The model diagnostic demonstrates that model_3 is the fittest model without significant errors.
+
+
+## Discussion on NA
+```{r}
+library(naniar)
+pisa_SC115_nonOECD <- filter(pisa_SC155, OECD == "0")
+pisa_SC115_OECD <- filter(pisa_SC155, OECD == "1")
+vis_miss(pisa_SC155)
+vis_miss(pisa_SC115_nonOECD)
+vis_miss(pisa_SC115_OECD)
+```
+The graphics has suggested that OECD countries reported more NAs than non-OECD countries. This opens more space to further investigate why developed countries reported more NAs.
+
+
