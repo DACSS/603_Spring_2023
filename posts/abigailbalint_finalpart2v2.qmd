@@ -1,0 +1,251 @@
+---
+title: "Final Project Part 2"
+author: "Abigail Balint"
+desription: "Final project part  2 updates"
+date: "04/20/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart2
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description of data 
+
+The dataset I am using comes from Kaggle https://www.kaggle.com/datasets/kaggle/kaggle-survey-2018 and is a survey titled "2018 Kaggle Machine Learning & Data Science Survey" conducted by Kaggle to capture the current state of machine learning and data science usage, mainly at the enterprise and academic level. The dataset contains survey responses from almost 24,000 respondents from varying backgrounds. The survey contains 50 questions, including 9 demographic questions and 41 questions around machine learning and data science. The questions range from platforms and products used, and tools and methodology, barriers to entry, and more. It also asks respondents about their employee experience working in these fields. I believe that the wide array of types of questions used make this dataset a good fit for research, as there are binary and categorical variables to explore but also some that ask for explicit numeric values like what percentage of their work falls to different tasks. Having several different types of questions provide opportunities for multiple types of models to be performed.
+
+This survey was also run in 2017, 2019, and 2020 on Kaggle as part of an annual competition where users could submit code and analysis using this public data. However, I decided to use the 2018 dataset as my focus because certain questions that I think would be really interesting to analyze were omitted in later years/the survey was shortened overall. This survey was hosted by Kaggle, open to anyone in the industry, for one week in October 2018.
+
+
+Reading in the dataset --
+
+```{r, echo=T}
+
+final <- read_csv("_data/final_project_data.csv")
+head(final,10)
+```
+```{r}
+
+```
+
+## Research Question 
+
+Upon doing a cursory search around this data, I see some high level executive-summary style research published about this data set, but I wasn't able to find anything focused on more specific research questions. It was more demographic data of the state of ML and Data Science. I think there is the opportunity to speak more specifically about the state of machine learning and data science, and look deeper at what tools students and employees are using versus what their time is devoted to.
+
+Based on feedback from my part 1 of the final, I am narrowing down my area of focus. There is a huge amount of data within this dataset, but as this research is focused on performing regression modeling, I think the best fit for my main research question is as follows:
+
+How does an individual’s background, experience, and time in their field/role impact what their day to day looks like?
+
+I plan to use questions like "During a typical data science project at work or school, approximately what proportion of your time is devoted to the following?" to get exact numbers that I can correlate against demos and more general usage of tools and platforms to see if there is any connection between the work one does and the tools they use.
+
+I am interested in this dataset because a lot of research in my career is in the machine learning space, so I am always interested in contextualizing the employee experience in these areas so that I can better understand the subject of some of my survey research. I also do more general employee engagement research in my career and I think this final is a great opportunity to try my hand at some of the correlations I would like to run at my job now but have never been able to because I don't have any prior stats knowledge.
+
+
+## Hypothesis
+
+The hypothesis I would like to test is:
+
+Those with more years of experience in machine learning/coding will spend a larger proportion of their time doing analyzing and decision making, as opposed to those newer to the job will spend more time cleaning data and doing actual coding.
+
+The below variables are the ones I plan to consider using:
+
+Independent variable:
+Q24	How long have you been writing code to analyze data?
+
+Dependent variable:
+Q34_Part_6	During a typical data science project at work or school, approximately what proportion of your time is devoted to the following? (Answers must add up to 100%) - Finding insights in the data and communicating with stakeholders
+
+The below variables could be used as confounding variables to the independent variable, or as alternative dependent variables to test that could give me opposite results to test essentially the second half of my hypothesis statement:
+
+* Confounding variable 1 - Q8 How many years of experience do you have in your current role?
+
+* Confounding variable 2 - Q25	For how many years have you used machine learning methods (at work or in school)?
+
+* Other alternative dependent - Q11_1 Select any activities that make up an important part of your role at work: (Select all that apply) - Analyze and understand data to influence product or business decisions
+
+* Other alternative dependent - Q23	Approximately what percent of your time at work or school is spent actively coding?
+
+* Other alternative dependent -  Q34_Part_2	During a typical data science project at work or school, approximately what proportion of your time is devoted to the following? - Cleaning data
+
+
+## Descriptive Statistics
+
+I described my dataset at the top of this as well as discussed variables of interest in the Research Question section, but here is a little bit of exploratory code to give a general feel for what the data looks like:
+ 
+
+ 
+I can see the data contains mostly younger males, but because of the sample size can really work with lots of demographic combinations.
+
+```{r}
+ggplot(final, aes(x = Q1)) +
+  geom_bar() +
+   labs(x="Gender")
+```
+
+```{r}
+ggplot(final, aes(x = Q2)) +
+  geom_bar() +
+  labs(x="Age") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+
+There is also a range of coding experience in the dataset.
+```{r}
+ggplot(final, aes(x = Q24)) +
+  geom_bar() +
+   labs(x="Years of coding experience") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+The data is split between students, tech industry employees, and other industry employees.
+```{r}
+ggplot(final, aes(x = Q7)) +
+  geom_bar() +
+   labs(x="Industry") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+Here, I made a scatterplot showing where the amount of training from work meets the amount of time spent finding insights instead of cleaning data, coding, etc. I expected this to be much higher for those who received most or all of their training from work, but that isn't the case.
+
+```{r}
+ggplot(final, aes(x = Q35_Part_3, y=Q34_Part_6)) +
+  geom_point() +
+   labs(x="Percentage of machine learning training from work", y="Percentage of project time spent finding insights")
+```
+
+
+
+# Hypothesis Testing
+
+
+Hypothesis: Those with more years of experience in machine learning/coding will spend a larger proportion of their time doing analyzing and decision making, as opposed to those newer to the job will spend more time cleaning data and doing actual coding.
+
+Since the variables are in text format in the survey, I recoded the ones needed into a numerical format that gives a corresponding number in ascending order to match the level of experience the respondent reports (i.e, 1 = one year/lowest categorical, ascending from there). Later in my analysis I may filter out some of the response options to paint a clearer picture.
+
+```{r}
+forplot <- final %>%
+  drop_na(Q34_Part_6, Q25, Q24, Q25RC, Q24RC, Q34_Part_1, Q23, Q23RC)
+forplot$time <- as.character(forplot$Q24)
+forplot$anpercent <- as.character(forplot$Q34_Part_6)
+table(forplot$time, forplot$anpercent)
+```
+
+
+I can see from my t-test that we reject the null hypothesis that there is no relationship between these two variables, and we can assume a relationship between the percentage of time one spends analyzing data and how many years they have been writing code. I used a t-test because one of my variables is categorical while one is numeric (percent of time).
+
+24RC = Amount of years they have been coding
+Q34_6 = Proportion of time spent analyzing data
+```{r}
+t.test(forplot$Q24RC, forplot$Q34_Part_6)
+```
+
+Now I am fitting a model using these two variables:
+24RC =Amount of years they have been coding
+Q34_6 = Time spent analyzing data
+```{r}
+
+fitmodel <- lm(Q24RC ~ Q34_Part_6 , data = forplot)
+summary(fitmodel)
+
+```
+
+Plotting the model:
+24RC =Amount of years they have been coding
+Q34_6 = Time spent analyzing data
+(will update with labels in the final version)
+```{r}
+plot(Q34_Part_6 ~ Q24RC, data = forplot, main = "Percentage of time analyzing data vs. time in field")
+```
+Here I am filtering out those who say that they have less than 20% percent of time spent on analysis or that they aren't involved in coding so that I can weed out the large number of zero percents. I can see it doesn't change my p-value but does change my mean.
+
+24RC = Amount of years they have been coding
+Q34_6 = Proportion of time spent analyzing data
+```{r}
+forplot2 <- final %>%
+  drop_na(Q34_Part_6, Q25, Q24, Q25RC, Q24RC, Q34_Part_1, Q11_Part_1, Q23, Q23RC) %>%
+  filter(Q34_Part_6 > 19, Q25RC < 9, Q24RC < 10, Q34_Part_1 > 19, Q23RC > 2)
+t.test(forplot2$Q24RC, forplot2$Q34_Part_6)
+```
+This helps a little but leaves me with a low sample size to work with, so I'll try a confounding variable added.
+
+Filtered chart:
+```{r}
+fitmodel2 <- lm(Q24RC ~ Q34_Part_6 , data = forplot2)
+summary(fitmodel2)
+plot(Q34_Part_6 ~ Q24RC, data = forplot2, main = "Percentage of time analyzing data vs. time in field")
+```
+Here I added Q25 which is amount of years spent using machine learning in their work, and same as previously:
+
+24RC = Amount of years they have been coding
+Q34_6 = Proportion of time spent analyzing data
+```{r}
+t.test(forplot2$Q24RC + forplot2$Q25RC, forplot2$Q34_Part_6)
+```
+I can see this is is still statistically significant when I add in amount of years spent using machine learning in their work, and the p-value has dropped even more.
+```{r}
+fitmodel3 <- lm(Q34_Part_6 ~ Q24RC + Q25RC , data = forplot)
+summary(fitmodel3)
+```
+
+Next I would like to try Q11 - "Select any activities that make up an important part of your role at work: Analyze and understand data to influence product or business decisions." This is a categorical variable of yes vs no that is similar to the one I fit above but a bit more general. I will use a chi-squared test since my independent variable of time in coding is also categorical. 
+```{r}
+forplot$time <- as.character(forplot$Q24RC)
+forplot$analyze <- as.character(forplot$Q11_Part_1RC2)
+table(forplot$time, forplot$analyze)
+chisq.test(forplot$time, forplot$analyze, correct = TRUE)
+```
+```{r}
+fitmodel4 <- lm(Q11_Part_1RC ~ Q24RC , data = forplot)
+summary(fitmodel4)
+```
+Since using Q11 gives similar results and is a less detailed variable, I think I will go back to analyzing "During a typical data science project at work or school, approximately what proportion of your time is devoted to the following?  - Finding insights in the data and communicating with stakeholders" and add "How many years of experience do you have in your current role?" as a confounding variable.
+
+Below I am adding in Q8 as a confounding variable "How many years of experience do you have in your current role?" as amount of time in role could mean that they are relied less on for data collection and cleaning and more analyzing of data. Here my p-value is very small so I think the confounding variable had an impact.
+```{r}
+fitmodel5 <- lm(Q34_Part_6 ~ Q24RC + Q8RC , data = forplot)
+summary(fitmodel5)
+```
+Overall, I am seeing that there is a relationship between work done in respondent's roles and the amount of time that they have been coding or in their current role. I wish that there was more numerical data within this dataset that I could use to supplement these findings.
+
+
+# Diagnostics
+
+I think my final fitted model makes the most sense. Distributions in the below charts appear normal.
+
+```{r}
+plot(fitted(fitmodel5), resid(fitmodel5))
+```
+```{r}
+plot(fitmodel5)
+```
+
+
+# Challenges, Next Steps
+
+- As someone who has never done any form of regression modeling before this course, looking back I would have chosen a dataset that was numerical based as opposed to survey data. I struggled transforming the survey variables into something that would make sense to model as most were ranges or picklists and very few open ends or actual numbers to be used. I focused on the proportion of time variable as my dependent variable as it was one of the few variables that was numerical.
+
+- I previously attempted to transform some of the categorical variables into a format that would make sense to run modelling on but my results were looking off from what I would expect. I may make another attempt at this if I feel something additional is needed for my final poster.
+
+- My plan for next steps is to work on adding more proper labeling to what I have so far as well as some nicer charts to demonstrate the models that I fit, especially the final one. Hopefully the direction I have started in makes sense and is workable to make a statement for my final poster.
+
+
+
+# Bibliography
+
+
+Kaggle, (2018). “2018 Kaggle Machine Learning & Data Science Survey”, Retrieved 21 March 2023 from https://www.kaggle.com/datasets/kaggle/kaggle-survey-2018.
+
+CC BY-SA 4.0 : https://creativecommons.org/licenses/by-sa/4.0/
+:::
