@@ -40,23 +40,30 @@ For recent data in Jacksonville, Florida, on - y = selling price of home (in dol
 A particular home of 1240 square feet on a lot of 18,000 square feet sold for \$145,000. Find the predicted selling price and the residual, and interpret.
 
 ```{r}
-x1 <-  1240
-x2 <- 18000
+x1 <-  1240 #house size
+x2 <- 18000 #lot size
 y_observed <- 145000
 ```
 
 ```{r}
 # find predicted selling price
 y_hat <- (-10536) + (53.8*x1) + (2.84*x2)
-y_hat #selling price
-```
+residual <- y_observed - y_hat
+cat('Predict sale price: $',  y_hat)
+cat('\n')
+cat('Residual: $', residual)
+cat('\n')
 
-Predict selling price: \${y_hat} .
+cat('The predicted sale price of', y_hat, 'dollars is', residual, 'dollars less than the actual observed house price of', y_observed, '.')
+```
 
 ### B
 
-For fixed lot size, how much is the house selling price pre\`dicted to increase for each squarefoot increase in home size? Why?
+Holding the lot size fixed, each unit increase in square footage increases the house value by 53.8 dollars. This is because the square footage coefficient is 53.8. 
 
 ###C
 
-According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size
+The lot size would need to increase by 19.94 square feet to increase the home value by 53.8 dollars.
+
+
+
