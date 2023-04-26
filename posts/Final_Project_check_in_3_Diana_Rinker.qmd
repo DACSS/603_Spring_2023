@@ -1,0 +1,886 @@
+---
+title: "Final Project check-in 2"
+author: "Diana Rinker"
+description: "Final project DACSS 603"
+date: "4/24/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## DACSS 603, spring 2023
+
+## Final Project check-in 2, Diana Rinker.
+
+# Introduction. Online engagement
+
+It is well known that online engagement and popularity with the web
+resource is a highly valuable metric and is driving site revenue. This
+research project is exploring which factors contribute to users online
+engagement.
+
+To do that I will use the data of an online blog on the news website.
+The author of this blog is posting articles about interpersonal
+relationships every work day (Mon- Fri). The posts are formulated as a
+letter from a reader with the situation and a question about
+relationships. The author gives an advice about the situation. Website
+readers are free to comment under each post, but cannot make their own
+posts.
+
+All post methadata and comments are public. They are saved by the
+website and available for the analysis. Using this data set, I will
+explore how readers' engagement connected with blogs's author
+engagement, site comments', web source of readers and negative behaviors
+online.
+
+My research question is: Does the authors engagement in the conversation
+around the post makes readers more engaged and promotes positive
+interactions among them?
+
+**DV:** My dependent construct is **"user's engagement**", I will
+measure users' engagement at the level of individual post, using the
+following metrics:
+
+1.  Page views
+2.  Page visits (one visit can contain a few views, if the person visits
+    other pages on the site)
+3.  Unique users. One person can visit the same page a few times (it is
+    calculated for all time since the page was posted).
+4.  Number of votes: "thums up" or "thumbs down"
+5.  Number of comments
+6.  Exit rate or "bounces". When the visitor is coming to the page and
+    then leaving, i.e. not opening other pages on this website.
+
+L2 - page readers \* Reveal letter \* Reveal comments
+
+**IV:** My main independent variable is **Blog's author engagement.** I
+will measure authors engagement as the factor variable, with the
+following levels:
+
+A. Unspecified comment
+
+B. Featured comment
+
+C. Engagement in conversation
+
+To control for **confounders,** I will also measure the follwing
+variables:
+
+1.  Topic of the post ("post tag"), categorical variable.
+
+2.  Source of the readers, also categorical variable.
+
+3.  Mood of the conversation , derivative continuous variable calculated
+    as the ratio of "likes" to "dislikes".
+
+4.  Blocked and flagged comments.
+
+```{r, echo=F}
+#Loading necessary libraries: 
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+```
+
+### Data source and description. 
+
+To answer my research question I will use two datasets. the first data
+set has information about all comments associated with each post by post
+ID. The second data set is analytics data for the web bage. It contains
+one post per row and variables describe each post as a whole without
+breaking down to the comment level.
+
+In this project I will analyze posts for January 2021 - February 2023.
+Here is the list of variables in each dataset: 
+Post-level data:
+```{r, echo=T}
+getwd()
+# First, I will load the data set with the comment level data:
+raw <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\ data.2021.plus.csv"))
+comments.data<-raw 
+colnames (comments.data)
+head(comments.data$written_at)
+comments.data <-comments.data%>%
+              mutate(com.year = format(written_at,format = "%Y" ))
+# range(comments.data$com.year)
+# dim(comments.data)
+str(comments.data)
+```
+Comment data: 
+```{r, echo=T}
+# Second, loadng post-level data :
+merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\data.merged.csv"))
+# colnames(merged)
+str(merged)
+```
+
+Be
+
+To begin, I will review available variables and evaluate whether it is a
+good measure for this study.
+
+# 1.DV: popularity and engagement. 
+## 1.1.Popularity
+
+### Page views
+
+This is the most general metric, representing how many views the post
+received. Views do not distinguish repeated views by the same person.
+
+```{r, echo=T}
+# str(merged)
+ggplot(data=merged, mapping=aes(x=`Page views`))+
+  geom_histogram()
+```
+
+```{r, echo=T}
+merged$post.month <-as.numeric(merged$post.month)
+merged$year_month <- paste0(merged$post.year, "-", sprintf("%02d", merged$post.month))
+
+ggplot( data=merged, mapping=aes(y=`Page views`, x=year_month))+
+          geom_boxplot()+
+  labs(title="Number of post wiews per month", x="Month", y="Number of vews")+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+# ggplot(data=merged, mapping=aes(x=log(`Page views`)))+
+#   geom_histogram()
+
+```
+
+From this graph we can see that the numbers of views is increased over
+time. To get a better understanding of it, lets review other metrics.
+
+### Page visits and unique users
+
+Visit is an instance of a user engaging with bdc website. The user can
+visit a few pages of the site and re-visit them, creaing few views in
+once visit.Once th user left the website, the visit is over.
+
+There also can be many visits by the same viewer. To account for
+repeated users there is "Uniques" variable. It tells us how many unique
+users saw the post. The relationship will always be that
+
+Uniques \< Visits \< Views
+
+Lets plot them together:
+
+```{r, echo=T}
+# str(merged)
+ggplot(merged, aes(x =post.date )) +
+     geom_bar(aes(y = `Page views`, fill = "Page views"), stat = "identity", position = "dodge", width = 0.6) +
+     geom_bar(aes(y = Visits, fill = "Visits"), stat = "identity", position = "dodge", width = 0.6) +
+     geom_bar(aes(y = Uniques, fill = "Unique users"), stat = "identity", position = "dodge", width = 0.6)    +
+     labs(title = "Views, visits and unique users per month", x = "Post.date", y = "Value") + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This graph also shows increase in all three metrics in 2022-2023. To see
+how these metrics crrespond to each other, I will calculate "visits
+ratio" and "unique.ratio".
+
+### Page unique viewers.
+
+Becuse "Uniques" variable represents number of unique people who came to
+the page and viewed it at least once, his metric represents popularity
+of the post. It's distribution shows us that not all posts are equally
+popular:
+
+```{r, echo=T}
+# colnames(merged)
+ggplot(data=merged, mapping=aes(x=Uniques))+
+  geom_histogram()
+```
+
+We can see a long tail on the right, showing that there is a number of
+posts who are way more popular. If we look at the distribution of this
+variable over time, we will see significant increase of average
+popularity after December 2021.
+
+```{r, echo=T}
+ggplot( data=merged, mapping=aes(y=Uniques, x=merged$year_month))+
+          geom_boxplot()+
+  labs(title="Number of unique viewers per month", x="Month", y="Number of unique viewers")+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## 1.2. Engagement metrics:
+
+### Visit ratio and unique ratio:
+
+"visits ratio" is the number of visits per total views. This metric
+tells us how often the page being re-viewed. The lower the ratio means
+that the page was viewed more times during single visit. Since repeated
+view can be considered a higher engagement, the lower visit ratio
+indicates higher engagement.
+
+"unique ratio" - number of unique users per total views. It is telling
+us how often the same person re-visited the post. Lower ratio indicates
+repeated users, therefore higher engagement.
+
+Both ratios are always in the range of 0 - 1.
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(uniques.ratio = Uniques / `Page views`)%>%
+      mutate(visits.ratio = Visits / `Page views`)
+# str(merged)
+
+     ggplot(merged, aes( y = uniques.ratio, x =post.date, )) +
+          geom_point(color ="green" )    +
+          labs(title = "Unique.ratio per post ", x = "Post.date", y = "Value") + 
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+      ggplot(merged, aes( y = visits.ratio, x =post.date, )) +
+          geom_point(color ="blue" )    +
+          labs(title = "Visits.ratio per post ", x = "Post.date", y = "Value") + 
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))
+     
+```
+
+From the two graphs above we can see that the two variables are
+distributed very similarly.
+
+If we plot them against each other and visualize their correlation, we
+can see that they highly correlated especially in higher values.
+
+```{r, echo=T}
+      plot(merged$uniques.ratio, merged$visits.ratio)
+correlation <- cor(merged$uniques.ratio, merged$visits.ratio)
+correlation
+```
+
+Density of the distribution also showing that most posts are visited
+once and by unique users, i.e. post is read once by each user.
+
+```{r, echo=T}
+# DENSITY DISTRIBUTION HERE 
+     
+```
+
+### Exit rate
+
+This variable is measuring how many people visited the page and then
+left the website after the first view. This metric is the best measure
+of engagement for all users, as it represents the first step after being
+exposed to the post - either quitting the site or remaining on the site.
+
+Here can see the distribution of this variable :
+
+```{r, echo=T}
+# str(merged)
+merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
+
+ggplot(data=merged, mapping=aes(x=`Exit rate`))+
+  geom_histogram()
+
+```
+
+We can also see consistent increase of this value ovr time, similar to
+the trend seen before:
+
+```{r, echo=T}
+ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of `Exit rate` per post ", y = "Exit rate" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Number of reactions
+
+This represents total amount of likes and dislikes of comments per
+post.To like/dislike the comment, user doesn't have to log in.
+
+```{r, echo=T}
+# merged$year_month 
+# colnames(merged)
+
+ggplot(data=merged, mapping=aes(x=post.total.likes))+
+  geom_histogram()+
+  labs(title=" Number of all reactions per post")
+```
+
+Since we already saw that there is large variability in popularity of
+posts, which can natually impact absolute amount of reactions. To
+account for number of views, we calculate reactions.ratio:
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(reactions.ratio = post.total.likes / `Page views`)
+  
+# str(merged)
+ggplot(merged, mapping = aes(x=year_month , y=reactions.ratio, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of reactions ", y = "Percentage of reactions " )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+The absolute number of reactions and the ratio appear to decrease over
+time.
+
+
+
+### Number of comments: engagement metric for subset of readers. Absolute and per views.
+
+To comment on the requires logging in from a user, which is an indicator
+of greater engagement of an individual user. Therefore this variable
+represents engagement of a subset of users - more loyal readers who have
+created an account.
+
+```{r, echo=T}
+# merged$year_month 
+ggplot(data=merged, mapping=aes(x=n.comments))+
+  geom_histogram()
+
+```
+
+And change in the distribution over time:
+
+```{r, echo=T}
+ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of comments per post ", y = "Number of comments" )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+The trend in amount of comments over time is different. While previously
+reviewed variables seemed to increase over time, this variable
+decreases.
+
+We can calculate the ratio of comments per If we compare absolute values
+fo comments and ratio of comments per page views, we see the decrease in
+both cases, while the ratio's decrease is more dramatic:
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(comments.ratio = n.comments/ `Page views`)
+
+ggplot(merged, mapping = aes(x=year_month , y=comments.ratio, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of comments ratio (comments/page views) ", y = "Number of comments" )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+WE can see that with an increase of views (mostly driven by post
+popularity), comments ratio decreeases. So, newly added viewers are not
+adding to the engaged subset of readers.
+<!-- It is also more likely that the users who logged and commented will return to the post page , which would correspond with the decrased in visits.ratio and uniques.ratio).  -->
+
+The distribution of comments per post over time:
+
+```{r, echo=T}
+
+# str(merged)
+ggplot(merged, mapping = aes(x=year_month , y=post.total.likes, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of reactions over time  ", y = "Percentage of reactions " )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+```
+
+## 1.3 Impact of popularity on engagement.
+Since we noticed a pattern in distribution of describbed variables, lets find out how they are interconnected, and how popularity of the post impact users' engagement: 
+
+ 
+```{r, echo=T}
+pairs(subset (merged, select=c(Uniques, `Exit rate`, uniques.ratio, visits.ratio, reactions.ratio )))
+
+
+```
+
+This graph showing that  popularity is  strongly correlated with all engagement metrics, such as Exit rate, uniques ratio, visit ratio and reaction's ratio, where an increase in popularity causes decrease of engagement across all 4 metrics for engagement.
+
+We can also see that the relationship between Popularity and engagement rate are curvi-linear. If we log the values, we will see linear relationship: 
+```{r, echo=T}
+pairs(subset (merged, select=c(log(Uniques), log(`Exit rate`), uniques.ratio, visits.ratio, reactions.ratio )))
+# WHT DOES THE GRAPH SHOWS POST.DATE and POST.DATE1  INSTEAD OF "UNIQUES" and  "Exit rate"? 
+```
+
+
+As we saw in the distributions of variables above, all engagement metrics are strongly correlate with each other the popularity metric. 
+
+
+
+### 1.3.1. Modeling engagement ~ popularity: 
+Lets review how it is impacting exit rate :
+I will use "Exit rate" s my main engagement  variable, as it reporesents the first engagement chouce that all site users make: to stay on the site or leave. Using log() of popularity is shoing a better fitted model: 
+
+```{r, echo=T}
+ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
+  geom_point()
+
+summary(lm(`Exit rate`~ + log(Uniques) , data = merged))
+```
+
+We can see  significance of popularity and  high R^2 of the model, and can conclude that popularity overall decreases engagement.  To explore this connection further, lets mreview Sources of users that are coming to the website.
+
+
+
+
+
+### 1.3.2. How popularity impacts engagement: Referral sources.
+
+The website analytics provides information on where the viewers are
+coming from to the blog page. for example, if people clicked on the blog
+link posted on FaceBook, that would be referral from social media. If
+people clicked on the blog link within BDC website, that would be "BDC
+referral visit".
+
+There are 5 sources of referrals, each corresponding with a variable in
+the data set. Variable's value is a number of visits from this referral
+source.
+
+```         
+    "Search + amp referral visits"
+    "Direct (non-email) referral visits"
+    "Other website referral visits"
+    "Social referral visits"
+    "BDC referral visits"
+    "Visits when post was on LL HP" 
+```
+
+```{r, echo=T}
+#renaming variables for convenience: 
+merged<-merged%>%
+  rename(google ="Search + amp referral visits",
+         direct ="Direct (non-email) referral visits",
+         other.web = "Other website referral visits",
+          social= "Social referral visits",
+          bdc= "BDC referral visits",
+          ll= "Visits when post was on LL HP" )
+
+ggplot(merged, mapping=aes(x=post.date))+
+  geom_point(aes(y=google), color="red")+
+  geom_point(aes(y=direct), color="green")+
+  geom_point(aes(y=other.web), color="yellow")+
+  geom_point(aes(y=social), color="purple")+
+  geom_point(aes(y=bdc), color="blue")+
+  geom_point(aes(y=ll), color="pink")  +
+  labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This graph clearly demonstrates increase of "Search + amp referral
+visits" after December 2021, while other referral sources maintain the
+same level over time. This increase matches changes observed in
+popularity ( Page Views), and engagement metrics that are highly
+correlated with popularity. It also doubles views of the posts in many
+cases and might significanly influence our model and conclusions.
+
+### Early comments'impact 
+
+We saw that increased popularity is associated with the sources of the viewers and might come from the search engines.
+We want to find out if early engagement in the post ( comments within first 10 hours of the post time) trigger its appearance in google news listing and therefore cause sharp increase in popularity. 
+
+We are interested to find out, what characteristics of the post (prior
+to it being picked up by google), correlate with its appearance on
+google news.
+
+Number of comments within 1st 10 hours from the post.
+
+```{r, echo=T}
+#  calculating number of comments within first 10 hours 
+
+# date and time of the post 
+post.date  <-comments.data %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(post.dt = first(written_at), 
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, post.dt, n.coms)%>%
+arrange(desc(post_id))
+# head(post.date)
+
+# Calculating age of the post 
+comments.data <- merge( comments.data , post.date , by = "post_id", all = TRUE)
+comments.data <-comments.data %>%
+  mutate (age = difftime(  written_at,post.dt, units = "hours"), 
+          early = ifelse(age<10, 1, 0))
+
+early.coms  <-comments.data%>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(early.sum = sum(early), 
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, early.sum)%>%
+arrange(desc(post_id))
+
+# Adding number of early comments to merged dataset:
+merged <- merge( merged, early.coms , by = "post_id", all = TRUE)
+
+head(merged )
+```
+
+Now, as I calculated number of early comments for all posts, I can see
+if that number correlated with Google referrals. 
+
+```{r, echo=T}
+
+merged.2<-merged%>%
+  filter(google>10000)
+correlation.2 <- cor(merged.2$early.sum, merged.2$google)
+correlation.2
+plot(merged.2$early.sum, merged.2$google)
+```
+
+
+```{r, echo=T}
+summary(lm(google ~early.sum, data=merged.2))
+summary(lm(google ~early.sum, data=merged))
+```
+
+We can see significant connection between early comments and google
+referrals,  only on the data set of google referrals above 10000 visits. Also, R\^2 is low in this model, which
+suggests that there are other factors that are not considered in this
+model. I will explore how days of the week and time of the post
+contribute to this relationship.
+
+```{r, echo=T}
+# calculating day of the week for the post: 
+colnames(comments.data)
+# Calculating age of the post 
+library(lubridate)
+comments.data <-comments.data %>%
+  mutate (weekday = wday(post.dt, label = TRUE), 
+          weekend = ifelse(weekday =="Fri" | weekday == "Sat", 1, 0))
+
+# class(week.days$weekday)
+# levels(week.days$weekday) 
+# week.days$weekend
+
+weekdays <-comments.data %>%
+  group_by(post_id)%>%
+  arrange(written_at)%>%
+  summarize(post.weekday = first(weekday), 
+            post.weekend =first(weekend),
+            n.coms =n())%>%
+  filter (n.coms>100)%>%
+  select(post_id, post.weekday,post.weekend )%>%
+arrange(desc(post_id))
+
+# Adding number of early comments to merged dataset:
+merged <- merge( merged, weekdays , by = "post_id", all = TRUE)
+colnames(merged)
+
+# levels(merged$post.weekday)
+```
+
+### Post weekdays to the model
+
+```{r, echo=T}
+
+merged.2<-merged %>%
+  filter(google>10000)
+
+ plot(merged$post.weekday, merged$google)
+
+summary(lm(log(google) ~early.sum +post.weekday , data=merged.2))
+
+# table(merged.weekdays$post.weekday)
+
+ggplot (merged, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "All google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+ggplot (merged.2, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "Google referrals over 10K and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+
+
+```
+
+Early comments indeed influence Google referrals. However, this influence is different on different days of the week and appears more pronounced on Thursdays and Fridays.  This overall supports our suggestion that early engagement of loyal users through comments impacts post popularity. further investigation of factors would be helpful, with the goal to  model fit (R^2).
+
+
+
+Our hypothesis that large amount of early comments triggers google
+referrals has some preliminary support with the few restrictiions to be considere: 
+- the connection only appears on the posts with google referrals above 10000. 
+- This connection is atronger for only thursdays and Fridays and  appears very weak on other days of the week. 
+- low coefficient and high deviation of data from predicated valaues (low R\^2) suggest
+that there are other , more influential, factors that were not considered. 
+
+## 1.4.Conclusion
+
+As we reviewed a variety of engagement metric, I found:
+1. That they are all strongly correlated to each other and influenced by post popularity:
+Engagement overall decreases as popularity increases.In our further analysis I will need to include "Uniques" variable in the
+model to control for popularity
+
+2.  Also as a result of exploration of engagement metrics, we can
+    distinguish two types of users: superficial visitors and loyal
+    readers. The main difference is that loyal readers have created
+    accounts and therefore can comment. It is possible that htese two groups of readers  respond differently to popularity increase, as well as other Independent variables. Therefore, the difference in types of readers must be considered when addressing our main hypothesi: whether authors engagement and other factors impacts reader's engagement.
+    
+3. Early engagement of loyal users through comments might contribute to dramatic changes in post popularity. 
+
+
+
+Now, lets consider independent variables of our main hypothesis. 
+# 2. Independent variables (IV):
+
+```{r, echo=T}
+library(stargazer)
+
+
+stargazer()
+```
+
+
+### Authors comments
+
+To identify, how much the author of the blog is engaged in the post, I
+will create an additional variable derived from a user_name field.
+
+```{r, echo=T}
+# str(merged)
+comments.data$user_name<-  ifelse (is.na(comments.data$user_name), 0, comments.data$user_name)
+comments.data$author<-  ifelse (comments.data$user_name=="MeredithGoldstein", 1, 0)
+
+comments.grouped <-comments.data %>%
+  group_by(post_id)%>%
+  summarize(n.comments=n(),
+            author.sum = sum(author))
+
+# dim(comments.grouped )
+# colnames(comments.grouped )
+# class(comments.grouped$author.sum)
+
+# Comments data contains rows that dont actually reporesent posts, and were crearted by web support team for troubleshooting. I need to remove these rows. They typically have very low number of comments
+comments.grouped <-comments.grouped %>%
+filter(n.comments >100)  # removing invalid posts created by the  website management team.
+
+comments.grouped <-comments.grouped %>%
+  select(post_id, author.sum)
+ dim(comments.grouped)
+ 
+ 
+#adding author.sum to main data set: 
+merged <- merge( merged , comments.grouped, by = "post_id", all = TRUE)
+
+
+ggplot(data=merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of Author's comments by months", y = "Author's comments" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+This graph shows, that majority of posts have no author's comments.
+However, if we look at the box plots' upper ranges, we can suggest a
+trend of decrease in author's comments with time.
+
+### Mood of the post.
+
+This is a numerical variable, calculated as percentage of "thumbs up"
+from all likes (both "thumbs up" and "thumbs down").
+
+```{r, echo=T}
+ggplot(merged, mapping = aes(x=year_month , y=pct.positive, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of Mood per post ", y = "Mood" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+### Blocked comments per post.
+
+Now I will visualize amount of blocked comments per post:
+
+```{r, echo=T}
+
+ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "Number Blocked comments  per post ", y = "Number of blocked comments per post" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+# 3. Creating the model for main hypothesis testing
+
+As we mentioned above, we will add popularity to the model when testing main hypothesis. Also,  I am going to break the data set into two groups: prior to December 2021 and after December 2021 due to  dramatic change in referral sources. I will use these two datasets to to test my main hypothesis and compare results. 
+
+```{r, echo=T}
+merged.2021 <- merged%>%
+  filter(post.date <	"2021-12-01")
+merged.2022 <- merged%>%
+  filter(post.date >=	"2021-12-01")
+
+```
+
+
+
+## 3.1 Basic model. 
+
+I will start with creating a simple model of engagement ~ popularity and author's engagement: 
+```{r, echo=T}
+
+# colnames(merged)
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged.2021))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged.2022))
+
+
+```
+
+To see how engagement of loyal readers readers impacted ,  I will use another measure for engagement as DV, which represents only registered users:  number of comments. 
+
+```{r, echo=T}
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged))
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged.2021))
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged.2022))
+
+```
+
+This shows that loyal readers' engagement is decreasing with popularity only in 20022, and somewhat increasing with author's comments. 
+
+
+###  analize change in x1 and x2 to y , considering log() 
+
+## 3.2 Adding other/confounding variables.
+Now I will add other variables  to see if there is any impact on the results of the model with engagement of both groups of readers. 
+For number of comments,  I would have to select either early.sum  or n.comments, due to high correlation between them
+```{r, echo=T}
+(cor(merged$early.sum, merged$n.comments))
+```
+I am including n.comments in the model, to see if engagement of loyal readers through comments impact overall engagement:
+
+```{r, echo=T}
+# colnames(merged)
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged))
+```
+Number of comments shows to be significant, negatively impacting overall engagement. Considering our earlier finding, that early comments increase popularity and therefore decrease overall engagement, this is expected. 
+Tuesday as a level of "weekday" variable also shows to significantly decrease engagement. 
+
+Authors engagement and blocked comments seem to increase engagement. 
+
+```{r, echo=T}
+summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum +post.weekday, data = merged))
+```
+
+While general viewers show no impact by mood of the post , we see significant positive correlation of loyals' engagement with mood of the post and higher significance for blocked comments, both positive, i.e increasing engagement.  Monday also appears having significantly more engagement than other days among loyal readers.   We see no impact of author's comments on loyal readers engagement. 
+
+
+Number of comments, representing engagement is somewhat impacted by three independent variables, but this model has low R\^2 , which
+suggests that there are other factors impacting loyal reader's engagement that are not considered in this model.
+
+
+## 3.3 Using different datasets for comparing: 
+
+### Exit rate  for 2021 and 2022+:
+
+```{r, echo=T}
+# colnames(merged)
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022))
+```
+Exit rate (engagement) still correlates with popularity of the site or bot 2021 and 2021,confirming the same finding from un-splitted data set earlier. 
+However, author's comments appear only be relevant to all user's engagement in 2022, and not in 2021. Mood of the post appears  significant for user's engagement only in 2021, and blocked comments only appear significant in 2022. 
+
+
+
+### N.comments  for 2021 and 2022+:
+```{r, echo=T}
+summary(lm(n.comments ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday, data = merged.2021))
+summary(lm(n.comments ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday, data = merged.2022))
+```
+None of the variables show significance for loyal user's engagement(comments) in 2021, except Monday. However, loyal users are significantly influenced by popularity, mood of the post and blocked comments  and Monday in 2022. 
+
+## 3.4 Diagnostic of models:
+
+DV: Exit rate. Diagnostics for the whole dataset:
+```{r, echo=T}
+# colnames(merged)
+model.ex.r<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum +n.comments, data = merged)
+par(mfrow = c(2,3))
+plot(model.ex.r, which = 1:6)
+```
+
+DV: Exit rate. Diagnostics for split data(2021 and 2022+). 
+```{r, echo=T}
+
+ex.r.2021 <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2021)
+ex.r.2022 <-lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2022)
+par(mfrow = c(2,3))
+plot(ex.r.2021, which = 1:6)
+par(mfrow = c(2,3))
+plot(ex.r.2022, which = 1:6)
+```
+
+DV: number of comments. Diagnostics for the whole dataset:
+```{r, echo=T}
+model.n.com<- lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged)
+par(mfrow = c(2,3))
+plot(model.n.com, which = 1:6)
+
+```
+
+DV: number of comments. Diagnostics for split data(2021 and 2022+). 
+```{r, echo=T}
+n.com.2021 <- lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged.2021)
+n.com.2022 <-lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged.2022)
+par(mfrow = c(2,3))
+plot(n.com.2021, which = 1:6)
+par(mfrow = c(2,3))
+plot(n.com.2022, which = 1:6)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 4. Conlusion
+
+This study explored the connection between user's online engagement and bolg's author engagement.  To do so, we
+1) also analyzed the impact of post popularity on engagement, and found significant connection
+2) compared year 2021 and 2022 and found difference in relationships between DV and IV variables. 
+3)Found that author's engagement does impact users engagement, but mostly in 2022 and towards all viewers and less through  loyal readers. 
+
+
+```{r, echo=T}
+knitr::include_graphics("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP diagram .png")
+```
+
+The results showed that the post popularity is the major factor for online engagement and that more popular posts tend to be less engaging.    
+
+We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement. .  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers. 
+
+
+
+ 
