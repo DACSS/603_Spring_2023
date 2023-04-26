@@ -130,29 +130,31 @@ summary(fit)
 ```
 ###D 
 
-rankAsst: Holding all else equal, associate professors make $10,162 less than a professor. This finding is statistically significant.
+rankAsst: Holding all else equal, associate professors make $11118.76 less than a professor. This finding is statistically significant.
 
-rankAssoc: Holding all else equal, assistant professors make $5,144 less than a professor.
+rankAssoc: Holding all else equal, assistant professors make $5826.40  less than a professor. This finding is statistically significant.
 
 ```{r}
 salary$rank <- relevel(salary$rank, ref="Prof")
-fit <- lm(salary ~ rank + sex + year + ysdeg, data = salary)
+fit <- lm(salary ~ rank + sex + year + ysdeg + degree, data = salary)
 summary(fit)
 ```
 ###E 
 
 By excluding rank:
 
-- the model as a whole is considerably less 'useful'. The r-squared has gone down from 85 to 56, as has the adjusted R-squared, even though we have simplified the model. This means the model without rank has less 'explainatory' power. We also see an increase in the residual standard error.
+- the model as a whole is considerably less 'useful'. The r-squared has gone down from 86 to 63, as has the adjusted R-squared, even though we have simplified the model. This means the model without rank has less 'explanatory' power. We also see an increase in the residual standard error.
 
-- sexFemale in the new model is now correlated with a decreased salary of $746 compared to the original models increase of $845. That being said, sex is still not statistically significant.
+- sexFemale in the new model is now correlated with a decreased salary of $1,286.54 compared to the original models increase of $1,166.37  That being said, sex is still not statistically significant.
 
-- there is a slight increase in the coefficient for year.
+- There is a slight decrease in the coefficient for year.
 
-- Most notably, in the new model, an increase in one year in number of years since degree is associated with a $230 increase in salary, compared to $55 reduction from the previous model. This finding is statistically significant.
+- In the new model, an increase in one year in number of years since degree is associated with a $339.40 increase in salary, compared to $124.57  reduction from the previous model. This finding is statistically significant.
+
+- In the new model, having a phd is associated with a decline in salary by $3,299.35 compared to the $1,388.61 bump in the original model.
 
 ```{r}
-fit_no_rank <- lm(salary ~ sex + year + ysdeg, data = salary)
+fit_no_rank <- lm(salary ~ sex + year + ysdeg + degree, data = salary)
 ```
 
 ```{r message=FALSE, warning=FALSE}
