@@ -1,0 +1,204 @@
+---
+title: "Kristin Abijaoude_HW4"
+editor: visual
+date: "04/22/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Hw4
+  - kristin abijaoude
+---
+
+# Question 1
+
+ŷ = −10,536 + 53.8x1 + 2.84x2
+
+y = selling price of home (in dollars) x1 = size of home (in square feet) x2 = lot size (in square feet)
+
+A. particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000. Find the predicted selling price and the residual, and interpret.
+
+```{r}
+price = -10536 + (53.8 * 1240) + (2.84 * 18000)
+print(price)
+
+residual = price - 145000
+print(residual)
+```
+
+The predicted price is `$107,296`, which is much under the `$145,000` price sold by `-$37,704`.
+
+B. For fixed lot size, how much is the house selling price predicted to increase for each square- foot increase in home size? Why? 
+
+It's `$53.80` for every 1x increase in square feet of the selling house, as shown in the equation as a coefficient of 1x.
+
+C. According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size? 
+
+You need to increase the lot size by 18.94 sq feet to have the same impact as a one square foot increase.
+
+```{r}
+# x1 / x2
+
+lot = 53.80 / 2.84
+print(lot)
+```
+
+# Question 2
+
+```{r}
+library(alr4)
+data(salary, package = "alr4")
+head(salary)
+```
+A. Test the hypothesis that the mean salary for men and women is the same, without regard to any other variable but sex.
+
+With a p-value of 0.09, we can conclude that the mean salary for both men and women is the same, thus accepting the null hypothesis.
+
+```{r}
+sex <- select(salary, c(sex))
+salary1 <-  select(salary, c(salary))
+
+sex <- as.numeric(unlist(sex))
+salary1 <- as.numeric(unlist(salary1))
+
+mean <- t.test(salary1 ~ sex, var.equal = FALSE, alternative = "two.sided")
+print(mean)
+```
+
+B. Run a multiple linear regression with salary as the outcome variable and everything else as predictors, including sex.
+
+```{r}
+model <- lm(formula = salary ~ ., data = salary)
+summary(model)
+```
+```{r}
+confint(model, 'sexFemale', level=0.95)
+```
+
+
+```{r}
+confint(model, level=0.95)
+```
+C. Interpret your finding for each predictor variable; discuss (a) statistical significance, (b) interpretation of the coefficient / slope in relation to the outcome variable and other variables
+
+`degreePD` -  This means that, all else being equal, PhD holders can expect to earn an average of `$1,388.60` more in salary.
+
+`rankAssoc` - Associate professors can expect to earn an average of `$5,292.40` more in salary.
+
+`rankProf` - Professors would earn an average of `$11,118.80` more in salary.
+
+`sexFemale` - Female faculty workers would earn an average of `$1,166.4` more in salary.
+
+`year` - The longer a faculty member works at a college, the more they earn in salary, with an average of `$476.30` in increase.
+
+`ysdeg` - However, if it's been several years since you earned your last degree, expect a decrease of `-$124.60` in salary on average.
+
+D. Change the baseline category for the rank variable. Interpret the coefficients related to rank again.
+
+```{r}
+salary$rank <- relevel(salary$rank, ref = "Prof")
+model2 <- lm(formula = salary ~ ., data = salary)
+summary(model2)
+```
+
+In the new model, we can see that assistant professors and associate professors lose an average of `-$11,118.80` and `-$5,826.40` in salary, respectively. 
+
+E Removing `rank` from the model
+
+```{r}
+model3 <- lm(formula = salary ~ degree + sex + year + ysdeg, data = salary)
+summary(model3)
+```
+
+When removing `rank` from the equation, we can see a decrease in the average salary for PhD holders and female faculty members by `-$3,299.30` and `-$1,286.50`, respectively.  In addition, the salary average for year is smaller than before, but it's still an increase. The biggest shift is `ysdeg` with `$339.40` increase in salary on average.
+
+F New variable, new hypothesis
+
+Some people have argued that the new Dean has been making offers that are a lot more generous to newly hired faculty than the previous one and that this might explain some of the variation in Salary.
+
+```{r}
+salary <- salary %>%
+  mutate(ysdeg15 = ifelse(ysdeg <= 15, 1,0))
+salary
+
+model4 <- lm(formula = salary ~ degree + sex + year + ysdeg15, data = salary)
+print(model4)
+
+cor.test(salary$ysdeg, salary$ysdeg15)
+```
+
+I took out the `ysdeg` variable as they're too similar to the new variable I created `ysdeg15` to avoid multicollinearity. 
+
+The correlation is `-0.8434239 `, in which we can reject that alternative hypothesis. In other words, there are no changes in salary average.
+
+# Question 3
+
+```{r}
+library(smss)
+data("house.selling.price", package = "smss")
+head(house.selling.price)
+```
+A. Using the house.selling.price data, run and report regression results modeling y = selling price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 = yes; 0 = no).
+```{r}
+selling <- lm(formula = Price ~ Size + New, data = house.selling.price)
+summary(selling)
+```
+
+A new house sells at `$57,736.30` more, while for every one square foot is sold at `$116.10`.
+
+B. Report and interpret the prediction equation, and form separate equations relating selling price to size for new and for not new homes.
+
+y = `-40,230` + `116.10`x1 + `57,736.30`x2
+
+C. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.
+
+A not new house would be sold at `$308,070`
+```{r}
+price1 = -40230 + (116.10 * 3000) + (57736.30 * 0)
+print(price1)
+```
+
+D. Fit another model, this time with an interaction term allowing interaction between size and new, and report the regression results
+
+```{r}
+selling2 <- lm(formula = Price ~ Size*New, data = house.selling.price)
+summary(selling2)
+```
+
+E. Report the lines relating the predicted selling price to the size for homes that are (i) new, (ii) not new.
+
+```{r}
+# new
+price2 = -22227.808 + (104.44 * 3000 ) - (78527.50 * 1) + (61.92 * 1)
+price2
+
+# not new 
+price3 = -22227.808 + (104.44 * 3000 ) + 61.92
+price3
+```
+
+F. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.
+
+A new house would sell at `$212,626.60`, while a not new house would sell at `$291,154.10`.
+
+G. Find the predicted selling price for a home of 1500 square feet that is (i) new, (ii) not new. Comparing to (F), explain how the difference in predicted selling prices changes as the size of home increases.
+
+```{r}
+# new
+price4 = -40230 + (116.10 * 1500) + (57736.30 * 1)
+price4
+
+# not new 
+price5 = -40230 + (116.10 * 1500) 
+price5
+```
+
+A new house would sell at `$191,656.30`, less than the `$212,626.60` in Question F, and a not new house would sell at `$133,920`, also less than the `$291,154.10` in Question F as well.
+
+H. Do you think the model with interaction or the one without it represents the relationship of size and new to the outcome price? What makes you prefer one model over another?
+
+I think the model without the interaction represents the relationship of size and newness to the outcome price because it's simpler, easier to interpret, and 
+there is more statistical significance as opposed to the model with the interaction. Despite that, the RSS, R-square, and adjusted R-square are similar.
