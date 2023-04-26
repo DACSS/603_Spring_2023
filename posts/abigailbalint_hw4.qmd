@@ -1,0 +1,173 @@
+---
+title: "Homework 4"
+author: "Abigail Balint"
+desription: "HW4 Responses"
+date: "04/24/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - homework4
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(alr4)
+library(smss)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+
+a) Equation: ŷ = −10,536 + 53.8x1 + 2.84x2
+Subbing the size of home and lot size out for the variables in the equation:
+ŷ = −10,536 + 53.8(1240) + 2.84(18000)
+solving for y:
+```{r}
+a = -10536 + (53.8*1240) + (2.84*18000)
+print(a)
+a2=145000-a
+print(a2)
+```
+
+The predicted selling price is 107296. To find the residual, I am subtracting what it sold for from the predicted price. This means our prediction was low and the house sold for 37704 more than was predicted.
+
+b) It is predicted to increase 53.8 dollars per square foot as this is the coefficient in the equation for home size square footage.
+
+c) I think because the coefficient for home size is so much bigger than lot size, if we divide the coefficients by each other that would give the amount of home square feet we would need to have the same impact of one square foot in lot size, so 18.94 sq feet.
+```{r}
+c=53.8/2.84
+print(c)
+```
+
+# Question 2
+
+
+```{r}
+summary(salary)
+```
+
+
+a) The p value is .07 so we fail to reject the null hypothesis and are not able to say there is a significant difference in male vs female salaries.
+```{r}
+male <- salary %>%
+  filter(sex == "Male")
+female <- salary %>%
+  filter(sex == "Female")
+t.test(male$salary, female$salary, var.equal = TRUE)
+```
+b) Fitting model and summary below:
+```{r}
+model1 <- lm(salary ~ degree + rank + sex + year + ysdeg, data = salary)
+summary(model1)
+```
+c:
+degree: Degree has a positive coefficient but not a significant p-value, indicating as degree increases salary does as well but not at a statistically significant level.
+rank: Rank has a very high positive coefficient as well as being very statistically significant, indicating a strong relationship between this variable and salary.
+sex: Similarly to degree, sex has a positive coefficient but not a significant p-value, indicating a positive slope here but not a statistically significant level.
+year: This variable is statistically significant with a positive slope indicating more years in a current rank may increase salary.
+ysdeg: This variable is not significant and actually has a negative slope/coefficient.
+
+d: When I relevel rank I can see that it flips rank to have a negative slope/coefficient now instead of a positive one.
+```{r}
+levels(salary$rank)
+rankrl <- relevel(salary$rank, ref="Prof")
+model2 <- lm(salary ~ degree + rankrl + sex + year + ysdeg, data = salary)
+summary(model2)
+
+```
+e.When I take rank out of the model, year and ysdeg now have a p-value that is statistically significant (a drastic change).
+```{r}
+model3 <- lm(salary ~ degree + sex + year + ysdeg, data = salary)
+summary(model3)
+```
+f. To avoid multicollinearity, I don't think we should use year and ysdeg both within the model since we now know there is an interaction due to the new dean 15 years ago that could cause these two variables to be related.
+
+Below I am making a new variable that is if there is more than 15 years since highest degree they are assigned yes, otherwise no. I can see when fitting a model against salary this is very statistically significant, indicating the dean may have had an impact.
+
+```{r}
+salary2 <- salary  %>%
+  mutate(ysdeg15 = ifelse(ysdeg > 15, "yes", "no"))
+model4 <- lm(salary ~ ysdeg15, data = salary2)
+summary(model4)    
+```
+
+# Question 3
+
+```{r}
+library(smss)
+data("house.selling.price")
+house <- house.selling.price
+summary(house)
+```
+a) Based on this model, both whether it is new or not and the size are statistically significant variables in predicting price, although size is much more significant with a much smaller p value, the positive coefficient for whether the home is new or not is much higher.
+```{r}
+model5 <- lm(Price ~ New + Size, data = house)
+summary(model5)
+```
+
+
+b) Prediction equation for new:
+y=-40230.867 + 57736.283*new + 116.132*size
+
+c) 3000 square feet for new vs not:
+```{r}
+new <- -40230.867 + 57736.283*1 + 116.132*3000
+print (new)
+notnew <- -40230.867 + 57736.283*0 + 116.132*3000
+print(notnew)
+```
+Selling price of new: 365901.4
+Selling price of not new: 308165.1
+
+d) Fitting model with interaction: 
+```{r}
+model6 <- lm(Price ~ New*Size, data = house)
+summary(model6)
+```
+e) Plot for new:
+```{r}
+housenew <- house %>%
+  filter(New==1)
+ggplot(data = housenew, aes(x = Size, y = Price)) +
+  geom_point() +
+  labs(x = "Home size", y = "Selling price") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+Plot for not new:
+```{r}
+housenotnew <- house %>%
+  filter(New==0)
+ggplot(data = housenotnew, aes(x = Size, y = Price)) +
+  geom_point() +
+  labs(x = "Home size", y = "Selling price") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+f) Same answer as C I think.
+
+g) c) 300 square feet for new vs not was:
+Selling price of new: 365901.4
+Selling price of not new: 308165.1
+
+Now doing this for 1500 sf I got the same result. Is thi s because the new vs not new coefficient holds so much weight here?
+```{r}
+new2 <- -40230.867 + 57736.283*1 + 116.132*1500
+print (new)
+notnew2 <- -40230.867 + 57736.283*0 + 116.132*1500
+print(notnew)
+```
+
+h) I would use the model without interaction here because since the new vs not is so strong I feel like it overpowers the size variable and it makes more sense to look at them separately.
