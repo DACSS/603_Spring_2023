@@ -25,6 +25,7 @@ library(car)
 library(dplyr)
 library(alr4)
 library(stargazer)
+library(smss)
 ```
 
 # Question 1
@@ -192,12 +193,30 @@ vif(fit_dean)
 # Question 3
 (Data file: house.selling.price in smss R package)
 
+```{r}
+data("house.selling.price")
+glimpse(house.selling.price)
+house.selling.price$New <- as.factor(house.selling.price$New)
+
+```
+
+
 ### A 
 
 Using the house.selling.price data, run and report regression results modeling y = selling
 price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 =
 yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the
 meaning of the coefficient.
+
+Size: Holding all else equal, a one square foot increase in house size adds $116 dollars to its sale price. This finding is statistically significant. 
+
+New: Holding all else equal, a new house sells for $57,736 more than an 'old' house. This finding is also statistically significant. 
+
+```{r}
+fit <- lm(Price ~ Size + New, data = house.selling.price)
+summary(fit)
+```
+
 
 ### B
 
