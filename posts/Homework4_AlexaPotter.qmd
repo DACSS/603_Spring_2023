@@ -1,0 +1,243 @@
+---
+title: "Homework 4"
+author: "Alexa Potter"
+description: "DACSS 603"
+date: "04/24/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(car)
+library(smss)
+data("house.selling.price", package = "smss")
+df <- house.selling.price
+library(alr4)
+data("salary", package = "alr4")
+df <- salary
+
+```
+
+
+# Question 1
+
+For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home (in square feet), and x2 = lot size (in square feet), the prediction equation is ŷ = −10,536 + 53.8x1 + 2.84x2.   
+
+
+## A 
+
+A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000.  Find the predicted selling price and the residual, and interpret.   
+```{r}
+
+a_predicted = (-10536 + (53.8*(1240)) + (2.84*(18000)))
+a_predicted
+
+a_actual = 145000
+
+a_residual = a_actual - a_predicted
+
+a_residual
+```
+The predicted selling price is $107,296. The residual is $37,704. This means the buyer bought the house $37,704 over recent data predicitons.   
+
+## B  
+
+For fixed lot size, how much is the house selling price predicted to increase for each square foot increase in home size? Why?    
+```{r}
+(-10536 + (53.8*(1000)) + (2.84*(1000)))
+(-10536 + (53.8*(1001)) + (2.84*(1000)))
+```
+The house selling price is predicted to increase by $53.80. This is the coefficient to the home size variable, each x1 unit increases by 53.8.  
+
+
+## C  
+
+According to this prediction equation, for fixed home size, how much would lot size need  to increase to have the same impact as a one-square-foot increase in home size?     
+
+```{r}
+53.8/2.84
+```
+Lot size would need to increase by 18.94 to have the same impact as a 1 square foot increase in home size. 
+
+
+# Question 2  
+
+(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all  faculty in a small Midwestern college collected in the early 1980s for presentation in legal  proceedings for which discrimination against women in salary was at issue. All persons in the data  hold tenured or tenure track positions; temporary faculty are not included. The variables include  degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a  factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree,  and salary, academic year salary in dollars.   
+  
+  
+```{r}
+salary
+```
+
+
+## A  
+
+Test the hypothesis that the mean salary for men and women is the same, without regard to any other variable but sex. Explain your findings.  
+
+```{r}
+t.test(salary~sex, data=salary)
+```
+We can use the independent t-test here because it is comparing the means of continuous and categorical variables.   
+The p value here is not significant which means we fail to reject the null hypothesis that all population means are equal. 
+
+## B  
+
+Run a multiple linear regression with salary as the outcome variable and everything else as  predictors, including sex. Assuming no interactions between sex and the other predictors,  obtain a 95% confidence interval for the difference in salary between males and females.  
+
+Linear regression:  
+```{r}
+lm_salary <- lm(salary ~ degree + rank + sex + year + ysdeg, data =  salary)
+summary(lm_salary)
+```
+95% Confidence Interval for sexFemale is -697.8183 to 3030.56452  
+
+```{r}
+confint(lm_salary)
+```
+
+
+## C    
+
+Interpret your finding for each predictor variable; discuss (a) statistical significance, (b)  interpretation of the coefficient / slope in relation to the outcome variable and other variables    
+
+degree  
+
+Degree is not statistically significant. Individuals with degree "PhD" make 1388.61 more than "Master's".  
+
+rank  
+
+Rank is statistically significant. Individuals with rank "Prof" make 11118.76 more than "Asst" (constant) and individuals with rank "Assoc" make 5292.36 more than "Asst"
+
+sex  
+Sex is not statistically significant. sexFemale reflects women make 1166.37 more than men. 
+
+year  
+Year is statistically significant. With each increase in year an individual makes 476.31 more. 
+
+ysdeg   
+Years since degree is not statistically significant. It also have a negative relationship with salary. This means the more years away from their degree, an individual makes 124.57 less. 
+
+## D  
+
+Change the baseline category for the rank variable. Interpret the coefficients related to rank again.  
+
+```{r}
+salary$rank <- relevel(salary$rank, ref = "Prof")
+lm_salary2 <- lm(salary ~ degree + rank + sex + year + ysdeg, data =  salary)
+summary(lm_salary2)
+```
+Changing the baseline of rank to "Prof" does not change the statisitically significant variables. It does however, change the relationship with "Asst" and "Assoc" level of rank, as well as degree level of "Masters". These variables now have a negative relationship.
+
+## E  
+
+Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote,  “[a] variable may reflect a position or status bestowed by the employer, in which case if there  is discrimination in the award of the position or status, the variable may be ‘tainted.’ ” Thus,  for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to  adjust salaries before comparing the sexes may not be acceptable to the courts.  
+Exclude the variable rank, refit, and summarize how your findings changed, if they did.   
+
+
+```{r}
+lm_salary3 <- lm(salary ~ degree + sex + year + ysdeg, data =  salary)
+summary(lm_salary3)
+```
+Without the variable of rank, the statistically significant variables are now deegree, year, and ysdeg. Without rank females also make 1286.54 less than males so. Years since degree now has a postive relationship. 
+
+
+# Question 3  
+
+(Data file: house.selling.price in smss R package)  
+
+
+## A  
+
+Using the house.selling.price data, run and report regression results modeling y = selling  price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 =  yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the  meaning of the coefficient.  
+  
+```{r}
+house_lm <- lm(Price ~ Size + New, data = house.selling.price)
+summary(house_lm)
+```
+This model shows both size and new variables are statistically significant to price. A new house has a price of 57736.283 more than a not new home and for each unit increase of size, price increases 116.132. 
+
+## B  
+
+Report and interpret the prediction equation, and form separate equations relating selling  price to size for new and for not new homes.   
+
+y = -40230.867+116.132*X1(size) + 57736.283*X2(new)
+
+If the house is not new, X2 is cancelled out by 0  
+
+## C    
+
+Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.     
+y = -40230.867+116.132*X1(size) + 57736.283*X2(new)  
+
+```{r}
+#i
+
+-40230.867+(116.132*3000) + (57736.283*1)  
+
+
+#ii  
+-40230.867+(116.132*3000) + (57736.283*0)
+```
+
+
+## D  
+
+Fit another model, this time with an interaction term allowing interaction between size and  new, and report the regression results   
+ 
+```{r}
+house_lm2 <- lm(Price ~ Size*New, data = house.selling.price)
+summary(house_lm2)
+```
+These results now show "new" is not statistically significant but "size" and "size:new" is. 
+
+## E  
+
+Report the lines relating the predicted selling price to the size for homes that are (i) new,  (ii) not new.  
+
+i.
+y = -22227.808 + 104.438*X1(size) - 78527.502*X2(new) + 61.916*X1(size)*X2(new)  
+
+ii.
+y = -22227.808 + 104.438*X1(size) 
+
+## F   
+
+Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.   
+
+```{r}
+#i
+
+-22227.808 + (104.438*3000) - 78527.502 + (61.916*3000)  
+
+#ii
+-22227.808 + (104.438*3000)
+```
+
+
+## G  
+
+Find the predicted selling price for a home of 1500 square feet that is (i) new, (ii) not new.  Comparing to (F), explain how the difference in predicted selling prices changes as the size  of home increases.  
+
+```{r}
+#i
+
+-22227.808 + (104.438*1500) - 78527.502 + (61.916*1500)  
+
+#ii
+-22227.808 + (104.438*1500)
+```
+With the interaction of size*new, predicted selling prices changes by an increase of over 200% as the size of home increases in these instances. As the size increases, the percentage also increases in predicted selling price. 
+
+## H  
+
+Do you think the model with interaction or the one without it represents the relationship of  size and new to the outcome price? What makes you prefer one model over another?  
+
+R squared in the interaction model is higher as well as the standard error number is lower. BAsed on these two factors I would determine the interaction model is preferred. 
+
