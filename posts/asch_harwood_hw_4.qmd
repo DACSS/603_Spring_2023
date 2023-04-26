@@ -1,0 +1,295 @@
+---
+title: "Homework 4"
+author: "Asch Harwood"
+description: "Homework 4, Intro to Quant"
+date: "4/25/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+---
+
+```{r message=FALSE}
+library("dplyr")
+library("knitr")
+library(kableExtra)
+library(xtable)
+library(ggplot2)
+library(GGally)
+library(lme4)
+library(car)
+library(dplyr)
+library(alr4)
+library(stargazer)
+library(smss)
+```
+
+# Question 1
+
+### A
+
+```{r}
+x1 <-  1240 #house size
+x2 <- 18000 #lot size
+y_observed <- 145000
+```
+
+```{r}
+# find predicted selling price
+y_hat <- (-10536) + (53.8*x1) + (2.84*x2)
+residual <- y_observed - y_hat
+cat('Predict sale price: $',  y_hat)
+cat('\n')
+cat('Residual: $', residual)
+cat('\n')
+
+cat('The predicted sale price of', y_hat, 'dollars is', residual, 'dollars less than the actual observed house price of', y_observed, '.')
+```
+
+### B
+
+Holding the lot size fixed, each unit increase in square footage increases the house value by 53.8 dollars, which is the coefficient.
+
+### C
+
+The lot size would need to increase by 19.94 square feet to increase the home value by 53.8 dollars.
+
+# Question 2
+
+```{r}
+data(salary)
+```
+
+### A
+
+We cannot reject the null hypothesis that there is a difference between the mean male and female salary at the 0.05 significance level given the observed p-value of 0.09. The 95 percent confidence interval supports this conclusion because it contains zero.
+
+```{r}
+ggplot(data = salary, aes(x=salary, fill=sex)) + 
+  geom_histogram(bins=5)
+```
+
+```{r}
+male_salaries <- salary[salary$sex == "Male",]$salary
+female_salaries <- salary[salary$sex == "Female",]$salary
+t.test(male_salaries, female_salaries)
+```
+
+### B
+
+```{r}
+data(salary)
+fit <- lm(salary ~ rank + sex + year + ysdeg + degree, data = salary)
+sex_ci <- confint(fit)["sexFemale", ]
+cat('sexFemale confidence interval: ', sex_ci)
+```
+
+### C
+
+Intercept: The intercept of \$15,746.05 refers to when all coefficients are zero, which can be interpreted as the 'base' salary. In this case, our base reference professor is a male, assistant professor with zero years of experience and 0 years since graduation.
+
+rankAssoc: Holding all else equal, associate professors make \$5,292.36 more than assistant professors. This finding is statistically significant, which means we can reject the null hypothesis that there is no different in salary between associate and assistant professors.
+
+rankProf: Holding all else equal, professors make \$11,118.76 more than assistant professors. This finding is statistically significant, which means we can reject the null hypothesis that there is no different in salary between professors and assistant professors.
+
+sexFemale: Holding all else equal, female professors make \$1,166.37 more than male professors. This finding is NOT statistically significant, which means we cannot reject the null hypothesis that there is no difference in salary between male and female professors.
+
+year: Holding all else equal, for each year increase in years in current position, salary increases by \$476.31. This finding is statistically significant, which means we can reject the null hypothesis that an increase in years does not increase salary.
+
+ysdeg: Holding all else equal, for each year increase in years since degree, salary decreases by \$124.57. This finding is NOT statistically significant, which means we cannot reject the null hypothesis that a change in years in position does not have a corresponding change in salary.
+
+degreePhD: Holding all else equal, professors with PhD's make \$1,388 more than those with masters degrees. This is NOT statistically significant.
+
+```{r}
+summary(fit)
+```
+
+### D
+
+rankAsst: Holding all else equal, associate professors make \$11,118.76 less than a professor. This finding is statistically significant.
+
+rankAssoc: Holding all else equal, assistant professors make \$5,826.40 less than a professor. This finding is statistically significant.
+
+```{r}
+salary$rank <- relevel(salary$rank, ref="Prof")
+fit <- lm(salary ~ rank + sex + year + ysdeg + degree, data = salary)
+summary(fit)
+```
+
+### E
+
+By excluding rank:
+
+-   the model as a whole is less 'useful'. R-squared has gone down from 86 to 63, as has the adjusted r-squared, even though we have simplified the model. This means the model without rank has less 'explanatory' power. We also see an increase in the residual standard error.
+
+-   sexFemale in the new model is now correlated with a decreased salary of \$1,286.54 compared to the original model's increase of \$1,166.37. Sex is still not statistically significant.
+
+-   There is a slight decrease in the coefficient for year.
+
+-   In the new model, an increase in one year in number of years since degree is associated with a \$339.40 increase in salary, compared to the \$124.57 reduction from the previous model. This finding is statistically significant.
+
+-   In the new model, having a phd is associated with a decline in salary by \$3,299.35 compared to the \$1,388.61 bump in the original model.
+
+```{r}
+fit_no_rank <- lm(salary ~ sex + year + ysdeg + degree, data = salary)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Create a side-by-side table of the models using stargazer
+stargazer(fit, fit_no_rank,type = "text",
+          title = "Professor Salary Regression",
+          align = TRUE,
+          column.labels = c("M1:AllVari", "M2:NoRank"),
+          ci = TRUE, # Show confidence intervals
+          digits = 2) 
+```
+
+### F
+
+To prevent multicollinearity, I excluded `ys_deg` from the model. A pair plot visual inspection suggests that ys_deg is correlated with years. Without a visual inspection, we already know it is correlated with `dean_selected` because `dean_selected` is derived from `ys_deg`. We want to remove multicollinearity because it can influence other coefficients in the model, possibly obscuring the true relationship between the independent and dependent variable.
+
+There is evidence to suggest that the dean is preferentially rewarding staff he has hired. Holding all else equal, those hired by the dean earn \$2,160 more than those who were not. This number is statistically significant.
+
+```{r message=FALSE}
+#add dean selection
+salary$dean_selected <- ifelse(salary$ysdeg<=15, 1, 0)
+
+#dropping ysdeg b/c correlated with dean_selected
+x_no_y <- subset(salary, select = -c(salary, ysdeg))
+#pairs(x_no_y)
+
+# not including ys_deg b/c correlation with dean_selected and year
+fit_dean <- lm(salary ~ degree + rank + sex + dean_selected + year, data = salary)
+summary(fit_dean)
+```
+
+```{r}
+vif(fit_dean)
+```
+
+# Question 3
+
+```{r}
+data("house.selling.price")
+house.selling.price$New <- as.factor(house.selling.price$New)
+```
+
+### A
+
+Size: Holding all else equal, a one square foot increase in house size adds \$116 dollars to its sale price. This finding is statistically significant.
+
+New: Holding all else equal, a new house sells for \$57,736 more than an 'old' house. This finding is also statistically significant.
+
+```{r}
+fit <- lm(Price ~ Size + New, data = house.selling.price)
+summary(fit)
+```
+
+### B
+
+**Combined Model**
+
+`price = -40230.867 + 116.132*x_size + 57736.283*x_new`
+
+In this model, our price prediction is based on our intercept to -40,230.867 plus 116.132 multiplied by the house square footage plus \$57,736 if the house is new.
+
+**New House Model**
+
+`price_new_house = 116.132*x_size + 17505.42`
+
+**Old House Model**
+
+`price_old_house = 116.132*x_size - 40230.867`
+
+```{r}
+-40230.867 + 57736.283
+```
+
+### C
+
+Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.
+
+```{r}
+
+# house size
+x_size <- 3000
+
+# new model
+price_new_house <- 116.132*x_size + 17505.42
+
+#old house model
+price_old_house = 116.132*x_size - 40230.867
+
+cat('New house estimate: ', price_new_house)
+cat('\n')
+cat('Old house estimate: ', price_old_house)
+```
+
+### D
+
+```{r}
+fit <- lm(Price ~ Size + New + Size*New, data = house.selling.price)
+summary(fit)
+```
+
+### E
+
+New1: Coefficient of \$-78,537. Compared to old houses, new houses with zero square feet would sell for \$78,527, which is not possible. This result, however, is NOT statistically significant.
+
+Size:New1: For every unit increase in size, new homes sale price will increase by 61 dollars more than an old home. This coefficient is statistically significant.
+
+### F
+
+```{r}
+new_house <- data.frame(Size = 3000, New = 1)
+new_house$New <- as.factor(new_house$New)
+new_house_predicted_price <- as.numeric(predict(fit, newdata = new_house))
+
+
+old_house <- data.frame(Size = 3000, New = 0)
+old_house$New <- as.factor(old_house$New)
+old_house_predicted_price <- as.numeric(predict(fit, newdata = old_house))
+
+cat('New house predicted price: ', new_house_predicted_price)
+cat('\n')
+cat('Old house predicted price: ', old_house_predicted_price)
+```
+
+### G
+
+Given the use of our interaction term, which says that as homes increase in square footage, new homes will increase by \$61 per square foot more than old homes. Therefore as a result, as houses get larger, the price difference between new and old homes will also get larger.
+
+```{r}
+new_house <- data.frame(Size = 1500, New = 1)
+new_house$New <- as.factor(new_house$New)
+new_house_predicted_price <- as.numeric(predict(fit, newdata = new_house))
+
+
+old_house <- data.frame(Size = 1500, New = 0)
+old_house$New <- as.factor(old_house$New)
+old_house_predicted_price <- as.numeric(predict(fit, newdata = old_house))
+
+cat('New house predicted price: ', new_house_predicted_price)
+cat('\n')
+cat('Old house predicted price: ', old_house_predicted_price)
+```
+
+### H
+
+I prefer the model with the interaction term. While only slightly stronger in terms of its R-Squared, the model and the interaction term are simple enough to be easily interpreted. I also prefer it because 'New' by itself is not statistically significant. I feel the New variable is not 'specific' enough about what it refers to and thus not actually that useful in understanding home prices. What constitutes a new house? What happens if there is an old house that has been remodeled or has an addition?
+
+```{r warning=FALSE}
+fit_interaction <- lm(Price ~ Size + New + Size*New, data = house.selling.price)
+fit_no_interaction <- lm(Price ~ Size + New, data = house.selling.price)
+
+stargazer(fit_interaction, fit_no_interaction,type = "text",
+          title = "New vs Old Home Prices",
+          align = TRUE,
+          column.labels = c("M1:wInteraction", "M2:NoInteraction"),
+          ci = TRUE, # Show confidence intervals
+          digits = 2) 
+```
