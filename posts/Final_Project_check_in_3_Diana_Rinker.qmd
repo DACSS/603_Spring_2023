@@ -750,72 +750,81 @@ summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged.2022))
 
 ```
 
-To see how engagement of a subset of readers changes (loyal readers),  I will use another measure for engagement as DV, which represents only registered users:  number of comments. 
+To see how engagement of loyal readers readers impacted ,  I will use another measure for engagement as DV, which represents only registered users:  number of comments. 
 
 ```{r, echo=T}
 summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged))
-
-
-
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged.2021))
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged.2022))
 
 ```
 
-This shows that engagement is decreasing with popularity and someone increasing with author's comments. 
-for loyal readers : engagement is also sensitive to author's comments, but not sensitive to popularity of the post.
+This shows that loyal readers' engagement is decreasing with popularity only in 20022, and somewhat increasing with author's comments. 
+
 
 ###  analize change in x1 and x2 to y , considering log() 
 
-## 3.2 Adding other variables.
+## 3.2 Adding other/confounding variables.
 Now I will add other variables  to see if there is any impact on the results of the model with engagement of both groups of readers. 
 For number of comments,  I would have to select either early.sum  or n.comments, due to high correlation between them
 ```{r, echo=T}
 (cor(merged$early.sum, merged$n.comments))
 ```
-I am including n/comments in the model, to see if engagement of loyal readers through comments impact overall engagement:
+I am including n.comments in the model, to see if engagement of loyal readers through comments impact overall engagement:
 
 ```{r, echo=T}
 # colnames(merged)
-summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+post.weekday +n.comments, data = merged))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged))
 ```
-Ahd it is shown to be significant, negativelly impacting overall engagement. considering our finding s earlier, that early comments increase popularity and therefore decrease overall engagement, this is expected. Tuesday as level of "weekday" also shows to significantly decrease engagement. 
+Number of comments shows to be significant, negatively impacting overall engagement. Considering our earlier finding, that early comments increase popularity and therefore decrease overall engagement, this is expected. 
+Tuesday as a level of "weekday" variable also shows to significantly decrease engagement. 
 
-Authors engagement, day of the week(Tuesday) and blocked comments seem to increase engagement. 
+Authors engagement and blocked comments seem to increase engagement. 
 
 ```{r, echo=T}
-summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum +post.weekday, data = merged)) #not adding early.sum due to high correlation with DV: cor(merged$early.sum, merged$n.comments): 0.95
+summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum +post.weekday, data = merged))
 ```
 
- While general viewers show no impact by mood of the post or blocked comments, we see significant positive correlation of engagement with all of these metrics for loyal readers(=commenters). 
+While general viewers show no impact by mood of the post , we see significant positive correlation of loyals' engagement with mood of the post and higher significance for blocked comments, both positive, i.e increasing engagement.  Monday also appears having significantly more engagement than other days among loyal readers.   We see no impact of author's comments on loyal readers engagement. 
 
 
-Number of comments, representing engagement is somewhat impacted by
-three independent variables, but this model has low R\^2 , which
-suggests that there are other factors impacting loyal reader's
-engagement that are not considered in this model.
-
-
-
+Number of comments, representing engagement is somewhat impacted by three independent variables, but this model has low R\^2 , which
+suggests that there are other factors impacting loyal reader's engagement that are not considered in this model.
 
 
 ## 3.3 Using different datasets for comparing: 
 
-### Exit rate  for 2021 and 2022:
+### Exit rate  for 2021 and 2022+:
 
 ```{r, echo=T}
 # colnames(merged)
-summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2021))
-summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2022))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022))
 ```
 Exit rate (engagement) still correlates with popularity of the site or bot 2021 and 2021,confirming the same finding from un-splitted data set earlier. 
 However, author's comments appear only be relevant to all user's engagement in 2022, and not in 2021. Mood of the post appears  significant for user's engagement only in 2021, and blocked comments only appear significant in 2022. 
-## 3.2 Diagnostic of the model: 
 
+
+
+### N.comments  for 2021 and 2022+:
+```{r, echo=T}
+summary(lm(n.comments ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday, data = merged.2021))
+summary(lm(n.comments ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday, data = merged.2022))
+```
+None of the variables show significance for loyal user's engagement(comments) in 2021, except Monday. However, loyal users are significantly influenced by popularity, mood of the post and blocked comments  and Monday in 2022. 
+
+## 3.4 Diagnostic of models:
+
+DV: Exit rate. Diagnostics for the whole dataset:
 ```{r, echo=T}
 # colnames(merged)
-model.ex.r<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged)
-
+model.ex.r<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum +n.comments, data = merged)
 par(mfrow = c(2,3))
 plot(model.ex.r, which = 1:6)
+```
+
+DV: Exit rate. Diagnostics for split data(2021 and 2022+). 
+```{r, echo=T}
 
 ex.r.2021 <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2021)
 ex.r.2022 <-lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2022)
@@ -823,78 +832,55 @@ par(mfrow = c(2,3))
 plot(ex.r.2021, which = 1:6)
 par(mfrow = c(2,3))
 plot(ex.r.2022, which = 1:6)
+```
 
-
+DV: number of comments. Diagnostics for the whole dataset:
 ```{r, echo=T}
-
-
-
-model.2<- lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged)
-
-
+model.n.com<- lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged)
 par(mfrow = c(2,3))
-plot(model.2, which = 1:6)
+plot(model.n.com, which = 1:6)
 
 ```
 
-### Number of comments   for 2021 and 2022:
+DV: number of comments. Diagnostics for split data(2021 and 2022+). 
 ```{r, echo=T}
-summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged.2021))
-summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged.2022))
-```
-None of the variables show significance for loyal user's engagement(comments) in 2021. However, loyal users are significantly influenced by popularity, mood of the post and blocked comments in 2022. 
-
-
-### Adding a weekday:
-
-Adding the weekday of the post ad additional IV increases R\^2 and shows
-significance for one of the levels:
-
-```{r, echo=T}
-summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum + post.weekday, data = merged))
-summary(lm(`Exit rate` ~ log(Uniques) + author.sum + pct.positive+blocked.sum +post.weekday, data = merged))
-class(merged$post.weekday)
+n.com.2021 <- lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged.2021)
+n.com.2022 <-lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged.2022)
+par(mfrow = c(2,3))
+plot(n.com.2021, which = 1:6)
+par(mfrow = c(2,3))
+plot(n.com.2022, which = 1:6)
 ```
 
-### Adding early comments:
 
-Measuring how early comments impact engagement:
 
-```{r, echo=T}
-merged<- merged %>%
-  mutate (e.rate = `Exit rate`*10000)
-summary(lm(e.rate ~ log(Uniques) + author.sum +post.weekday +early.sum, data = merged))
 
-summary(lm(e.rate ~ log(Uniques) + author.sum+early.sum, data = merged))
-```
 
-The model's predictive value is pretty good (probably due to popularity
-being included) : 0.77. It also appears that this connection We can
-check it, by excluding the popularity, as see that R\^2 drops
-dramatically:
 
-```{r, echo=T}
-summary(lm(e.rate ~ author.sum+early.sum, data = merged))
-```
+
+
+
+
+
+
 
 
 # 4. Conlusion
 
-This study explored the connection between user's online engagement and bolg's author engagement.  To do so, we also analyzed the impact of post popularity on engagement. 
+This study explored the connection between user's online engagement and bolg's author engagement.  To do so, we
+1) also analyzed the impact of post popularity on engagement, and found significant connection
+2) compared year 2021 and 2022 and found difference in relationships between DV and IV variables. 
+3)Found that author's engagement does impact users engagement, but mostly in 2022 and towards all viewers and less through  loyal readers. 
 
 
 ```{r, echo=T}
 knitr::include_graphics("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP diagram .png")
 ```
 
-The results showed that the post popularity is the major factor for online engagement and is negatively correlated with it. i.e. more popular posts tend to be less engaging.    
+The results showed that the post popularity is the major factor for online engagement and that more popular posts tend to be less engaging.    
 
-We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is no significant impact of authors engagement on users engagement.  Such characteristics, as post mood and blocked comments also showed no connection with engagement of either groups of users. 
+We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement. .  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers. 
 
 
 
-While engagement metrics (exit rate and comments) did not show
-significant contribution, authors comment appeared significant in this
-model. - this is really out of place, i just don't want to lose this.
-
-# 
+ 
