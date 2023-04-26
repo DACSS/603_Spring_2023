@@ -168,19 +168,9 @@ stargazer(fit, fit_no_rank,type = "text",
 ```
 
 ### F 
+To prevent multicollinearity, I excluded ys_deg from the model. A pair plot visual inspection suggests that ys_deg is correlated with years. Without a visual inspection, we already know it is correlated with dean_selected because dean_selected is derived from ys_deg. We want to remove multicollinearity because it can impact the other coefficients in the model, possibly obscuring the true relationship between the independent and dependent variable.
 
-Everyone in this dataset was hired the year they earned their highest degree. It is also
-known that a new Dean was appointed 15 years ago, and everyone in the dataset who
-earned their highest degree 15 years ago or less than that has been hired by the new Dean.
-Some people have argued that the new Dean has been making offers that are a lot more
-generous to newly hired faculty than the previous one and that this might explain some of
-the variation in Salary.
-
-Create a new variable that would allow you to test this hypothesis and run another multiple
-regression model to test this. Select variables carefully to make sure there is no
-multicollinearity. Explain why multicollinearity would be a concern in this case and how
-you avoided it. Do you find support for the hypothesis that the people hired by the new
-Dean are making higher than those that were not?
+There is evidence to suggest that the dean is preferentially rewarding staff he has hired. Holding all else equal, those hired by the dean earn $2160 more than those who were not. This number is statistically significant.  
 
 ```{r message=FALSE}
 #add dean selection
@@ -188,12 +178,14 @@ salary$dean_selected <- ifelse(salary$ysdeg<=15, 1, 0)
 
 #dropping ysdeg b/c correlated with dean_selected
 x_no_y <- subset(salary, select = -c(salary, ysdeg))
-pairs(x_no_y)
+#pairs(x_no_y)
 
+# not including ys_deg b/c correlation with dean_selected and year
+fit_dean <- lm(salary ~ degree + rank + sex + dean_selected + year, data = salary)
+summary(fit_dean)
 ```
 ```{r}
-salary
-fit_dean <- lm(salary ~ )
+vif(fit_dean)
 ```
 
 
