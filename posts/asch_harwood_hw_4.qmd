@@ -119,20 +119,23 @@ sexFemale: Holding all else equal, female professors make $845 more than male pr
 
 year: Holding all else equal, for each year increase in years in current position, salary increases by $440. This finding is statistically significant, which means we can reject the null hypothesis that an increase in years does not increase salary.
 
-ysdeg: Holding all else equal, for each year increase in years since degree, salary decreases by $55. This finding is statistically significant, which means we cannot reject the null hypothesis that a change in years in position does not have a corresponding change in salary. 
+ysdeg: Holding all else equal, for each year increase in years since degree, salary decreases by $55. This finding is statistically significant, which means we cannot reject the null hypothesis that a change in years in position does not have a corresponding change in salary.
 
 ```{r}
 summary(fit)
 ```
-
-Interpret your finding for each predictor variable; discuss (a) statistical significance, (b)
-interpretation of the coefficient / slope in relation to the outcome variable and other variables
-
-
 ###D 
 
-Change the baseline category for the rank variable. Interpret the coefficients related to rank
-again.
+rankAsst: Holding all else equal, associate professors make $10,162 less than a professor. This finding is statistically significant.
+
+rankAssoc: Holding all else equal, assistant professors make $5,144 less than a professor.
+
+```{r}
+salary$rank <- relevel(salary$rank, ref="Prof")
+fit <- lm(salary ~ rank + sex + year + ysdeg, data = salary)
+summary(fit)
+```
+
 
 ###E 
 
