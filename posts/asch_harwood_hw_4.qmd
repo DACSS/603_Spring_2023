@@ -23,6 +23,7 @@ library(GGally)
 library(lme4)
 library(car)
 library(dplyr)
+library(alr4)
 ```
 
 # Question 1
@@ -75,16 +76,36 @@ degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc,
 factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree,
 and salary, academic year salary in dollars.
 
+```{r}
+data(salary)
+salary
+```
+
+
 ### A 
 
-Test the hypothesis that the mean salary for men and women is the same, without regard to
-any other variable but sex. Explain your findings.
+We cannot reject the null hypothesis that there is a difference between the mean male and female salary at the 0.05 significance level given the observed p-value of 0.09. The 95 percent confidence interval supports because it contains zero. 
+
+```{r}
+ggplot(data = salary, aes(x=salary, fill=sex)) + 
+  geom_histogram(bins=5)
+```
+
+```{r}
+male_salaries <- salary[salary$sex == "Male",]$salary
+female_salaries <- salary[salary$sex == "Female",]$salary
+t.test(male_salaries, female_salaries)
+```
+
 
 ### B 
 
-Run a multiple linear regression with salary as the outcome variable and everything else as
-predictors, including sex. Assuming no interactions between sex and the other predictors,
-obtain a 95% confidence interval for the difference in salary between males and females.
+```{r}
+fit <- lm(salary ~ rank + sex + year + ysdeg, data = salary)
+sex_ci <- confint(fit)["sexFemale", ]
+cat('sexFemale confidence interval: ', sex_ci)
+```
+
 
 ### C
 
