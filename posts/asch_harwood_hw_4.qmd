@@ -102,7 +102,8 @@ t.test(male_salaries, female_salaries)
 ### B 
 
 ```{r}
-fit <- lm(salary ~ rank + sex + year + ysdeg, data = salary)
+data(salary)
+fit <- lm(salary ~ rank + sex + year + ysdeg + degree, data = salary)
 sex_ci <- confint(fit)["sexFemale", ]
 cat('sexFemale confidence interval: ', sex_ci)
 ```
@@ -110,17 +111,19 @@ cat('sexFemale confidence interval: ', sex_ci)
 
 ### C
 
-Intercept: The intercept of $15,909 is when all over coefficients are zero, which can be interpreted as the 'base' salary. In this case, our base reference is a male, assistant professor with zero years of experience and 0 years since graduation
+Intercept: The intercept of $15746.05 is when all over coefficients are zero, which can be interpreted as the 'base' salary. In this case, our base reference is a male, assistant professor with zero years of experience and 0 years since graduation
 
-rankAssoc: Holding all else equal, associate professors make $5017 more than assistant professors. This finding is statistically significant, which means we can reject the null hypthosis that there is no different in salary between associate and assistant professors.
+rankAssoc: Holding all else equal, associate professors make $5292.36 more than assistant professors. This finding is statistically significant, which means we can reject the null hypthosis that there is no different in salary between associate and assistant professors.
 
-rankProf:  Holding all else equal, professors make $10,162.08 more than assistant professors. This finding is statistically significant, which means we can reject the null hypthosis that there is no different in salary between professors and assistant professors.
+rankProf:  Holding all else equal, professors make $11118.76 more than assistant professors. This finding is statistically significant, which means we can reject the null hypthosis that there is no different in salary between professors and assistant professors.
 
-sexFemale: Holding all else equal, female professors make $845 more than male professors. This finding is NOT statistically significant, which means we cannot reject the null hypothesis that there is no difference in salary between male and female professors.
+sexFemale: Holding all else equal, female professors make $1166.37 more than male professors. This finding is NOT statistically significant, which means we cannot reject the null hypothesis that there is no difference in salary between male and female professors.
 
-year: Holding all else equal, for each year increase in years in current position, salary increases by $440. This finding is statistically significant, which means we can reject the null hypothesis that an increase in years does not increase salary.
+year: Holding all else equal, for each year increase in years in current position, salary increases by $476.31 This finding is statistically significant, which means we can reject the null hypothesis that an increase in years does not increase salary.
 
-ysdeg: Holding all else equal, for each year increase in years since degree, salary decreases by $55. This finding is statistically significant, which means we cannot reject the null hypothesis that a change in years in position does not have a corresponding change in salary.
+ysdeg: Holding all else equal, for each year increase in years since degree, salary decreases by $124.57. This finding is NOT statistically significant, which means we cannot reject the null hypothesis that a change in years in position does not have a corresponding change in salary.
+
+degreePhD: Holding all else equal, professors with PhD's make $1388 more than those with masters degrees. This is NOT statistically significant.
 
 ```{r}
 summary(fit)
@@ -146,7 +149,7 @@ By excluding rank:
 
 - there is a slight increase in the coefficient for year.
 
-- Most notably, in the new model, an incrase in one year in number of years since degree is associated with a $230 increase in salary, compared to $55 reduction from the previous model. This finding is statisitically significant.
+- Most notably, in the new model, an increase in one year in number of years since degree is associated with a $230 increase in salary, compared to $55 reduction from the previous model. This finding is statistically significant.
 
 ```{r}
 fit_no_rank <- lm(salary ~ sex + year + ysdeg, data = salary)
@@ -176,6 +179,21 @@ regression model to test this. Select variables carefully to make sure there is 
 multicollinearity. Explain why multicollinearity would be a concern in this case and how
 you avoided it. Do you find support for the hypothesis that the people hired by the new
 Dean are making higher than those that were not?
+
+```{r message=FALSE}
+#add dean selection
+salary$dean_selected <- ifelse(salary$ysdeg<=15, 1, 0)
+
+#dropping ysdeg b/c correlated with dean_selected
+x_no_y <- subset(salary, select = -c(salary, ysdeg))
+pairs(x_no_y)
+
+```
+```{r}
+salary
+fit_dean <- lm(salary ~ )
+```
+
 
 # Question 3
 (Data file: house.selling.price in smss R package)
