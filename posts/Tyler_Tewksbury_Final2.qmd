@@ -1,0 +1,152 @@
+---
+title: "Final Project Part 2"
+author: "Tyler Tewksbury"
+desription: "Second Final Project check-in"
+date: "04/20/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart2
+  - tyler tewksbury
+  - chess
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background and Research Question
+
+In 2020, after the release of the Netflix series *The Queen's Gambit*, interest in chess was at an all-time high. This led many fans of the show to use popular websites such as Chess.com and Lichess.org to begin learning the game. These websites use a rating system that mimics that of official in-person chess leagues, increasing your rating number as you win and decreasing as you lose. This can be used to measure one's skill in chess, and determining if they can enter certain competitions. 
+
+When playing chess online, as you face someone completely random that the website matches you against, there is no guarantee that you will play against someone with an identical rating. Thus, there will typically be a difference between the two players' rating. Obviously the player with the higher rating would be more likely to win, right? That is where this study comes in. By quantifying the effect of rating difference on win chance, players may be able to understand more about the match they are currently in. Knowing how likely they are to win, how likely their opponent is to win, and this could lead to further interesting research about making the most fair chess matches possible. As there are not any academic studies on the topic, there is no proven indicator that a slight discrepancy in rating has is an indicator to a player's win chance. This poses the research question: 
+
+**How strong of a predictor is the difference between players chess rating in determining the victor?**
+
+
+## Dataset
+
+The dataset being used is sourced from Kaggle: https://www.kaggle.com/datasets/datasnaek/chess
+
+Gathered in 2016, the dataset contains information from over 20,000 matches on Lichess.org via the Lichess API. Information on the players', their opening moves, the results of the match, and more are all columns within the dataset. There was no selection criteria - it was simply the most recent games taken from the top 100 teams on the Lichess website, consisting of over 1,500 players. This should provide an adequate sample for building regression models.
+
+```{r}
+#reading in the dataset
+chess <- read.csv("_data/chess_games.csv")
+```
+
+## Descriptive Statistics 
+
+```{r}
+str(chess)
+```
+
+The dataset contains 20058 observations across 16 variables. 
+
+```{r}
+summary(chess)
+```
+Looking at the summary, it is clear what variables will be used and if any new columns will be added. The following will prove relevance to the research question:
+
+* `rated``
+* `victory_status``
+* `winner`
+* `white_id`
+* `white_rating`
+* `black_id`
+* `black_rating`
+* `turns`
+* `opening_eco`
+* `opening_name`
+
+
+A new column containing the difference between the rating will be added in the next iteration for analysis. Having this added column will make the functions necessary for analysis easier, as calculating the difference will not need to be repeated for each observation. 
+
+
+#### white_rating and black_rating
+
+```{r}
+range(chess$white_rating)
+range(chess$black_rating)
+
+```
+The ranges of the two sides are nearly identical, and are quite large nearing 2000. This could be both good and bad for the study, as the large range could prove significant, but it may be necessary to break the models into smaller ranges. This could also be interesting, perhaps seeing if the rating differences at a lower level matter more than that of a higher level, or vice versa.
+
+
+## Proposed Models
+
+The obvious model for this question will be a a linear probability regression, as the victory status is a binary variable. Proposed models initially are: 
+
+Linear probability including unranked
+Linear probability excluding unranked
+
+There will be more models, potentially differentiating between the different ranges as stated earlier. More possibilities include looking at exclusively drawn game data, analyzing favored openings depending on rank, or possibly finding other predictors if the rank difference is not significant. 
+
+## Part 2: Constructing Models
+
+To begin constructing the models, the difference in rank column needs to be added. This can be done using simple R commands. The victor will also be made into bingary numeric of 0 and 1, 0 being a white victory and 1 being a black victory. Draw results will be removed to allow use of linear probability.
+
+```{r}
+chess <- chess[chess$winner != 'draw' ,]
+chess <- chess %>%
+  mutate(winner = recode(winner, "white" = "0", "black" = "1")) %>%
+  mutate(winner = as.numeric(winner))
+chess$rating_diff <- chess$white_rating - chess$black_rating
+range(chess$rating_diff)
+hist(chess$rating_diff)
+```
+With the difference in rating defined, an initial model can be made with the difference as an explanatory variable, and the winner as the response variable.
+
+```{r}
+winner1 <- lm(winner ~ rating_diff, data = chess)
+summary(winner1)
+
+```
+The barebones model shows what was to be expected. A statistically significant relationship between the difference in rating and the outcome of the match. The p value being astronomically low confirms that the explanatory variable undoubtably affectts the dependent variable. Just from this barebones graph though, it is interesting to see how few outliers there are when visualized. Much more can be done both visually and statistically with this dataset however, so let's make more models, first controlling for the amount of turns taken in the match.
+
+```{r}
+winner2 <- lm(winner ~ rating_diff + turns, data = chess)
+summary(winner2)
+
+
+plot(x = chess$rating_diff, 
+     y = chess$winner)
+abline(winner1, col = "green")
+abline(h = .5, lty = 2, col = "black")
+abline(v = 0, lty = 2, col = "darkred")
+abline(winner2, col = "red")
+
+```
+I included the original regression line to show for comparison. The color will be green to easily differentiate it from future regression models. When controlling for the amount of turns taken in the match, a line slightly favoring a black victory is created. This is interesting, potentially implying that the amount of turns may matter more as the white player. This result is also statistically significant, as all of the models likely will be, given the obvious relationship between the two main variables.
+
+The third model that will be tested is a probit regression, as well as using a predict function to create a more appealing and more applicable regression line. 
+
+```{r}
+winner3 <- glm(winner ~ rating_diff, family = binomial(link = "logit"), data = chess)
+plot(x = chess$rating_diff, 
+     y = chess$winner)
+x <- seq(-1500, 1500, 10)
+y <- predict(winner3, list(rating_diff = x), type = "response")
+lines(x, y)
+
+```
+The probit model aims to determine the likelihood that a victory will occur based on the rating difference. This differs from the previous linear models, as the predicted value can exceed the binary range that we are looking for (the victory). By using a probit (or logit) model, as well as an s curve to visualize, this will prove more beneficial for future models.
+
+##Continued Work
+
+More models can and will be made using this data. As I further my knowledge of regression, as well as spend time working with the dataset. This check-in was just to show that I have *something*, and I plan to upload a "check-in 2.5" as time permits prior to the final submission. 
+
+Some example changes to future models are:
+Excluding extreme outliers
+Narrowing down the difference range significantly to see if a difference of just 10-20 points is significant
+Testing with more different opening  moves to see the difference they could make
+
+I also anticipate to improve the visualization aspect, with more interesting labels and colors to differentiate between models on a single visualization. The final poster will not have room to have many different models with differing visualizations, so it is important to make the few visualizations as clear and detailed as possible. 
