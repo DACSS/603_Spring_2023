@@ -519,7 +519,7 @@ ggplot(world_data, aes(x = long, y = lat, group = group, fill = GenderExclusion)
   theme_bw()
 ```
 
-The distribution of the explanatory variable `GenderExclusion` is somewhat right skewed, shows that fewer countries have high levels of gender exclusion. Given this skew, it might be necessary to explore logged versions of this variable. 
+The distribution of the explanatory variable `GenderExclusion` is somewhat right skewed, shows that fewer countries have high levels of gender exclusion. Given this skew, it might be necessary to explore logged versions of this variable.
 
 ```{r}
 MMR_Analysis %>%
@@ -692,7 +692,7 @@ AllLog <- (lm(formula = logMMR2017 ~ logGenderExclusion,
 stargazer(MMR_nolog, MMRlog, GElog, AllLog, type = 'text') 
 ```
 
-In all of the models the explanatory variable is found to have a positive and highly significant relationship at the 0.01 (1%) level. But a comparison of these models shows us that the model with logged versions of both the explanatory and dependent variables is the strongest. The R^2 and Adjusted R^2 values are much higher for this model than the models with only one logged variable or no logged variables. For this reason, the rest of the models in this analysis will use the `logMMR2017` in place of the `Maternal_Mortality_Ratio_2017` variable and the `logGenderExclusion` in place of the `GenderExclusion` variable.
+In all of the models the explanatory variable is found to have a positive and highly significant relationship at the 0.01 (1%) level. But a comparison of these models shows us that the model with logged versions of both the explanatory and dependent variables is the strongest. The R\^2 and Adjusted R\^2 values are much higher for this model than the models with only one logged variable or no logged variables. For this reason, the rest of the models in this analysis will use the `logMMR2017` in place of the `Maternal_Mortality_Ratio_2017` variable and the `logGenderExclusion` in place of the `GenderExclusion` variable.
 
 Next, the model will be explored with confounding variables added in.
 
@@ -735,16 +735,25 @@ MMR_3 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
 
 stargazer(MMR_1, MMR_2, MMR_3, type = 'text')
 ```
-It does not appear that the interaction term improved the model (the R\^2 value is the same as the model without the interaction term, but the adjusted R\^2 is slightly lower as we were penalized for adding another variable). The interaction term was also not significant, indicating that we do not need to keep it. Interestingly, the model without the interaction term or the `Expend_Health_pct_GDP` variable was the weakest of the three, with the lowest R^2 value. This indicates that while the `Expend_Health_pct_GDP` variable is not significant, its presence improves the model. Since the first two models have such similar R^2 values, we can review the AIC and BIC values to compare these models.
+
+It does not appear that the interaction term improved the model (the R\^2 value is the same as the model without the interaction term, but the adjusted R\^2 is slightly lower as we were penalized for adding another variable). The interaction term was also not significant, indicating that we do not need to keep it. Interestingly, the model without the interaction term or the `Expend_Health_pct_GDP` variable was the weakest of the three, with the lowest R\^2 value. This indicates that while the `Expend_Health_pct_GDP` variable is not significant, its presence improves the model. Since the first two models have such similar R\^2 values, we can review the AIC and BIC values to compare these models.
 
 ```{r}
 broom::glance(MMR_1)
 broom::glance(MMR_2)
 ```
 
-The model without the interaction term is slightly stronger as the AIC and BIC are slightly smaller. The model without the interaction term has an AIC of 392.101 and a BIC of 413.405 The model with the interaction term has an AIC of 393.7846 and a BIC of 418.132. 
+The model without the interaction term is slightly stronger as the AIC and BIC are slightly smaller. The model without the interaction term has an AIC of 392.101 and a BIC of 413.405 The model with the interaction term has an AIC of 393.7846 and a BIC of 418.132.
 
-Our strongest model that we will use in diagnostics later will be MMR_1, the model without the interaction term. This model supports the hypothesis that women's political inclusion has an effect on maternal mortality. While the `logGenderExclusion` variable was found to have a more significant effect on `logMMR2017` without any confounders, once confounding variables were introduced the model became stronger and a better fit, and the effect of `logGenderExclusion` remained statistically significant.
+The strongest model that will be used in diagnostics will be MMR_1, the model without the interaction term. This model supports the hypothesis that women's political inclusion has an effect on maternal mortality. While the `logGenderExclusion` variable was found to have a more significant effect on `logMMR2017` without any confounders, once control variables were introduced the model became stronger and a better fit and the effect of `logGenderExclusion` remained statistically significant.
+
+The final model can be written:
+
+**logMMR2017 = 12.28 + 0.2799logGenderExclusion + 0.0126Democracy - 0.0236SkilledBirthAttendant - 0.6601logGDP2017 - 0.0679Expend_Health_Pct_GDP**
+
+Which indicates that, controlling for democracy, the percentage of births with skilled attendants, GDP, and the percentage of GDP spent on health, a one unit increase in logGenderExclusion increases logMMR2017 by 0.28. A 1% increase in `GenderExclusion` leads to a 0.2785% increase in `Maternal_Mortality_2017`.
+
+*Formula:* 1% increase in x multiplies y by exp(0.2799\*log(1.01)), and increases y by 0.2799\*log(1.01) = 0.2785
 
 ### Hypothesis #2
 
@@ -780,7 +789,7 @@ stargazer(TotEff_noCov, TotEff_wCov, TotEff_wCov_noL, type = 'text')
 
 As noted in the section on hypothesis #1, the effect of the `logGenderExclusion` variable on `logMMR2017` is significant without covariates at the level of 0.01 (1%). Once control variables are added the model is much stronger, as evidenced by the higher R-squared values, but the explanatory variable is a little less significant (it is now at the level of 0.05 (5%)).
 
-The model with an the original, unlogged version of the `GenderExclusion` variable is also quite strong, although it has slightly smaller R^2 and adjusted R^2 values. THe `GenderExclusion` variable is still significant at the level of 0.05 (5%).
+The model with an the original, unlogged version of the `GenderExclusion` variable is also quite strong, although it has slightly smaller R\^2 and adjusted R\^2 values. THe `GenderExclusion` variable is still significant at the level of 0.05 (5%).
 
 The first *indirect effect* model will show the relationship between the explanatory variable and the mediator.
 
@@ -808,7 +817,7 @@ stargazer(IndEff1_noCov, IndEff1_wCov, IndEff1_wCov_noL, type = 'text')
 # Also should we try the interaction term again?
 ```
 
-The first indirect effect model show that the `logGenderExclusion` variable is statistically significant without any covariates, but is no longer significant when the control variables are included. This is not the case with the unlogged, original version of the `GenderExclusion` variable, which remains statistically significant at the 0.05 (5%) level even with the confounding variables included. A comparison of these models show that the model with the unlogged version of `GenderExclusion` is the strongest model, with the highest R^2 values. 
+The first indirect effect model show that the `logGenderExclusion` variable is statistically significant without any covariates, but is no longer significant when the control variables are included. This is not the case with the unlogged, original version of the `GenderExclusion` variable, which remains statistically significant at the 0.05 (5%) level even with the confounding variables included. A comparison of these models show that the model with the unlogged version of `GenderExclusion` is the strongest model, with the highest R\^2 values.
 
 The second and final indirect effect model will show the relationship between the mediator and the dependent variable while controlling for the explanatory variable.
 
@@ -840,9 +849,9 @@ IndEff2_wCov_noL <- (lm(formula = logMMR2017 ~ SkilledBirthAtt +
 stargazer(IndEff2_noCov, IndEff2_wCov, IndEff2_wCov_noL, type = 'text')
 ```
 
-In all of these second indirect effect models the explanatory variable is still statistically significant with the mediator present in the model, although in the case of the model with the unlogged version of `GenderExclusion` the significance is lower. The model with the `logGenderExclusion` variable and all of the covariates is stronger than the models without covariates and with the unlogged version of the `GenderExclusion` variable when comparing the R^2 values.
+In all of these second indirect effect models the explanatory variable is still statistically significant with the mediator present in the model, although in the case of the model with the unlogged version of `GenderExclusion` the significance is lower. The model with the `logGenderExclusion` variable and all of the covariates is stronger than the models without covariates and with the unlogged version of the `GenderExclusion` variable when comparing the R\^2 values.
 
-Since it is not entirely clearly which model is stronger - the one with the `logGenderExclusion` explanatory variable, or the model with the unlogged `GenderExclusion` explanatory variable, we will include both version in a mediation analysis here. 
+Since it is not entirely clearly which model is stronger - the one with the `logGenderExclusion` explanatory variable, or the model with the unlogged `GenderExclusion` explanatory variable, we will include both version in a mediation analysis here.
 
 #### Mediation analysis: logged IV
 
@@ -864,7 +873,7 @@ The **Total** **Effect** reports the sum of the direct and indirect effects of t
 
 Finally, **Prop. Mediated** indicates the proportion of the effect of the explanatory variable on the dependent variable that goes through the mediator. In this analysis it is not significant.
 
-In sum, this model shows that while gender exclusion has a direct effect on maternal mortality, there is no statistically significant evidence that it was mediated via the presence of skilled birth attendants. 
+In sum, this model shows that while gender exclusion has a direct effect on maternal mortality, there is no statistically significant evidence that it was mediated via the presence of skilled birth attendants.
 
 #### Mediation analysis: unlogged IV
 
@@ -877,6 +886,7 @@ summary(results_noL)
 
 plot(results_noL)
 ```
+
 The **ACME** **(average causal mediation effects)** accounts for the indirect effect of the explanatory variable (`GenderExclusion`) on the dependent variable (`logMMR2017`) that goes through the mediator (`SkilledBirthAtt`). This was found to be significant at the 0.05 (5%) level.
 
 **ADE (average direct effects)** shows the direct effect of the explanatory variable on the dependent variable. This was also calculated in the second indirect effect model above. In both cases the relationship between the explanatory variable and the dependent variable was found to be significant at the 0.1 (10%) level.
@@ -885,10 +895,9 @@ The **Total** **Effect** reports the sum of the direct and indirect effects of t
 
 Finally, **Prop. Mediated** indicates the proportion of the effect of the explanatory variable on the dependent variable that goes through the mediator. In this analysis it is significant at the 0.1 (10%) level.
 
-In sum, for this model the effect of gender exclusion on maternal mortality was mediated via the presence of skilled birth attendants. 
+In sum, for this model the effect of gender exclusion on maternal mortality was mediated via the presence of skilled birth attendants.
 
 *Note to prof: I think there is likely more to say here about this analysis and interpretation of the plot in particular, but I don't know this well yet, would be great to discuss further.*
-
 
 ## Model Diagnostics
 
