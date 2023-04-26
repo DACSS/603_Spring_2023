@@ -24,6 +24,7 @@ library(lme4)
 library(car)
 library(dplyr)
 library(alr4)
+library(stargazer)
 ```
 
 # Question 1
@@ -135,16 +136,31 @@ salary$rank <- relevel(salary$rank, ref="Prof")
 fit <- lm(salary ~ rank + sex + year + ysdeg, data = salary)
 summary(fit)
 ```
-
-
 ###E 
 
-Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote,
-“[a] variable may reflect a position or status bestowed by the employer, in which case if there
-is discrimination in the award of the position or status, the variable may be ‘tainted.’ ” Thus,
-for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to
-adjust salaries before comparing the sexes may not be acceptable to the courts.
-Exclude the variable rank, refit, and summarize how your findings changed, if they did.
+By excluding rank:
+
+- the model as a whole is considerably less 'useful'. The r-squared has gone down from 85 to 56, as has the adjusted R-squared, even though we have simplified the model. This means the model without rank has less 'explainatory' power. We also see an increase in the residual standard error.
+
+- sexFemale in the new model is now correlated with a decreased salary of $746 compared to the original models increase of $845. That being said, sex is still not statistically significant.
+
+- there is a slight increase in the coefficient for year.
+
+- Most notably, in the new model, an incrase in one year in number of years since degree is associated with a $230 increase in salary, compared to $55 reduction from the previous model. This finding is statisitically significant.
+
+```{r}
+fit_no_rank <- lm(salary ~ sex + year + ysdeg, data = salary)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Create a side-by-side table of the models using stargazer
+stargazer(fit, fit_no_rank,type = "text",
+          title = "Professor Salary Regression",
+          align = TRUE,
+          column.labels = c("M1:AllVari", "M2:NoRank"),
+          ci = TRUE, # Show confidence intervals
+          digits = 2) 
+```
 
 ### F 
 
