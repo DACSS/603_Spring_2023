@@ -1,0 +1,212 @@
+---
+title: "DACSS 603 Homework 4"
+author: "Laura Collazo"
+description: "Homework 5 for DACSS 603"
+date: "04/26/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+---
+
+```{r, echo=T, warning = FALSE, message = FALSE}
+
+library(tidyverse)
+library(smss)
+library(alr4)
+
+```
+
+# Question 1
+
+The answers for this question refer to the house.selling.price.2 data set in the smss package.  
+
+```{r}
+
+data(house.selling.price.2)
+
+model_1 <- lm(data = house.selling.price.2,P ~ S + Be + Ba + New)
+
+model_2 <- lm(data = house.selling.price.2,P ~ S + Ba + New)
+
+```
+
+
+## a
+
+Using backward elimination, the first variable to be deleted would be beds as it has the highest p-value.
+
+## b
+
+Using forward selection, the first variable to be added would be new as it has the lowest p-value. 
+
+## c
+
+I think beds has a large p-value in the regression model, even though it's highly correlated with price, because multicollinearity exists between beds and size.
+
+## d
+
+Below are 2 different models: one with all variables and one with beds removed as it did not have a significant p-value in the original model.
+
+```{r}
+
+summary(model_1)
+summary(model_2)
+
+```
+
+### R-squared
+
+If using only the value for R-squared to determine the best fitting model I would select the model using all variables as it's higher, albeit barely, than the model without beds as seen above.
+
+### Adjusted R-squared
+
+If using only the value for adjusted R-squared to determine the best fitting model I would select the model without beds as it's slightly higher than the model with all variables as seen above.
+
+### PRESS
+
+If using only the PRESS statistic to determine the best fitting model, I would select the model without the variable beds. As seen below, `P ~ S + Ba + New` has the lowest PRESS statistic. 
+
+```{r}
+
+# PRESS function
+
+PRESS <- function(model) {
+    i <- residuals(model)/(1 - lm.influence(model)$hat)
+    sum(i^2)
+}
+
+```
+
+`P ~ S + Be + Ba + New`
+
+```{r}
+
+PRESS(model_1)
+
+```
+
+`P ~ S + Ba + New`
+
+```{r}
+
+PRESS(model_2)
+
+```
+
+### AIC
+
+If using only the value for AIC to determine the best fitting model, I would select the model without the variable beds. As seen in the summary below, `P ~ S + Ba + New` has the lowest AIC.
+
+```{r, echo=T}
+
+step(object = model_1, direction = "backward")
+
+```
+
+### BIC
+
+If using only the value for BIC to determine the best fitting model, I would select the model without the variable beds. As seen below, `P ~ S + Ba + New` has the lowest BIC.
+
+`P ~ S + Be + Ba + New`
+
+```{r}
+
+BIC(model_1)
+
+```
+
+`P ~ S + Ba + New`
+
+```{r}
+
+BIC(model_2)
+
+```
+
+## e
+
+The model I would select as best fitting is the one without beds, `P ~ S + Ba + New`. This model is the best fitting using each criterion, except when looking at R-squared. R-squared isn't the best measure to examine anyways, though, as it increases as predictor variables are added even if the variables aren't significant. I also believe there is multicollinearity between size and beds, so removing beds addresses this issue.
+
+# Question 2
+
+Question two uses the data set `trees`.
+
+```{r}
+
+data("trees")
+
+```
+
+## a
+
+Below is the regression model `Volume ~ Girth + Height`. It has a very high adjusted R-squared and all variables have a significant p-value. This indicates a good fitting model.
+
+```{r}
+
+model_2a <- lm(data = trees, Volume ~ Girth + Height)
+
+summary(model_2a)
+
+```
+
+## b
+
+Diagnostic plots for this model are below. 
+
+In the Residuals vs Fitted plot, both the linearity and constant variance assumptions are violated as the line is not linear and the points are not equally horizontal around the line at 0.
+
+In the Normal Q-Q plot, most of the points fall on the line, however towards the ends they begin to curve. This violates the normality assumption. 
+
+The Scale-Location plot shows a violation of the constant variance assumption and also indicates heteroskedasticity.
+
+The Residuals vs Leverage plot shows an outlier outside of Cooks distance which violates the influential observation assumption.
+
+After examining these plots, it appears the model is actually not a great fit as it violates all assumptions.  
+
+
+```{r}
+
+plot(model_2a)
+
+```
+
+# Question 3
+
+This question examines if it's possible that voters in Palm Beach County voted for Buchanan when their intended choice was Gore due to the style of ballot that was used.
+
+## a
+
+Below is the regression summary and diagnostic plots for the model `Buchanan ~ Bush`. Based on the diagnostic plots, Palm Beach County is an outlier in every plot as the point for it on each graph is labeled and falls far from all the others. 
+
+```{r}
+
+data("florida")
+
+model_3a <- (lm(data = florida, Buchanan ~ Bush))
+
+summary(model_3a)
+
+plot(model_3a)
+
+```
+
+## b
+
+The log of both variables are used in the next model and diagnostic plots. Although this is a better fitting model, Palm Beach County is still an outlier in every diagnostic plot.
+
+```{r}
+
+data("florida")
+
+model_3b <- (lm(data = florida, log(Buchanan) ~ log(Bush)))
+
+summary(model_3b)
+
+plot(model_3b)
+
+```
