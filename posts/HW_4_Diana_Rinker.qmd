@@ -1,0 +1,342 @@
+---
+title: "HW_4_Diana_Rinker"
+author: "Diana_Rinker"
+editor: visual
+---
+
+------------------------------------------------------------------------
+
+# DACSS 603, spring 2023
+
+# Homework 4, Diana Rinker.
+
+Loading necessary libraries:
+
+```{r, echo=T}
+library(dplyr)
+library(ggplot2)
+library(alr4)
+library(smss)
+data(UN11)
+
+
+
+```
+
+# Question 1
+
+For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home (in square feet), and x2 = lot size (in square feet), the prediction equation is ŷ = −10,536 + 53.8x1 + 2.84x2.
+
+A. A particular home of 1240 square feet on a lot of 18,000 square feet sold for \$145,000. Find the predicted selling price and the residual, and interpret.
+
+B. For fixed lot size, how much is the house selling price predicted to increase for each square- foot increase in home size? Why?
+
+C. According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size?
+
+## A.
+
+```{r, echo=T}
+x1<- 1240
+x2 <- 18000 
+predicted.price <- (-10536) + 53.8*x1 + 2.84*x2
+residual <- predicted.price - 145000
+table <- cbind( c("prediciton", "residual"), c(predicted.price,residual))
+knitr::kable(table) 
+```
+
+The residual is negative, meaning that the model underestimated house price.
+
+## B.
+
+ŷ = −10,536 + 53.8x1 + 2.84x2. If X2 is fixed, Y increases by 53.8 dollars per each square foot increase. The coeeficient of X1 indicates increase in Y with the change of X1, if the other variables kept the same.
+
+## C.
+
+To increase Y by 53.8, X2 would need to increase by 53.8/2.84 = 8.94366.
+
+```{r, echo=T}
+x2.incr<- 53.8/2.84
+x2.incr
+
+```
+
+# Question 2
+
+(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all faculty in a small Midwestern college collected in the early 1980s for presentation in legal proceedings for which discrimination against women in salary was at issue. All persons in the data hold tenured or tenure track positions; temporary faculty are not included. The variables include degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree, and salary, academic year salary in dollars.
+
+## A.
+
+Test the hypothesis that the mean salary for men and women is the same, without regard to any other variable but sex. Explain your findings.
+
+```{r, echo=T}
+data(salary)
+str(salary)
+```
+
+First, I will make sure that variances in male and female groups are equal:
+
+```{r, echo=T}
+salary$sex
+Male <- subset(salary, sex == "Male")
+Female<- subset(salary, sex == "Female")
+var.test(Male$salary, Female$salary)
+
+```
+
+P\>0.05 means that the variances of thwo samples can be considered equal.
+
+```{r, echo=T}
+salary$sex
+Male <- subset(salary, sex == "Male")
+Female<- subset(salary, sex == "Female")
+t.test(Male$salary, Female$salary, var.equal=T, Alternative="two.soded")
+```
+
+The p-value of a t-test is above 0.05, which means that we accept H0 that the means of these two groups ere the same.
+
+## B.
+
+Run a multiple linear regression with salary as the outcome variable and everything else as predictors, including sex. Assuming no interactions between sex and the other predictors, obtain a 95% confidence interval for the difference in salary between males and females.
+
+```{r, echo=T}
+str(salary)
+summary ( lm(salary ~ degree + rank + sex + year +ysdeg , data = salary ))
+
+```
+
+Confidence interval for the difference in salary between males and females:
+
+```{r, echo=T}
+confint(model, "sexMale", level = 0.95)
+```
+
+## C.
+
+Interpret your finding for each predictor variable; discuss (a) statistical significance, (b) interpretation of the coefficient / slope in relation to the outcome variable and other variables
+
+```{r, echo=T}
+str(salary)
+summary ( lm(salary ~ degree + rank + sex + year +ysdeg , data = salary ))
+
+```
+
+degree: shows no significance in the model (p-value is above 0.05), meaning that this variable cannot explain or predict salary. Rank variable shows high level of significance for all of its three levels (p-value lower than 0.0001), meaning that the rank influences the salary. The rank of the professor increases the salary twice more than the rank of the Associate professor.
+
+Sex variable with two levels (male and female) has no significance and therefore does not contribute to the salary value.
+
+Year shows high significance (low p-value), but has the lowest coefficient to the salary value.
+
+Ysdeg shows no significance and therefore does not contribute to the salary.
+
+## D.
+
+Change the baseline category for the rank variable. Interpret the coefficients related to rank again.
+
+```{r, echo=T}
+str(salary)
+levels(salary$rank)
+salary$rank <- relevel(salary$rank, ref = "Prof")
+summary ( lm(salary ~ degree + rank + sex + year +ysdeg , data = salary ))
+```
+
+I used relevel() function tochange base cathegory for Rank from Asssistant to Professor. Now we can see that ssostant professor earns on average \$11118 less than professor, and Associate makes \$5826 less than professor.
+
+## E.
+
+Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote, "\[a\] variable may reflect a position or status bestowed by the employer, in which case if there is discrimination in the award of the position or status, the variable may be 'tainted.'" Thus, for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to adjust salaries before comparing the sexes may not be acceptable to the courts.
+
+Exclude the variable rank, refit, and summarize how your findings changed, if they did.
+
+```{r, echo=T}
+# first, I return value "Asst" to be baseline, because it has smallest salaries. 
+levels(salary$rank)
+salary$rank <- relevel(salary$rank, ref = "Asst")
+
+#excluding rank from the model 
+summary ( lm(salary ~ degree + sex + year +ysdeg , data = salary ))
+
+```
+
+Once I excluded rank from the model, the variable sex became significant. I interpret it, as the variable rank was taking "covering" variable sex. It the previous model rank had very high significance, and now "sex" became significant, supporting Finkelstein's hypothesis.
+
+## F.
+
+Everyone in this dataset was hired the year they earned their highest degree.
+
+ysdeg = time since hired
+
+It is also known that a new Dean was appointed 15 years ago, and everyone in the dataset who earned their highest degree 15 years ago or less than that has been hired by the new Dean.
+
+separate thos who been hired by him ysdeg \<=15 yrs - \> two groups compare
+
+Some people have argued that the new Dean has been making offers that are a lot more generous to newly hired faculty than the previous one and that this might explain some of the variation in Salary.
+
+Create a new variable that would allow you to test this hypothesis and run another multiple regression model to test this.
+
+Select variables carefully to make sure there is no multicollinearity.
+
+Explain why multicollinearity would be a concern in this case and how you avoided it.
+
+Do you find support for the hypothesis that the people hired by the new Dean are making higher than those that were not?
+
+```{r, echo=T}
+
+# ysdeg = time since hired
+salary<-salary%>%
+  mutate (new.hire = ifelse (ysdeg >15, 0, 1))
+```
+
+Since new.hire variable is derived from ysdeg, I will remove ysdeg from the model to avoid multicollinearity:
+
+```{r, echo=T}
+summary ( lm(salary ~ degree + sex +  rank + year + new.hire, data = salary ))
+
+# old summary ( lm(salary ~ degree + sex + year +ysdeg , data = salary ))
+```
+
+The model is showing significance for the new.hire variable, supporting the hypothesis tha tpeople hired by the new Dean are paid better.
+
+# Question 3
+
+(Data file: house.selling.price in smss R package)
+
+```{r, echo=T}
+data(house.selling.price)
+```
+
+## A.
+
+Using the house.selling.price data, run and report regression results modeling y = selling price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 = yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the meaning of the coefficient.
+
+```{r, echo=T}
+data(house.selling.price)
+str(house.selling.price)
+
+```
+```{r, echo=T}
+
+summary (lm(Price~ Size + New, data = house.selling.price))
+```
+The model is demostrating statisticsl significance of both independent variable, with the size variable having a better significance level. Size coefficient of 115 indicates that with an increase of size by square foot, the price of the house would increase by 116 dollars. 
+
+At the same time, the coefficient of "New" variable is much bgger than  Size, meaning that the the new house would be 57736 dollars more expencive than the old one of the same size. 
+
+## B. 
+Report and interpret the prediction equation, and form separate equations relating selling price to size for new and for not new homes.
+
+Prediction equation is: 
+Price = (116 * Size) + (57736 * New) 
+
+to form separate equations for new and not new houses,  I will split dataset into two by the "New" variable: 
+```{r, echo=T}
+new.houses<- house.selling.price%>%
+  filter(New==1)
+old.houses<- house.selling.price%>%
+  filter(New==0)
+new.model<- (lm(Price~ Size , data = new.houses))
+new.model
+old.model<- (lm(Price~ Size , data = old.houses))
+old.model
+```
+
+Model for New houses: 
+price =  166* Size
+
+
+Model for Old houses: 
+price =  104* Size
+
+
+## C. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.
+New house of size 3000
+```{r, echo=T}
+Size<- 3000
+new.house<- 166*Size 
+new.house
+
+```
+Old house of size 3000
+```{r, echo=T}
+old.house <- 104*Size
+old.house
+```
+
+## D. Fit another model, this time with an interaction term allowing interaction between size and new, and report the regression results
+
+```{r, echo=T}
+summary (lm(Price~ Size + New +Size*New, data = house.selling.price))
+```
+Once we added interaction term between New and size, the significance of "New" variable disappeared. Instead, the interaction term appears to explain the change in price better, i.e. combination of size and newness of the house impacts the price. 
+
+
+
+## E. Report the lines relating the predicted selling price to the size for homes that are (i) new, (ii) not new.
+
+```{r, echo=T}
+house.selling.price<- house.selling.price%>%
+  mutate (predicted.price = predict(lm(Price~ Size + New +Size*New)))
+
+new.houses<- house.selling.price%>%
+  filter(New==1)
+ggplot(new.houses, mapping=aes(x=Size, y=predicted.price))+
+  geom_smooth(method="lm")+
+  labs(title=" Predicted selling price to the size for  new homes", x="Size", y="Predicted price")
+
+
+old.houses<- house.selling.price%>%
+  filter(New==0)
+ggplot(old.houses, mapping=aes(x=Size, y=predicted.price))+
+  geom_smooth(method="lm")+
+  labs(title=" Predicted selling price to the size for old homes", x="Size", y="Predicted price")
+
+
+```
+
+
+
+## F. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.
+New:
+```{r, echo=T}
+model <-lm(Price~ Size + New +Size*New, data = house.selling.price)
+
+predicted1.y.new <- predict(model, newdata = data.frame(Size = 3000, New = 1))
+predicted1.y.new 
+```
+Old: 
+```{r, echo=T}
+predicted1.y.old <- predict(model, newdata = data.frame(Size = 3000, New = 0))
+predicted1.y.old 
+
+```
+
+
+
+## G. Find the predicted selling price for a home of 1500 square feet that is (i) new, (ii) not new. Comparing to (F), explain how the difference in predicted selling prices changes as the size of home increases.
+```{r, echo=T}
+predicted2.y.new <- predict(model, newdata = data.frame(Size = 1500, New = 1))
+predicted2.y.new 
+predicted2.y.old <- predict(model, newdata = data.frame(Size = 1500, New = 0))
+predicted2.y.old
+```
+The difference in prices between old and new house for F (3000sq.f) is 
+```{r, echo=T}
+dif.1 <- predicted1.y.new -predicted1.y.old 
+dif.1
+```
+The difference in prices between old and new house for G (1500sq.f) is 
+```{r, echo=T}
+dif.2 <- predicted2.y.new -predicted2.y.old 
+dif.2
+```
+Apparently the difference between old and new houses of the same square footage is increasing with increase of size. 
+
+
+
+
+## H. Do you think the model with interaction or the one without it represents the relationship of size and new to the outcome price? What makes you prefer one model over another?
+
+Clearly the model with interaction represents relationship better, because difference in prices of larger houses is bigger than difference in prices for smaller houses. 
+
+
+
+
