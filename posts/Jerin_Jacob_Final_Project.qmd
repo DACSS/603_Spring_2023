@@ -26,11 +26,17 @@ Now a days, movies are a well marketed entertainment product. Just like any othe
 ```{r, echo=T}
 library(readxl)
 library(tidyverse)
+library(lubridate)
+library(dplyr)
 ```
 
 ```{r}
-df <- read.csv("_data/project_data.csv")
-#df
+df <- read.csv("_data/project_data.csv") 
+df$Open <- ymd(df$Open)
+df$Close <- ymd(df$Close)
+df<- df|>
+  mutate(open_day = yday(Open), close_day = yday(Close), days_of_show = case_when(close_day < open_day ~ (365-open_day)+close_day, close_day >= 0 ~ close_day-open_day)) 
+df
 
 ```
 
@@ -67,12 +73,77 @@ There are 10 variables with 200 rows.
 ```{r, echo=T}
 summary(df)
 ```
+```{r}
+unique(df$Distributor)
+movies_per_distributor <- df |>
+  group_by(Distributor) |>
+  count(Distributor)
+movies_per_distributor  
+ggplot(movies_per_distributor, aes(x=Distributor, y=n)) +
+  geom_bar(position = 'dodge', stat = 'identity')
+
+```
+```{r}
+
+
+```
+
 
 Using the glimpse() function, let's have a look at how our data would look like!
 
 ```{r}
 glimpse(df)
 ```
+Code sample
+```{r}
+# Load necessary libraries
+library(dplyr) # for data manipulation
+library(ggplot2) # for data visualization
+
+# Load data into a data frame
+movie_data <- read.csv("_data/project_data.csv") 
+
+# Rename columns for clarity
+colnames(movie_data) <- c("rank", "release_date", "domestic_gross", "max_theaters", "opening_weekend_gross", "domestic_percentage", "opening_theaters", "opening_date", "closing_date", "distributor", "international_gross", "worldwide_gross")
+
+# Subset data to include only relevant columns
+movie_data <- select(movie_data, opening_weekend_gross, worldwide_gross)
+
+# Check data for any missing values or outliers
+summary(movie_data)
+
+# Calculate descriptive statistics
+initial_week_mean <- mean(movie_data$opening_weekend_gross)
+initial_week_sd <- sd(movie_data$opening_weekend_gross)
+total_mean <- mean(movie_data$worldwide_gross)
+total_sd <- sd(movie_data$worldwide_gross)
+
+# Create scatterplot to visualize the relationship between the variables
+ggplot(data = movie_data, aes(x = opening_weekend_gross, y = worldwide_gross)) +
+  geom_point() +
+  labs(x = "Opening Weekend Gross", y = "Worldwide Gross")
+
+# Calculate correlation coefficient between the two variables
+correlation <- cor(movie_data$opening_weekend_gross, movie_data$worldwide_gross)
+
+# Create linear regression model
+lm_model <- lm(worldwide_gross ~ opening_weekend_gross, data = movie_data)
+
+# View summary of the linear regression model
+summary(lm_model)
+
+# Perform hypothesis test
+# Null hypothesis: The total gross collection of a movie is not dependent on the opening week's collection
+# Alternative hypothesis: The total gross collection of a movie is dependent on the opening week's collection
+#test <- t.test(movie_data$worldwide_gross ~ movie_data$opening_weekend_gross, var.equal = TRUE)
+
+# View results of hypothesis test
+#test
+
+
+```
+
+
 
 ## References:
 
