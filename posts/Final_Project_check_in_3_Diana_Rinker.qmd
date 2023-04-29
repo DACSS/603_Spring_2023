@@ -775,7 +775,7 @@ I am including n.comments in the model, to see if engagement of loyal readers th
 ```{r, echo=T}
 (cor(merged$early.sum, merged$n.comments))
 ```
-Below is the summary of estimates and p-values  for this model, for three different datasets: all data, 2021 and 2022: 
+Below is the summary of estimates and p-values  for three models, derived from the three different data sets: all data, 2021 and 2022. Comparing them will allow to identify whether the  
 
 ```{r, echo=T}
 # colnames(merged)
@@ -790,53 +790,87 @@ model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.s
 
 library(stargazer)
 stargazer(model.all , model.2021, model.2022, type = 'text')
+
+
+#three models with different variables 
+model.1 <- lm(`Exit rate` ~ log(Uniques)+ author.sum  , data = merged)
+model.2 <- lm(`Exit rate` ~ log(Uniques)+ author.sum  +n.comments , data = merged)
+model.3 <- lm(`Exit rate` ~ log(Uniques)+ author.sum  +n.comments + pct.positive, data = merged)
+model.4<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +pct.positive +blocked.sum , data = merged)
+model.5<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +pct.positive +blocked.sum + post.weekday , data = merged)
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged)
+
+library(stargazer)
+stargazer(model.0, model.1, model.2, model.3, model.4, model.5, type = 'text')
+
 ```
 
-This table shows that in addition to post popularity (log(Uniques), which contributes the most to the engagement increasing exit rates,  there are other significant variables across all three data sets , such as 
-- authors comments, ourmain independent variable of the research question. 
-- post weekday 
+This table shows that in addition to post popularity (log(Uniques)), which contributes the most to the engagement increasing exit rates,  there are other significant variables, such as 
+- authors comments, our main independent variable of the research question. 
 - number of comments, measurement of engagement of loyal readers. 
-
-Lets review diagnositcs of this model: 
-
+- blocked.sum
+- post weekday 
+ However, the coefficients for number of comments and number of blocked comments are negligibly small indicating  that their influence is realy, but tiny. Coefficients  for a weekday and author's comments are statistically significant and their estimates are , even though small, are bigger that the other variables. 
+ 
+ ### Now I will use the same independent variables to calculate estimated coefficients based on  three to datasets. The result will allow me to see if difference between models produced based on different training data: 
+ 
 ## 3.4 Diagnostic of linear models:
 ### Residuals vs fitted values
-DV: Exit rate. Diagnostics for the Residuals vs fitted values: 
-
-For the whole data set we can see that the residuals almost equally distributed around 0, with an exception if the higher values of exit rate that seem to pull the line down. 
-However, the graphs for 2021 and 2022 data clearly demonstrate unequal distribution of residuals around predicted values, specifically in 2022: 
 ```{r, echo=T}
-# colnames(merged)
-model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
-model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
-model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
 
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2022)
 par(mfrow = c(2,3))
 plot(model.all, which = 1)
 plot(model.2021, which = 1)
 plot(model.2022, which = 1)
 ```
-
-This suggests that adding quadratic term to the model might increase the fit. 
+WE can see that 2022 dataset produced curved line of residuals, suggesting  that quadratic model might be a better fit for 2022 data.
 
 ### QQ plot
-This plot is testing for normality of residual distribution. 
-Tje graphs below show 
+This plot is testing for normality of residual distribution.
 ```{r, echo=T}
-# colnames(merged)
-model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
-model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
-model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
-
-par(mfrow = c(2,3))
 plot(model.all, which = 2)
-plot(model.2021, which = 2)
+plot(model.2021, which =2)
 plot(model.2022, which = 2)
 ```
-Here we can see that the  points  form a curve instead of straight line for all three data sets, which means that our sample data are skewed.  This will confirm if we plot the Exit rat and author.sum:
+QQ plots showing some deviation from  straight line on the edges, suggesting skewed distribution of residuals from all three models. 
+
 
 ```{r, echo=T}
+plot(model.all, which = 3)
+plot(model.2021, which =3)
+plot(model.2022, which = 3)
+```
+Scale-location of compete dataset, combining 2021 and 2022 showing also some heteroscedasticity in distribution oif the data. Since 2021 and 2022 seem more heteroscedastistic,  this difference in the combined dataset might indicate significant differences betweek 2021 and 2022 data. 
 
+```{r, echo=T}
+plot(model.all, which = 4)
+plot(model.2021, which =4)
+plot(model.2022, which = 4)
+```
+Cooks distance demonstrates some outliers in each dataset.  We can review REsidualsvs Leverage plot to find out if these outliers impact our regression models: 
+```{r, echo=T}
+plot(model.all, which = 5)
+plot(model.2021, which =5)
+plot(model.2022, which = 5)
+```
+
+
+```{r, echo=T}
+plot(model.all, which = 6)
+plot(model.2021, which =6)
+plot(model.2022, which = 6)
+```
+
+
+Since the diagnostic lots suggested non-linearity as the way to improve the model,  I will plot dependent variable against each Iv to see which of them might need to be logged or squared: 
+
+## Plotting DV~IV distributions
+### Authors comments: 
+
+```{r, echo=T}
 library(gridExtra)
 plot1<- ggplot (merged, mapping =aes(y=log(`Exit rate`), x=author.sum))+
   geom_point()+
@@ -846,23 +880,24 @@ plot2<- ggplot(merged, aes(x = as.factor(author.sum), y = log(`Exit rate`))) +
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
-Lets also look at distribution of exit rate per n.comments. Despite this distribution being  skewed, its shape is closer to normal: 
+### Exit rate ~ Number of comments plot : 
+Lets also look at distribution of exit rate per n.comments. 
 ```{r, echo=T}
-
 library(gridExtra)
-plot1<- ggplot (merged, mapping =aes(y=log(`Exit rate`), x=n.comments))+
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+
   geom_point()+
   geom_smooth(method="lm")
-plot2<- ggplot(merged, aes(x = n.comments, y = log(`Exit rate`))) +
+
+plot2<- ggplot(merged, aes(x = n.comments, y = `Exit rate`)) +
   geom_bar(stat = "identity")
 grid.arrange(plot1, plot2, ncol=2)
 ```
+Despite this distribution being  skewed, its shape is closer to normal.
 
-Also., the weekday, another significant variable, is a categorical variable. 
+### Exit rate ~ week day plot :
+Weekday is another significant variable. It is also a categorical variable. 
 
 ```{r, echo=T}
-
-library(gridExtra)
 plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=post.weekday))+
   geom_point()+
   geom_smooth(method="lm")
@@ -871,23 +906,21 @@ plot2<- ggplot(merged, aes(x = post.weekday, y = `Exit rate`)) +
   geom_bar(stat = "identity")
 grid.arrange(plot1, plot2, ncol=2)
 ```
+The plot shows significant difference of exit rate on mondays, consistent with the coefficients of all three models. 
 
-We can see that the exit rate is lowest on Mondays
-Lets plot number of omments and exit rates per dsy of the week. 
+<!-- ```{r, echo=T} -->
+<!--  ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+ -->
+<!--   geom_point()+ -->
+<!--   geom_smooth(method="lm")+facet_wrap(~post.weekday) -->
 
-```{r, echo=T}
- ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+
-  geom_point()+
-  geom_smooth(method="lm")+facet_wrap(~post.weekday)
+<!--  ggplot(merged, aes(x = n.comments, y = `Exit rate`)) + -->
+<!--   geom_bar(stat = "identity") -->
 
- ggplot(merged, aes(x = n.comments, y = `Exit rate`)) +
-  geom_bar(stat = "identity")
-
-```
-It appears that Monday and Tuesday this relationship between number of comments nad exit rate is the most pronounced. 
+<!-- ``` -->
+<!-- It appears that Monday and Tuesday this relationship between number of comments nad exit rate is the most pronounced.  -->
 
 
-As we reviewd distributions of  independent variables  per  Exit rate, we saw that author's comments  are not normally distributed, which contributed to curve in QQ plot. 
+As we reviewd distributions of  independent variables  per  Exit rate, we saw that author's comments  are not normally distributed, which might have contributed to curve in QQ plot. 
 
 ### Scale-Location
 
@@ -904,7 +937,26 @@ plot(model.2022, which = 3)
 ```
  While 
  
- We cn conclude that the  heteroskedasticity of the data
+ We can conclude that the  heteroskedasticity of the data
+ 
+#Modifying data to log(auth.sum) 
+ 
+```{r, echo=T}
+model.6<- lm(`Exit rate` ~ log(Uniques)+ log(author.sum)   +n.comments  +blocked.sum + post.weekday , data = merged)
+# Since lo(0) is not allowe,  I will add a pseudocount ot auth.sum to be able to take log()
+merged <- merged %>%
+  mutate (author.sum = author.sum+0.001)
+
+model.7<-lm(`Exit rate` ~ log(Uniques)+ log(author.sum)   +n.comments  +blocked.sum + post.weekday , data = merged)
+
+model.8 <-  lm(`Exit rate` ~ log(Uniques) +I(author.sum^2)  + I(n.comments^2)  +blocked.sum + post.weekday , data = merged)
+library(stargazer)
+stargazer(model.6, model.7, model.8 , type = 'text')
+
+```
+ 
+ 
+ 
  
  
 # Plotting predicted against  data 
