@@ -12,6 +12,8 @@ format:
 editor: 
   markdown: 
     wrap: 72
+editor_options: 
+  chunk_output_type: console
 ---
 
 ## DACSS 603, spring 2023
@@ -421,7 +423,7 @@ As we saw in the distributions of variables above, all engagement metrics are st
 
 ### 1.3.1. Modeling engagement ~ popularity: 
 Lets review how it is impacting exit rate :
-I will use "Exit rate" s my main engagement  variable, as it reporesents the first engagement chouce that all site users make: to stay on the site or leave. Using log() of popularity is showing a better fitted model: 
+I will use "Exit rate" s my main engagement  variable, as it reporesents the first engagement chiuce that all site users make: to stay on the site or leave. Using log() of popularity is showing a better fitted model: 
 
 ```{r, echo=T}
 ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
@@ -528,7 +530,8 @@ arrange(desc(post_id))
 # Adding number of early comments to merged dataset:
 merged <- merge( merged, early.coms , by = "post_id", all = TRUE)
 
-head(merged )
+# head(merged)
+
 ```
 
 Now, as I calculated number of early comments for all posts, I can see
@@ -545,8 +548,8 @@ plot(merged.2$early.sum, merged.2$google)
 
 
 ```{r, echo=T}
-summary(lm(google ~early.sum, data=merged.2))
-summary(lm(google ~early.sum, data=merged))
+summary(lm(google ~early.sum, data=merged.2)) # for posts with google >10K 
+summary(lm(google ~early.sum, data=merged)) # for all posts 
 ```
 
 We can see significant connection between early comments and google
@@ -599,7 +602,7 @@ summary(lm(log(google) ~early.sum +post.weekday , data=merged.2))
 # table(merged.weekdays$post.weekday)
 
 ggplot (merged, mapping =aes(x=early.sum, y=google, color =post.weekday))+
-  geom_point( ) +
+  geom_point( )+
   geom_smooth(method="lm")+
   labs(title = "All google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
      theme(axis.text.x = element_text(angle = 45, hjust = 1))+
@@ -639,9 +642,9 @@ model to control for popularity
 2.  Also as a result of exploration of engagement metrics, we can
     distinguish two types of users: superficial visitors and loyal
     readers. The main difference is that loyal readers have created
-    accounts and therefore can comment. It is possible that htese two groups of readers  respond differently to popularity increase, as well as other Independent variables. Therefore, the difference in types of readers must be considered when addressing our main hypothesi: whether authors engagement and other factors impacts reader's engagement.
+    accounts and therefore can comment. It is possible that these two groups of readers  respond differently to popularity increase, as well as other Independent variables. Therefore, the difference in types of readers must be considered when addressing our main hypothesi: whether authors engagement and other factors impacts reader's engagement.
     
-3. Early engagement of loyal users through comments might contribute to dramatic changes in post popularity. 
+3. ?? Early engagement of loyal users through comments might contribute to dramatic changes in post popularity. 
 
 
 
@@ -649,10 +652,10 @@ Now, lets consider independent variables of our main hypothesis.
 # 2. Independent variables (IV):
 
 ```{r, echo=T}
-library(stargazer)
-
-
-stargazer()
+# library(stargazer)
+# 
+# 
+# stargazer()
 ```
 
 
@@ -734,7 +737,7 @@ merged.2021 <- merged%>%
   filter(post.date <	"2021-12-01")
 merged.2022 <- merged%>%
   filter(post.date >=	"2021-12-01")
-
+dim(merged.2021)
 ```
 
 
@@ -766,22 +769,93 @@ This shows that loyal readers' engagement is decreasing with popularity only in 
 
 ###  analize change in x1 and x2 to y , considering log() 
 
-## 3.2 Adding other/confounding variables.
+## 3.2 Adding other/confounding variables and splitting  dataset: .
 Now I will add other variables  to see if there is any impact on the results of the model with engagement of both groups of readers. 
-For number of comments,  I would have to select either early.sum  or n.comments, due to high correlation between them
+I am including n.comments in the model, to see if engagement of loyal readers through comments impact overall engagement.  Since early comments, a variable used to explore the connection between engagement and popularity, was derived from n.comments and highly correlate with it,  I will not include it in the model. 
 ```{r, echo=T}
 (cor(merged$early.sum, merged$n.comments))
 ```
-I am including n.comments in the model, to see if engagement of loyal readers through comments impact overall engagement:
+Below is the summary of estimates and p-values  for this model, for three different datasets: all data, 2021 and 2022: 
 
 ```{r, echo=T}
 # colnames(merged)
-summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged))
-```
-Number of comments shows to be significant, negatively impacting overall engagement. Considering our earlier finding, that early comments increase popularity and therefore decrease overall engagement, this is expected. 
-Tuesday as a level of "weekday" variable also shows to significantly decrease engagement. 
+# summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged))
+# summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021))
+# summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022))
 
-Authors engagement and blocked comments seem to increase engagement. 
+
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+library(stargazer)
+stargazer(model.all , model.2021, model.2022, type = 'text')
+```
+
+This table shows that in addition to post popularity (log(Uniques), which contributes the most to the engagement increasing exit rates,  there are other significant variables across all three data sets , such as 
+- authors comments, ourmain independent variable of the research question. 
+- post weekday 
+- number of comments, measurement of engagement of loyal readers. 
+
+Lets review diagnositcs of this model: 
+
+## 3.4 Diagnostic of linear models:
+### Residuals vs fitted values
+DV: Exit rate. Diagnostics for the Residuals vs fitted values: 
+
+For the whole data set we can see that the residuals almost equally distributed around 0, with an exception if the higher values of exit rate that seem to pull the line down. 
+However, the graphs for 2021 and 2022 data clearly demonstrate unequal distribution of residuals around predicted values, specifically in 2022: 
+```{r, echo=T}
+# colnames(merged)
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+par(mfrow = c(2,3))
+plot(model.all, which = 1)
+plot(model.2021, which = 1)
+plot(model.2022, which = 1)
+```
+
+This suggests that adding quadratic term to the model might increase the fit. 
+
+### QQ plot
+This plot is testing for normality of residual distribution. 
+Tje graphs below show 
+```{r, echo=T}
+# colnames(merged)
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+par(mfrow = c(2,3))
+plot(model.all, which = 2)
+plot(model.2021, which = 2)
+plot(model.2022, which = 2)
+```
+Here we can see that the  points  form a curve instead of straight line for all three datasets, which means that our sample data are skewed.  This will confirm if we plot the Exit rat and author.sum:
+
+# HEREto plot  the distribution of our data, 
+```{r, echo=T}
+
+library(gridExtra)
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=author.sum))+
+  geom_point()+
+  geom_smooth(method="lm")
+plot2<- ggplot(merged, aes(x = as.factor(author.sum), y = `Exit rate`)) +
+  geom_bar(stat = "identity")
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+
+
+
+
+
+
+
+
+# N.comments :
 
 ```{r, echo=T}
 summary(lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum +post.weekday, data = merged))
@@ -797,14 +871,14 @@ suggests that there are other factors impacting loyal reader's engagement that a
 ## 3.3 Using different datasets for comparing: 
 
 ### Exit rate  for 2021 and 2022+:
+Exit rate (engagement) still correlates with popularity of the site or bot 2021 and 2021,confirming the same finding from un-splitted data set earlier. 
+However, author's comments appear only be relevant to all user's engagement in 2022, and not in 2021. Mood of the post appears  significant for user's engagement only in 2021, and blocked comments only appear significant in 2022. 
 
 ```{r, echo=T}
 # colnames(merged)
-summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021))
-summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022))
-```
-Exit rate (engagement) still correlates with popularity of the site or bot 2021 and 2021,confirming the same finding from un-splitted data set earlier. 
-However, author's comments appear only be relevant to all user's engagement in 2022, and not in 2021. Mood of the post appears  significant for user's engagement only in 2021, and blocked comments only appear significant in 2022. 
+
+
+
 
 
 
@@ -815,28 +889,56 @@ summary(lm(n.comments ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ po
 ```
 None of the variables show significance for loyal user's engagement(comments) in 2021, except Monday. However, loyal users are significantly influenced by popularity, mood of the post and blocked comments  and Monday in 2022. 
 
-## 3.4 Diagnostic of models:
 
-DV: Exit rate. Diagnostics for the whole dataset:
+
+
+## adding x 2 
 ```{r, echo=T}
-# colnames(merged)
-model.ex.r<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum +n.comments, data = merged)
+# test 
+merged<-merged%>%
+  mutate (n.comments2 =n.comments^2 )
+
+
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum +blocked.sum +n.comments2 + n.comments2* author.sum, data = merged))
+
+
+moodel.sq<- lm(`Exit rate` ~ log(Uniques)+ author.sum +blocked.sum +n.comments2 + n.comments2* author.sum, data = merged)
 par(mfrow = c(2,3))
-plot(model.ex.r, which = 1:6)
+plot(moodel.sq, which = 1:6)
+
+
+# ggplot(merged, aes(x = author.sum, y = `Exit rate`)) +
+#   
+#   geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 2)) +
+#   labs(title = "Exit Rate vs. Log(Uniques) and Other Variables",
+#        x = "author.sum",
+#        y = "Exit Rate"
+#        ) +
+#   scale_color_gradient(low = "blue", high = "red")
+
+# same for split data : 
+
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum +blocked.sum +n.comments2 + n.comments2* author.sum, data = merged.2021))
+moodel.sq.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum +blocked.sum +n.comments2 + n.comments2* author.sum, data = merged.2021)
+par(mfrow = c(2,3))
+plot(moodel.sq.2021, which = 1:6)
+
+# merged.2022<-merged.2022%>%
+#       filter(google<10000)  
+dim(merged.2022)
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum +blocked.sum +n.comments2 + n.comments2* author.sum, data = merged.2022))
+moodel.sq.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum +blocked.sum +n.comments2 + n.comments2* author.sum, data = merged.2022)
+par(mfrow = c(2,3))
+plot(moodel.sq.2022, which = 1:6)
+
+
+
+
 ```
 
-DV: Exit rate. Diagnostics for split data(2021 and 2022+). 
-```{r, echo=T}
 
-ex.r.2021 <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2021)
-ex.r.2022 <-lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum, data = merged.2022)
-par(mfrow = c(2,3))
-plot(ex.r.2021, which = 1:6)
-par(mfrow = c(2,3))
-plot(ex.r.2022, which = 1:6)
-```
 
-DV: number of comments. Diagnostics for the whole dataset:
+## DV: number of comments. Diagnostics 
 ```{r, echo=T}
 model.n.com<- lm(n.comments ~ log(Uniques) + author.sum + pct.positive +blocked.sum, data = merged)
 par(mfrow = c(2,3))
@@ -853,6 +955,14 @@ plot(n.com.2021, which = 1:6)
 par(mfrow = c(2,3))
 plot(n.com.2022, which = 1:6)
 ```
+
+
+
+
+
+
+
+
 
 
 # 4. Conlusion
