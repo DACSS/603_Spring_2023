@@ -10,6 +10,9 @@ format:
     code-copy: true
     code-tools: true
 ---
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
 
 ```{r reading in data}
 
@@ -17,10 +20,6 @@ format:
 jobs_gender <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/jobs_gender.csv")
 earnings_female <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/earnings_female.csv") 
 employed_gender <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-03-05/employed_gender.csv") 
-
-#View(employed_gender)
-#View(jobs_gender)
-#View(earnings_female)
 
 #bringing in libraries
 library(dplyr)
@@ -288,3 +287,203 @@ When comparing the top 10 minor occupation categories that are on average more d
 (10) Life, Physical, and Social Science
 
 Further analysis is necessary to know if female dominated occupation categories is a statistically significant factor that contributes to the wage gap.
+
+### Analysis
+
+For the analysis, the first independent variable investigated was whether gender domination in an occupation has a relationship to the female percent of male earnings. We hypothesized that the wage gap is in male dominated occupations, therefore the feamle percent of male earnings would be lower in those occupations. We looked at this in two different ways. 
+
+First, a new variable was created, **gender_dominatedV**. For occupations with 50.1% or higher of females this variable was coded as "0", for occupations made up of 50% or lower of females this variable was coded as "1". 
+
+```{r new categorical variable- binary}
+#Using minor_category and percent_female variables to create a new variable of "female dominated" vs. "male dominated"
+
+#gender_dominated<-data_frame(jobs_gender$occupation, jobs_gender$percent_female)
+
+#head(jobs_gender)
+kable(gender_dominated[order(gender_dominated$`jobs_gender$percent_female`, gender_dominated$`jobs_gender$occupation`, decreasing = TRUE),])
+
+
+jobs_gender<-jobs_gender%>%
+  mutate(gender_dominatedV = case_when(percent_female >=50.1 ~ 0,
+                                       percent_female <=50 ~ 1))
+#head(jobs_gender)
+```
+#### Relationship Between Occupation and Wage Gap
+
+In the two visualizations below, we can see that there is a negative relationship between male dominated occupations and percent of male earnings. This means, women make less of a percent of their male colleagues in male dominated fields, than women working in female dominated fields. The second visualization is taking a different perspective, looking at the percent of women in the field, and the percent of male earnings. Here we can see a positive relationship, again communicating that as the amount of women in an occupation increase (in proportion to men), their percent of male earnings increases. 
+
+```{r relationship between occupation and wage gap}
+
+ggplot(data = jobs_gender, aes(x = wage_percent_of_male, y = gender_dominatedV)) + 
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+
+ggplot(data = jobs_gender, aes(x = wage_percent_of_male, y = percent_female)) + 
+  geom_point() +
+  geom_smooth(method = 'lm', se=F)
+```
+
+To know if this relationship is significant, a regression analysis was run. Missing data were considered in this analysis. The variable with a large amount of missing data was **wage_percent_of_male**, these data were missing due to small sample size for the occupations. Therefore, these missing data was found to be "missing not at random". The regression dropped the missing data, however this could bias the data as it does not include the entire data-set's set of occupations.  
+
+```{r missing data}
+summary(jobs_gender)
+summary(earnings_female)
+summary(employed_gender)
+
+```
+
+```{r regression occupation and wage gap}
+
+summary(GenDomReg<-lm(wage_percent_of_male ~ gender_dominatedV, data = jobs_gender))
+
+summary(GenDomReg2<-lm(wage_percent_of_male ~ percent_female, data = jobs_gender))
+
+```
+
+According to the regressions above, we can conlcude that there is a significant relationship between female percent of male earnings and percent of women in the occupation. That is, the more women in a field, the smaller the wage gap. 
+
+In the first regression, we compared our binary variable to the female percent of male earnings to find a significant, negative relationship. This analysis resulted in a p value of 0.00153 and an adjusted R-squared of 0.00727. From this we can conclude that in male dominated fields, women make less percent of male earnings than in the female dominated fields. 
+
+In the second regression, we compared percent of women in an occupation with female percent of male earnings and found a significant positive relationship. The analysis resulted in a p value of 8.27e-05 and an adjusted R-squared of 0.01163. From this we can gather that as percent of women in an occupation increase, women begin to make more percent of male earnings than women in male dominated fields. 
+
+A third regression was run in order to control for total earnings and total workers. We decided to use the percent of women variable rather than the binary variable because that yeilded a stronger relationship to percent of earnings. 
+
+```{r occupation and wage regression 2}
+
+summary(GenDomReg3<-lm(wage_percent_of_male ~ percent_female + total_earnings + total_workers, data = jobs_gender))
+
+```
+These regression results maintain the significant relationship between percent of women in an occupation and their percent of male earnings. However, the significant level decreases (p value of 0.00129), whereas the adjust R-squared increases (0.02039). This means that we have a stronger model as a whole, however the relationship between our IV and DV has lost strength. 
+
+From these regressions we can conclude that the wage gap is statistically significantly greater for women in male-dominated occupations, than it is for women in female-dominated occupations. 
+
+#### Relationship Between Age and Wage Gap
+
+The visualization below shows the relationship between our second independent variable of age group and our dependent variable of female wage percent of male. This visualization tells us that starting at age 25, womens' percent of mens' earnings already starts to decrease, with a significant drop at age 35. The literature believes this to be true due to women beginning to have children (Kochhar, 2023). The literature has found that women with children on average get paid less than women without children, and men with children on average get paid more than men without children (Kochhar, 2023). It is theorized that this is due to an implicit bias that men are expected to provide for their family, where women are expected to be the primary child care provider. 
+
+```{r relationship between age and wage gap}
+
+earnings_female %>%
+  filter(!str_detect(group, "Total, 16 years and older"))%>%
+  ggplot(aes(x = group, y = percent)) + 
+  geom_boxplot() +
+  geom_smooth(method = 'lm', se=F)
+
+```
+
+An Analysis of Variance (ANOVA) was run to investigate the relationship between age group and female earnings percent of male, controlling for year. 
+
+```{r ANOVA}
+summary(AgeANOVA<-aov(percent~group + Year, data = earnings_female))
+
+```
+The results of the ANOVA show a significant relationship between the age groups with a p value of <2e-16. 
+
+A Tukey posthoc analysis was then used to breakdown where the significant differences exited. 
+
+```{r Tukey HSD}
+TukeyHSD(AgeANOVA, conf.level = .95)
+
+```
+
+The results of the Tukey show similar results to the boxplot visualization above. When younger women (age groups 16-19 years old) are compared to women 25 years or older, there is a significant difference in percent of male earnings (p value of 0.0000). That is to say, once a women turns 25, she is already getting paid significantly less than her own gender at ages 16-24. What is also shown from the results of this analysis is with every age group jump, a woman makes significantly less than the age group before (p value 0.000) until a woman reaches 55 years old. There is not a significant difference between female earnings for women in the 45 - 54 and 55-64 age groups. Then women a woman turns 65+ she is actually making significantly more than the women in age group before her, yet she is still making an average of about 73% of her male peers. 
+
+### Conclusions
+
+From this analysis we can conlude that there is a signification relationship between both occupation and wage gap as well as age and wage gap. The resulst showed that as the percent of women in an occupation increase, the percent of male earnings also increased. This means that women in female-dominated fields experience a small wage gap than those in male-dominated fields. That said, women in female-dominated fields get paid less on average than women in male-dominated fields. 
+
+We can also conclude that as a woman gets older, she gets paid less percent of male earnings. With every age group jump, a woman made a significantly lower percent of male earnings than the prior age group. 
+
+### Limitations
+
+This investigation had hoped to analyze the interaction between the two independent variables (age and occupation), however the occupation data ranged from 2011 to 2013 and the age data ranged from 1979 to 2011. Therefore, we were unable to look at the interaction between age and occupation, which tells us only a portion of the influence of our independent variables on wage gap. 
+
+### Bibliography
+```{R Citations}
+#citation("readr")
+#citation("ggplot2")
+#citation("tidyverse")
+#citation("stringr")
+#citation("dplyr")
+#citation("vtable")
+````
+
+Aragão, C., 2023. Gender pay gap in U.S. hasn’t changed much in two decades, Pew Research Center. United States of America. Retrieved from https://policycommons.net/artifacts/3456468/gender-pay-gap-in-us/4256843/ on 29 Apr 2023. CID: 20.500.12592/8mzrnq.
+
+Blau, F. D., & Kahn, L. M. (2017). The gender wage gap: Extent, trends, and explanations. Journal of economic literature, 55(3), 789-865.
+
+H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
+Huntington-Klein N (2023). _vtable: Variable Table for Variable Documentation_. R package version 1.4.2,
+  <https://CRAN.R-project.org/package=vtable>.
+  
+Kochhar, R. (2023). The enduring grip of the gender pay gap.
+
+Thomas Mock (2022). Tidy Tuesday: A weekly data project aimed at the R ecosystem. https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-03-05
+  
+Wickham H (2022). _stringr: Simple, Consistent Wrappers for Common String Operations_. R package version 1.5.0,
+  <https://CRAN.R-project.org/package=stringr>.
+
+Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL,
+  Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H
+  (2019). “Welcome to the tidyverse.” _Journal of Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686
+  <https://doi.org/10.21105/joss.01686>.
+  
+Wickham H, François R, Henry L, Müller K, Vaughan D (2023). _dplyr: A Grammar of Data Manipulation_. R package version 1.1.0,
+  <https://CRAN.R-project.org/package=dplyr>.
+  
+Wickham H, Hester J, Bryan J (2023). _readr: Read Rectangular Text Data_. R package version 2.1.4,
+  <https://CRAN.R-project.org/package=readr>.
+  
+Wrohlich, K. (2017). Gender pay gap varies greatly by occupation. DIW Economic Bulletin, 7(43), 429-435.
+
+  
+
+
+
+
+
+
+```{r extra code}
+
+#relationship between occupation and wage gap
+
+#jobs_gender%>%
+ # group_by(gender_dominatedV)%>%
+  #summarise(average_total_earnings=mean(total_earnings))%>%
+  #ggplot(aes(gender_dominatedV, average_total_earnings)) +
+  #geom_col(aes(fill = gender_dominatedV)) +
+  #geom_text(aes(y=average_total_earnings, 
+                #label=sprintf("%0.2f", round(average_total_earnings, digits = 2))))
+
+#jobs_gender%>%
+  #group_by(gender_dominatedV)%>%
+  #summarise(average_wage_percent_of_male=mean(wage_percent_of_male))%>%
+  #ggplot(aes(gender_dominatedV, average_wage_percent_of_male)) +
+  #geom_col(aes(fill = gender_dominatedV)) +
+  #geom_text(aes(y=average_wage_percent_of_male, 
+                #label=sprintf("%0.2f", round(average_wage_percent_of_male, digits = 2))))
+
+
+#gender_dominated2 <- data_frame(jobs_gender$occupation, jobs_gender$gender_dominatedV)
+
+#interaction between IVs
+#earnings_female2 <- earnings_female%>%
+ # pivot_wider(names_from = group, values_from = percent)%>%
+  #rename("year" = "Year")
+
+#head(earnings_female2)
+#view(earnings_female2)
+
+#Age_OccupationType <- merge(earnings_female2, employed_gender, by.x ="year")
+
+#view(jobs_gender)
+#view(employed_gender)
+
+#head(employed_gender)
+
+#head(Age_Occupation)
+#view(Age_Occupation)
+
+
+```
