@@ -833,27 +833,169 @@ plot(model.all, which = 2)
 plot(model.2021, which = 2)
 plot(model.2022, which = 2)
 ```
-Here we can see that the  points  form a curve instead of straight line for all three datasets, which means that our sample data are skewed.  This will confirm if we plot the Exit rat and author.sum:
+Here we can see that the  points  form a curve instead of straight line for all three data sets, which means that our sample data are skewed.  This will confirm if we plot the Exit rat and author.sum:
 
-# HEREto plot  the distribution of our data, 
 ```{r, echo=T}
 
 library(gridExtra)
-plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=author.sum))+
+plot1<- ggplot (merged, mapping =aes(y=log(`Exit rate`), x=author.sum))+
   geom_point()+
   geom_smooth(method="lm")
-plot2<- ggplot(merged, aes(x = as.factor(author.sum), y = `Exit rate`)) +
+plot2<- ggplot(merged, aes(x = as.factor(author.sum), y = log(`Exit rate`))) +
   geom_bar(stat = "identity")
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
+Lets also look at distribution of exit rate per n.comments. Despite this distribution being  skewed, its shape is closer to normal: 
+```{r, echo=T}
+
+library(gridExtra)
+plot1<- ggplot (merged, mapping =aes(y=log(`Exit rate`), x=n.comments))+
+  geom_point()+
+  geom_smooth(method="lm")
+plot2<- ggplot(merged, aes(x = n.comments, y = log(`Exit rate`))) +
+  geom_bar(stat = "identity")
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+Also., the weekday, another significant variable, is a categorical variable. 
+
+```{r, echo=T}
+
+library(gridExtra)
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=post.weekday))+
+  geom_point()+
+  geom_smooth(method="lm")
+
+plot2<- ggplot(merged, aes(x = post.weekday, y = `Exit rate`)) +
+  geom_bar(stat = "identity")
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+We can see that the exit rate is lowest on Mondays
+Lets plot number of omments and exit rates per dsy of the week. 
+
+```{r, echo=T}
+ ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+
+  geom_point()+
+  geom_smooth(method="lm")+facet_wrap(~post.weekday)
+
+ ggplot(merged, aes(x = n.comments, y = `Exit rate`)) +
+  geom_bar(stat = "identity")
+
+```
+It appears that Monday and Tuesday this relationship between number of comments nad exit rate is the most pronounced. 
+
+
+As we reviewd distributions of  independent variables  per  Exit rate, we saw that author's comments  are not normally distributed, which contributed to curve in QQ plot. 
+
+### Scale-Location
+
+```{r, echo=T}
+# colnames(merged)
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+par(mfrow = c(2,3))
+plot(model.all, which = 3)
+plot(model.2021, which = 3)
+plot(model.2022, which = 3)
+```
+ While 
+ 
+ We cn conclude that the  heteroskedasticity of the data
+ 
+ 
+# Plotting predicted against  data 
+```{r, echo=T}
+# colnames(merged)
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+
+
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+
+merged.pred1 <- merged%>%
+mutate (predicted = predict(model.all))
+
+plot.all<-ggplot (merged.pred1, mapping =aes(y=`Exit rate`, x=predicted))+
+  geom_point()+
+  geom_abline(slope = 1, intercept = 0)+
+  labs(title="for alldata")
+
+## 2021 test 
+merged.pred2021 <- merged.2021%>%
+      mutate (predicted.y = predict(model.all,newdata = merged.pred2021))
+
+
+merged.2021 <- merged.2021 %>%
+  mutate (predicted.y = predict(model.all))
+dim(merged.2021)
+
+
+plot.2021<-ggplot (merged.pred2021 , mapping =aes(y=`Exit rate`, x=predicted)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0)+
+  labs(title="for 2021")
+
+## 2022 test 
+merged.pred2022 <- merged%>%
+mutate (predicted = predict(model.all))
+
+plot.2022<-ggplot (merged.2022, mapping =aes(y=`Exit rate`, x=predicted)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0)+
+  labs(title="for 2022")
+
+
+grid.arrange(plot.all, plot.2021,plot.2022,  ncol=3)
 
 
 
+```
+ test 
+
+```{r, echo=T}
+# colnames(merged)
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+
+merged.pred1 <- merged%>%
+mutate (predicted = predict(model.all))
+
+plot.all<-ggplot (merged.pred1, mapping =aes(y=`Exit rate`, x=predicted))+
+  geom_point()+
+  geom_abline(slope = 1, intercept = 0)+
+  labs(title="for alldata")
+
+## 2021 test 
+merged.pred2021 <- merged%>%
+        mutate (predicted = predict(model.2021))
+
+plot.2021<-ggplot (merged.pred2021, mapping =aes(y=`Exit rate`, x=predicted)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0)+
+  labs(title="for 2021")
+
+## 2022 test 
+merged.pred2022 <- merged%>%
+mutate (predicted = predict(model.2022))
+
+plot.2022<-ggplot (merged.pred2022, mapping =aes(y=`Exit rate`, x=predicted)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0)+
+  labs(title="for 2022")
+
+
+grid.arrange(plot.all, plot.2021,plot.2022,  ncol=3)
 
 
 
-
+```
 
 # N.comments :
 
