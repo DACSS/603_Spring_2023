@@ -87,6 +87,8 @@ library(readxl)
 library(dplyr)
 library(ggplot2)
 library(tidyverse)
+library(png)
+library(grid)
 ```
 
 ### Data source and description. 
@@ -401,25 +403,25 @@ Since we noticed a pattern in distribution of describbed variables, lets find ou
 ```{r, echo=T}
 pairs(subset (merged, select=c(Uniques, `Exit rate`, uniques.ratio, visits.ratio, reactions.ratio )))
 
-
 ```
 
 This graph showing that  popularity is  strongly correlated with all engagement metrics, such as Exit rate, uniques ratio, visit ratio and reaction's ratio, where an increase in popularity causes decrease of engagement across all 4 metrics for engagement.
 
 We can also see that the relationship between Popularity and engagement rate are curvi-linear. If we log the values, we will see linear relationship: 
 ```{r, echo=T}
+
 pairs(subset (merged, select=c(log(Uniques), log(`Exit rate`), uniques.ratio, visits.ratio, reactions.ratio )))
-# WHT DOES THE GRAPH SHOWS POST.DATE and POST.DATE1  INSTEAD OF "UNIQUES" and  "Exit rate"? 
+# WHy DOES THE GRAPH SHOW POST.DATE and POST.DATE1  INSTEAD OF "UNIQUES" and  "Exit rate"? 
 ```
 
 
-As we saw in the distributions of variables above, all engagement metrics are strongly correlate with each other the popularity metric. 
+As we saw in the distributions of variables above, all engagement metrics are strongly correlate with each other and negatively correlate with the popularity metric. 
 
 
 
 ### 1.3.1. Modeling engagement ~ popularity: 
 Lets review how it is impacting exit rate :
-I will use "Exit rate" s my main engagement  variable, as it reporesents the first engagement chouce that all site users make: to stay on the site or leave. Using log() of popularity is shoing a better fitted model: 
+I will use "Exit rate" s my main engagement  variable, as it reporesents the first engagement chouce that all site users make: to stay on the site or leave. Using log() of popularity is showing a better fitted model: 
 
 ```{r, echo=T}
 ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
@@ -578,7 +580,7 @@ arrange(desc(post_id))
 
 # Adding number of early comments to merged dataset:
 merged <- merge( merged, weekdays , by = "post_id", all = TRUE)
-colnames(merged)
+# colnames(merged)
 
 # levels(merged$post.weekday)
 ```
@@ -590,7 +592,7 @@ colnames(merged)
 merged.2<-merged %>%
   filter(google>10000)
 
- plot(merged$post.weekday, merged$google)
+ # plot(merged$post.weekday, merged$google)
 
 summary(lm(log(google) ~early.sum +post.weekday , data=merged.2))
 
@@ -853,18 +855,6 @@ plot(n.com.2022, which = 1:6)
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # 4. Conlusion
 
 This study explored the connection between user's online engagement and bolg's author engagement.  To do so, we
@@ -872,14 +862,17 @@ This study explored the connection between user's online engagement and bolg's a
 2) compared year 2021 and 2022 and found difference in relationships between DV and IV variables. 
 3)Found that author's engagement does impact users engagement, but mostly in 2022 and towards all viewers and less through  loyal readers. 
 
-
 ```{r, echo=T}
-knitr::include_graphics("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP diagram .png")
+# knitr::include_graphics("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP_diagram.png")
+
+
+img <- readPNG("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP_diagram.png")
+grid.raster(img)
 ```
 
 The results showed that the post popularity is the major factor for online engagement and that more popular posts tend to be less engaging.    
 
-We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement. .  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers. 
+We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement.  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers. 
 
 
 
