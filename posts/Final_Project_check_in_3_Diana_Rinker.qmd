@@ -814,7 +814,7 @@ This table shows that in addition to post popularity (log(Uniques)), which contr
  
  ### Now I will use the same independent variables to calculate estimated coefficients based on  three to datasets. The result will allow me to see if difference between models produced based on different training data: 
  
-## 3.4 Diagnostic of linear models:
+## 3.3 Diagnostic of linear models:
 ### Residuals vs fitted values
 ```{r, echo=T}
 
@@ -837,27 +837,28 @@ plot(model.2022, which = 2)
 ```
 QQ plots showing some deviation from  straight line on the edges, suggesting skewed distribution of residuals from all three models. 
 
-
+### Scale-Location
 ```{r, echo=T}
 plot(model.all, which = 3)
 plot(model.2021, which =3)
 plot(model.2022, which = 3)
 ```
 Scale-location of compete dataset, combining 2021 and 2022 showing also some heteroscedasticity in distribution oif the data. Since 2021 and 2022 seem more heteroscedastistic,  this difference in the combined dataset might indicate significant differences betweek 2021 and 2022 data. 
-
+### Cooks distance 
 ```{r, echo=T}
 plot(model.all, which = 4)
 plot(model.2021, which =4)
 plot(model.2022, which = 4)
 ```
 Cooks distance demonstrates some outliers in each dataset.  We can review REsidualsvs Leverage plot to find out if these outliers impact our regression models: 
+### Residuals vs leverage
 ```{r, echo=T}
 plot(model.all, which = 5)
 plot(model.2021, which =5)
 plot(model.2022, which = 5)
 ```
 
-
+### Cooks distance vs Leverage
 ```{r, echo=T}
 plot(model.all, which = 6)
 plot(model.2021, which =6)
@@ -883,16 +884,16 @@ grid.arrange(plot1, plot2, ncol=2)
 ### Exit rate ~ Number of comments plot : 
 Lets also look at distribution of exit rate per n.comments. 
 ```{r, echo=T}
-library(gridExtra)
 plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+
   geom_point()+
   geom_smooth(method="lm")
 
 plot2<- ggplot(merged, aes(x = n.comments, y = `Exit rate`)) +
   geom_bar(stat = "identity")
+
 grid.arrange(plot1, plot2, ncol=2)
 ```
-Despite this distribution being  skewed, its shape is closer to normal.
+Despite this distribution being  skewed, its shape is close to normal.
 
 ### Exit rate ~ week day plot :
 Weekday is another significant variable. It is also a categorical variable. 
@@ -922,7 +923,7 @@ The plot shows significant difference of exit rate on mondays, consistent with t
 
 As we reviewd distributions of  independent variables  per  Exit rate, we saw that author's comments  are not normally distributed, which might have contributed to curve in QQ plot. 
 
-### Scale-Location
+### why is this here ? Scale-Location
 
 ```{r, echo=T}
 # colnames(merged)
@@ -939,115 +940,267 @@ plot(model.2022, which = 3)
  
  We can conclude that the  heteroskedasticity of the data
  
-#Modifying data to log(auth.sum) 
+# Modifying auth.sum to address variability of residuals:  
  
 ```{r, echo=T}
-model.6<- lm(`Exit rate` ~ log(Uniques)+ log(author.sum)   +n.comments  +blocked.sum + post.weekday , data = merged)
+merged <- merged %>%
+  mutate (author.sum = author.sum+0.001)
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged)
 # Since lo(0) is not allowe,  I will add a pseudocount ot auth.sum to be able to take log()
 merged <- merged %>%
   mutate (author.sum = author.sum+0.001)
-
 model.7<-lm(`Exit rate` ~ log(Uniques)+ log(author.sum)   +n.comments  +blocked.sum + post.weekday , data = merged)
-
-model.8 <-  lm(`Exit rate` ~ log(Uniques) +I(author.sum^2)  + I(n.comments^2)  +blocked.sum + post.weekday , data = merged)
+model.8 <-  lm(`Exit rate` ~ log(Uniques) +I(author.sum^2)  + n.comments  +blocked.sum + post.weekday , data = merged)
 library(stargazer)
 stargazer(model.6, model.7, model.8 , type = 'text')
-
 ```
+Despite our suggestion that logging or squaring of author'sum might lead to a better model, leaving this variable as is produces better result.  
+ I will now see if  that changes if we create a model from a subsets of our data : 2021 and 2022:
  
- 
- 
- 
- 
-# Plotting predicted against  data 
 ```{r, echo=T}
-# colnames(merged)
-model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
 
 
-model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
-model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+model.6<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged)
+model.6.5<-lm(`Exit rate` ~ log(Uniques)+ I(author.sum^2)    +n.comments  +blocked.sum + post.weekday , data = merged)
+model.7<- lm(`Exit rate` ~ log(Uniques)+ author.sum +n.comments  +blocked.sum + post.weekday , data = merged.2021)
+model.8<- lm(`Exit rate` ~ log(Uniques)+ I(author.sum^2) +n.comments  +blocked.sum + post.weekday , data = merged.2021)
+model.9<- lm(`Exit rate` ~ log(Uniques)+ author.sum +n.comments  +blocked.sum + post.weekday , data = merged.2022)
+model.10<- lm(`Exit rate` ~ log(Uniques)+ I(author.sum^2) +n.comments  +blocked.sum + post.weekday , data = merged.2022)  
 
-
-merged.pred1 <- merged%>%
-mutate (predicted = predict(model.all))
-
-plot.all<-ggplot (merged.pred1, mapping =aes(y=`Exit rate`, x=predicted))+
-  geom_point()+
-  geom_abline(slope = 1, intercept = 0)+
-  labs(title="for alldata")
-
-## 2021 test 
-merged.pred2021 <- merged.2021%>%
-      mutate (predicted.y = predict(model.all,newdata = merged.pred2021))
-
-
-merged.2021 <- merged.2021 %>%
-  mutate (predicted.y = predict(model.all))
-dim(merged.2021)
-
-
-plot.2021<-ggplot (merged.pred2021 , mapping =aes(y=`Exit rate`, x=predicted)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0)+
-  labs(title="for 2021")
-
-## 2022 test 
-merged.pred2022 <- merged%>%
-mutate (predicted = predict(model.all))
-
-plot.2022<-ggplot (merged.2022, mapping =aes(y=`Exit rate`, x=predicted)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0)+
-  labs(title="for 2022")
-
-
-grid.arrange(plot.all, plot.2021,plot.2022,  ncol=3)
-
-
-
+library(stargazer)
+stargazer(model.6,model.6.5,  model.7, model.8,model.9, model.10,type = 'text')
 ```
- test 
+ 
+### Re-checling diagnostics : 
+Residuals vs fitted values for squared models.
+
+For model based on all data, non-squared and squared author comments in the model: 
+```{r, echo=T}
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2022)
+par(mfrow = c(3,2))
+plot(model.6, which = 1)
+plot(model.6.5, which = 1)
+```
+For 2021 : non-squared and squared author comments in the model: 
+```{r, echo=T}
+plot(model.7, which = 1)
+plot(model.8, which = 1)
+```
+For 2022 : non-squared and squared author comments in the model 
+```{r, echo=T}
+
+plot(model.9, which = 1)
+plot(model.10, which = 1)
+```
+ 
+From the plots above we can conclude that using Author comments's squared value did not impact fit of the model and the issue with variability of residuals persisted.  I conclude that this curve is caused by another variable, and not authors comments. 
+ 
+ 
+ 
+# Modifying n.comments to address variability of residuals:  
+ Since the residuals issue only pertains to models derived from 2022 data,  I will test three mdocifications of the model on the same 2022 dataset: 
+```{r, echo=T}
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged.2022)
+
+model.7<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +I(n.comments^2)  +blocked.sum + post.weekday , data = merged.2022)
+model.8<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +log(n.comments)  +blocked.sum + post.weekday , data = merged.2022)
+
+library(stargazer)
+stargazer(model.6, model.7,model.8, type = 'text')
+```
+ 
+### Residuals vs fitted values for squared models 
+normal, log and squareds for 2022 data models: 
+```{r, echo=T}
+par(mfrow = c(3,3))
+plot(model.6, which = 1)
+plot(model.7, which = 1)
+plot(model.8, which = 1)
+```
+Here we can see the residual issue is still curved and modification of n.comments variable did not address the issue. 
+
+
+
+
+# adding google variable: 
+since we saw before that google variable strongly stands out for 2022 datase, I willadd it to see how much it impoves the model and residuals variability. 
 
 ```{r, echo=T}
-# colnames(merged)
-model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
-model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
-model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google , data = merged.2022)
 
+model.7<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday+log(google) , data = merged.2022)
+model.8<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + I(google^2), data = merged.2022)
 
-merged.pred1 <- merged%>%
-mutate (predicted = predict(model.all))
+library(stargazer)
+stargazer(model.6, model.7,model.8, type = 'text')
+```
+Here we see that google appears as a significant independent variable. The model with  IV as log(google) demonstrates the best fit. 
 
-plot.all<-ggplot (merged.pred1, mapping =aes(y=`Exit rate`, x=predicted))+
-  geom_point()+
-  geom_abline(slope = 1, intercept = 0)+
-  labs(title="for alldata")
+Diagnostocs: 
+```{r, echo=T}
+par(mfrow = c(3,1))
+plot(model.6, which = 1)
+plot(model.7, which = 1)
+plot(model.8, which = 1)
+```
+ It also significantly i,mproved the issue with residuals variability
 
-## 2021 test 
-merged.pred2021 <- merged%>%
-        mutate (predicted = predict(model.2021))
+Next, I will plot google variable against DV: 
+```{r, echo=T}
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=google))+
+  geom_point()
 
-plot.2021<-ggplot (merged.pred2021, mapping =aes(y=`Exit rate`, x=predicted)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0)+
-  labs(title="for 2021")
+plot2<- ggplot (merged, mapping =aes(y=`Exit rate`, x=I(google^2)))+
+  geom_point()
 
-## 2022 test 
-merged.pred2022 <- merged%>%
-mutate (predicted = predict(model.2022))
+plot3<-ggplot (merged, mapping =aes(y=`Exit rate`, x=log(google)))+
+  geom_point()
 
-plot.2022<-ggplot (merged.pred2022, mapping =aes(y=`Exit rate`, x=predicted)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0)+
-  labs(title="for 2022")
+grid.arrange(plot1, plot2,plot3, ncol=2)
+```
+This shows that  a percent increase of google referrals correspond with decrease of engagement. 
+I will add the rest of referral sources as Independent variables to my model, to see if that improves the fit and resolves residuals issue: 
 
+google ="Search + amp referral visits",
+direct ="Direct (non-email) referral visits",
+other.web = "Other website referral visits",
+social= "Social referral visits",
+bdc= "BDC referral visits",
+ll= "Visits when post was on LL HP" )
 
-grid.arrange(plot.all, plot.2021,plot.2022,  ncol=3)
+# Other referral sources
+```{r, echo=T}
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct  , data = merged.2022)
+model.7<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web , data = merged.2022)
+model.8<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web +social, data = merged.2022)
+model.9<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web +social +bdc , data = merged.2022)
+model.10<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web +social +bdc +ll, data = merged.2022)
 
-
+library(stargazer)
+stargazer(model.6, model.7,model.8, model.9,model.10,  type = 'text')
 
 ```
+
+
+Now I will plot  distribution of exit rates per referrals: 
+```{r, echo=T}
+plot.6<- ggplot (merged, mapping =aes(y=`Exit rate`, x=google))+
+  geom_point()+
+  labs(title="Google")
+
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=direct))+
+  geom_point()+
+  labs(title="Direct")
+
+plot2<- ggplot (merged, mapping =aes(y=`Exit rate`, x=other.web))+
+  geom_point()+
+  labs(title="Other web")
+
+plot3<-ggplot (merged, mapping =aes(y=`Exit rate`, x=social))+
+  geom_point()+
+  labs(title="Social")
+
+plot4<-ggplot (merged, mapping =aes(y=`Exit rate`, x=bdc))+
+  geom_point()+
+  labs(title="BDC")
+
+plot5<-ggplot (merged, mapping =aes(y=`Exit rate`, x=ll))+
+  geom_point()+
+  labs(title="LL")
+
+grid.arrange(plot.6, plot1, plot2,plot3,plot4,plot5, ncol=2)
+```
+
+From the plots we can see that Other web sources have similar distribution as google, bur were not significant IV for the model. Direct and BDC are positively correlated with exit rate, but this relationship is more linear. 
+Social and LL referrals seem have much smaller coefficient, but are significant for the model.
+
+Next, I will modify the model and  use the same variables for the whole data set and 2021:  
+```{r, echo=T}
+
+model.1<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged)
+
+model.2<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2021)
+
+model.3<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+
+library(stargazer)
+stargazer(model.1, model.2, model.3,  type = 'text')
+```
+
+
+This table demonstrates difference in models depending on the data set used for its production.  Specifically, the difference between 2021 and 2022 demonstrates : 
+
+        1. Authors comments impact Exit rate engagement in 2022, but not in 2021
+        2. Number of comments impacts engagement in 2021, but not in 2022. 
+        3. weekday Tuesday significantly impact engagement, but even more in 2022. 
+        4. Google referrals make difference on engagement in 2022
+        5. Direct referrals always impacted engagement, by increasing it. 
+        6. social referrals increase engagement only in 2022
+        7. Interla bds referrals assocoated with lower engagement for both 2021 and 2022. 
+        8. LL referrals assocoated with lower engagement for both 2021 and 2022. 
+
+ 
+## 3.4 Diagnostic of  corrected models (with referral sources):
+### Residuals vs fitted values
+```{r, echo=T}
+
+model.all<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged)
+
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2021)
+
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+par(mfrow = c(4,3))
+plot(model.all, which = 1)
+plot(model.2021, which = 1)
+plot(model.2022, which = 1)
+```
+WE can see that 2022 dataset produced curved line of residuals, suggesting  that quadratic model might be a better fit for 2022 data.
+
+### QQ plot
+This plot is testing for normality of residual distribution.
+```{r, echo=T}
+plot(model.all, which = 2)
+plot(model.2021, which =2)
+plot(model.2022, which = 2)
+```
+
+#Scale-location
+
+```{r, echo=T}
+plot(model.all, which = 3)
+plot(model.2021, which =3)
+plot(model.2022, which = 3)
+```
+This results improved in compare with earlier model. 
+
+Cooks distance:
+```{r, echo=T}
+par(mfrow = c(3,3))
+plot(model.all, which = 4)
+plot(model.2021, which =4)
+plot(model.2022, which = 4)
+```
+Residuals vs Leverage:
+```{r, echo=T}
+plot(model.all, which = 5)
+plot(model.2021, which =5)
+plot(model.2022, which = 5)
+```
+Cook's distanc vs Leverage: 
+```{r, echo=T}
+plot(model.all, which = 6)
+plot(model.2021, which =6)
+plot(model.2022, which = 6)
+```
+"Cook's distance vs Leverage" also improved for 2022. 
+
+Summary: the model, that takes into account referral sources demonstrated a better fit, and addressed issue with residuals identified in diagnostics, especially for 2022.
+
+ 
 
 # N.comments :
 
@@ -1176,7 +1329,7 @@ grid.raster(img)
 
 The results showed that the post popularity is the major factor for online engagement and that more popular posts tend to be less engaging.    
 
-We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement.  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers. 
+We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement.  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers.  
 
 
 
