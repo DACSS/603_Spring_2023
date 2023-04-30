@@ -116,6 +116,7 @@ comments.data <-comments.data%>%
 # range(comments.data$com.year)
 # dim(comments.data)
 str(comments.data)
+dim(comments.data)
 ```
 Comment data: 
 ```{r, echo=T}
@@ -123,6 +124,7 @@ Comment data:
 merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\data.merged.csv"))
 # colnames(merged)
 str(merged)
+dim(merged)
 ```
 
 Be
@@ -432,11 +434,7 @@ ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
 summary(lm(`Exit rate`~ + log(Uniques) , data = merged))
 ```
 
-We can see  significance of popularity and  high R^2 of the model, and can conclude that popularity overall decreases engagement.  To explore this connection further, lets mreview Sources of users that are coming to the website.
-
-
-
-
+We can see  significance of popularity and  high R^2 of the model, and can conclude that popularity overall decreases engagement.  To explore this connection further, I will review Sources of users that are coming to the website.
 
 ### 1.3.2. How popularity impacts engagement: Referral sources.
 
@@ -476,8 +474,9 @@ ggplot(merged, mapping=aes(x=post.date))+
   geom_point(aes(y=social), color="purple")+
   geom_point(aes(y=bdc), color="blue")+
   geom_point(aes(y=ll), color="pink")  +
-  labs(title = "referral sources per post ", y = "Number of referrals" , x="Post")+ 
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(title = "Referral sources per post ", y = "Number of referrals" , x="Post")+ 
+  scale_color_manual(values = c("red", "green", "yellow", "purple", "blue", "pink"),
+                     labels = c("Google", "Direct", "Other Web", "Social", "Bdc", "LL"))
 ```
 
 This graph clearly demonstrates increase of "Search + amp referral
@@ -488,7 +487,6 @@ correlated with popularity. It also doubles views of the posts in many
 cases and might significanly influence our model and conclusions.
 
 ### Early comments'impact 
-
 We saw that increased popularity is associated with the sources of the viewers and might come from the search engines.
 We want to find out if early engagement in the post ( comments within first 10 hours of the post time) trigger its appearance in google news listing and therefore cause sharp increase in popularity. 
 
@@ -539,23 +537,12 @@ if that number correlated with Google referrals.
 
 ```{r, echo=T}
 
-merged.2<-merged%>%
-  filter(google>10000)
-correlation.2 <- cor(merged.2$early.sum, merged.2$google)
-correlation.2
-plot(merged.2$early.sum, merged.2$google)
-```
-
-
-```{r, echo=T}
-summary(lm(google ~early.sum, data=merged.2)) # for posts with google >10K 
 summary(lm(google ~early.sum, data=merged)) # for all posts 
 ```
 
-We can see significant connection between early comments and google
-referrals,  only on the data set of google referrals above 10000 visits. Also, R\^2 is low in this model, which
-suggests that there are other factors that are not considered in this
-model. I will explore how days of the week and time of the post
+We can see no significant connection between early comments and google
+referrals.
+Next,  I will explore whether days of the week and time of the post
 contribute to this relationship.
 
 ```{r, echo=T}
@@ -1025,7 +1012,7 @@ Here we can see the residual issue is still curved and modification of n.comment
 
 
 # adding google variable: 
-since we saw before that google variable strongly stands out for 2022 datase, I willadd it to see how much it impoves the model and residuals variability. 
+We saw earlier that the value of google variable significantly increases in  2022. I will add it to the model to see how much it impoves fit and residuals variability. 
 
 ```{r, echo=T}
 model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google , data = merged.2022)
@@ -1040,7 +1027,7 @@ Here we see that google appears as a significant independent variable. The model
 
 Diagnostocs: 
 ```{r, echo=T}
-par(mfrow = c(3,1))
+par(mfrow = c(1,3))
 plot(model.6, which = 1)
 plot(model.7, which = 1)
 plot(model.8, which = 1)
