@@ -1,0 +1,402 @@
+---
+title: "Homework 4"
+author: "Felix Betanourt"
+desription: "DACSS 603 HW4"
+date: "04/25/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - simple regression
+  - multiple regression
+  - non-linear function
+  - p-value
+  - model fitting
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Homework 4
+
+DACSS 603, Spring 2023
+
+```{r}
+# Loading packages
+
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyverse))
+library(formattable)
+suppressPackageStartupMessages(library(kableExtra))
+library(ggplot2)
+suppressPackageStartupMessages(library(alr4))
+suppressPackageStartupMessages(library(smss))
+
+```
+
+
+Some of the questions use data from the alr4 and smss R packages. You would need to call in those packages in R (no need for an  install.packages() call in your .qmd file, though—just use library()) and load the data using the data() function.
+
+Question 1
+
+For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home (in square feet), and x2 = lot size (in square feet), the prediction equation is ŷ = −10,536 + 53.8x1 + 2.84x2.
+
+A. A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000. Find the predicted selling price and the residual, and interpret.
+
+Predicted value:
+
+```{r}
+
+predicted <- -10536 + 53.8*1240 + 2.84*18000
+predicted
+```
+
+Residual:
+
+```{r}
+residual <- 145000-107296
+residual 
+
+```
+
+The predicted value is $107,296 therefore the the residual is $37,704. The residual is positive, which means that the model is under-predicting. Would be appropriate to check with other actual values and adjusting the regression model for better fit.
+
+
+B. For fixed lot size, how much is the house selling price predicted to increase for each square foot increase in home size? Why?
+
+The slope for lot size is 2.84, this means that for every square foot the price should increase by $2.84.
+
+
+C. According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size?
+
+```{r}
+
+x2 <- (53.8/2.84)
+x2
+
+```
+
+lot size should increase almost 19 times to have the same impact in the price as home size. 
+
+
+Question 2
+
+(Data file: salary in alr4 R package). 
+
+```{r}
+
+str(salary)
+
+```
+
+The data file concerns salary and other characteristics of all faculty in a small Midwestern college collected in the early 1980s for presentation in legal proceedings for which discrimination against women in salary was at issue. 
+
+All persons in the data hold tenured or tenure track positions; temporary faculty are not included. The variables include degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree, and salary, academic year salary in dollars.
+
+A. Test the hypothesis that the mean salary for men and women is the same, without regard to any other variable but sex. Explain your findings.
+
+```{r}
+
+t.test(salary ~ sex, data = salary)
+
+```
+Since p-value > 0.05 , there is not significant difference between salary means for Males and Females.
+
+
+B. Run a multiple linear regression with salary as the outcome variable and everything else as predictors, including sex. Assuming no interactions between sex and the other predictors, obtain a 95% confidence interval for the difference in salary between males and females.
+
+```{r}
+
+#salary2 <- salary%>%
+ # mutate(degree_o = case_when(
+  #      degree == "Masters" ~ 0,
+  #       degree == "PhD" ~ 1,
+   #     )) %>%
+#  mutate(rank_o = case_when(
+ #        rank == "Asst" ~ 1,
+  #       rank == "Assoc" ~ 2,
+   #      rank == "Prof" ~ 3,
+    #     )) %>%
+#  mutate(sex_o = case_when(
+ #        sex == "Male" ~ 0,
+  #       sex == "Female" ~ 1,
+   #      ))
+
+summary (model1 <- lm(salary ~ ysdeg + year + rank + sex + degree, data=salary))
+
+t.test(salary ~ sex, data = salary, conf.int = TRUE)
+
+
+```
+
+C. Interpret your finding for each predictor variable; discuss (a) statistical significance, (b) interpretation of the coefficient / slope in relation to the outcome variable and other variables.
+
+a) The variables that predict salary are years in current rank, and rank, as those are variables with p-value<0.05.
+
+b) In terms of the coefficients:
+
+- Years in current rank: for each year in current rank the salary increases by 476 units.
+- Rank: the benchmark is assistant therefore by being associate there the salary is 5,292 higher than assistant and 11,118 higher for professor.
+- Gender/sex: females makes 1,166 more in salary than males. Not a significant variable to explain salary.
+- Degree: having a PhD means 1,388 more dollars than holding a Masters. Not a significant variable to explain salary.
+- Years since highest degree earned: in this case, more years means less salary, specifically 124 dollars less per year since highest degree was earned. Also, not a significant variable to explain salary.
+
+
+D. Change the baseline category for the rank variable. Interpret the coefficients related to rank again.
+
+```{r}
+
+salary$rank <- relevel(salary$rank, ref = "Assoc")
+summary (model2 <- lm(salary ~ ysdeg + year + rank + sex + degree, data=salary))
+#summary(salary$salary - model2$fitted.values)
+
+```
+
+Being Assistant means 5,292 dollars less in salary compared to being Associate, and at the same time being Professor is 5,826 dollars more than Associate.
+
+E. Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote, “[a] variable may reflect a position or status bestowed by the employer, in which case if there is discrimination in the award of the position or status, the variable may be ‘tainted.’ ” Thus, for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to adjust salaries before comparing the sexes may not be acceptable to the courts.
+Exclude the variable rank, refit, and summarize how your findings changed, if they did.
+
+```{r}
+summary (model3 <- lm(salary ~ ysdeg + year + sex + degree, data=salary))
+
+```
+
+By excluding rank, we have these changes in the model:
+
+- R squared is reduced from 0.85 to 0.63, this means that the rank has an relevant weight in explaining salary.
+
+- In this model years since highest degree earned has a significant relationship with salary, as well as Degree. Both variables were not significant in the model when rank is included.
+
+- Years in current rank reduces significance over salary, from a p-value < 0.001 to a p-value < 0.05.
+
+
+F. Everyone in this dataset was hired the year they earned their highest degree. It is also known that a new Dean was appointed 15 years ago, and everyone in the dataset who earned their highest degree 15 years ago or less than that has been hired by the new Dean. 
+
+Some people have argued that the new Dean has been making offers that are a lot more generous to newly hired faculty than the previous one and that this might explain some of the variation in Salary.
+
+Create a new variable that would allow you to test this hypothesis and run another multiple regression model to test this. Select variables carefully to make sure there is no multicollinearity. Explain why multicollinearity would be a concern in this case and how you avoided it. Do you find support for the hypothesis that the people hired by the new Dean are making higher than those that were not?
+
+```{r}
+salary$tenure <- ifelse(salary$ysdeg <= 15, "15 or less", "More than 15")
+salary$tenure <- as.factor(salary$tenure)
+
+salary2 <- salary%>%
+  mutate(degree_o = case_when(
+        degree == "Masters" ~ 0,
+         degree == "PhD" ~ 1,
+        )) %>%
+  mutate(rank_o = case_when(
+        rank == "Asst" ~ 1,
+        rank == "Assoc" ~ 2,
+         rank == "Prof" ~ 3,
+         )) %>%
+  mutate(sex_o = case_when(
+         sex == "Male" ~ 0,
+         sex == "Female" ~ 1,
+         )) %>%
+  mutate(tenure_o = case_when(
+         tenure == "15 or less" ~ 1,
+         tenure == "More than 15" ~ 0,
+         ))
+  
+t.test(salary ~ tenure_o, data = salary2)
+
+cor_matrix <- cor(salary2[, c("ysdeg", "rank_o", "year", "sex_o", "tenure_o", "degree_o")], use = "complete.obs")
+round(cor_matrix, 2)
+
+```
+
+Years since highest degree earned has an strong correlation with tenure (new variable result of dividing the population in when they were hired). It was expected because tenure is a variable created based on years since highest degree earned (Everyone in this dataset was hired the year they earned their highest degree).
+
+So there is multicollinearity for these 2 variables, so I will exclude years since highest degree earned from the model and keep tenure.
+
+
+```{r}
+
+summary (model4 <- lm(salary ~ year + tenure_o + rank + sex_o + degree_o, data=salary2))
+
+
+```
+Seems that with a significant p-value (<0.05), being hired 15 years ago or less means higher salary than faculty with more than 15 years. Specifically, being in the group of 15 years or less means 2,163 dollars more than the other group.
+
+
+Question 3
+
+(Data file: house.selling.price in smss R package)
+
+```{r}
+
+data("house.selling.price")
+house <- house.selling.price
+str(house)
+
+
+```
+
+A. Using the house.selling.price data, run and report regression results modeling y = selling price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 = yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the meaning of the coefficient.
+
+```{r}
+summary (model5 <- lm(Price ~ Size + New, data=house))
+
+```
+
+Both independent variables (Size and if New or not) are statistically significant to predict the home price. In particular, for every square feet the home price increases by $116.13, and when the house is new the price is higher in $57,736 compared when is not new.
+
+B. Report and interpret the prediction equation, and form separate equations relating selling price to size for new and for not new homes.
+
+The prediction equation is:
+
+y = selling price of home (in dollars), x1 = size of home (in square feet), and x2 = home is new (1 = yes; 0 = no), the prediction equation for new homes is
+
+ŷ = -40230.867 + 116.132x1 + 57736.283
+
+
+For the no new homes prediction equation we need to calculate the slope for no new (value 0 in the variable):
+
+```{r}
+
+
+slope_nonew <- coef(model5)[1] - coef(model5)[3]
+slope_nonew
+
+
+```
+
+Prediction equation for No New home:
+
+ŷ = -40230.867 + 116.132x1 - 97967.15
+
+C. Find the predicted selling price for a home of 3000 square feet that is (i) new
+
+```{r}
+
+predicted_new_house <- -40230.867 + 116.132*3000 + 57736.283
+predicted_new_house
+
+```
+
+(ii) not new
+
+```{r}
+
+predicted_nonew_house <- -40230.867 + 116.132*3000 - 97967.15
+predicted_nonew_house
+
+```
+
+D. Fit another model, this time with an interaction term allowing interaction between size and new, and report the regression results
+
+```{r}
+summary (model7 <- lm(Price ~ Size + New + Size*New, data=house))
+```
+
+
+E. Report the lines relating the predicted selling price to the size for homes that are (i) new, (ii) not new.
+
+The prediction formula for this model is:
+
+ŷ = -22227.808 + 104.438*size - 78527.502*new (0 or 1) + 61.916*size*new (0 or 1).
+
+To predict price for new or not new houses, we would need just to use the values 1 or 0 in the "new" variable.
+
+
+F. Find the predicted selling price for a home of 3000 square feet that is (i) new, 
+
+```{r}
+
+newdata <- data.frame(
+  New = 1, 
+  Size = 3000  
+)
+
+predicted_price <- predict(model7, newdata)
+predicted_price
+
+```
+
+(ii) not new.
+```{r}
+
+newdata <- data.frame(
+  New = 0, 
+  Size = 3000  
+)
+
+predicted_price2 <- predict(model7, newdata)
+predicted_price2
+
+```
+
+
+G. Find the predicted selling price for a home of 1500 square feet that is (i) new, 
+
+```{r}
+
+newdata <- data.frame(
+  New = 1, 
+  Size = 1500  
+)
+
+predicted_price3 <- predict(model7, newdata)
+predicted_price3
+
+```
+
+
+(ii) not new. 
+
+```{r}
+
+newdata2 <- data.frame(
+  New = 0, 
+  Size = 1500  
+)
+
+predicted_price4 <- predict(model7, newdata2)
+predicted_price4
+
+```
+
+Comparing to (F), explain how the difference in predicted selling prices changes as the size of home increases.
+
+```{r}
+
+#Difference in price for model in question F
+
+diff_f <- predicted_price - predicted_price2
+diff_f
+
+diff_g <- predicted_price3 - predicted_price4
+diff_g
+
+```
+
+Seems that the difference in price between new or not new homes is bigger when the size is higher. For instance, for a new house with 3000 sqf is $107k higher than no new. But for 1500 sqf the new house is only $14k more. 
+
+
+H. Do you think the model with interaction or the one without it represents the relationship of 
+size and new to the outcome price? What makes you prefer one model over another
+
+
+
+Both models seems good to predict price given p-value for F-statistics is significant in both models, however the the value of F itself is a lot higher in the model with no interaction size-new, which means that there is better fit in this model compared to the interaction model.
+
+The R2 and Adjusted R2 are similar in both models, so the interaction doesn't seems to add more explanation to the variations to the home price.
+
+On the other hand, the interaction model provides an additional insight which is that the difference in price between new and no new houses is moderated by the size. This moderation is relevant to understand the price variation and it is not captured in the no-interaction model.
+
+
+For those reasons, I would rather use the model with the interaction.
+
