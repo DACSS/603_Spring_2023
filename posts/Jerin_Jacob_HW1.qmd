@@ -1,0 +1,148 @@
+---
+title: "Homework 1"
+author: "Jerin Jacob"
+desription: "Homework 1- 603 Spring 2023"
+date: "03/20/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - challenge1
+  - Jerin Jacob
+  - Lung Capacity Data
+  - ggplot2
+  - tidyverse
+  - 
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(readxl)
+library(dplyr)
+library(magrittr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Question 1
+
+## Loading the Data
+
+```{r}
+df <- read_excel("_data/LungCapData.xls")
+df
+```
+
+## A
+```{r}
+summary(df)
+hist(df$LungCap, xlab = "Lung Capacity", main = "", freq = F)
+
+```
+The histogram shows that the distribution is almost a normal distribution with most of the values close to the mean. 
+## B
+```{r}
+boxplot(LungCap ~ Gender, df)
+
+```
+The minimum, first quartile, median, third quartile and maximum, all of them appear to be slightly higher for males than females.
+
+## C
+```{r}
+dff<- df |>
+  group_by(Smoke) |>
+  summarise(LungCap = mean(LungCap))
+```
+
+Lung capacity of non-smokers is higher than that of smokers which is against the expectation!
+
+## D
+### Age less than or equal to 13
+```{r}
+df1 <- df |>
+  filter(Age <= 13) |>
+  group_by(Smoke)|>
+  summarise(LungCap = mean(LungCap)) |>
+  mutate(Age = "<=13")
+df1
+```
+
+### Age 14 & 15
+```{r}
+df2 <- df |>
+  filter(Age >= 14 & Age <= 15) |>
+  group_by(Smoke)|>
+  summarise(LungCap = mean(LungCap))|>
+  mutate(Age = "14&15")
+class(df2)
+```
+
+### Age 16 to 17
+
+```{r}
+df3 <- df |>
+  filter(Age >= 16 & Age <= 17) |>
+  group_by(Smoke)|>
+  summarise(LungCap = mean(LungCap))|>
+  mutate(Age = "16&17")
+```
+
+### Age greater than or equal to 18
+
+```{r}
+df4 <- df |>
+  filter(Age >= 18) |>
+  group_by(Smoke)|>
+  summarise(LungCap = mean(LungCap))|>
+  mutate(Age = ">=18")
+```
+
+## E
+```{r}
+new_df <- rbind(df1,df2, df3,df4)
+new_df
+ggplot(new_df, aes(fill=Smoke, y=LungCap, x=Age)) +
+  geom_bar(position='dodge', stat='identity')
+
+ggplot(dff, aes(y=LungCap, x=Smoke, fill = Smoke)) +
+  geom_bar(position='dodge', stat='identity')  
+
+```
+Only age group that showed similar result that of step C is <=13. The analysis could go wrong if the lung capacity of smokers and non smokers are studied without considering the age.
+
+# Question 2
+
+```{r}
+df_prison <- tibble(X = c(0,1,2,3,4), Frequency = c(128,434,160,64,24))
+
+df_prison
+
+n <- sum(df_prison$Frequency)
+n
+
+```
+
+```{r}
+df_prison |>
+  filter(X == 2) |>
+  pull(Frequency) |>
+  divide_by(n)
+
+```
+
+```{r}
+#log(write) = 3.135 + 0.115 female + 0.0066 read + 0.0077 math
+
+
+
+#write = - 99.164 + 5.389 female + 20.941 log(math) + 16.852 log(read)
+
+
+
+```
+
+

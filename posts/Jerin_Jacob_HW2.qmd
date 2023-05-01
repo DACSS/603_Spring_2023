@@ -1,0 +1,278 @@
+---
+title: "Homework 2"
+author: "Jerin Jacob"
+desription: "Homework 2- 603 Spring 2023"
+date: "04/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw2
+  - challenge2
+  - Jerin Jacob
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(readxl)
+library(dplyr)
+library(magrittr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Questions:
+### 1.
+
+```{r}
+# Set sample size, mean, and standard deviation
+n_bypass <- 539
+mean_wait_time_bypass <- 19
+sd_bypass <- 10
+
+# Calculate the standard error
+se_bypass <- sd_bypass / sqrt(n_bypass)
+
+# Calculate the margin of error for a 90% confidence interval
+me_bypass <- qnorm(0.95) * se_bypass
+
+# Calculate the lower and upper bounds of the confidence interval
+lower_bypass <- mean_wait_time_bypass - me_bypass
+upper_bypass <- mean_wait_time_bypass + me_bypass
+
+# Print the results
+cat("90% confidence interval for Bypass: [", round(lower_bypass, 3), ",", round(upper_bypass, 3), "]\n")
+
+```
+
+```{r}
+# Set sample size, mean, and standard deviation
+n_angiography <- 847
+mean_wait_time_angiography <- 18
+sd_angiography <- 9
+
+# Calculate the standard error
+se_angiography <- sd_angiography / sqrt(n_angiography)
+
+# Calculate the margin of error for a 90% confidence interval
+me_angiography <- qnorm(0.95) * se_angiography
+
+# Calculate the lower and upper bounds of the confidence interval
+lower_angiography <- mean_wait_time_angiography - me_angiography
+upper_angiography <- mean_wait_time_angiography + me_angiography
+
+# Print the results
+cat("90% confidence interval for Angiography: [", round(lower_angiography, 3), ",", round(upper_angiography, 3), "]\n")
+
+```
+
+```{r}
+# Create a sequence of x values
+x <- seq(min(lower_bypass, lower_angiography) - 1, max(upper_bypass, upper_angiography) + 1, length = 100)
+
+# Create normal probability density functions for each dataset
+y_bypass <- dnorm(x, mean_wait_time_bypass, sd_bypass)
+y_angiography <- dnorm(x, mean_wait_time_angiography, sd_angiography)
+
+# Plot the normal density curves
+plot(x, y_bypass, type = "l", col = "blue", ylim = c(0, max(y_bypass, y_angiography)), main = "Confidence Intervals Comparison", xlab = "x", ylab = "Density")
+lines(x, y_angiography, type = "l", col = "red")
+
+# Draw vertical lines at the lower and upper bounds of the confidence intervals for each dataset
+abline(v = lower_bypass, col = "blue")
+abline(v = upper_bypass, col = "blue")
+abline(v = lower_angiography, col = "red")
+abline(v = upper_angiography, col = "red")
+
+# Draw shaded areas for the confidence intervals for each dataset
+polygon(c(lower_bypass, x[x >= lower_bypass & x <= upper_bypass], upper_bypass), c(0, y_bypass[x >= lower_bypass & x <= upper_bypass], 0), col = "lightblue")
+polygon(c(lower_angiography, x[x >= lower_angiography & x <= upper_angiography], upper_angiography), c(0, y_angiography[x >= lower_angiography & x <= upper_angiography], 0), col = "pink")
+
+# Add a legend to the plot
+legend("topright", legend = c("Bypass Wait Time", "Angiography Wait Time"), col = c("blue", "red"), fill = c("lightblue", "pink"), lty = 1)
+
+```
+90 % Confidence Interval is narrower for Angiography.
+
+
+### 2.
+
+```{r}
+# Set the sample size and number of people who said yes
+n_surveyed_adults <- 1031
+for_college <- 567
+
+# Calculate the point estimate of the proportion
+p_hat <- for_college / n_surveyed_adults
+cat("Point estimate for the portion of all adult Americans who believe that a college education is essential for success is: ", p_hat*100,"%", "\n")
+
+# Calculate the standard error
+se <- sqrt(p_hat*(1-p_hat)/n_surveyed_adults)
+
+# Calculate the margin of error for a 95% confidence interval
+me <- qnorm(0.975)*se
+
+# Calculate the lower and upper bounds of the confidence interval
+lower <- p_hat - me
+upper <- p_hat + me
+
+# Print the confidence interval
+cat("95% Confidence Interval for p: [", lower, ", ", upper, "]", "\n")
+
+
+```
+95% Confidence Interval says that, this range of values will have the true population parameter in 95% of the repeated sampling.
+
+
+### 3.
+
+```{r}
+me <- 5
+population_sd <- (200-30)/4
+z_95 <- qnorm(1-0.05/2)
+
+n <- (z_95*population_sd/me)^2
+n
+```
+
+
+
+### 4. 
+
+A. Assuming that the population mean is 500.
+Null Hypothesis = There is no difference in the mean income of all senior-level workers and the mean income of senior level female employees.
+
+```{r}
+# Set the significance level
+alpha <- 0.05
+
+# Specify the population mean, sample size, sample mean, and sample standard deviation
+pop_mean <- 500
+n <- 9
+sample_mean <- 410
+sample_sd <- 90
+
+# Calculate the standard error of the mean
+sem <- sample_sd / sqrt(n)
+
+# Calculate the t-statistic
+t_stat <- (sample_mean - pop_mean) / sem
+
+# Calculate the degrees of freedom
+df <- n - 1
+
+# Calculate the two-tailed p-value
+p_value <- 2 * pt(-abs(t_stat), df)
+
+# Determine whether to reject or fail to reject the null hypothesis
+if (p_value < alpha) {
+  cat("Reject the null hypothesis: the sample mean is significantly different from the population mean.\n")
+} else {
+  cat("Fail to reject the null hypothesis: there is not sufficient evidence to conclude that the sample mean is different from the population mean.\n")
+}
+
+# Print the test statistics and p-value
+cat("t-statistic:", t_stat, "\n")
+cat("p-value:", p_value, "\n")
+
+```
+p value is less than 0.05 and therefore we reject the null hypothesis. Therefore the mean income for all senior-level workers and mean income for senior level female workers are not same. The range of 95% confidence interval is < 500 which means the mean income of the female workers are less than 500 with a 5% significance level.  
+
+
+B. 
+```{r}
+p_value <- pt(-abs(t_stat), df)
+p_value
+
+```
+It is less than 0.05 we reject null hypothesis.
+
+
+C.
+
+```{r}
+p_value <- pt(-abs(t_stat), df, lower.tail = F)
+p_value
+```
+p value for this one tailed test is 0.4923534 which means we fail to reject null hypothesis since it is greater than 0.05 since we are testing with a 5% significance value. In other words, the true mean of the sample is not greater than population mean
+
+### 5. 
+A. 
+
+```{r}
+mu <- 500
+y_hat_jones <- 519.5
+se_jones <- 10
+y_hat_smith <- 519.7
+se_smith <- 10
+n <- 1000
+
+# Set the significance level
+alpha <- 0.05
+
+# Specify the population mean, estimated means, and standard errors for each sample
+pop_mean <- 500
+mean1 <- 519.5
+mean2 <- 519.7
+se1 <- 10
+se2 <- 10
+n1 <- 1000
+n2 <- 1000
+
+# Calculate the pooled standard error
+pooled_se <- sqrt(((n1 - 1) * se1^2 + (n2 - 1) * se2^2) / (n1 + n2 - 2))
+
+# Calculate the t-statistic
+t_stat <- (mean1 - mean2 - 0) / (pooled_se * sqrt(1/n1 + 1/n2))
+
+# Calculate the degrees of freedom
+df <- n1 + n2 - 2
+
+# Calculate the two-tailed p-value
+p_value <- 2 * pt(-abs(t_stat), df)
+
+
+# Print the test statistics and p-value for both samples
+cat("Jones' - t-statistic:", (mean1 - pop_mean) / se1, "p-value:", 2 * pt(-abs((mean1 - pop_mean) / se1), n1 - 1), "\n")
+cat("Smith's - t-statistic:", (mean2 - pop_mean) / se2, "p-value:", 2 * pt(-abs((mean2 - pop_mean) / se2), n2 - 1), "\n")
+
+```
+
+
+### 6. 
+```{r}
+# Creating the dataframe
+grade_level <- c(rep("6th grade", 100), rep("7th grade", 100), rep("8th grade", 100))
+snack <- c(rep("healthy snack", 31), rep("unhealthy snack", 69), rep("healthy snack", 43),
+           rep("unhealthy snack", 57), rep("healthy snack", 51), rep("unhealthy snack", 49))
+snack_data <- data.frame(grade_level, snack)
+
+```
+
+We are conducting a Chi-square test in this question since we are testing the association between two categorical variables.
+```{r}
+table(snack_data$snack,snack_data$grade_level)
+```
+```{r}
+chisq.test(snack_data$snack,snack_data$grade_level,correct = FALSE)
+```
+A p-value smaller than 0.05 indicates that there is a relationship between grade level and the choice of snack.
+
+
+### 7. 
+
+```{r}
+# Creating the dataframe
+Area <- c(rep("Area1", 6), rep("Area2", 6), rep("Area3", 6))
+cost <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5, 7.5, 8.2, 8.5, 8.2, 7.0, 9.3,
+          5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+Area_cost <- data.frame(Area,cost)
+one.way <- aov(cost ~ Area, data = Area_cost)
+summary(one.way)
+```
+
+The small p-value tells us that the three areas have a difference in means.
