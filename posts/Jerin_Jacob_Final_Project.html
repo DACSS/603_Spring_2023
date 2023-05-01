@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jerin Jacob">
+<meta name="dcterms.date" content="2023-03-10">
+<meta name="description" content="Final project qmd file for 603">
+
+<title>Final Project 603</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/DACSS_Round_Network.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<meta name="twitter:title" content="Final Project 603">
+<meta name="twitter:description" content="Final project qmd file for 603">
+<meta name="twitter:image" content="https://dacss.github.io/603_Spring_2023/posts/Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-4-1.png">
+<meta name="twitter:creator" content="@UMassDACSS">
+<meta name="twitter:site" content="@UMassDACSS">
+<meta name="twitter:image-height" content="960">
+<meta name="twitter:image-width" content="1344">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/UMass White Wordmark Horiz.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="true"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/" rel="" target="">
+ <span class="menu-text">Spring 2023 Posts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">Contributors</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://umass.edu/sbs/dacss" rel="" target="">
+ <span class="menu-text">DACSS</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#reading-the-data" id="toc-reading-the-data" class="nav-link active" data-scroll-target="#reading-the-data">Reading the data</a>
+  <ul class="collapse">
+  <li><a href="#column-description" id="toc-column-description" class="nav-link" data-scroll-target="#column-description"><strong>COLUMN DESCRIPTION</strong></a></li>
+  </ul></li>
+  <li><a href="#summary-of-each-variables" id="toc-summary-of-each-variables" class="nav-link" data-scroll-target="#summary-of-each-variables">Summary of each variables</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References:</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Final Project 603</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">finalpart1</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Final project qmd file for 603
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jerin Jacob </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 10, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Now a days, movies are a well marketed entertainment product. Just like any other products in the market, movies are also having an allocated a marketing budget and promotional activities are done in scale. This often result in the opening weekend’s gross ticketing volume to rise. But are the pre-release promotional activities helping the movie to collect more or is it just creating a hype initially? Or does the movie’s gross collection is not at all dependant on pre release promotions? This dataset has 200 highest grossing movies of 2022. It has both the opening week’s gross as well as the total gross collection of the movies, along with other variables. Assuming that opening week’s collection is depending on the pre-release promotion, by looking on the relationship between opening week’s gross and total gross, I am trying to see how the pre-release activities help the producers earn more in boxoffice.</p>
+<p><strong>Research Question</strong>: Is the total collection of a movie depending on the pre-release promotional activities?</p>
+<p><strong>Null hypothesis</strong>: The total gross collection of a movie is not dependant on the opening week’s collection</p>
+<p><strong>Alternative hypotheses</strong>: Total gross collection is positively dependant on the opening week’s collection</p>
+<section id="reading-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="reading-the-data">Reading the data</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"_data/project_data.csv"</span>) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Open <span class="ot">&lt;-</span> <span class="fu">ymd</span>(df<span class="sc">$</span>Open)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Close <span class="ot">&lt;-</span> <span class="fu">ymd</span>(df<span class="sc">$</span>Close)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span> df<span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">open_day =</span> <span class="fu">yday</span>(Open), <span class="at">close_day =</span> <span class="fu">yday</span>(Close), <span class="at">days_of_show =</span> <span class="fu">case_when</span>(close_day <span class="sc">&lt;</span> open_day <span class="sc">~</span> (<span class="dv">365</span><span class="sc">-</span>open_day)<span class="sc">+</span>close_day, close_day <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">~</span> close_day<span class="sc">-</span>open_day)) </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Rank
+1      1
+2      2
+3      3
+4      4
+5      5
+6      6
+7      7
+8      8
+9      9
+10    10
+11    11
+12    12
+13    13
+14    14
+15    15
+16    16
+17    17
+18    18
+19    19
+20    20
+21    21
+22    22
+23    23
+24    24
+25    25
+26    26
+27    27
+28    28
+29    29
+30    30
+31    31
+32    32
+33    33
+34    34
+35    35
+36    36
+37    37
+38    38
+39    39
+40    40
+41    41
+42    42
+43    43
+44    44
+45    45
+46    46
+47    47
+48    48
+49    49
+50    50
+51    51
+52    52
+53    53
+54    54
+55    55
+56    56
+57    57
+58    58
+59    59
+60    60
+61    61
+62    62
+63    63
+64    64
+65    65
+66    66
+67    67
+68    68
+69    69
+70    70
+71    71
+72    72
+73    73
+74    74
+75    75
+76    76
+77    77
+78    78
+79    79
+80    80
+81    81
+82    82
+83    83
+84    84
+85    85
+86    86
+87    87
+88    88
+89    89
+90    90
+91    91
+92    92
+93    93
+94    94
+95    95
+96    96
+97    97
+98    98
+99    99
+100  100
+101  101
+102  102
+103  103
+104  104
+105  105
+106  106
+107  107
+108  108
+109  109
+110  110
+111  111
+112  112
+113  113
+114  114
+115  115
+116  116
+117  117
+118  118
+119  119
+120  120
+121  121
+122  122
+123  123
+124  124
+125  125
+126  126
+127  127
+128  128
+129  129
+130  130
+131  131
+132  132
+133  133
+134  134
+135  135
+136  136
+137  137
+138  138
+139  139
+140  140
+141  141
+142  142
+143  143
+144  144
+145  145
+146  146
+147  147
+148  148
+149  149
+150  150
+151  151
+152  152
+153  153
+154  154
+155  155
+156  156
+157  157
+158  158
+159  159
+160  160
+161  161
+162  162
+163  163
+164  164
+165  165
+166  166
+167  167
+168  168
+169  169
+170  170
+171  171
+172  172
+173  173
+174  174
+175  175
+176  176
+177  177
+178  178
+179  179
+180  180
+181  181
+182  182
+183  183
+184  184
+185  185
+186  186
+187  187
+188  188
+189  189
+190  190
+191  191
+192  192
+193  193
+194  194
+195  195
+196  196
+197  197
+198  198
+199  199
+200  200
+                                                                                                                                                                    Release
+1                                                                                                                                                         Top Gun: Maverick
+2                                                                                                                                                  Avatar: The Way of Water
+3                                                                                                                                            Black Panther: Wakanda Forever
+4                                                                                                                               Doctor Strange in the Multiverse of Madness
+5                                                                                                                                                  Jurassic World: Dominion
+6                                                                                                                                                  Minions: The Rise of Gru
+7                                                                                                                                                                The Batman
+8                                                                                                                                                    Thor: Love and Thunder
+9                                                                                                                                                      Sonic the Hedgehog 2
+10                                                                                                                                                               Black Adam
+11                                                                                                                                             Puss in Boots: The Last Wish
+12                                                                                                                                                                    Elvis
+13                                                                                                                                                                Uncharted
+14                                                                                                                                                                     Nope
+15                                                                                                                                                                Lightyear
+16                                                                                                                                                                    Smile
+17                                                                                                                                                            The Lost City
+18                                                                                                                                                             Bullet Train
+19                                                                                                                                                             The Bad Guys
+20                                                                                                                              Fantastic Beasts: The Secrets of Dumbledore
+21                                                                                                                                                  DC League of Super-Pets
+22                                                                                                                                                  Where the Crawdads Sing
+23                                                                                                                                                          The Black Phone
+24                                                                                                                                                                   Scream
+25                                                                                                                                                                  Morbius
+26                                                                                                                                        Everything Everywhere All at Once
+27                                                                                                                                                       Ticket to Paradise
+28                                                                                                                                                           The Woman King
+29                                                                                                                                                           Halloween Ends
+30                                                                                                                                                                      Dog
+31                                                                                                                                                          Jackass Forever
+32                                                                                                                                                        A Man Called Otto
+33                                                                                                                                                            Violent Night
+34                                                                                                                                                    Lyle, Lyle, Crocodile
+35                                                                                                                                                        Death on the Nile
+36                                                                                                                                                      Don't Worry Darling
+37                                                                                                                                                 Downton Abbey: A New Era
+38                                                                                                                                                                Barbarian
+39                                                                                                                                                                 The Menu
+40                                                                                                                                            Dragon Ball Super: Super Hero
+41                                                                                                                                                            Strange World
+42                                                                                                                                              Jujutsu Kaisen 0: The Movie
+43                                                                                                                                                             The Northman
+44                                                                                                                                                  The Bob's Burgers Movie
+45                                                                                                                                                                    Beast
+46                                                                                                                                                           The Invitation
+47                                                                                                                                                    Avatar2022 Re-release
+48                                                                                                                             Whitney Houston: I Wanna Dance with Somebody
+49                                                                                                                                                                Ambulance
+50                                                                                                                                                                 Marry Me
+51                                                                                                                                                               Father Stu
+52                                                                                                                                                                 Devotion
+53                                                                                                                                  The Unbearable Weight of Massive Talent
+54                                                                                                                                                       Prey for the Devil
+55                                                                                                                                                                 Moonfall
+56                                                                                                                                         Paws of Fury: The Legend of Hank
+57                                                                                                                                                            The Fabelmans
+58                                                                                                                                                                The Whale
+59                                                                                                                                                                  Babylon
+60                                                                                                                                                                Amsterdam
+61                                                                                                                                       The Chosen Season 3: Episode 1 &amp; 2
+62                                                                                                                                                                  The 355
+63                                                                                                                                                                      RRR
+64                                                                                                                                                              Glass Onion
+65                                                                                                                                                            Easter Sunday
+66                                                                                                                                                      One Piece Film: Red
+67                                                                                                                                                                        X
+68                                                                                                                                                                     Bros
+69                                                                                                                                                     Bodies Bodies Bodies
+70                                                                                                                                                              Terrifier 2
+71                                                                                                                                                Mrs. Harris Goes to Paris
+72                                                                                                                                                The Banshees of Inisherin
+73                                                                                                                                                              Firestarter
+74                                                                                                                                                               Blacklight
+75                                                                                                                                                         See How They Run
+76                                                                                                                                                                    Pearl
+77                                                                                                                                   Spider-Man: No Way Home2022 Re-release
+78                                                                                                                                                           Redeeming Love
+79                                                                                                                                                                     Till
+80                                                                                                                                          Three Thousand Years of Longing
+81                                                                                                                                               Brahmastra Part One: Shiva
+82                                                                                                                                                            Bones and All
+83                                                                                                                                                                      Men
+84                                                                                                                                                                   Memory
+85                                                                                                                                                                     Fall
+86                                                                                                                   BTS Permission to Dance on Stage - Seoul: Live Viewing
+87                                                                                                                                                                      Tár
+88                                                                                                                                           Marcel the Shell with Shoes On
+89                                                                                                                                                                 She Said
+90                                                                                                                                                        I Heard the Bells
+91                                                                                                                                                       Orphan: First Kill
+92                                                                                                                                                                 Lifemark
+93                                                                                                                                                      Jaws2022 Re-release
+94                                                                                                                                                               Clerks III
+95                                                                                                                                                               The Cursed
+96                                                                                                                                                      Triangle of Sadness
+97                                                                                                                                                                Vengeance
+98                                                                                                                                                  Ponniyin Selvan: Part I
+99                                                                                                                                                         Moonage Daydream
+100                                                                                                                                                                   Belle
+101                                                                                                                                                             Family Camp
+102                                                                                                                                                                  Cyrano
+103                                                                                                                                                           Women Talking
+104                                                                                                                                                      Laal Singh Chaddha
+105                                                                                                                                                              The Outfit
+106                                                                                                                                           The Worst Person in the World
+107                                                                                                                                                        K.G.F: Chapter 2
+108                                                                                                                                                                Breaking
+109                                                                                                                                         Honk for Jesus. Save Your Soul.
+110                                                                                                                                                             Mack &amp; Rita
+111                                                                                                                                                              Studio 666
+112                                                                                                                                                    Crimes of the Future
+113                                                                                                                                                             Gigi &amp; Nate
+114                                                                                                                                                          The Good House
+115                                                                                                                                                       Decision to Leave
+116                                                                                                                                                      Emily the Criminal
+117                                                                                                                                                                    Umma
+118                                                                                                                                                   The Wolf and the Lion
+119                                                                                                                                                Jeepers Creepers: Reborn
+120                                                                                                                               E.T. the Extra-Terrestrial2022 Re-release
+121                                                                                                                                                                 Watcher
+122                                                                                                                                                      Mr. Malcolm's List
+123                                                                                                                                                         Armageddon Time
+124                                                                                                                                                             Radhe Shyam
+125 2022 Oscar Nominated Short Films: Live Action/2022 Oscar Nominated Short Films: Animation/2022 Oscar Nominated Short Films: Documentary2022 Oscar Nominated Short Films
+126                                                                                                                                                                  Vikram
+127                                                                                                                                                     The King's Daughter
+128                                                                                                                                                                  Living
+129                                                                                                                                                          Infinite Storm
+130                                                                                                                                                            Vikram Vedha
+131                                                                                                                                                                The Duke
+132                                                                                                                                                       Running the Bases
+133                                                                                                                                                          ¿Y cómo es él?
+134                                                                                                                                                       The Kashmir Files
+135                                                                                                                                                              2000 Mules
+136                                                                                                                                   It's a Wonderful Life75th Anniversary
+137                                                                                                                                            The Godfather2022 Re-release
+138                                                                                                                                                           Spoiler Alert
+139                                                                                                                                                                Medieval
+140                                                                                                                             Rogue One: A Star Wars Story2022 Re-release
+141                                                                                                                                     Howl's Moving Castle2022 Re-release
+142                                                                                                                                                 F3: Fun and Frustration
+143                                                                                                                                                         Empire of Light
+144                                                                                                                                                                Aftersun
+145                                                                                                                                                        After Ever Happy
+146                                                                                                                                                            Fire of Love
+147                                                                                                                            Hallelujah: Leonard Cohen, a Journey, a Song
+148                                                                                                                                                                  Broker
+149                                                                                                                                                          The Contractor
+150                                                                                                                                                          Jug Jugg Jeeyo
+151                                                                                                       Coldplay: Music of the Spheres - Live Broadcast from Buenos Aires
+152                                                                                                                             The Beatles: Get Back - The Rooftop Concert
+153                                                                                                                                                                      EO
+154                                                                                                                                                   Hansan: Rising Dragon
+155                                                                                                                         Johnny Cash: The Redemption of an American Icon
+156                                                                                                                                                        The Tiger Rising
+157                                                                                                                                                                 Acharya
+158                                                                                                                                                            Petite Maman
+159                                                                                                                                                             The Roundup
+160                                                                                                                                 Evangelion: 3.0+1.01 Thrice Upon a Time
+161                                                                                                                          Star Trek II: The Wrath of Khan2022 Re-release
+162                                                                                                                                                    Met Opera: The Hours
+163                                                                                                                                                 The Phantom of the Open
+164                                                                                                                                                                 Corsage
+165                                                                                                                                            Saint Michael Meet the Angel
+166                                                                                                                                                    Back to the Drive-in
+167                                                                                                                                                       Ante Sundharaniki
+168                                                                                                                                                              Unsilenced
+169                                                                                                                                                            The Mean One
+170                                                                                                                                                       HIT: The 2nd Case
+171                                                                                                                                                    Official Competition
+172                                                                                                                                                     Gangubai Kathiawadi
+173                                                                                                                                                        Cuando sea joven
+174                                                                                                                                                         Confess, Fletch
+175                                                                                                                                                              Man of God
+176                                                                                                                                                               Call Jane
+177                                                                                                                                    The Quintessential Quintuplets Movie
+178                                                                                                                                                           God's Country
+179                                                                                                                               Deep in the Heart: A Texas Wildlife Story
+180                                                                                                                                             The Railway Children Return
+181                                                                                                                                                                    Vivo
+182                                                                                                                                                                  Eiffel
+183                                                                                                                                                   Selena2022 Re-release
+184                                                                                                                                        All the Beauty and the Bloodshed
+185                                                                                                                                                       Brian and Charles
+186                                                                                                                                                   Emergency Declaration
+187                                                                                                                                                           Superspreader
+188                                                                                                                                                             Tyson's Run
+189                                                                                                                                                          The Inspection
+190                                                                                                                                                                   Alice
+191                                                                                                                                                      RRR2022 Re-release
+192                                                                                                                                                           The Good Boss
+193                                                                                                                                                                  Inu-oh
+194                                                                                                                                                            The Forgiven
+195                                                                                                                                                          Fourth of July
+196                                                                                                                                                                 Mad God
+197                                                                                                                                                                   Clean
+198                                                                                                                                                                Waterman
+199                                                                                                                                                 Meet Me in the Bathroom
+200                                                                                                                                                             Holy Spider
+        Gross max_th   Opening perc_tot_gr open_th       Open      Close
+1   718732821   4751 126707459        17.6    4735 2022-05-27 2022-12-16
+2   636955746   4340 134100226        21.1    4202 2022-12-16       &lt;NA&gt;
+3   453474324   4396 181339761        40.0    4396 2022-11-11       &lt;NA&gt;
+4   411331607   4534 187420998        45.6    4534 2022-05-06       &lt;NA&gt;
+5   376851080   4697 145075625        38.5    4676 2022-06-10 2022-09-23
+6   369695210   4427 107010140        28.9    4391 2022-07-01       &lt;NA&gt;
+7   369345583   4417 134008624        36.3    4417 2022-03-04       &lt;NA&gt;
+8   343256830   4375 144165107        42.0    4375 2022-07-08 2022-10-14
+9   190872904   4258  72105176        37.8    4234 2022-04-08 2022-07-08
+10  168152111   4402  67004323        39.8    4402 2022-10-21 2022-01-13
+11  151221725   4121  12429515         8.2    4099 2022-12-21       &lt;NA&gt;
+12  151040048   3932  31211579        20.7    3906 2022-06-24 2022-10-14
+13  148648820   4275  44010155        29.6    4275 2022-02-18       &lt;NA&gt;
+14  123277080   3807  44366910        36.0    3785 2022-07-22 2022-10-06
+15  118307188   4255  50577961        42.8    4255 2022-06-17 2022-09-09
+16  105935048   3659  22609925        21.3    3645 2022-09-30 2022-12-16
+17  105344029   4283  30453269        28.9    4253 2022-03-25 2022-06-23
+18  103368602   4357  30030156        29.1    4357 2022-08-05       &lt;NA&gt;
+19   97233630   4042  23950245        24.6    4008 2022-04-22 2022-11-17
+20   95850844   4245  42151256        44.0    4208 2022-04-15 2022-07-01
+21   93657117   4332  23003441        24.6    4314 2022-07-29       &lt;NA&gt;
+22   90230760   3650  17253227        19.1    3650 2022-07-15 2022-10-20
+23   90123230   3156  23633220        26.2    3150 2022-06-24 2022-09-23
+24   81641405   3666  30018805        36.8    3664 2022-01-14       &lt;NA&gt;
+25   73865530   4268  39005895        52.8    4268 2022-04-01       &lt;NA&gt;
+26   72015067   2220    501305         0.7      10 2022-03-25       &lt;NA&gt;
+27   68275985   4066  16509095        24.2    3543 2022-10-21       &lt;NA&gt;
+28   67328130   3765  19051442        28.3    3765 2022-09-16       &lt;NA&gt;
+29   64079860   3901  40050355        62.5    3901 2022-10-14 2022-11-17
+30   61778069   3827  14883928        24.1    3677 2022-02-18       &lt;NA&gt;
+31   57743451   3653  23154388        40.1    3604 2022-02-04       &lt;NA&gt;
+32   53076006   3957     56257         0.1       4 2022-12-30       &lt;NA&gt;
+33   49761525   3723  13450240        27.0    3682 2022-12-02       &lt;NA&gt;
+34   46888441   4350  11401182        24.3    4350 2022-10-07       &lt;NA&gt;
+35   45630104   3420  12891123        28.3    3280 2022-02-11       &lt;NA&gt;
+36   45309403   4121  19353213        42.7    4113 2022-09-23       &lt;NA&gt;
+37   44141550   3830  16000495        36.2    3820 2022-05-20       &lt;NA&gt;
+38   40842944   2890  10543948        25.8    2340 2022-09-09       &lt;NA&gt;
+39   38501125   3228   9004957        23.4    3211 2022-11-18       &lt;NA&gt;
+40   38112140   3018  21126919        55.4    3018 2022-08-19       &lt;NA&gt;
+41   37968963   4174  12151384        32.0    4174 2022-11-23       &lt;NA&gt;
+42   34542754   2418  18009921        52.1    2286 2022-03-18       &lt;NA&gt;
+43   34233110   3284  12290800        35.9    3234 2022-04-22       &lt;NA&gt;
+44   31933830   3425  12416819        38.9    3425 2022-05-27       &lt;NA&gt;
+45   31846530   3754  11575855        36.3    3743 2022-08-19 2022-10-14
+46   25100080   3117   6805468        27.1    3114 2022-08-26 2022-10-20
+47   24714024   2040  10529576        42.6    1860 2022-09-23 2022-10-14
+48   23571483   3625   4700450        19.9    3625 2022-12-23       &lt;NA&gt;
+49   22781115   3412   8699630        38.2    3412 2022-04-08       &lt;NA&gt;
+50   22438180   3643   7949980        35.4    3642 2022-02-11       &lt;NA&gt;
+51   20884796   2705   5402642        25.9    2705 2022-04-13       &lt;NA&gt;
+52   20511938   3458   5902803        28.8    3405 2022-11-23       &lt;NA&gt;
+53   20300157   3036   7131703        35.1    3036 2022-04-22 2022-06-10
+54   19802293   2980   7185126        36.3    2980 2022-10-28       &lt;NA&gt;
+55   19060660   3446   9868997        51.8    3446 2022-02-04       &lt;NA&gt;
+56   17811382   3481   6321423        35.5    3475 2022-07-15 2022-08-19
+57   16683555   1962    161579         1.0       4 2022-11-11       &lt;NA&gt;
+58   15763761   1721    332152         2.1       6 2022-12-09       &lt;NA&gt;
+59   15351455   3351   3603368        23.5    3343 2022-12-23 2022-01-27
+60   14947969   3005   6444896        43.1    3005 2022-10-07       &lt;NA&gt;
+61   14612089   2021   8772746        60.0    2021 2022-11-18       &lt;NA&gt;
+62   14570455   3145   4621765        31.7    3145 2022-01-07       &lt;NA&gt;
+63   14500000   1200   9500000        31.7    1200 2022-03-25       &lt;NA&gt;
+64   13280000    696   9400000        31.7     696 2022-11-23       &lt;NA&gt;
+65   13013690   3176   5447130        41.9    3175 2022-08-05 2022-09-23
+66   12775324   2367   9340245        73.1    2367 2022-11-04       &lt;NA&gt;
+67   11765309   2920   4275126        36.3    2865 2022-03-18       &lt;NA&gt;
+68   11628165   3356   4854125        41.7    3350 2022-09-30       &lt;NA&gt;
+69   11446602   2541    226653         2.0       6 2022-08-05       &lt;NA&gt;
+70   10640105   1550    805000         7.6     770 2022-10-06 2022-12-02
+71   10433915   1001   1953070        18.7     980 2022-07-15 2022-09-23
+72   10157055   1205    184454         1.8       4 2022-10-21       &lt;NA&gt;
+73    9739250   3413   3827715        39.3    3412 2022-05-13 2022-06-24
+74    9591094   2772   3502475        36.5    2772 2022-02-11       &lt;NA&gt;
+75    9586237   2502   3007657        31.4    2404 2022-09-16       &lt;NA&gt;
+76    9423445   2982   3128427        33.2    2935 2022-09-16       &lt;NA&gt;
+77    9321593   3935   5403230        58.0    3935 2022-09-02       &lt;NA&gt;
+78    9214020   1963   3530180        38.3    1903 2022-01-21       &lt;NA&gt;
+79    9000202   2136    242269         2.7      16 2022-10-14 2022-12-16
+80    8286741   2436   2919717        35.2    2436 2022-08-26 2022-10-06
+81    7839108    810   4543659        58.0     810 2022-09-09 2022-10-14
+82    7834907   2727   2258562        28.8    2727 2022-11-23       &lt;NA&gt;
+83    7587853   2212   3293030        28.8    2212 2022-05-20       &lt;NA&gt;
+84    7329043   2555   3113298        42.5    2555 2022-04-29       &lt;NA&gt;
+85    7240521   1548   2512145        34.7    1548 2022-08-12       &lt;NA&gt;
+86    6840000    803   6840000        34.7     803 2022-03-12       &lt;NA&gt;
+87    6351010   1090    158620         2.5       4 2022-10-07       &lt;NA&gt;
+88    6333702    821    159403         2.5       6 2022-06-24       &lt;NA&gt;
+89    5825995   2023   2217010        38.1    2022 2022-11-18       &lt;NA&gt;
+90    5644104   1204   2016504        35.7    1082 2022-12-01       &lt;NA&gt;
+91    5413227    557   1739557        32.1     498 2022-08-19 2022-09-23
+92    5180537   1531   2189456        42.3    1531 2022-09-09       &lt;NA&gt;
+93    5100765   1246   2638285        51.7    1246 2022-09-02 2022-09-23
+94    4663106      5    674330        14.5    1246 2022-09-16       &lt;NA&gt;
+95    4588389   1695   1776142        38.7    1687 2022-02-18       &lt;NA&gt;
+96    4345174    610    214602         4.9      10 2022-10-07       &lt;NA&gt;
+97    4330720   1003   1755325        40.5     998 2022-07-29 2022-09-01
+98    4282000    500   4018000        40.5     500 2022-09-30       &lt;NA&gt;
+99    4218925    733   1230145        29.2     170 2022-09-16       &lt;NA&gt;
+100   4018313   1338   1565658        39.0    1338 2022-01-14 2022-02-03
+101   3973263   1057   1399117        35.2     854 2022-05-13       &lt;NA&gt;
+102   3873124    797   1385995        35.8     797 2022-02-25       &lt;NA&gt;
+103   3428556    707     40530         1.2       8 2022-12-23       &lt;NA&gt;
+104   3401324    517   1486924        43.7     516 2022-08-11 2022-09-01
+105   3344040   1328   1499730        44.8    1324 2022-03-18       &lt;NA&gt;
+106   3034775    554    138424         4.6       4 2022-02-04       &lt;NA&gt;
+107   2874000    554   2874000         4.6       4 2022-04-15       &lt;NA&gt;
+108   2806359    909    985921        35.1     902 2022-08-26 2022-10-07
+109   2561270   1882   1422615        55.5    1880 2022-09-02       &lt;NA&gt;
+110   2540965   1930   1038291        40.9    1930 2022-08-12       &lt;NA&gt;
+111   2513963   2306   1540543        61.3    2306 2022-02-25       &lt;NA&gt;
+112   2452882    773   1117962        45.6     773 2022-06-03       &lt;NA&gt;
+113   2280814   1220    990279        43.4    1184 2022-09-02 2022-10-27
+114   2219760   1061    801568        36.1    1061 2022-09-30       &lt;NA&gt;
+115   2179864    169     96200         4.4       3 2022-10-14       &lt;NA&gt;
+116   2156296    483    669161        31.0     470 2022-08-12       &lt;NA&gt;
+117   2121025    805    915290        43.2     805 2022-03-18 2022-04-21
+118   2072173   1005    641845        31.0    1005 2022-02-04       &lt;NA&gt;
+119   2033057    996    380299        18.7     461 2022-09-19       &lt;NA&gt;
+120   2030725    793   1072350        52.8     389 2022-08-12 2022-09-01
+121   1961207    764    826775        42.2     764 2022-06-03       &lt;NA&gt;
+122   1885718   1384    810742        43.0    1384 2022-07-01       &lt;NA&gt;
+123   1860050   1006     70275         3.8       6 2022-10-28       &lt;NA&gt;
+124   1860000    800   1860000         3.8     800 2022-03-11       &lt;NA&gt;
+125   1801646    355    434107        24.1     355 2022-02-25       &lt;NA&gt;
+126   1770000    465   1770000        24.1     465 2022-06-03       &lt;NA&gt;
+127   1758963   2170    723802        41.1    2170 2022-01-21       &lt;NA&gt;
+128   1623267    644     22784         1.4       3 2022-12-23       &lt;NA&gt;
+129   1600543   1525    758919        47.4    1525 2022-03-25       &lt;NA&gt;
+130   1589362    558    986592        62.1     558 2022-09-30       &lt;NA&gt;
+131   1526970    353     25776         1.7       4 2022-04-22       &lt;NA&gt;
+132   1511980   1080    538749        35.6    1080 2022-09-16 2022-11-24
+133   1500636    325    624377        41.6     325 2022-04-22 2022-06-17
+134   1485000    230   1485000        41.6     230 2022-03-18       &lt;NA&gt;
+135   1465513    415    751755        51.3     415 2022-05-20       &lt;NA&gt;
+136   1439643    960    734571        51.0     960 2022-12-18       &lt;NA&gt;
+137   1414662    596    965375        68.2     156 2022-02-25       &lt;NA&gt;
+138   1384003    783     82983         6.0       6 2022-12-02       &lt;NA&gt;
+139   1374325   1311    821991        59.8    1311 2022-09-09       &lt;NA&gt;
+140   1362667    255   1060459        77.8     255 2022-08-26       &lt;NA&gt;
+141   1212525    868    762961        62.9     868 2022-09-23       &lt;NA&gt;
+142   1195000    400   1028000        62.9     400 2022-05-27       &lt;NA&gt;
+143   1177577    436    163405        13.9     110 2022-12-09 2022-01-26
+144   1117065     97     60752         5.4       4 2022-10-21       &lt;NA&gt;
+145   1072750   1144    114993        10.7     239 2022-09-07       &lt;NA&gt;
+146   1064080    191     22416         2.1       3 2022-07-06       &lt;NA&gt;
+147   1062603    168     24488         2.3       3 2022-07-01       &lt;NA&gt;
+148   1040895    271      3265         0.3       3 2022-12-23       &lt;NA&gt;
+149   1035265    489    560678        54.2     489 2022-04-01       &lt;NA&gt;
+150   1033000    318    725000        54.2     318 2022-06-24       &lt;NA&gt;
+151   1015000    833   1015000        54.2     833 2022-10-28       &lt;NA&gt;
+152    976712    179    391252        40.1      67 2022-01-30       &lt;NA&gt;
+153    890654     80     24000        40.1       2 2022-11-18       &lt;NA&gt;
+154    865888     32    287554        33.2      32 2022-07-29       &lt;NA&gt;
+155    840580   1087    287554        33.2      32 2022-12-05       &lt;NA&gt;
+156    835162    872    364216        43.6     872 2022-01-21       &lt;NA&gt;
+157    832000    396    832000        43.6     396 2022-04-29       &lt;NA&gt;
+158    829065    224     45764         5.5       4 2022-04-22       &lt;NA&gt;
+159    812859     22    102204        12.6      15 2022-05-19       &lt;NA&gt;
+160    810744    745    320631        39.5     745 2022-12-06       &lt;NA&gt;
+161    794943    967    454868        57.2     967 2022-09-04       &lt;NA&gt;
+162    791374    826    791374        57.2     826 2022-12-10       &lt;NA&gt;
+163    748695    501     25577         3.4       6 2022-06-03       &lt;NA&gt;
+164    695609    317     32285         4.6       2 2022-12-23       &lt;NA&gt;
+165    643828    811     32285         4.6       2 2022-09-29       &lt;NA&gt;
+166    626557     17     32285         4.6       2 2022-06-06       &lt;NA&gt;
+167    620000    350    620000         4.6     350 2022-06-10       &lt;NA&gt;
+168    613621    186     47339         7.7      34 2022-01-21       &lt;NA&gt;
+169    612260    162    218550        35.7     162 2022-12-08       &lt;NA&gt;
+170    600000    280    600000        35.7     280 2022-12-02       &lt;NA&gt;
+171    593790    173     27150         4.6       4 2022-06-17       &lt;NA&gt;
+172    592000    173    592000         4.6       4 2022-03-04       &lt;NA&gt;
+173    588028    315    268465        45.7     315 2022-09-23       &lt;NA&gt;
+174    538842    516    266744        49.5     516 2022-09-16 2022-09-29
+175    534627    830    266744        49.5     516 2022-03-21       &lt;NA&gt;
+176    512770   1068    244469        47.7    1068 2022-10-28       &lt;NA&gt;
+177    502000    910    502000        47.7     910 2022-12-02       &lt;NA&gt;
+178    493679    785    279928        56.7     785 2022-09-16       &lt;NA&gt;
+179    480240     69    131360        27.4      69 2022-06-03       &lt;NA&gt;
+180    466391    923    245904        52.7     923 2022-09-23       &lt;NA&gt;
+181    454807    705    245904        52.7     923 2022-04-25       &lt;NA&gt;
+182    444814    308     42394         9.5      41 2022-04-29 2022-08-18
+183    444681    427    141916        31.9     427 2022-04-07 2022-04-28
+184    431551     48     28803         6.7       3 2022-11-23       &lt;NA&gt;
+185    430635    279    216220        50.2     279 2022-06-17       &lt;NA&gt;
+186    412196     42    123140        29.9      42 2022-08-12       &lt;NA&gt;
+187    399370    235    289500        72.5     235 2022-09-30 2022-10-27
+188    391426    428    212800        54.4     428 2022-03-11       &lt;NA&gt;
+189    385627    144     65942        17.1       5 2022-11-18       &lt;NA&gt;
+190    373043    169    173614        46.5     169 2022-03-18       &lt;NA&gt;
+191    369112    135      5100        46.5       3 2022-06-01       &lt;NA&gt;
+192    363130    174     22363         6.2      15 2022-08-26       &lt;NA&gt;
+193    351558    350    191004        54.3     350 2022-08-12 2022-09-16
+194    340222    139    135476        39.8     125 2022-07-01       &lt;NA&gt;
+195    325070     39      9722         3.0       2 2022-07-01       &lt;NA&gt;
+196    325042     37      8416         2.6       2 2022-06-10       &lt;NA&gt;
+197    318877    254    162098        50.8     254 2022-01-28       &lt;NA&gt;
+198    316848     44     65753        20.8      13 2022-04-01       &lt;NA&gt;
+199    307000    157     86071        28.0       4 2022-11-04       &lt;NA&gt;
+200    304287     98     16376         5.4       1 2022-10-28       &lt;NA&gt;
+                            Distributor  int_gross world_gross open_day
+1                    Paramount Pictures  770000000  1488732821      147
+2                  20th Century Studios 1539273359  2176229105      350
+3   Walt Disney Studios Motion Pictures  389276658   842750982      315
+4   Walt Disney Studios Motion Pictures  544444197   955775804      126
+5                    Universal Pictures  625127000  1001978080      161
+6                    Universal Pictures  569933000   939628210      182
+7                          Warner Bros.  401600000   770945583       63
+8   Walt Disney Studios Motion Pictures  417671251   760928081      189
+9                    Paramount Pictures  211783942   402656846       98
+10                         Warner Bros.  224800000   392952111      294
+11                   Universal Pictures  217884000   369105725      355
+12                         Warner Bros.  136300000   287340048      175
+13    Sony Pictures Entertainment (SPE)  253100000   401748820       49
+14                   Universal Pictures   47958512   171235592      203
+15  Walt Disney Studios Motion Pictures  108118232   226425420      168
+16                   Paramount Pictures  110200000   216135048      273
+17                   Paramount Pictures   85500000   190844029       84
+18    Sony Pictures Entertainment (SPE)  135900000   239268602      217
+19                   Universal Pictures  152928648   250162278      112
+20                         Warner Bros.  311100000   406950844      105
+21                         Warner Bros.  113700000   207357117      210
+22    Sony Pictures Entertainment (SPE)   50000000   140230760      196
+23                   Universal Pictures   71317512   161440742      175
+24                   Paramount Pictures   58400000   140041405       14
+25                    Columbia Pictures   93595431   167460961       91
+26                                  A24   34208930   106223997       84
+27                   Universal Pictures   99818878   168094863      294
+28                     TriStar Pictures   25100000    92428130      259
+29                   Universal Pictures   40107000   104186860      287
+30             United Artists Releasing   22996174    84774243       49
+31                   Paramount Pictures   22740710    80484161       35
+32                    Columbia Pictures   30400000    83476006      364
+33                   Universal Pictures   25947000    75708525      336
+34    Sony Pictures Entertainment (SPE)   57200000   104088441      280
+35                 20th Century Studios   91677131   137307235       42
+36                         Warner Bros.   42100000    87409403      266
+37                       Focus Features   48459987    92601537      140
+38                 20th Century Studios    4509393    45352337      252
+39                 Searchlight Pictures   41015668    79516793      322
+40                          Crunchyroll   48450000    86562140      231
+41  Walt Disney Studios Motion Pictures   35652677    73621640      327
+42                          Crunchyroll  132202507   166745261       77
+43                       Focus Features   35400000    69633110      112
+44                 20th Century Studios    2214920    34148750      147
+45                   Universal Pictures   27249279    59095809      231
+46    Sony Pictures Entertainment (SPE)    8600000    33700080      238
+47                 Walt Disney Pictures   51298893    76012917      266
+48                     TriStar Pictures   33000000    56571483      357
+49                   Universal Pictures   29519869    52300984       98
+50                   Universal Pictures   29519869    52300984       42
+51    Sony Pictures Entertainment (SPE)   28019880    50458060      103
+52                    Columbia Pictures     707583    21592379      327
+53                            Lionsgate    1161367    21673305      112
+54                            Lionsgate    8816163    29116320      301
+55                            Lionsgate   24841861    44644154       35
+56                   Paramount Pictures   48234703    67295363      196
+57                   Universal Pictures   24507136    42318518      315
+58                                  A24   11507000    28190555      343
+59                   Paramount Pictures     534803    16298564      357
+60  Walt Disney Studios Motion Pictures   35100000    50451455      280
+61                        Fathom Events   16297841    31245810      322
+62                   Universal Pictures      67524    14679613        7
+63                     Sarigama Cinemas   13256995    27827450       84
+64                              Netflix  142988696   157488696      327
+65                   Universal Pictures   13280000     9400000      217
+66                          Crunchyroll      60565    13074255      308
+67                                  A24  174394746   187170070       77
+68                   Universal Pictures    3014549    14779858      273
+69                                  A24    3146627    14774792      217
+70         Cinedigm Entertainment Group    2483068    13929670      279
+71                       Focus Features    4072239    14712344      196
+72                 Searchlight Pictures   19594585    30028500      294
+73                   Universal Pictures   27299387    37456442      133
+74             Briarcliff Entertainment    5300000    15039250       42
+75  Walt Disney Studios Motion Pictures    6311113    15902207      259
+76                                  A24   12380397    21966634      259
+77    Sony Pictures Entertainment (SPE)    9423445     3128427      245
+78                   Universal Pictures     291925     9613518       21
+79             United Artists Releasing     250178     9464198      287
+80             United Artists Releasing    1042939    10043141      238
+81  Walt Disney Studios Motion Pictures   11077956    19364697      252
+82             United Artists Releasing   42325677    50164785      327
+83                                  A24    6700000    14534907      140
+84                 Open Road Films (II)    3564218    11152071      119
+85                            Lionsgate    6568212    13897255      224
+86                  Trafalgar Releasing   10122740    17363261       71
+87                       Focus Features   25760000    32600000      280
+88                                  A24    3797167    10148177      175
+89                   Universal Pictures     175890     6509592      322
+90                        Fathom Events    7603176    13429171      335
+91                   Paramount Pictures      35163     5679267      231
+92                        Fathom Events   31670516    37083743      252
+93                   Universal Pictures     391289     5571826      245
+94                        Fathom Events     532047     5632812      259
+95                     LD Entertainment      54491     4717597       49
+96                                 Neon    4588389     1776142      280
+97                       Focus Features   18754222    23099396      210
+98                     Sarigama Cinemas      39816     4370536      273
+99                                 Neon   17594105    21876105      259
+100                               GKIDS    8173901    12392826       14
+101                Roadside Attractions   60648189    64666502      133
+102            United Artists Releasing    3973263     1399117       56
+103            United Artists Releasing    2523606     6396730      357
+104                  Paramount Pictures    3428556       40530      223
+105                      Focus Features    8692212    12093536       77
+106                                Neon     688273     4032313       35
+107                       Viva Pictures    9632563    12667338      105
+108               Bleecker Street Media   86249940    89123940      238
+109                      Focus Features    2806359      985921      245
+110                   Gravitas Premiere    2561270     1422615      224
+111                Open Road Films (II)      11105     2552070       56
+112                                Neon     504552     3018515      154
+113                Roadside Attractions    2098683     4551565      245
+114                Roadside Attractions    2280814      990279      273
+115                                MUBI      60154     2279914      287
+116                Roadside Attractions   20640265    22820129      224
+117                       Stage 6 Films    2156296      669161       77
+118              Blue Fox Entertainment     111568     2232593       35
+119                       Fathom Events   17438405    19510578      262
+120                  Universal Pictures    3921881     5954938      224
+121                           IFC Films     600000     2630725      154
+122               Bleecker Street Media    1027844     2989051      182
+123                      Focus Features     138789     2024507      301
+124                                   -    4147210     6007260       70
+125                            ShortsTV   14094804    15954804       56
+126                Prime Media Pictures    1801646      434107      154
+127                   Gravitas Ventures   28067637    29837637       21
+128   Sony Pictures Entertainment (SPE)     472484     2231447      357
+129               Bleecker Street Media    7184934     8808201       84
+130              Reliance Entertainment     106524     1707067      273
+131              Sony Pictures Classics    6644804     8234166      112
+132                          UP2U Films   12700247    14227217      259
+133                           Lionsgate    1511980      538749      112
+134                         Zee Studios    3125233     4625869       77
+135                       D'Souza Media   23336898    24821898      140
+136                       Fathom Events    1465513      751755      352
+137                  Paramount Pictures     950140     2389783       56
+138                      Focus Features    2800000     4214662      336
+139            The Avenue Entertainment    1384003       82983      252
+140 Walt Disney Studios Motion Pictures    3044374     4418699      238
+141                       Fathom Events    1261755     2624422      266
+142                                   -     109155     1321680      147
+143                Searchlight Pictures    8654193     9849193      343
+144                                 A24    4252533     5430110      294
+145                       Fathom Events    2298211     3763329      250
+146                                Neon   18082312    19155062      187
+147   Sony Pictures Entertainment (SPE)     556353     1620433      182
+148                                Neon    1512380     2574983      357
+149                   STX Entertainment   17129541    18170436       91
+150                                   -    1087023     2122288      175
+151                 Trafalgar Releasing   10434726    11467726      301
+152                                IMAX    1571693     2586693       30
+153                  Sideshow Releasing    1230134     2206846      322
+154           Well Go USA Entertainment    1014632     1905286      210
+155                       Fathom Events     345008     1210896      339
+156                      Variance Films         NA      840580       21
+157                Prime Media Pictures     279996     1115158      119
+158                                Neon    7216175     8048175      112
+159                  Capelight Pictures    1161270     1990335      139
+160                       Fathom Events  100341188   101154047      340
+161                       Fathom Events   92952268    93763012      247
+162                       Fathom Events     110605      905548      344
+163              Sony Pictures Classics      66528      857902      154
+164                           IFC Films    3276304     4024999      357
+165                       Fathom Events    2177746     2873355      272
+166                                   -         NA      643828      157
+167                                   -         NA      626557      161
+168                       Zhen Pictures     585346     1198967       21
+169          Atlas Distribution Company     612260      218550      342
+170                                   -     142389      742389      336
+171                           IFC Films    4237346     4831136      168
+172    Paramount Pictures International    2679210     3271210       63
+173                     Pantelion Films    1440049     2028077      266
+174                  Paramount Pictures     117771      656613      259
+175                       Fathom Events     648533     1183160       80
+176                Roadside Attractions     149470      662240      301
+177                         Crunchyroll   16786993    17288993      336
+178                           IFC Films     493679      279928      259
+179                                   -     480240      131360      154
+180              Blue Fox Entertainment    3832340     4298731      266
+181                       Fathom Events     328907      783714      115
+182              Blue Fox Entertainment   13204791    13649605      119
+183                                   -     444681      141916       97
+184                                   -     258016      689567      327
+185                      Focus Features     430215      860850      168
+186           Well Go USA Entertainment   20953067    21365263      224
+187                                   -     399370      289500      273
+188                Collide Distribution       4201      395627       70
+189                                 A24     385627       65942      322
+190                Roadside Attractions     373043      173614       77
+191                      Variance Films     369112        5100      152
+192                   Cohen Media Group    6972297     7335427      238
+193                               GKIDS      82774      434332      224
+194                Roadside Attractions    1031334     1371556      182
+195             Circus King Productions     325070        9722      182
+196                           IFC Films     325042        8416      161
+197                           IFC Films     318877      162098       28
+198                 Purdie Distribution      19986      336834       91
+199                              Utopia     307000       86071      308
+200                              Utopia    1156233     1460520      301
+    close_day days_of_show
+1         350          203
+2          NA           NA
+3          NA           NA
+4          NA           NA
+5         266          105
+6          NA           NA
+7          NA           NA
+8         287           98
+9         189           91
+10         13           84
+11         NA           NA
+12        287          112
+13         NA           NA
+14        279           76
+15        252           84
+16        350           77
+17        174           90
+18         NA           NA
+19        321          209
+20        182           77
+21         NA           NA
+22        293           97
+23        266           91
+24         NA           NA
+25         NA           NA
+26         NA           NA
+27         NA           NA
+28         NA           NA
+29        321           34
+30         NA           NA
+31         NA           NA
+32         NA           NA
+33         NA           NA
+34         NA           NA
+35         NA           NA
+36         NA           NA
+37         NA           NA
+38         NA           NA
+39         NA           NA
+40         NA           NA
+41         NA           NA
+42         NA           NA
+43         NA           NA
+44         NA           NA
+45        287           56
+46        293           55
+47        287           21
+48         NA           NA
+49         NA           NA
+50         NA           NA
+51         NA           NA
+52         NA           NA
+53        161           49
+54         NA           NA
+55         NA           NA
+56        231           35
+57         NA           NA
+58         NA           NA
+59         27           35
+60         NA           NA
+61         NA           NA
+62         NA           NA
+63         NA           NA
+64         NA           NA
+65        266           49
+66         NA           NA
+67         NA           NA
+68         NA           NA
+69         NA           NA
+70        336           57
+71        266           70
+72         NA           NA
+73        175           42
+74         NA           NA
+75         NA           NA
+76         NA           NA
+77         NA           NA
+78         NA           NA
+79        350           63
+80        279           41
+81        287           35
+82         NA           NA
+83         NA           NA
+84         NA           NA
+85         NA           NA
+86         NA           NA
+87         NA           NA
+88         NA           NA
+89         NA           NA
+90         NA           NA
+91        266           35
+92         NA           NA
+93        266           21
+94         NA           NA
+95         NA           NA
+96         NA           NA
+97        244           34
+98         NA           NA
+99         NA           NA
+100        34           20
+101        NA           NA
+102        NA           NA
+103        NA           NA
+104       244           21
+105        NA           NA
+106        NA           NA
+107        NA           NA
+108       280           42
+109        NA           NA
+110        NA           NA
+111        NA           NA
+112        NA           NA
+113       300           55
+114        NA           NA
+115        NA           NA
+116        NA           NA
+117       111           34
+118        NA           NA
+119        NA           NA
+120       244           20
+121        NA           NA
+122        NA           NA
+123        NA           NA
+124        NA           NA
+125        NA           NA
+126        NA           NA
+127        NA           NA
+128        NA           NA
+129        NA           NA
+130        NA           NA
+131        NA           NA
+132       328           69
+133       168           56
+134        NA           NA
+135        NA           NA
+136        NA           NA
+137        NA           NA
+138        NA           NA
+139        NA           NA
+140        NA           NA
+141        NA           NA
+142        NA           NA
+143        26           48
+144        NA           NA
+145        NA           NA
+146        NA           NA
+147        NA           NA
+148        NA           NA
+149        NA           NA
+150        NA           NA
+151        NA           NA
+152        NA           NA
+153        NA           NA
+154        NA           NA
+155        NA           NA
+156        NA           NA
+157        NA           NA
+158        NA           NA
+159        NA           NA
+160        NA           NA
+161        NA           NA
+162        NA           NA
+163        NA           NA
+164        NA           NA
+165        NA           NA
+166        NA           NA
+167        NA           NA
+168        NA           NA
+169        NA           NA
+170        NA           NA
+171        NA           NA
+172        NA           NA
+173        NA           NA
+174       272           13
+175        NA           NA
+176        NA           NA
+177        NA           NA
+178        NA           NA
+179        NA           NA
+180        NA           NA
+181        NA           NA
+182       230          111
+183       118           21
+184        NA           NA
+185        NA           NA
+186        NA           NA
+187       300           27
+188        NA           NA
+189        NA           NA
+190        NA           NA
+191        NA           NA
+192        NA           NA
+193       259           35
+194        NA           NA
+195        NA           NA
+196        NA           NA
+197        NA           NA
+198        NA           NA
+199        NA           NA
+200        NA           NA</code></pre>
+</div>
+</div>
+<p>There are 10 variables with 200 rows.</p>
+<section id="column-description" class="level3">
+<h3 class="anchored" data-anchor-id="column-description"><strong>COLUMN DESCRIPTION</strong></h3>
+<ul>
+<li><p>‘Rank’: rank of the movie</p></li>
+<li><p>‘Release’: release date of the movie</p></li>
+<li><p>‘Gross’: domestic gross of the movie</p></li>
+<li><p>‘max_th’: maximum number of theaters the movie was released in</p></li>
+<li><p>‘Opening’: gross on opening weekend</p></li>
+<li><p>‘perc_tot_gr’: domestic percentage of the total gross</p></li>
+<li><p>‘open_th’: number of theaters the movie opened in</p></li>
+<li><p>‘Open’: opening date</p></li>
+<li><p>‘Close’: closing date</p></li>
+<li><p>‘Distributor’: name of the distributor</p></li>
+<li><p>‘int_gross’: international gross</p></li>
+<li><p>‘world_gross’: worldwide gross</p></li>
+</ul>
+</section>
+</section>
+<section id="summary-of-each-variables" class="level2">
+<h2 class="anchored" data-anchor-id="summary-of-each-variables">Summary of each variables</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Rank          Release              Gross               max_th      
+ Min.   :  1.00   Length:200         Min.   :   304287   Min.   :   5.0  
+ 1st Qu.: 50.75   Class :character   1st Qu.:  1028500   1st Qu.: 457.8  
+ Median :100.50   Mode  :character   Median :  3995788   Median :1083.5  
+ Mean   :100.50                      Mean   : 36977151   Mean   :1760.2  
+ 3rd Qu.:150.25                      3rd Qu.: 21273142   3rd Qu.:3189.0  
+ Max.   :200.00                      Max.   :718732821   Max.   :4751.0  
+                                                                         
+    Opening           perc_tot_gr       open_th            Open           
+ Min.   :     3265   Min.   : 0.10   Min.   :   1.0   Min.   :2022-01-07  
+ 1st Qu.:   243919   1st Qu.:20.50   1st Qu.: 160.5   1st Qu.:2022-04-22  
+ Median :  1066404   Median :35.45   Median : 916.5   Median :2022-08-05  
+ Mean   : 11649361   Mean   :32.05   Mean   :1588.8   Mean   :2022-07-18  
+ 3rd Qu.:  8137392   3rd Qu.:43.25   3rd Qu.:3156.2   3rd Qu.:2022-10-07  
+ Max.   :187420998   Max.   :77.80   Max.   :4735.0   Max.   :2022-12-30  
+                                                                          
+     Close            Distributor          int_gross        
+ Min.   :2022-01-13   Length:200         Min.   :4.201e+03  
+ 1st Qu.:2022-07-08   Class :character   1st Qu.:7.076e+05  
+ Median :2022-09-23   Mode  :character   Median :6.311e+06  
+ Mean   :2022-08-27                      Mean   :5.177e+07  
+ 3rd Qu.:2022-10-14                      3rd Qu.:3.040e+07  
+ Max.   :2022-12-16                      Max.   :1.539e+09  
+ NA's   :155                             NA's   :3          
+  world_gross           open_day     close_day      days_of_show   
+ Min.   :5.100e+03   Min.   :  7   Min.   : 13.0   Min.   : 13.00  
+ 1st Qu.:2.099e+06   1st Qu.:112   1st Qu.:189.0   1st Qu.: 35.00  
+ Median :1.287e+07   Median :217   Median :266.0   Median : 55.00  
+ Mean   :8.765e+07   Mean   :199   Mean   :239.2   Mean   : 62.18  
+ 3rd Qu.:6.049e+07   3rd Qu.:280   3rd Qu.:287.0   3rd Qu.: 84.00  
+ Max.   :2.176e+09   Max.   :364   Max.   :350.0   Max.   :209.00  
+                                   NA's   :155     NA's   :155     </code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df<span class="sc">$</span>Distributor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Paramount Pictures"                  "20th Century Studios"               
+ [3] "Walt Disney Studios Motion Pictures" "Universal Pictures"                 
+ [5] "Warner Bros."                        "Sony Pictures Entertainment (SPE)"  
+ [7] "Columbia Pictures"                   "A24"                                
+ [9] "TriStar Pictures"                    "United Artists Releasing"           
+[11] "Focus Features"                      "Searchlight Pictures"               
+[13] "Crunchyroll"                         "Walt Disney Pictures"               
+[15] "Lionsgate"                           "Fathom Events"                      
+[17] "Sarigama Cinemas"                    "Netflix"                            
+[19] "Cinedigm Entertainment Group"        "Briarcliff Entertainment"           
+[21] "Open Road Films (II)"                "Trafalgar Releasing"                
+[23] "LD Entertainment"                    "Neon"                               
+[25] "GKIDS"                               "Roadside Attractions"               
+[27] "Viva Pictures"                       "Bleecker Street Media"              
+[29] "Gravitas Premiere"                   "MUBI"                               
+[31] "Stage 6 Films"                       "Blue Fox Entertainment"             
+[33] "IFC Films"                           "-"                                  
+[35] "ShortsTV"                            "Prime Media Pictures"               
+[37] "Gravitas Ventures"                   "Reliance Entertainment"             
+[39] "Sony Pictures Classics"              "UP2U Films"                         
+[41] "Zee Studios"                         "D'Souza Media"                      
+[43] "The Avenue Entertainment"            "STX Entertainment"                  
+[45] "IMAX"                                "Sideshow Releasing"                 
+[47] "Well Go USA Entertainment"           "Variance Films"                     
+[49] "Capelight Pictures"                  "Zhen Pictures"                      
+[51] "Atlas Distribution Company"          "Paramount Pictures International"   
+[53] "Pantelion Films"                     "Collide Distribution"               
+[55] "Cohen Media Group"                   "Circus King Productions"            
+[57] "Purdie Distribution"                 "Utopia"                             </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>movies_per_distributor <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Distributor) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Distributor)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>movies_per_distributor  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 58 × 2
+# Groups:   Distributor [58]
+   Distributor                      n
+   &lt;chr&gt;                        &lt;int&gt;
+ 1 -                               10
+ 2 20th Century Studios             4
+ 3 A24                              9
+ 4 Atlas Distribution Company       1
+ 5 Bleecker Street Media            3
+ 6 Blue Fox Entertainment           3
+ 7 Briarcliff Entertainment         1
+ 8 Capelight Pictures               1
+ 9 Cinedigm Entertainment Group     1
+10 Circus King Productions          1
+# ℹ 48 more rows</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(movies_per_distributor, <span class="fu">aes</span>(<span class="at">x=</span>Distributor, <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">'dodge'</span>, <span class="at">stat =</span> <span class="st">'identity'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Using the glimpse() function, let’s have a look at how our data would look like!</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 200
+Columns: 15
+$ Rank         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17…
+$ Release      &lt;chr&gt; "Top Gun: Maverick", "Avatar: The Way of Water", "Black P…
+$ Gross        &lt;int&gt; 718732821, 636955746, 453474324, 411331607, 376851080, 36…
+$ max_th       &lt;int&gt; 4751, 4340, 4396, 4534, 4697, 4427, 4417, 4375, 4258, 440…
+$ Opening      &lt;int&gt; 126707459, 134100226, 181339761, 187420998, 145075625, 10…
+$ perc_tot_gr  &lt;dbl&gt; 17.6, 21.1, 40.0, 45.6, 38.5, 28.9, 36.3, 42.0, 37.8, 39.…
+$ open_th      &lt;int&gt; 4735, 4202, 4396, 4534, 4676, 4391, 4417, 4375, 4234, 440…
+$ Open         &lt;date&gt; 2022-05-27, 2022-12-16, 2022-11-11, 2022-05-06, 2022-06-…
+$ Close        &lt;date&gt; 2022-12-16, NA, NA, NA, 2022-09-23, NA, NA, 2022-10-14, …
+$ Distributor  &lt;chr&gt; "Paramount Pictures", "20th Century Studios", "Walt Disne…
+$ int_gross    &lt;int&gt; 770000000, 1539273359, 389276658, 544444197, 625127000, 5…
+$ world_gross  &lt;dbl&gt; 1488732821, 2176229105, 842750982, 955775804, 1001978080,…
+$ open_day     &lt;dbl&gt; 147, 350, 315, 126, 161, 182, 63, 189, 98, 294, 355, 175,…
+$ close_day    &lt;dbl&gt; 350, NA, NA, NA, 266, NA, NA, 287, 189, 13, NA, 287, NA, …
+$ days_of_show &lt;dbl&gt; 203, NA, NA, NA, 105, NA, NA, 98, 91, 84, NA, 112, NA, 76…</code></pre>
+</div>
+</div>
+<p>Code sample</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># for data manipulation</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># for data visualization</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data into a data frame</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>movie_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"_data/project_data.csv"</span>) </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename columns for clarity</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(movie_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rank"</span>, <span class="st">"release_date"</span>, <span class="st">"domestic_gross"</span>, <span class="st">"max_theaters"</span>, <span class="st">"opening_weekend_gross"</span>, <span class="st">"domestic_percentage"</span>, <span class="st">"opening_theaters"</span>, <span class="st">"opening_date"</span>, <span class="st">"closing_date"</span>, <span class="st">"distributor"</span>, <span class="st">"international_gross"</span>, <span class="st">"worldwide_gross"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset data to include only relevant columns</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>movie_data <span class="ot">&lt;-</span> <span class="fu">select</span>(movie_data, opening_weekend_gross, worldwide_gross)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Check data for any missing values or outliers</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(movie_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> opening_weekend_gross worldwide_gross    
+ Min.   :     3265     Min.   :5.100e+03  
+ 1st Qu.:   243919     1st Qu.:2.099e+06  
+ Median :  1066404     Median :1.287e+07  
+ Mean   : 11649361     Mean   :8.765e+07  
+ 3rd Qu.:  8137392     3rd Qu.:6.049e+07  
+ Max.   :187420998     Max.   :2.176e+09  </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate descriptive statistics</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>initial_week_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(movie_data<span class="sc">$</span>opening_weekend_gross)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>initial_week_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(movie_data<span class="sc">$</span>opening_weekend_gross)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>total_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(movie_data<span class="sc">$</span>worldwide_gross)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>total_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(movie_data<span class="sc">$</span>worldwide_gross)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create scatterplot to visualize the relationship between the variables</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> movie_data, <span class="fu">aes</span>(<span class="at">x =</span> opening_weekend_gross, <span class="at">y =</span> worldwide_gross)) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Opening Weekend Gross"</span>, <span class="at">y =</span> <span class="st">"Worldwide Gross"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate correlation coefficient between the two variables</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>correlation <span class="ot">&lt;-</span> <span class="fu">cor</span>(movie_data<span class="sc">$</span>opening_weekend_gross, movie_data<span class="sc">$</span>worldwide_gross)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create linear regression model</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(worldwide_gross <span class="sc">~</span> opening_weekend_gross, <span class="at">data =</span> movie_data)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># View summary of the linear regression model</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = worldwide_gross ~ opening_weekend_gross, data = movie_data)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-451201231  -13991506   -5651237    3936064 1218096100 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           4.833e+06  8.810e+06   0.549    0.584    
+opening_weekend_gross 7.109e+00  2.744e-01  25.904   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 116100000 on 198 degrees of freedom
+Multiple R-squared:  0.7722,    Adjusted R-squared:  0.771 
+F-statistic:   671 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform hypothesis test</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Null hypothesis: The total gross collection of a movie is not dependent on the opening week's collection</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative hypothesis: The total gross collection of a movie is dependent on the opening week's collection</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#test &lt;- t.test(movie_data$worldwide_gross ~ movie_data$opening_weekend_gross, var.equal = TRUE)</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View results of hypothesis test</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References:</h2>
+<ol type="1">
+<li><p>Nasir, Suphan &amp; Öcal, Figen. (2016). Film Marketing: The Impact of Publicity Activities on Demand Generation. 10.4018/978-1-5225-0143-5.ch019.</p></li>
+<li><p><em>Elizabeth Cooper-Martin (1991) ,“Consumers and Movies: Some Findings on Experiential Products”, in NA - Advances in Consumer Research Volume 18, eds.&nbsp;Rebecca H. Holman and Michael R. Solomon, Provo, UT : Association for Consumer Research, Pages: 372-378.</em></p></li>
+</ol>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project 603"</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Jerin Jacob"</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final project qmd file for 603"</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/10/2023"</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>Now a days, movies are a well marketed entertainment product. Just like any other products in the market, movies are also having an allocated a marketing budget and promotional activities are done in scale. This often result in the opening weekend's gross ticketing volume to rise. But are the pre-release promotional activities helping the movie to collect more or is it just creating a hype initially? Or does the movie's gross collection is not at all dependant on pre release promotions? This dataset has 200 highest grossing movies of 2022. It has both the opening week's gross as well as the total gross collection of the movies, along with other variables. Assuming that opening week's collection is depending on the pre-release promotion, by looking on the relationship between opening week's gross and total gross, I am trying to see how the pre-release activities help the producers earn more in boxoffice.</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>**Research Question**: Is the total collection of a movie depending on the pre-release promotional activities?</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>**Null hypothesis**: The total gross collection of a movie is not dependant on the opening week's collection</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>**Alternative hypotheses**: Total gross collection is positively dependant on the opening week's collection</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reading the data</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"_data/project_data.csv"</span>) </span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Open <span class="ot">&lt;-</span> <span class="fu">ymd</span>(df<span class="sc">$</span>Open)</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Close <span class="ot">&lt;-</span> <span class="fu">ymd</span>(df<span class="sc">$</span>Close)</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span> df<span class="sc">|&gt;</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">open_day =</span> <span class="fu">yday</span>(Open), <span class="at">close_day =</span> <span class="fu">yday</span>(Close), <span class="at">days_of_show =</span> <span class="fu">case_when</span>(close_day <span class="sc">&lt;</span> open_day <span class="sc">~</span> (<span class="dv">365</span><span class="sc">-</span>open_day)<span class="sc">+</span>close_day, close_day <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">~</span> close_day<span class="sc">-</span>open_day)) </span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>There are 10 variables with 200 rows.</span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="fu">### **COLUMN DESCRIPTION**</span></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Rank': rank of the movie</span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Release': release date of the movie</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Gross': domestic gross of the movie</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'max_th': maximum number of theaters the movie was released in</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Opening': gross on opening weekend</span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'perc_tot_gr': domestic percentage of the total gross</span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'open_th': number of theaters the movie opened in</span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Open': opening date</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Close': closing date</span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Distributor': name of the distributor</span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'int_gross': international gross</span>
+<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'world_gross': worldwide gross</span>
+<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary of each variables</span></span>
+<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span>
+<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(df<span class="sc">$</span>Distributor)</span>
+<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a>movies_per_distributor <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Distributor) <span class="sc">|&gt;</span></span>
+<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Distributor)</span>
+<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a>movies_per_distributor  </span>
+<span id="cb21-86"><a href="#cb21-86" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(movies_per_distributor, <span class="fu">aes</span>(<span class="at">x=</span>Distributor, <span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb21-87"><a href="#cb21-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">'dodge'</span>, <span class="at">stat =</span> <span class="st">'identity'</span>)</span>
+<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-92"><a href="#cb21-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-93"><a href="#cb21-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-94"><a href="#cb21-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-96"><a href="#cb21-96" aria-hidden="true" tabindex="-1"></a>Using the glimpse() function, let's have a look at how our data would look like!</span>
+<span id="cb21-97"><a href="#cb21-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-100"><a href="#cb21-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span>
+<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-103"><a href="#cb21-103" aria-hidden="true" tabindex="-1"></a>Code sample</span>
+<span id="cb21-106"><a href="#cb21-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb21-107"><a href="#cb21-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb21-108"><a href="#cb21-108" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># for data manipulation</span></span>
+<span id="cb21-109"><a href="#cb21-109" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># for data visualization</span></span>
+<span id="cb21-110"><a href="#cb21-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-111"><a href="#cb21-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data into a data frame</span></span>
+<span id="cb21-112"><a href="#cb21-112" aria-hidden="true" tabindex="-1"></a>movie_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"_data/project_data.csv"</span>) </span>
+<span id="cb21-113"><a href="#cb21-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-114"><a href="#cb21-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename columns for clarity</span></span>
+<span id="cb21-115"><a href="#cb21-115" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(movie_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rank"</span>, <span class="st">"release_date"</span>, <span class="st">"domestic_gross"</span>, <span class="st">"max_theaters"</span>, <span class="st">"opening_weekend_gross"</span>, <span class="st">"domestic_percentage"</span>, <span class="st">"opening_theaters"</span>, <span class="st">"opening_date"</span>, <span class="st">"closing_date"</span>, <span class="st">"distributor"</span>, <span class="st">"international_gross"</span>, <span class="st">"worldwide_gross"</span>)</span>
+<span id="cb21-116"><a href="#cb21-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-117"><a href="#cb21-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset data to include only relevant columns</span></span>
+<span id="cb21-118"><a href="#cb21-118" aria-hidden="true" tabindex="-1"></a>movie_data <span class="ot">&lt;-</span> <span class="fu">select</span>(movie_data, opening_weekend_gross, worldwide_gross)</span>
+<span id="cb21-119"><a href="#cb21-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-120"><a href="#cb21-120" aria-hidden="true" tabindex="-1"></a><span class="co"># Check data for any missing values or outliers</span></span>
+<span id="cb21-121"><a href="#cb21-121" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(movie_data)</span>
+<span id="cb21-122"><a href="#cb21-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-123"><a href="#cb21-123" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate descriptive statistics</span></span>
+<span id="cb21-124"><a href="#cb21-124" aria-hidden="true" tabindex="-1"></a>initial_week_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(movie_data<span class="sc">$</span>opening_weekend_gross)</span>
+<span id="cb21-125"><a href="#cb21-125" aria-hidden="true" tabindex="-1"></a>initial_week_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(movie_data<span class="sc">$</span>opening_weekend_gross)</span>
+<span id="cb21-126"><a href="#cb21-126" aria-hidden="true" tabindex="-1"></a>total_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(movie_data<span class="sc">$</span>worldwide_gross)</span>
+<span id="cb21-127"><a href="#cb21-127" aria-hidden="true" tabindex="-1"></a>total_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(movie_data<span class="sc">$</span>worldwide_gross)</span>
+<span id="cb21-128"><a href="#cb21-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-129"><a href="#cb21-129" aria-hidden="true" tabindex="-1"></a><span class="co"># Create scatterplot to visualize the relationship between the variables</span></span>
+<span id="cb21-130"><a href="#cb21-130" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> movie_data, <span class="fu">aes</span>(<span class="at">x =</span> opening_weekend_gross, <span class="at">y =</span> worldwide_gross)) <span class="sc">+</span></span>
+<span id="cb21-131"><a href="#cb21-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-132"><a href="#cb21-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Opening Weekend Gross"</span>, <span class="at">y =</span> <span class="st">"Worldwide Gross"</span>)</span>
+<span id="cb21-133"><a href="#cb21-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-134"><a href="#cb21-134" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate correlation coefficient between the two variables</span></span>
+<span id="cb21-135"><a href="#cb21-135" aria-hidden="true" tabindex="-1"></a>correlation <span class="ot">&lt;-</span> <span class="fu">cor</span>(movie_data<span class="sc">$</span>opening_weekend_gross, movie_data<span class="sc">$</span>worldwide_gross)</span>
+<span id="cb21-136"><a href="#cb21-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-137"><a href="#cb21-137" aria-hidden="true" tabindex="-1"></a><span class="co"># Create linear regression model</span></span>
+<span id="cb21-138"><a href="#cb21-138" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(worldwide_gross <span class="sc">~</span> opening_weekend_gross, <span class="at">data =</span> movie_data)</span>
+<span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a><span class="co"># View summary of the linear regression model</span></span>
+<span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_model)</span>
+<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform hypothesis test</span></span>
+<span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a><span class="co"># Null hypothesis: The total gross collection of a movie is not dependent on the opening week's collection</span></span>
+<span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative hypothesis: The total gross collection of a movie is dependent on the opening week's collection</span></span>
+<span id="cb21-146"><a href="#cb21-146" aria-hidden="true" tabindex="-1"></a><span class="co">#test &lt;- t.test(movie_data$worldwide_gross ~ movie_data$opening_weekend_gross, var.equal = TRUE)</span></span>
+<span id="cb21-147"><a href="#cb21-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-148"><a href="#cb21-148" aria-hidden="true" tabindex="-1"></a><span class="co"># View results of hypothesis test</span></span>
+<span id="cb21-149"><a href="#cb21-149" aria-hidden="true" tabindex="-1"></a><span class="co">#test</span></span>
+<span id="cb21-150"><a href="#cb21-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-151"><a href="#cb21-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-152"><a href="#cb21-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb21-153"><a href="#cb21-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-154"><a href="#cb21-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-155"><a href="#cb21-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-156"><a href="#cb21-156" aria-hidden="true" tabindex="-1"></a><span class="fu">## References:</span></span>
+<span id="cb21-157"><a href="#cb21-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-158"><a href="#cb21-158" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Nasir, Suphan &amp; Öcal, Figen. (2016). Film Marketing: The Impact of Publicity Activities on Demand Generation. 10.4018/978-1-5225-0143-5.ch019.</span>
+<span id="cb21-159"><a href="#cb21-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-160"><a href="#cb21-160" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>*Elizabeth Cooper-Martin (1991) ,"Consumers and Movies: Some Findings on Experiential Products", in NA - Advances in Consumer Research Volume 18, eds. Rebecca H. Holman and Michael R. Solomon, Provo, UT : Association for Consumer Research, Pages: 372-378.*</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
