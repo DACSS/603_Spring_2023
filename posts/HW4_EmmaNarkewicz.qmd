@@ -1,0 +1,594 @@
+---
+title: "Homework 4"
+author: "Emma Narkewicz"
+description: "Emma Narkewicz HW4"
+date: "05/01/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - linear regression
+  - emma_narkewicz
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+# Question 1
+
+For recent data in Jacksonville, Florida, on y = selling price of home
+(in dollars), x1 = size of home (in square feet), and x2 = lot size (in
+square feet), the prediction equation is ŷ = −10,536 + 53.8x1 + 2.84x2.
+
+## A
+
+A particular home of 1240 square feet on a lot of 18,000 square feet
+sold for \$145,000. Find the predicted selling price and the residual,
+and interpret.
+
+To solve for the predicted price, I plugged in x1 = 1,240 & x2 = 18,000
+
+```{r}
+#Predicted Price
+pp <- -10536 + (53.8 * 1240) + (2.84 * 18000)  
+pp
+```
+
+From the equation, the predicted selling price of the house is \$107,296
+
+The residual can be calculated using the equation:
+
+Residual = (actual y-value) - (predicted y value)
+
+```{r}
+#Residual
+
+R = 145000 - 107296
+R
+```
+
+The residual of positive \$37,704 indicates that the house sold for more
+than the model predicted, meaning the model under-predicted the selling
+price.
+
+## B
+
+For fixed lot size, how much is the house selling price predicted to
+increase for each square- foot increase in home size? Why?
+
+Based on the prediction equation for a fixed lot size (x2), the price of
+the house is expected to increase \$53.8 dollars for each square foot of
+house size. This is because with a fixed lot size (x2) t the 53.8x1 in
+the prediction equation explains the increase in house price per each
+square foot of house size
+
+ŷ = −10,536 + 53.8x1 + 2.84x2.
+
+## C
+
+According to this prediction equation, for fixed home size, how much
+would lot size need to increase to have the same impact as a
+one-square-foot increase in home size?
+
+Home size = x1 = 1 Lot size = x2
+
+53.81 (x1) = 2.84x2 53.8 = 2.84x2
+
+```{r}
+53.8/2.84
+
+```
+
+Based on the prediction equation, the lot size would need to increase by
+18.94 square feet to have the same impact as a 1-square-foot increase in
+home size.
+
+# Question 2
+
+(Data file: salary in alr4 R package). The data file concerns salary and
+other characteristics of all faculty in a small Midwestern college
+collected in the early 1980s for presentation in legal proceedings for
+which discrimination against women in salary was at issue. All persons
+in the data hold tenured or tenure track positions; temporary faculty
+are not included. The variables include degree, a factor with levels PhD
+and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor
+with levels Male and Female; Year, years in current rank; ysdeg, years
+since highest degree, and salary, academic year salary in dollars.
+
+## A {#a-1}
+
+```{r}
+library(alr4)
+head(salary)
+summary(salary)
+```
+
+Test the hypothesis that the mean salary for men and women is the same,
+without regard to any other variable but sex. Explain your findings.
+
+To test the hypothesis if the mean salary for men and women is the same,
+I created a linear regression model for salary with only sex as the
+explanatory variable.
+
+The null hypothesis is that mean salary men and women is the same - H0:
+μm = μw
+
+The alternative hypothesis is that the mean salary of men and women is
+not the same - Ha: μm ≠ μw
+
+```{r}
+##Hypothesis testing with linear regression only
+summary(lm(salary ~ sex, data = salary))
+```
+
+The resulting coefficient for the sexFemale explanatory variable is
+-3340, suggesting Female staff make on average \$3,340 less than Male
+professors. In the linear regression model, sexFemale has a p-value of
+0.0706 meaning at the 0.05 level we fail to reject the null hypothesis
+that there is no difference in the mean salaries for men and women. We
+could however reject the null hypothesis at the 0.1 significance level.
+
+## B
+
+Run a multiple linear regression with salary as the outcome variable and
+everything else as predictors, including sex. Assuming no interactions
+between sex and the other predictors, obtain a 95% confidence interval
+for the difference in salary between males and females.
+
+```{r}
+
+##95% confidence interval
+lm(salary ~ degree + rank + sex + ysdeg + year, data = salary) |> confint()
+```
+
+The 95% confidence interval for the sexFemale is (-663, 3340) which can
+be interpreted as women making between \$663 less or \$3340 more than
+their male colleagues.
+
+Compared to to the coefficient of -3340 in the model with only sex as an
+explanatory variable, this suggests that controlling for rank, degree,
+years since degree, and years of experience explains some of the
+difference between male and female salaries.
+
+## C
+
+Interpret your finding for each predictor variable; discuss (a)
+statistical significance, (b) interpretation of the coefficient / slope
+in relation to the outcome variable and other variables
+
+```{r}
+summary (lm(salary ~ degree + rank + sex + ysdeg + year, data = salary))
+```
+
+-   degree PhD has a p=value of 0.180, meaning it is not statistically
+    significant at the 0.1 or 0.05 level. It has a positive coefficient
+    of 1388.61 suggesting that that having a PhD increases a person's
+    salary by \$1388 over having a Master's degree. This is the 3rd
+    largest coefficient of any of the explanatory variables in the
+    model.
+
+-   rankAssoc has as p-value of 3.22 \* e\^-05, meaning it a
+    statistically significant explanatory variable at the 0.001 level.
+    It has a positive coefficient of 5293.36 suggesting that being an
+    associate professor results in \$5292 larger salary than an
+    Assistant professor. This is the 2nd largest coefficient of any of
+    the explanatory variables in the model.
+
+-   rankProf has a p-value of 1.62 \* e\^-10, meaning it is a
+    statistically significant explanatory variable at the 0.001 level.
+    It has a positive coefficient of 11,118, suggesting that having a
+    rank of full professorship results in a salary of \$11,118 more than
+    an Assistant professor. This is the largest coefficient of any of
+    the explanatory variables in the model, suggesting it is responsible
+    for the largest change in salary of any variable in the model.
+
+-   sexFemale has a p-value of 0.214, meaning it is not statistically
+    significant at the 0.1 or 0.05 level. The coefficient of 1166
+    suggests that being female increases salary by \$1166, which is
+    surprising given the well-known phenomenon of the wage gap.
+
+-   ysdeg has a p-value of 0.115, meaning it is not statistically
+    significant at the 0.1 or 0.05 level. The coefficient of -124
+    suggests that every year since getting a degree, an individual's
+    salary decreases by \$124.
+
+-   year has a p-value of 8.65 \* e\^-06, meaning it is statistically
+    significant at the 0.001 level. The coefficient of 476 suggests that
+    that every year someone is in their job as a professor, their salary
+    increases by \$476.
+
+## D
+
+Change the baseline category for the rank variable. Interpret the
+coefficients related to rank again.
+
+```{r}
+#Relevel 
+salary$rank <- relevel(salary$rank, ref = 'Prof')
+summary (lm(salary ~ degree + rank + sex + ysdeg + year, data = salary))
+```
+
+After re-leveling the rank to Prof instead of Assistant professor and
+re-running the linear regression model, rankAsst now has a coefficient
+of -11118 and rankAssociate has a coefficient of -5826. This means an
+Assistant professor makes \$11,118 less than a full professsor and a an
+Associate professor makes \$5,826 less than a full professors. These are
+the same coefficients for the rankProf and RankAssoc in the previous
+model, expect negative, as they now represent the distance from the top
+rank (professor) as opposed to the lowest rank (assistant).
+
+## E
+
+Finkelstein (1980), in a discussion of the use of regression in
+discrimination cases, wrote, "[a](#a-1) variable may reflect a position
+or status bestowed by the employer, in which case if there is
+discrimination in the award of the position or status, the variable may
+be 'tainted.'" Thus, for example, if discrimination is at work in
+promotion of faculty to higher ranks, using rank to adjust salaries
+before comparing the sexes may not be acceptable to the courts.
+
+Exclude the variable rank, refit, and summarize how your findings
+changed, if they did.
+
+```{r}
+#Rerun model excluding rank
+summary (lm(salary ~ degree + sex + ysdeg + year, data = salary))
+```
+
+Rerunning the model excluding rank changes the coefficient of sexFemale
+to negative -1286, from previously being positive +1166. However, with a
+p-value of 0.332 the explanatory variable of sexFemale is still not
+statistically significant at any level after removing rank.
+
+## F
+
+Everyone in this data set was hired the year they earned their highest
+degree. It is also known that a new Dean was appointed 15 years ago, and
+everyone in the data set who earned their highest degree 15 years ago or
+less than that has been hired by the new Dean. Some people have argued
+that the new Dean has been making offers that are a lot more generous to
+newly hired faculty than the previous one and that this might explain
+some of the variation in Salary.
+
+Create a new variable that would allow you to test this hypothesis and
+run another multiple regression model to test this. Select variables
+carefully to make sure there is no multicollinearity. Explain why
+multicollinearity would be a concern in this case and how you avoided
+it. Do you find support for the hypothesis that the people hired by the
+new Dean are making higher than those that were not?
+
+I created a new variable "New_Dean" where anyone who earned their
+highest degree (ysdeg) over 15 years ago are coded as a 0 & anyone who
+earned their highest degree (ysdeg) 15 or less years ago coded as a 1.
+
+```{r}
+#recreating new variable
+salary_Dean <- salary %>%
+  mutate(New_Dean = case_when(
+    ysdeg > 15 ~ "0",
+    ysdeg <= 15 ~ "1"))
+
+salary_Dean
+```
+
+Multicollinearity occurs when one explanatory variable is predicted by
+another variable in the model to a substantial degree. This can be
+caused by an explanatory variable is a combination of another variable
+in the model or there are two almost identical variables in the model.
+
+To avoid multicollinearity in this model while testing if being hired by
+the New Dean results in a higher salary, I will not include ysdeg in the
+linear regression model. This is because the New Dean explanatory
+variable was created from the ysdeg model, meaning that they are likely
+substantially correlated.
+
+```{r}
+##Testing New Dean Hypothesis after removing ysdeg
+summary (lm(salary ~ degree + rank + sex + New_Dean + year, data = salary_Dean))
+```
+
+According to the linear regression model, having been hired by the New
+Dean does result in a higher salary of \$2,163, as indicated by the
+coefficient to this variable. Furthermore, the New Dean explanatory
+variable is just barely statistically significant at the 0.05 level with
+a p-value of 0.0496.
+
+# Question 3
+
+```{r}
+#Load data
+library(smss)
+data("house.selling.price")
+head(house.selling.price)
+summary(house.selling.price)
+```
+
+## A
+
+Using the house.selling.price data, run and report regression results
+modeling y = selling price (in dollars) in terms of size of home (in
+square feet) and whether the home is new (1 = yes; 0 = no). In
+particular, for each variable; discuss statistical significance and
+interpret the meaning of the coefficient.
+
+```{r}
+#linear regression model y = selling price, explanatory variables = Size & New
+summary(lm(Price ~ Size + New, data = house.selling.price))
+```
+
+-   *Size* of a house statistically significant at the 0.0001 level with
+    a p-value less than 2 \* e\^-16. The coefficient of the Size
+    variable is 116 suggesting that for every square-foot the size of a
+    house increases, the predicted price increases by \$116.
+
+-   *New* The newness of a house is statistically significant at the
+    0.05 level with a p-value of 0.00257. The coefficient of 57735
+    suggests that the predicted price of a new house is \$57736.283 more
+    than a house than is not new.
+
+## B
+
+Report and interpret the prediction equation, and form separate
+equations relating selling price to size for new and for not new homes.
+
+Y = -40230.867 + 116.132(x1) + 57726.263(x2)
+
+where x1 = size of house in square feet, x2 = if a house is new (1 =
+yes, 0 = no)
+
+This prediction equation can be interpreted that the predicted price of
+a house in \$ can be calculated by multiplying the size of the house in
+square feet by \~ \$116, subtracting the intercept of -\$40,230 from the
+price, and adding \$57,726 if the house is new.
+
+Seperate equations for the selling price for new and not new houses can
+be generated by subbing in x2 =1 for new houses and x2 =0 for not new
+houses and calculating the resulting equation
+
+Ynew house = -40230.867 + 116.132(x1) + 57726.263(1) = -40,230.867 +
+57,726.263 + 116.132 (x1) *Ynew house = 17495.4 + 116.132(x1)* *where x1
+= size of house in square-feet*
+
+This equation can be interpreted as the Predicted Price of a new house
+in dollars can be calculated from \$17;495 + \$116 for every square foot
+in size the house is.
+
+```{r}
+#substraction of intercepts
+57726.263 - 40230.867
+```
+
+Ynot new = -40230.867 + 116.132(x1) + 57726.263(0) = -40230.867 +
+116.132(x1) + 0
+
+\*Ynotnew = -40230.867 + 116.132(x1) \*\* *where x1 = size of house in
+square-feet*
+
+This equation can be interpreted as the price of a not-new house in
+dollars is calculated as \$116 for every square-foot a house increases
+in size, minus \$40,230.
+
+## C
+
+Find the predicted selling price for a home of 3000 square feet that is
+(i) new, (ii) not new.
+
+i.  for a new house where x1 = 3000 Y = 17495.4 + 116.132(x1) Y =
+    17495.4 + 116.132 (3000)
+
+```{r}
+#Arithmitic
+116.132 * 3000
+348396 + 17495.4 
+```
+
+Y = 17495.4 + 34896 Y = 365891.4 *The predicted price of a new house
+with a size of 3000 square feet is \$365,891.4*
+
+ii. For a non-new house where x1 = 3000 Y = -40230.867 + 116.132(x1) Y =
+    = -40230.867 + 116.132(3000)
+
+```{r}
+#Arithmetic
+116.132 * 3000
+
+348396 - 40230.867
+
+```
+
+    Y = -40230.867 + 348396
+    Y = 308165.1
+
+*The predicted price of a not new house with a size of 3000 square feet
+is \$308,165.1*
+
+## D
+
+Fit another model, this time with an interaction term allowing
+interaction between size and new, and report the regression results
+
+```{r}
+#linear regression model y = selling price, explanatory variables = Interaction Size * New
+summary(lm(Price ~ Size * New, data = house.selling.price))
+```
+
+In the model with the interaction between Size \* New, the Adjusted
+R-squared of the model is 0.7363 as opposed to the model with Size & New
+as explanatory variables without an interaction, which had an adjusted
+R-squared of 0.7169. In the interaction model:
+
+-   *Size* has a p-value of less than 2\*e-\^16, being statistically
+    significant at the 0.05 level. The coefficient of 104.438 suggest
+    that the price of the house increases \$104 for every square foot a
+    house increases in size
+
+-   *New* has a p-value of 0.12697, not being statistically significant
+    at the 0.05 or 0.1 levels. The coefficient of -78527.502 suggests
+    that if a house is new, regardless of size, the predicted price of
+    the house decreases by \$78527. In the previous model without the
+    interaction between new & size, new had a positive coefficient and
+    was statistically significant.
+
+-   *Size x New* has a p-value of 0.00527, which is statistically
+    significant at the 0.01 level. This suggests there is a interaction
+    between the newness of a house and the size of a house. The
+    coefficient of 61.916 suggests the predicted price of only new
+    houses increases by \$61.9 for each square foot the size of the
+    house increases.
+
+Written out as an equation for predicted price, where x1 = size of house
+in square feet & x2 = newness of house
+
+*Y = -22227.808 + 104.438(x1) - 78527.502(x2) + 61.916(x1)(x2)*
+
+## E
+
+Report the lines relating the predicted selling price to the size for
+homes that are (i) new, (ii) not new.
+
+-   
+
+    (i) new, x2 = 1. Plugging that into the prediction equation: Y =
+        -22227.808 + 104.438(x1) - 78527.502(x2) + 61.916(x1)(x2) Y =
+        -22227.808 + 104.438(x1) - 78527.502(1) + 61.916(x1)(1) Y =
+        -22227.808 + 104.438(x1) - 78527.502 + 61.916(x1)
+
+```{r}
+#Arithmetic
+-22227.808 -78527.502
+104.438 + 61.916
+```
+
+*Ynew = -100755.3 + 166.354(x1)*
+
+-   
+
+    (ii) not new, x2 = 0. Plugging that into the prediction equation: Y
+         = -22227.808 + 104.438(x1) - 78527.502(0) + 61.916(x1)(0) Y =
+         -22227.808 + 104.438(x1) - 0 + 0 *Ynotnew = -22227.808 +
+         104.438(x1)*
+
+## F
+
+Find the predicted selling price for a home of 3000 square feet that is
+(i) new, (ii) not new.
+
+-   
+
+    (i) new, x1 = 3000 square feet Ynew = -100755.3 + 166.354(x1) Ynew =
+        -100755.3 + 166.354(3000)
+
+```{r}
+166.354 * 3000 
+```
+
+Ynew = -100755.3 + 499062
+
+```{r}
+-100755.3 + 499062
+```
+
+Ynew = 398306.7 *The predicted selling price of a new house 3000 square
+feet in size is \$398306.7*
+
+-   
+
+    (ii) not new, x1 = 3000 square feet Ynotnew = -22227.808 +
+         104.438(x1) Ynotnew = -22227.808 + 104.438(3000)
+
+```{r}
+104.438 * 3000
+```
+
+Ynotnew = -22227.808 + 313314
+
+```{r}
+-22227.808 + 313314
+```
+
+Ynotnew = 291086.2 *The predicted selling price of a not new house 3000
+square feet in size is \$291,086.2*
+
+## G
+
+Find the predicted selling price for a home of 1500 square feet that is
+(i) new, (ii) not new. Comparing to (F), explain how the difference in
+predicted selling prices changes as the size of home increases.
+
+-   
+
+    (i) new, x1 = 1500 square feet Ynew = -100755.3 + 166.354(x1) Ynew =
+        -100755.3 + 166.354(1500)
+
+```{r}
+166.354 * 1500
+```
+
+Ynew = -100755.3 + 249531
+
+```{r}
+-100755.3 + 249531
+```
+
+Ynew = 148775.7
+
+*The predicted selling price of a new house 1500 square feet in size is
+\$148,775.7*
+
+-   
+
+    (ii) not new, x1 = 1500 square feet Ynotnew = -22227.808 +
+         104.438(x1) Ynotnew = -22227.808 + 104.438(1500)
+
+```{r}
+ 104.438 * 1500
+```
+
+Ynotnew = -22227.808 + 156657
+
+```{r}
+-22227.808 + 156657
+```
+
+Ynotnew = 134429.2 *The predicted selling price of a not new house 1500
+square feet in size is \$ 134429.2*
+
+-   Difference in prices new & not new by size
+
+```{r}
+#Difference new, not new x1 = 3000 square feet
+398306.7 - 291086.2
+##Difference new, not new x1 = 1500 square feet
+ 148775.7 - 134429.2
+#Division 
+107220.5/14346.5
+```
+
+The difference between the price of a new & not house 3000 feet in size
+is \$107,220.5
+
+The difference between the price of a new & not new house 1500 feet in
+size is \$14,346.5
+
+A house that is 3000 square feet in size is twice the size of a house
+1500 square feet in size, the difference between a new & not new houses
+is 7.473635x more for a house that is 3000 square feet than a house that
+is 15000 square feet in size. This suggests that the larger the size of
+a house the more influence the newness of a house has on price.
+
+## H
+
+Do you think the model with interaction or the one without it represents
+the relationship of size and new to the outcome price? What makes you
+prefer one model over another?
+
+Based on the statistical significance of the interaction between
+New:Size at the 0.001 level & the higher Adjusted R-Squared of the model
+with the interaction term 0.7363) than the adjusted R-squared of the
+model without the interaction term (0.7169) both make me prefer the
+model with the interacction term over the other interms of best
+representing the relationship of size and new to the outcome price.
