@@ -1,0 +1,270 @@
+---
+title: "Homework 5"
+author: "Miguel Curiel"
+description: "Multiple linear regression for DACSS 603."
+date: "05/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - linear regression
+  - multiple linear regression
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+```{r, eval=TRUE, echo=TRUE}
+# load necessary packages
+library(tidyverse)
+library(alr4)
+library(smss)
+library(knitr)
+```
+
+# Question 1
+
+(Data file: house.selling.price.2 from smss R package)
+
+For the house.selling.price.2 data the tables below show a correlation
+matrix and a model fit using four predictors of selling price.
+
+|       | **Price** | **Size** | **Beds** | **Baths** | **New** |
+|-------|-----------|----------|----------|-----------|---------|
+| Price | 1         | 0.899    | 0.590    | 0.714     | .357    |
+| Size  | 0.899     | 1        | 0.669    | 0.662     | 0.176   |
+| Beds  | 0.590     | 0.669    | 1        | 0.334     | 0.267   |
+| Baths | 0.714     | 0.662    | 0.334    | 1         | 0.182   |
+| New   | 0.357     | 0.176    | 0.267    | 0.182     | 1       |
+
+: Correlation Matrix
+
+|             | Estimate | Std. Error | t value | Pr(\> \| t\| ) |
+|-------------|----------|------------|---------|----------------|
+| (Intercept) | -41.795  | 12.104     | -3.453  | 0.001          |
+| Size        | 64.761   | 5.630      | 11.504  | 0              |
+| Beds        | -2.766   | 3.960      | -0.698  | 0.487          |
+| Baths       | 19.203   | 5.650      | 3.399   | 0.001          |
+| New         | 18.984   | 3.873      | 4.902   | 0.00000        |
+
+: Regression Output (Outcome: House Price)
+
+With the these four predictors:
+
+A.  For backward elimination, which variable would be deleted first?
+    Why?
+
+    1.  Beds because it is moderately correlated to house price (.59),
+        but most importantly, because its P-value is the only one that
+        is not significant (.487).
+
+B.  For forward selection, which variable would be added first? Why?
+
+    1.  Size because it is the variable most correlated with price (.89)
+        and it seems to have the lowest P-value (0).
+
+C.  Why do I think BEDS has such a large P-value in the multiple
+    regression model, even though it has a substantial correlation with
+    PRICE?
+
+    1.  There are several reasons why this could happen
+        (multicollinearity, sample size, variable selection, nonlinear
+        relationship), but my guess is that this is due to
+        multicollinearity. This is because there are other variables
+        that measure similar things (e.g., one would expect beds to be
+        correlated to baths and size), therefore the regression model
+        cannot differentiate the exact effect that beds has on the
+        outcome variable.
+
+D.  Using software with these four predictors, find the model that would
+    be selected using each criterion:
+
+    1.  R-squared
+
+    2.  Adjusted R-squared
+
+    3.  PRESS
+
+    4.  AIC
+
+    5.  BIC
+
+```{r, eval=TRUE, echo=TRUE}
+# Read in data
+data("house.selling.price", package = "smss")
+data <- house.selling.price
+
+# Define the first regression model
+model1 <- lm(Price ~ Size + Beds + Baths + New, data = data)
+
+# Define the second regression model
+model2 <- lm(Price ~ Size + Beds + New, data = data)
+
+# Define the second regression model
+model3 <- lm(Price ~ Size + New, data = data)
+
+# Calculate the R-squared for each model
+rsq1 <- summary(model1)$r.squared
+rsq2 <- summary(model2)$r.squared
+rsq3 <- summary(model3)$r.squared
+
+# Calculate the adjusted R-squared for each model
+adj_rsq1 <- summary(model1)$adj.r.squared
+adj_rsq2 <- summary(model2)$adj.r.squared
+adj_rsq3 <- summary(model3)$adj.r.squared
+
+# Calculate the PRESS statistic for each model
+press1 <- sum(resid(model1)/(1 - hatvalues(model1))^2)
+press2 <- sum(resid(model2)/(1 - hatvalues(model2))^2)
+press3 <- sum(resid(model3)/(1 - hatvalues(model3))^2)
+
+# Calculate the AIC for each model
+aic1 <- AIC(model1)
+aic2 <- AIC(model2)
+aic3 <- AIC(model3)
+
+# Calculate the BIC for each model
+bic1 <- BIC(model1)
+bic2 <- BIC(model2)
+bic3 <- BIC(model3)
+
+# Create a table comparing the models
+results <- data.frame(Model = c("Model w/all predictors"
+                                , "Model w/out baths"
+                                , "Model w/out beds and baths"),
+                      R_squared = c(rsq1, rsq2, rsq3),
+                      Adj_R_squared = c(adj_rsq1, adj_rsq2, adj_rsq3),
+                      PRESS = c(press1, press2, press3),
+                      AIC = c(aic1, aic2, aic3),
+                      BIC = c(bic1, bic2, bic3))
+
+# Print the results table
+kable(results, caption = "Model Evaluation Metrics")
+```
+
+E.  Explain which model I prefer and why.
+
+    1.  Based on the previous metrics, I would choose the model that
+        **selects** `Size` and `New` as predictors and **excludes** the
+        `Beds` and `Baths` variables. I would choose this one because it
+        has the highest adjusted R-squared (0.7168767), the lowest AIC
+        (2467.648) and lowest BIC (2478.069). These metrics do not
+        evaluate a model's predictive performance; rather, they assess
+        how well a model explains variance in the outcome variable
+        (i.e., explanatory power and simplicity).
+
+# Question 2
+
+(Data file: trees from base R)
+
+From the documentation:
+
+"This data set provides measurements of the diameter, height and volume
+of timber in 31 felled black cherry trees. Note that the diameter (in
+inches) is erroneously labeled Girth in the data. It is measured at 4 ft
+6 in above the ground."
+
+Tree volume estimation is a big deal, especially in the lumber industry.
+Use the trees data to build a basic model of tree volume prediction. In
+particular:
+
+A.  Fit a multiple regression model with the Volume as the outcome and
+    Girth and Height as the explanatory variables.
+
+```{r, eval=TRUE, echo=TRUE}
+# Read in data
+data("trees")
+data <- trees
+
+# Define the regression model
+model4 <- lm(Volume ~ Girth + Height, data = data)
+```
+
+B.  Run regression diagnostic plots on the model. Based on the plots, do
+    you think any of the regression assumptions is violated?
+
+    1.  Based on the diagnostic plots below, there are a couple of
+        regression assumptions that seem to be violated, in particular
+        **nonlinearity and outliers**. Starting off with the Residuals
+        vs Fitted plot, it should have a roughly straight horizontal
+        line, but as we see there is a slight curvature which suggests
+        the relation between variables is not linear. The Normal Q-Q
+        plot looks as expected - a straight diagonal line - which
+        indicates that data is normally distributed. Moving on with the
+        Scale-Location plot, even though there is a slight curvature,
+        the line looks roughly horizontal which suggests there is
+        constant variance. Lastly, the Residuals vs Leverage plot should
+        yield no data points outside of the red dashed lines - in this
+        case, there is one point that is outside which indicates there
+        is an outlier in the data.
+
+```{r, eval=TRUE, echo=TRUE}
+# Generate diagnostic plots
+par(mfrow = c(2, 2))
+plot(model4)
+```
+
+# Question 3
+
+(Data file: florida in alr4 R package)
+
+In the 2000 election for U.S. president, the counting of votes in
+Florida was controversial. In Palm Beach County in south Florida, for
+example, voters used a so-called butterfly ballot. Some believe that the
+layout of the ballot caused some voters to cast votes for Buchanan when
+their intended choice was Gore.
+
+The data has variables for the number of votes for each
+candidate---Gore, Bush, and Buchanan.
+
+A.  Run a simple linear regression model where the Buchanan vote is the
+    outcome and the Bush vote is the explanatory variable. Produce the
+    regression diagnostic plots. Is Palm Beach County an outlier based
+    on the diagnostic plots? Why or why not?
+
+    1.  Palm Beach County does seem to be an outlier based on the
+        diagnostic plots. All plots show it away from the rest of the
+        data points, but in particular, the Residuals vs Leverage plot
+        is used to determine outliers based on Cook's distance and we
+        can clearly see that Palm Beach (and DADE) are outside of the
+        red dashed lines.
+
+```{r, echo=TRUE, eval=TRUE}
+# Read in data
+data("florida", package = "alr4")
+data <- florida
+
+# Define the regression model
+model5 <- lm(Buchanan ~ Bush, data = data)
+
+# Generate diagnostic plots
+par(mfrow = c(2, 2))
+plot(model5)
+```
+
+B.  Take the log of both variables (Bush vote and Buchanan Vote) and
+    repeat the analysis in (A.) Does your findings change?
+
+    1.  Findings do slightly change - even though Palm Beach County
+        still is somewhat away from the rest of the data points, now it
+        is closer. Additionally, it is no longer outside of the red
+        dashed lines in the Residuals vs Leverage plot, which means that
+        using a logarithmic transformation makes it so that Palm Beach
+        is not an outlier.
+
+```{r, eval=TRUE, echo=TRUE}
+# Define the regression model
+model6 <- lm(log(Buchanan) ~ log(Bush), data = data)
+
+# Generate diagnostic plots
+par(mfrow = c(2, 2))
+plot(model6)
+```
