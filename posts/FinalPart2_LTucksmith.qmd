@@ -1,0 +1,310 @@
+---
+title: "FinalPart2"
+author: "Liam Tucksmith"
+desription: "FinalPart2"
+date: "05/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart2
+  - Liam Tucksmith
+  - tidyverse
+  - readxl
+  - ggplot2
+  - dplyr
+  - tidyr
+  - janitor
+---
+
+```{r, echo=T}
+#| label: setup
+#| warning: false
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(janitor)
+knitr::opts_chunk$set(echo = TRUE)
+```
+Note: I slightly changed my final project to be looking at sports betting rather than media. The media portion was too ambitious so I pivoted to something more straightforward. Please let me know if that is an issue. 
+
+The most profitable sports league in the world, the National Football League, generated $18 billion in revenue in 2021 according to sportico.com. This total represents national media rights, league sponsorships with gambling companies, news outlets, and other companies, and shared revenue and royalties from the league’s various affiliates and subsidiaries, such as NFL Enterprises, NFL Properties, and NFL International. Sports betting, an industry linked to the NFL, generated $7.5 in revenue in 2021. As money is what keeps the NFL afloat and allows teams to competitively pay for top players and coaches, NFL teams benefit from sports betting engagement and vice versa. What I plan to analyze how the win-rate of a team relates to the ratio of correct money line predictions for that team, season by season. My hypothesis is that teams with higher win ratios will have higher correct money-line prediction ratios, both when they are favored, not favored, and in total. 
+
+The first dataset is a collection of all the matchups and scores that occurred in the NFL since 1966. The matchup information includes the names of the two teams competing, home/away team status, the match site, the weather on game day, and the final score for each team. Sports betting data for each game since 1977 is also included, and includes who was favored (money line), the point spread (point differential), and the over/under line. The dataset is from https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data and was created from a variety of sources including games and scores from public websites such as ESPN, NFL.com, and Pro Football Reference. Weather information is from NOAA data, cross-referenced with NFLweather.com. Betting data reflects lines available at sportsline.com and aussportsbetting.com. For the analysis, I will limit the data to the data collected from the previous 5 years. 
+
+Data import and clean-up
+```{r}
+#read in data
+
+scores <- read.csv("~/Documents/GitHub/603_Spring_2023/posts/_data/spreadspoke_scores.csv")
+colnames(scores)
+scores <- scores[scores$schedule_season >= 2018, ]
+summary(scores)
+glimpse(scores)
+```
+
+Data cleanup and descriptive analytics
+```{r}
+#map team names to abbreviations
+unique(scores$team_home)
+unique(scores$team_favorite_id)
+
+#rewrite team_home and team_away to use IDs
+scores$team_home[scores$team_home=="Philadelphia Eagles"] <- "PHI"
+scores$team_home[scores$team_home=="Arizona Cardinals"] <- "ARI"
+scores$team_home[scores$team_home=="Baltimore Ravens"] <- "BAL"
+scores$team_home[scores$team_home=="Carolina Panthers"] <- "CAR"
+scores$team_home[scores$team_home=="Cleveland Browns"] <- "CLE"
+scores$team_home[scores$team_home=="Denver Broncos"] <- "DEN"
+scores$team_home[scores$team_home=="Green Bay Packers"] <- "GB"
+scores$team_home[scores$team_home=="Indianapolis Colts"] <- "IND"
+scores$team_home[scores$team_home=="Los Angeles Chargers"] <- "LAC"
+scores$team_home[scores$team_home=="Miami Dolphins"] <- "MIA"
+scores$team_home[scores$team_home=="Minnesota Vikings"] <- "MIN"
+scores$team_home[scores$team_home=="New England Patriots"] <- "NE"
+scores$team_home[scores$team_home=="New Orleans Saints"] <- "NO"
+scores$team_home[scores$team_home=="New York Giants"] <- "NYG"
+scores$team_home[scores$team_home=="Detroit Lions"] <- "DET"
+scores$team_home[scores$team_home=="Oakland Raiders" | 
+                 scores$team_home=="Las Vegas Raiders"] <- "LVR"
+scores$team_home[scores$team_home=="Cincinnati Bengals"] <- "CIN"
+scores$team_home[scores$team_home=="Atlanta Falcons"] <- "ATL"
+scores$team_home[scores$team_home=="Buffalo Bills"] <- "BUF"
+scores$team_home[scores$team_home=="Dallas Cowboys"] <- "DAL"
+scores$team_home[scores$team_home=="Jacksonville Jaguars"] <- "JAX"
+scores$team_home[scores$team_home=="Los Angeles Rams"] <- "LAR"
+scores$team_home[scores$team_home=="New York Jets"] <- "NYJ"
+scores$team_home[scores$team_home=="Pittsburgh Steelers"] <- "PIT"
+scores$team_home[scores$team_home=="San Francisco 49ers"] <- "SF"
+scores$team_home[scores$team_home=="Tampa Bay Buccaneers"] <- "TB"
+scores$team_home[scores$team_home=="Tennessee Titans"] <- "TEN"
+scores$team_home[scores$team_home=="Washington Redskins" | 
+                 scores$team_home=="Washington Football Team"|
+                 scores$team_home=="Washington Commanders"] <- "WAS"
+scores$team_home[scores$team_home=="Chicago Bears"] <- "CHI"
+scores$team_home[scores$team_home=="Houston Texans"] <- "HOU"
+scores$team_home[scores$team_home=="Kansas City Chiefs"] <- "KC"
+scores$team_home[scores$team_home=="Seattle Seahawks"] <- "SEA"
+
+scores$team_away[scores$team_away=="Philadelphia Eagles"] <- "PHI"
+scores$team_away[scores$team_away=="Arizona Cardinals"] <- "ARI"
+scores$team_away[scores$team_away=="Baltimore Ravens"] <- "BAL"
+scores$team_away[scores$team_away=="Carolina Panthers"] <- "CAR"
+scores$team_away[scores$team_away=="Cleveland Browns"] <- "CLE"
+scores$team_away[scores$team_away=="Denver Broncos"] <- "DEN"
+scores$team_away[scores$team_away=="Green Bay Packers"] <- "GB"
+scores$team_away[scores$team_away=="Indianapolis Colts"] <- "IND"
+scores$team_away[scores$team_away=="Los Angeles Chargers"] <- "LAC"
+scores$team_away[scores$team_away=="Miami Dolphins"] <- "MIA"
+scores$team_away[scores$team_away=="Minnesota Vikings"] <- "MIN"
+scores$team_away[scores$team_away=="New England Patriots"] <- "NE"
+scores$team_away[scores$team_away=="New Orleans Saints"] <- "NO"
+scores$team_away[scores$team_away=="New York Giants"] <- "NYG"
+scores$team_away[scores$team_away=="Detroit Lions"] <- "DET"
+scores$team_away[scores$team_away=="Oakland Raiders" | 
+                 scores$team_away=="Las Vegas Raiders"] <- "LVR"
+scores$team_away[scores$team_away=="Cincinnati Bengals"] <- "CIN"
+scores$team_away[scores$team_away=="Atlanta Falcons"] <- "ATL"
+scores$team_away[scores$team_away=="Buffalo Bills"] <- "BUF"
+scores$team_away[scores$team_away=="Dallas Cowboys"] <- "DAL"
+scores$team_away[scores$team_away=="Jacksonville Jaguars"] <- "JAX"
+scores$team_away[scores$team_away=="Los Angeles Rams"] <- "LAR"
+scores$team_away[scores$team_away=="New York Jets"] <- "NYJ"
+scores$team_away[scores$team_away=="Pittsburgh Steelers"] <- "PIT"
+scores$team_away[scores$team_away=="San Francisco 49ers"] <- "SF"
+scores$team_away[scores$team_away=="Tampa Bay Buccaneers"] <- "TB"
+scores$team_away[scores$team_away=="Tennessee Titans"] <- "TEN"
+scores$team_away[scores$team_away=="Washington Redskins" | 
+                 scores$team_away=="Washington Football Team"|
+                 scores$team_away=="Washington Commanders"] <- "WAS"
+scores$team_away[scores$team_away=="Chicago Bears"] <- "CHI"
+scores$team_away[scores$team_away=="Houston Texans"] <- "HOU"
+scores$team_away[scores$team_away=="Kansas City Chiefs"] <- "KC"
+scores$team_away[scores$team_away=="Seattle Seahawks"] <- "SEA"
+
+unique(scores$team_home)
+n_distinct(scores$team_home)
+unique(scores$team_away)
+```
+
+```{r}
+#add column for game winner
+scores$score_home = as.integer(scores$score_home)
+scores$score_away = as.integer(scores$score_away)
+
+scores$winner = ifelse(scores$score_home == scores$score_away, "TIE", ifelse(scores$score_home > scores$score_away, scores$team_home, scores$team_away))
+
+#add column for if money line prediction is true
+scores$mlTF = ifelse(scores$winner == scores$team_favorite_id, TRUE, FALSE)
+scores$mlHomeAway = ifelse(scores$team_home == scores$team_favorite_id, "Home", "Away")
+
+#get counts for wins and losses, correct and incorrect moneyline predictions when favored and not favored, for away and home games
+home_team <- scores %>% group_by(team_home, schedule_season) %>% 
+                  summarise(home_wins = sum(team_home == winner),
+                            home_losses = sum(team_away == winner),
+                            ml_incorr_favored_h = sum(mlTF == FALSE & mlHomeAway == "Home"),
+                            ml_incorr_unfavored_h = sum(mlTF == FALSE & mlHomeAway == "Away"),
+                            ml_corr_favored_h = sum(mlTF == TRUE & mlHomeAway == "Home"),
+                            ml_corr_unfavored_h = sum(mlTF == TRUE & mlHomeAway == "Away"),
+                            .groups = 'drop')
+
+away_team <- scores %>% group_by(team_away, schedule_season) %>% 
+                  summarise(away_wins = sum(team_away == winner),
+                            away_losses = sum(team_home == winner),
+                            ml_incorr_favored_a = sum(mlTF == FALSE & mlHomeAway == "Away"),
+                            ml_incorr_unfavored_a = sum(mlTF == FALSE & mlHomeAway == "Home"),
+                            ml_corr_favored_a = sum(mlTF == TRUE & mlHomeAway == "Away"),
+                            ml_corr_unfavored_a = sum(mlTF == TRUE & mlHomeAway == "Home"),
+                            .groups = 'drop')
+
+#merge home and away data
+teams <- merge(home_team, away_team, 
+               by.x = c("team_home","schedule_season"), 
+               by.y = c("team_away","schedule_season"))
+
+colnames(teams)
+
+teams <- teams %>% 
+       rename("team" = "team_home")
+
+#combine home and away fields 
+teams$total_wins <- teams$home_wins + teams$away_wins
+teams$total_losses <- teams$home_losses + teams$away_losses
+teams$total_home_games <- teams$home_wins + teams$home_losses
+
+#combine favored and unfavored, correct and incorrect data
+teams$ml_corr_favored <- teams$ml_corr_favored_h + teams$ml_corr_favored_a 
+teams$ml_corr_unfavored <- teams$ml_corr_unfavored_h + teams$ml_corr_unfavored_a
+teams$ml_corr_total <- teams$ml_corr_favored + teams$ml_corr_unfavored 
+teams$ml_incorr_favored <- teams$ml_incorr_favored_h + teams$ml_incorr_favored_a
+teams$ml_incorr_unfavored <- teams$ml_incorr_unfavored_h + teams$ml_incorr_unfavored_a
+teams$ml_incorr_total <- teams$ml_incorr_favored + teams$ml_incorr_unfavored 
+
+#calculate win, correct, uncorrect, and total money line predictions
+teams$win_ratio = teams$total_wins/(teams$total_wins + teams$total_losses)
+teams$ratio_corr_favored = teams$ml_corr_favored/(teams$ml_corr_favored + teams$ml_incorr_favored)
+teams$ratio_corr_unfavored = teams$ml_corr_unfavored/(teams$ml_corr_unfavored + teams$ml_incorr_unfavored)
+teams$ratio_corr_total = teams$ml_corr_total/(teams$ml_corr_total + teams$ml_incorr_total)
+```
+```{r}
+head(teams, 50)
+```
+
+```{r}
+#plot correct and incorrect moneyline prediction ratio for each team by season
+agg_tbl <- teams %>% group_by(team, schedule_season) %>% 
+  summarise(corr_ratio = (sum(ml_corr_total)/(sum(ml_corr_total + ml_incorr_total))),
+            incorr_ratio = (sum(ml_incorr_total)/(sum(ml_corr_total + ml_incorr_total))),
+            sum = sum(ml_corr_total + ml_incorr_total),
+            .groups = 'drop')
+
+ggplot(agg_tbl, aes(factor(team), fill=factor(corr_ratio))) +     
+  geom_bar()
+
+ggplot(agg_tbl, aes(x=schedule_season, y=corr_ratio)) +     
+  geom_col() + 
+  facet_wrap(~team)
+
+#plot correct moneyline prediction ratio for each team by season, facet  by team
+agg_tbl2 <- teams %>% group_by(team, schedule_season) %>% 
+  summarise(ratio = (sum(ml_corr_favored)/(sum(ml_corr_favored + ml_incorr_favored))),
+            .groups = 'drop')
+
+ggplot(agg_tbl2, aes(x=schedule_season, y=ratio)) +     
+  geom_col() + 
+  facet_wrap(~team)
+```
+```{r}
+#plot win ratio of each team by season 
+agg_tbl3 <- teams %>% group_by(team, schedule_season) %>% 
+  summarise(ratio = total_wins/(total_wins + total_losses),
+            .groups = 'drop')
+
+ggplot(agg_tbl3, aes(x=schedule_season, y=ratio)) +     
+  geom_point(aes(colour = factor(team))) 
+```
+
+```{r}
+regFavored <- lm(teams$ratio_corr_favored ~ teams$win_ratio)
+print(summary(regFavored))
+
+regUnfavored <- lm(teams$ratio_corr_unfavored ~ teams$win_ratio)
+print(summary(regUnfavored))
+
+regTotal <- lm(teams$ratio_corr_total ~ teams$win_ratio)
+print(summary(regTotal))
+```
+```{r}
+regFavoredTeam <- lm(teams$ratio_corr_favored ~ teams$win_ratio + teams$team)
+print(summary(regFavoredTeam))
+
+regUnfavoredTeam <- lm(teams$ratio_corr_unfavored ~ teams$win_ratio + teams$team)
+print(summary(regUnfavoredTeam))
+
+regTotalTeam <- lm(teams$ratio_corr_total ~ teams$win_ratio + teams$team)
+print(summary(regTotalTeam))
+```
+```{r}
+regCorrFavplot <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_favored)) +     
+            geom_point(aes(colour = team)) +   
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth")
+
+regCorrFavplot2 <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_favored)) +     
+            geom_point(aes(colour = team)) + 
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth") + facet_wrap(~schedule_season)
+
+regCorrFavplot3 <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_favored)) +     
+            geom_point(aes(colour = team)) + 
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth") + facet_wrap(~team)
+
+regCorrUnplot <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_unfavored)) +     
+            geom_point(aes(colour = team)) +   
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth")
+
+regCorrUnplot2 <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_unfavored)) +     
+            geom_point(aes(colour = team)) + 
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth") + facet_wrap(~schedule_season)
+
+regTotalplot <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_total)) +     
+            geom_point(aes(colour = team)) + 
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth") + facet_wrap(~schedule_season)
+
+regTotalplot2 <- ggplot(teams, aes(x=win_ratio, y=ratio_corr_total)) +     
+            geom_point(aes(colour = team)) + 
+            stat_smooth(method = "lm",
+                        formula = y ~ x,
+                        geom = "smooth") + facet_wrap(~team)
+
+regCorrFavplot
+regCorrFavplot2
+regCorrFavplot3
+regCorrUnplot
+regCorrUnplot2
+regTotalplot
+regTotalplot2
+```
+
+After looking through the regression models and diagnostics, the best performing model I found is (teams$ratio_corr_favored ~ teams$win_ratio). It makes sense that this model is well-performing because if you are a team with a high win_ratio across multiple years, you will inherently be favored more often and correctly favored more often. Looking at the regression lines by team is helpful for determining which teams are performing the best in the league, but ultimately that regression is not helpful as a general regression tool as it ultimately just shows the team with the highest win_ratio. 
+```{r}
+plot(regFavoredTeam)
+```
+
+
+
