@@ -1,0 +1,151 @@
+---
+title: "Homework 4"
+author: "Guanhua Tan"
+description: "Homework 4"
+date: "04/01/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - regression analysis
+---
+
+```{r}
+library(tidyverse)
+library(smss)
+library(alr4)
+library(ggplot2)
+data(UN11)
+```
+
+# Question 1
+
+```{r}
+y<--10536 + 53.8 *1240 +2.84 *18000
+y
+redidual_1 <- 145000-y
+redidual_1
+
+x2 <-53.8/2.84
+x2
+```
+
+A the predicted selling price is 107,292; the residual is 37,704; interpret is -10536.
+
+B For fixed lot size, if the house size increase one square feet, the house price will increase 53.8.
+
+C if the lot size need to increase 18.94, that will have the same impact as a one-square-foot increase in home size.
+
+
+# Question 2
+```{r}
+data(salary)
+head(salary)
+summary(lm(salary~sex, salary))
+```
+
+A. According the Chisq test, sex has the impact on salary.
+
+```{r}
+lm(salary ~ ., data = salary) |>
+  confint()
+```
+The 95% confidence intervals for the female salary is (-697.81, 3030.56), other variables controlled.
+
+```{r}
+
+sex_salary <- lm(salary~degree+rank+sex+year+ysdeg, data=salary)
+summary(sex_salary)
+```
+C. degreePhD, sexFemale, and ysdeg doesn't show statistical significance. For other fixed terms, if one person hold a associate professor ranking, the salary increases 5292.36, compared to a assistant professor. In the same condition, if one person holds a full professor, the salary increases 11118.76, compared to a assistant professor. People's age has the positive impact on their salary. When the age increases 1 year, the salary increases 476.31.
+
+```{r}
+salary$rank <-relevel(salary$rank, ref="Prof")
+salary$sex <-relevel(salary$sex, ref="Female")
+
+sex_salary <- lm(salary~degree+rank+sex+year+ysdeg, data=salary)
+summary(sex_salary)
+```
+
+D. For other fixed terms, if one person holds a assistant professor ranking, the salary decreases 11118.76, compared to a full professor. In the same condition, if one person hold a associate professor, the salary decreases 5826.40, compared to a full professor.
+
+```{r}
+sex_salary <- lm(salary~degree+sex+year+ysdeg, data=salary)
+summary(sex_salary)
+```
+E if the model drops the variable rank, the variable years after the degree presents the strongly statistical significance.
+
+```{r}
+salary_F <- salary %>%
+  mutate(fifteen_years= case_when(ysdeg > 15 ~0,ysdeg <= 15 ~ 1))
+summary(lm(salary~degree + sex + rank+ year+fifteen_years,salary_F))
+
+```
+
+# Question 3
+
+```{r}
+data("house.selling.price")
+head(house.selling.price)
+house_model_1 <- lm(Price~Size+New, data=house.selling.price)
+summary(house_model_1)
+```
+A. The variables Size and New show the statistical significance. the price will increase 116 when the house size increases 1 square feet. If the house is new, the price will increase 57736.283, compared with the size old house.
+
+B. Price= 116.132*Size+57736.283*New-40230.86
+For new homes
+Price=115.132*Size + 57736.283-40230.86
+For not new homes
+Price=115.132*Size -40239.86.
+
+```{r}
+y_new <- 116.32*3000+57736.283-40230.86
+y_old <- 116.32*3000-40230.86
+y_new
+y_old
+```
+
+C. the new home price is 366465.4; the old home price is 308729.1
+
+```{r}
+house_model_2 <- lm(Price~Size+New*Size, data=house.selling.price)
+summary(house_model_2)
+
+```
+D. The regression result shows that the interaction term is statistical significance and r squared value is larger than the previous model.
+
+E. for new homes, y=-22227.808+104.438*Size-78527.502+61.916*Size
+for old homes, y=104.438*Size-100755.3
+
+```{r}
+Size_3000 <-3000
+Price_new <- 22227.808+104.438*Size_3000-78527.502+61.916*Size_3000
+Price_old <-104.438*Size_3000-100755.3
+Price_new
+Price_old
+```
+F. For 3000 square feet, the new hous is 442,762.3 which the old one is 212,558.7
+
+```{r}
+Size_1500 <-1500
+Price_new_1500 <- 22227.808+104.438*Size_1500-78527.502+61.916*Size_1500
+Price_old_1500 <-104.438*Size_1500-100755.3
+Price_new_1500
+Price_old_1500
+```
+
+G. According to the predicted lines, when the size increases, the new house price will increase more than the old one's.
+
+H. I think the model with the interaction one represents the relationship between size and new because it has a larger value of R square.
+
+
+
+
+
+
+
+
