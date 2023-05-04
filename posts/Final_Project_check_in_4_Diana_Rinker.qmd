@@ -1,0 +1,1245 @@
+---
+title: "Final Project checkin 4"
+author: "Diana Rinker"
+description: "Final project DACSS 603"
+date: "5/2/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+editor: 
+  markdown: 
+    wrap: 72
+editor_options: 
+  chunk_output_type: console
+---
+
+## DACSS 603, spring 2023
+
+## Final Project check-in 2, Diana Rinker.
+
+# Introduction. Online engagement
+
+It is well known that online engagement and popularity with the web
+resource is a highly valuable metric and is driving site revenue. This
+research project is exploring which factors contribute to users online
+engagement.
+
+To do that I will use the data of an online blog on the news website.
+The author of this blog is posting articles about interpersonal
+relationships every work day (Mon- Fri). The posts are formulated as a
+letter from a reader with the situation and a question about
+relationships. The author gives an advice about the situation. Website
+readers are free to comment under each post, but cannot make their own
+posts.
+
+All post methadata and comments are public. They are saved by the
+website and available for the analysis. Using this data set, I will
+explore how readers' engagement connected with blogs's author
+engagement, site comments', web source of readers and negative behaviors
+online.
+
+My research question is: Does the authors engagement in the conversation
+around the post makes readers more engaged and promotes positive
+interactions among them?
+
+**DV:** My dependent construct is **"user's engagement**", I will
+measure users' engagement at the level of individual post, using the
+following metrics:
+
+1.  Page views
+2.  Page visits (one visit can contain a few views, if the person visits
+    other pages on the site)
+3.  Unique users. One person can visit the same page a few times (it is
+    calculated for all time since the page was posted).
+4.  Number of votes: "thums up" or "thumbs down"
+5.  Number of comments
+6.  Exit rate or "bounces". When the visitor is coming to the page and
+    then leaving, i.e. not opening other pages on this website.
+
+L2 - page readers \* Reveal letter \* Reveal comments
+
+**IV:** My main independent variable is **Blog's author engagement.** I
+will measure authors engagement as the factor variable, with the
+following levels:
+
+A. Unspecified comment
+
+B. Featured comment
+
+C. Engagement in conversation
+
+To control for **confounders,** I will also measure the follwing
+variables:
+
+1.  Topic of the post ("post tag"), categorical variable.
+
+2.  Source of the readers, also categorical variable.
+
+3.  Mood of the conversation , derivative continuous variable calculated
+    as the ratio of "likes" to "dislikes".
+
+4.  Blocked and flagged comments.
+
+```{r, echo=F}
+#Loading necessary libraries: 
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(png)
+library(grid)
+```
+
+### Data source and description. 
+
+To answer my research question I will use two datasets. the first data
+set has information about all comments associated with each post by post
+ID. The second data set is analytics data for the web bage. It contains
+one post per row and variables describe each post as a whole without
+breaking down to the comment level.
+
+In this project I will analyze posts for January 2021 - February 2023.
+Here is the list of variables in each dataset: 
+Post-level data:
+```{r, echo=T}
+getwd()
+# First, I will load the data set with the comment level data:
+raw <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\ data.2021.plus.csv"))
+comments.data<-raw 
+colnames (comments.data)
+head(comments.data$written_at)
+comments.data <-comments.data%>%
+              mutate(com.year = format(written_at,format = "%Y" ))
+# range(comments.data$com.year)
+# dim(comments.data)
+str(comments.data)
+dim(comments.data)
+```
+Comment data: 
+```{r, echo=T}
+# Second, loadng post-level data :
+merged <- as_tibble (read_csv("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\globe\\data.merged.csv"))
+# colnames(merged)
+str(merged)
+dim(merged)
+```
+
+Be
+
+To begin, I will review available variables and evaluate whether it is a
+good measure for this study.
+
+# 1.DV: popularity and engagement. 
+## 1.1.Popularity
+
+### Page views
+
+This is the most general metric, representing how many views the post
+received. Views do not distinguish repeated views by the same person.
+
+```{r, echo=T}
+# str(merged)
+ggplot(data=merged, mapping=aes(x=`Page views`))+
+  geom_histogram()
+```
+
+```{r, echo=T}
+merged$post.month <-as.numeric(merged$post.month)
+merged$year_month <- paste0(merged$post.year, "-", sprintf("%02d", merged$post.month))
+
+ggplot( data=merged, mapping=aes(y=`Page views`, x=year_month))+
+          geom_boxplot()+
+  labs(title="Number of post wiews per month", x="Month", y="Number of vews")+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+# ggplot(data=merged, mapping=aes(x=log(`Page views`)))+
+#   geom_histogram()
+
+```
+
+From this graph we can see that the numbers of views is increased over
+time. To get a better understanding of it, lets review other metrics.
+
+### Page visits and unique users
+
+Visit is an instance of a user engaging with bdc website. The user can
+visit a few pages of the site and re-visit them, creaing few views in
+once visit.Once th user left the website, the visit is over.
+
+There also can be many visits by the same viewer. To account for
+repeated users there is "Uniques" variable. It tells us how many unique
+users saw the post. The relationship will always be that
+
+Uniques \< Visits \< Views
+
+Lets plot them together:
+
+```{r, echo=T}
+# str(merged)
+ggplot(merged, aes(x =post.date )) +
+     geom_bar(aes(y = `Page views`, fill = "Page views"), stat = "identity", position = "dodge", width = 0.6) +
+     geom_bar(aes(y = Visits, fill = "Visits"), stat = "identity", position = "dodge", width = 0.6) +
+     geom_bar(aes(y = Uniques, fill = "Unique users"), stat = "identity", position = "dodge", width = 0.6)    +
+     labs(title = "Views, visits and unique users per month", x = "Post.date", y = "Value") + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This graph also shows increase in all three metrics in 2022-2023. To see
+how these metrics crrespond to each other, I will calculate "visits
+ratio" and "unique.ratio".
+
+### Page unique viewers.
+
+Becuse "Uniques" variable represents number of unique people who came to
+the page and viewed it at least once, his metric represents popularity
+of the post. It's distribution shows us that not all posts are equally
+popular:
+
+```{r, echo=T}
+# colnames(merged)
+ggplot(data=merged, mapping=aes(x=Uniques))+
+  geom_histogram()
+```
+
+We can see a long tail on the right, showing that there is a number of
+posts who are way more popular. If we look at the distribution of this
+variable over time, we will see significant increase of average
+popularity after December 2021.
+
+```{r, echo=T}
+ggplot( data=merged, mapping=aes(y=Uniques, x=merged$year_month))+
+          geom_boxplot()+
+  labs(title="Number of unique viewers per month", x="Month", y="Number of unique viewers")+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## 1.2. Engagement measurement:
+
+
+### Exit rate
+
+This variable is measuring how many people visited the page and then
+left the website after the first view. This metric is the best measure
+of engagement for all users, as it represents the first step after being
+exposed to the post - either quitting the site or remaining on the site.
+
+Here can see the distribution of this variable :
+
+```{r, echo=T}
+# str(merged)
+merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
+
+ggplot(data=merged, mapping=aes(x=`Exit rate`))+
+  geom_histogram()
+
+```
+
+We can also see consistent increase of this value ovr time, similar to
+the trend seen before:
+
+```{r, echo=T}
+ggplot(merged, mapping = aes(x=year_month , y=`Exit rate`, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of `Exit rate` per post ", y = "Exit rate" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Number of comments: engagement metric for subset of readers. Absolute and per views.
+
+Commenting requires user to log in, which is an indicator
+of greater engagement of an individual user. Therefore this variable
+represents engagement of a subset of users - more loyal readers who have
+created an account.
+
+```{r, echo=T}
+# merged$year_month 
+ggplot(data=merged, mapping=aes(x=n.comments))+
+  geom_histogram()
+
+```
+
+And change in the distribution over time:   
+
+```{r, echo=T}
+ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of comments per post ", y = "Number of comments" )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+The trend in amount of comments over time is different. While previously
+reviewed variables seemed to increase over time, this variable
+decreases.
+
+We can calculate the ratio of comments per views. If we compare absolute values
+fo comments and ratio of comments per page views, we see the decrease in
+both cases, while the ratio's decrease is more dramatic:
+
+```{r, echo=T}
+  merged <- merged %>%
+     mutate(comments.ratio = n.comments/ `Page views`)
+
+ggplot(merged, mapping = aes(x=year_month , y=comments.ratio, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of comments ratio (comments/page views) ", y = "Number of comments" )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+WE can see that with an increase of ablsolute amount of views and Unique variable, comments ratio decreases. 
+
+The distribution of comments per post over time:
+
+```{r, echo=T}
+
+# str(merged)
+ggplot(merged, mapping = aes(x=year_month , y=post.total.likes, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of reactions over time  ", y = "Percentage of reactions " )+
+  scale_y_continuous(breaks = seq (from=0, to= 10000, by= 100)) + 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+```
+
+## 1.3 Impact of popularity on engagement.
+Since we noticed a pattern in distribution of describbed variables, lets find out how they are interconnected, and how popularity of the post impact users' engagement: 
+
+ 
+```{r, echo=T}
+pairs(subset (merged, select=c(Uniques, `Exit rate`, uniques.ratio, visits.ratio, reactions.ratio )))
+
+```
+
+This graph showing that  popularity is  strongly correlated with  engagement , where an increase in popularity causes decrease of engagement.
+
+We can also see that the relationship between Popularity and engagement rate are curvi-linear. If we log the values, we will see linear relationship: 
+```{r, echo=T}
+# 
+# pairs(subset (merged, select=c(log(Uniques), log(`Exit rate`), uniques.ratio, visits.ratio, reactions.ratio )))
+# WHy DOES THE GRAPH SHOW POST.DATE and POST.DATE1  INSTEAD OF "UNIQUES" and  "Exit rate"? 
+```
+
+
+As we saw in the distributions of variables above, all engagement metrics are strongly and negatively correlate with the popularity metric. 
+
+
+
+### 1.3.1. Modeling engagement ~ popularity: 
+Lets review how it is impacting exit rate :
+I will use "Exit rate" s my main engagement  variable, as it reporesents the first engagement chiuce that all site users make: to stay on the site or leave. Using log() of popularity is showing a better fitted model: 
+
+```{r, echo=T}
+ggplot(merged, mapping=aes(x=log(Uniques), y=`Exit rate` ))+
+  geom_point()
+
+
+summary(lm(`Exit rate`~ + log(Uniques) , data = merged))
+```
+
+We can see  significance of popularity and  high R^2 of the model, and conclude that popularity  decreases engagement(measured by `Exit rate`).  To explore this connection further, I will review Sources of users that are coming to the website.
+
+### 1.3.2. How popularity impacts engagement: Referral sources.
+
+The website analytics provides information on where the viewers are
+coming from to the blog page. for example, if people clicked on the blog
+link posted on FaceBook, that would be referral from social media. If
+people clicked on the blog link within BDC website, that would be "BDC
+referral visit".
+
+There are 5 sources of referrals, each corresponding with a variable in
+the data set. Variable's value is a number of visits from this referral
+source.
+
+      
+    "Search + amp referral visits"
+    "Direct (non-email) referral visits"
+    "Other website referral visits"
+    "Social referral visits"
+    "BDC referral visits"
+    "Visits when post was on LL HP" 
+
+
+```{r, echo=T}
+#renaming variables for convenience: 
+merged<-merged%>%
+  rename(google ="Search + amp referral visits",
+         direct ="Direct (non-email) referral visits",
+         other.web = "Other website referral visits",
+          social= "Social referral visits",
+          bdc= "BDC referral visits",
+          ll= "Visits when post was on LL HP" )
+
+ggplot(merged, mapping=aes(x=post.date))+
+  geom_point(aes(y=google), color="red")+
+  geom_point(aes(y=direct), color="green")+
+  geom_point(aes(y=other.web), color="yellow")+
+  geom_point(aes(y=social), color="purple")+
+  geom_point(aes(y=bdc), color="blue")+
+  geom_point(aes(y=ll), color="pink")  +
+  labs(title = "Referral sources per post ", y = "Number of referrals" , x="Post")+ 
+  scale_color_manual(values = c("red", "green", "yellow", "purple", "blue", "pink"),
+                     labels = c("Google", "Direct", "Other Web", "Social", "Bdc", "LL"))
+```
+
+This graph clearly demonstrates increase of "Search + amp referral
+visits" after December 2021, while other referral sources maintain the
+same level over time. This increase matches changes observed in
+popularity ( Page Views), and engagement metrics that are highly
+correlated with popularity. It also doubles views of the posts in many
+cases and might significantly influence our model and conclusions.
+
+
+
+### Post weekdays to the model
+
+```{r, echo=T}
+colnames(merged)
+merged.2<-merged %>%
+  filter(google>10000)
+
+ # plot(merged$post.weekday, merged$google)
+
+summary(lm(log(google) ~early.sum +post.weekday , data=merged.2))
+
+# table(merged.weekdays$post.weekday)
+
+ggplot (merged, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( )+
+  geom_smooth(method="lm")+
+  labs(title = "All google referrals and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+ggplot (merged.2, mapping =aes(x=early.sum, y=google, color =post.weekday))+
+  geom_point( ) +
+  geom_smooth(method="lm")+
+  labs(title = "Google referrals over 10K and early comments", y = "Google referrals" , x="Early comments")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  facet_wrap(~post.weekday)
+
+
+
+
+```
+
+Early comments indeed influence Google referrals. However, this influence is different on different days of the week and appears more pronounced on Thursdays and Fridays.  This overall supports our suggestion that early engagement of loyal users through comments impacts post popularity. further investigation of factors would be helpful, with the goal to  model fit (R^2).
+
+
+
+Our hypothesis that large amount of early comments triggers google
+referrals has some preliminary support with the few restrictiions to be considere: 
+- the connection only appears on the posts with google referrals above 10000. 
+- This connection is atronger for only thursdays and Fridays and  appears very weak on other days of the week. 
+- low coefficient and high deviation of data from predicated valaues (low R\^2) suggest
+that there are other , more influential, factors that were not considered. 
+
+## 1.4.Conclusion
+
+As we reviewed a variety of engagement metric, I found:
+
+1.    That they are all strongly correlated to each other and influenced by post popularity:
+Engagement overall decreases as popularity increases.In our further analysis I will need to include "Uniques" variable in the model to control for popularity
+
+2.  Also as a result of exploration of engagement metrics and referral sources, I now distinguish two types of users: viewers and loyal readers. The main difference is that loyal readers have created     accounts and therefore can leave a comment. 
+
+It is possible that these two groups of readers  respond differently to popularity increase, as well as other Independent variables. Therefore, the difference in types of readers must be considered when addressing our main hypothesi: whether authors engagement and other factors impacts reader's engagement.
+    
+3. Does engagement of loyal users through comments contribute to changes in post popularity and engagement of viewers? 
+
+
+
+Now, lets consider independent variables of our main hypothesis. 
+# 2. Independent variables (IV):
+
+```{r, echo=T}
+# library(stargazer)
+# 
+# 
+# stargazer()
+```
+
+
+### Authors comments
+
+To identify, how much the author of the blog is engaged in the post, I
+will create an additional variable derived from a user_name field.
+
+```{r, echo=T}
+# str(merged)
+comments.data$user_name<-  ifelse (is.na(comments.data$user_name), 0, comments.data$user_name)
+comments.data$author<-  ifelse (comments.data$user_name=="MeredithGoldstein", 1, 0)
+
+comments.grouped <-comments.data %>%
+  group_by(post_id)%>%
+  summarize(n.comments=n(),
+            author.sum = sum(author))
+
+# dim(comments.grouped )
+# colnames(comments.grouped )
+# class(comments.grouped$author.sum)
+
+# Comments data contains rows that dont actually reporesent posts, and were crearted by web support team for troubleshooting. I need to remove these rows. They typically have very low number of comments
+comments.grouped <-comments.grouped %>%
+filter(n.comments >100)  # removing invalid posts created by the  website management team.
+
+comments.grouped <-comments.grouped %>%
+  select(post_id, author.sum)
+ dim(comments.grouped)
+ 
+ 
+#adding author.sum to main data set: 
+merged <- merge( merged , comments.grouped, by = "post_id", all = TRUE)
+
+
+ggplot(data=merged, mapping = aes(x=year_month , y=author.sum, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of Author's comments by months", y = "Author's comments" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+This graph shows, that majority of posts have no author's comments.
+However, if we look at the box plots' upper ranges, we can suggest a
+trend of decrease in author's comments with time.
+
+### Mood of the post.
+
+This is a numerical variable, calculated as percentage of "thumbs up"
+from all likes (both "thumbs up" and "thumbs down").
+
+```{r, echo=T}
+ggplot(merged, mapping = aes(x=year_month , y=pct.positive, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "distribution of Mood per post ", y = "Mood" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+### Blocked comments per post.
+
+Now I will visualize amount of blocked comments per post:
+
+```{r, echo=T}
+
+ggplot(merged, mapping = aes(x=year_month , y=blocked.sum, fill=year_month ))+
+  geom_boxplot() +
+  labs(title = "Number Blocked comments  per post ", y = "Number of blocked comments per post" , x="Month")+ 
+     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+# 3. Modeling for hypothesis testing
+
+As we mentioned above, we will add popularity to the model when testing main hypothesis. Also,  I am going to break the data set into two groups: prior to December 2021 and after December 2021 due to  dramatic change in referral sources. I will use these two datasets to to test my main hypothesis and compare results. 
+
+```{r, echo=T}
+merged.2021 <- merged%>%
+  filter(post.date <	"2021-12-01")
+merged.2022 <- merged%>%
+  filter(post.date >=	"2021-12-01")
+dim(merged.2021)
+```
+
+
+
+## 3.1 Basic model. 
+
+I will start with creating a simple model of engagement ~ popularity and author's engagement: 
+```{r, echo=T}
+
+# colnames(merged)
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged.2021))
+summary(lm(`Exit rate` ~ log(Uniques)+ author.sum, data = merged.2022))
+
+
+```
+
+To see how engagement of loyal readers readers impacted ,  I will use another measure for engagement as DV, which represents only registered users:  number of comments. 
+
+```{r, echo=T}
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged))
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged.2021))
+summary(lm(n.comments ~ log(Uniques) + author.sum , data = merged.2022))
+
+```
+
+This shows that loyal readers' engagement is decreasing with popularity only in 2022, and somewhat increasing with author's comments. 
+
+
+## 3.2 Adding other/confounding variables and splitting  dataset: .
+Now I will add other variables  to see if there is any impact on the results of the model with engagement of both groups of readers. 
+I am including n.comments in the model, to see if engagement of loyal readers through comments impact overall engagement.  
+
+Below is the summary of estimates and p-values  for three models, derived from the three different data sets: all data, 2021 and 2022. Comparing them will allow to identify whether the  
+
+```{r, echo=T}
+# colnames(merged)
+# summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged))
+# summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021))
+# summary(lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022))
+
+
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+library(stargazer)
+stargazer(model.all , model.2021, model.2022, type = 'text')
+
+
+#three models with different variables 
+model.1 <- lm(`Exit rate` ~ log(Uniques)+ author.sum  , data = merged)
+model.2 <- lm(`Exit rate` ~ log(Uniques)+ author.sum  +n.comments , data = merged)
+model.3 <- lm(`Exit rate` ~ log(Uniques)+ author.sum  +n.comments + pct.positive, data = merged)
+model.4<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +pct.positive +blocked.sum , data = merged)
+model.5<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +pct.positive +blocked.sum + post.weekday , data = merged)
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged)
+
+library(stargazer)
+stargazer(model.0, model.1, model.2, model.3, model.4, model.5, type = 'text')
+
+```
+
+This table shows that in addition to post popularity (log(Uniques)), which contributes the most to the engagement increasing exit rates,  there are other significant variables, such as 
+- authors comments, our main independent variable of the research question. 
+- number of comments, measurement of engagement of loyal readers. 
+- blocked.sum
+- post weekday 
+ However, the coefficients for number of comments and number of blocked comments are negligibly small indicating  that their influence is realy, but tiny. Coefficients  for a weekday and author's comments are statistically significant and their estimates are , even though small, are bigger that the other variables. 
+ 
+ ### Now I will use the same independent variables to calculate estimated coefficients based on  three to datasets. The result will allow me to see if difference between models produced based on different training data: 
+ 
+## 3.3 Diagnostic of linear models:
+### Residuals vs fitted values
+```{r, echo=T}
+
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2022)
+par(mfrow = c(2,3))
+plot(model.all, which = 1)
+plot(model.2021, which = 1)
+plot(model.2022, which = 1)
+```
+WE can see that 2022 dataset produced curved line of residuals, suggesting  that quadratic model might be a better fit for 2022 data.
+
+### QQ plot
+This plot is testing for normality of residual distribution.
+```{r, echo=T}
+plot(model.all, which = 2)
+plot(model.2021, which =2)
+plot(model.2022, which = 2)
+```
+QQ plots showing some deviation from  straight line on the edges, suggesting skewed distribution of residuals from all three models. 
+
+### Scale-Location
+```{r, echo=T}
+plot(model.all, which = 3)
+plot(model.2021, which =3)
+plot(model.2022, which = 3)
+```
+Scale-location of compete dataset, combining 2021 and 2022 showing also some heteroscedasticity in distribution oif the data. Since 2021 and 2022 seem more heteroscedastistic,  this difference in the combined dataset might indicate significant differences betweek 2021 and 2022 data. 
+### Cooks distance 
+```{r, echo=T}
+plot(model.all, which = 4)
+plot(model.2021, which =4)
+plot(model.2022, which = 4)
+```
+Cooks distance demonstrates some outliers in each dataset.  We can review REsidualsvs Leverage plot to find out if these outliers impact our regression models: 
+### Residuals vs leverage
+```{r, echo=T}
+plot(model.all, which = 5)
+plot(model.2021, which =5)
+plot(model.2022, which = 5)
+```
+
+### Cooks distance vs Leverage
+```{r, echo=T}
+plot(model.all, which = 6)
+plot(model.2021, which =6)
+plot(model.2022, which = 6)
+```
+
+
+Since the diagnostic lots suggested non-linearity as the way to improve the model,  I will plot dependent variable against each Iv to see which of them might need to be logged or squared: 
+
+## Plotting DV~IV distributions
+### Authors comments: 
+
+```{r, echo=T}
+library(gridExtra)
+
+
+plot1<- ggplot (merged, mapping =aes(y=log(`Exit rate`), x=author.sum))+
+  geom_point()+
+  geom_smooth(method="lm")
+plot2<- ggplot(merged, aes(x = as.factor(author.sum), y = log(`Exit rate`))) +
+  geom_bar(stat = "identity")
+
+dev.off()
+grid.arrange(plot1, plot2, ncol=2)
+plot1
+
+```
+
+### Exit rate ~ Number of comments plot : 
+Lets also look at distribution of exit rate per n.comments. 
+```{r, echo=T}
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+
+  geom_point()+
+  geom_smooth(method="lm")
+
+plot2<- ggplot(merged, aes(x = n.comments, y = `Exit rate`)) +
+  geom_bar(stat = "identity")
+
+grid.arrange(plot1, plot2, ncol=2)
+```
+Despite this distribution being  skewed, its shape is close to normal.
+
+### Exit rate ~ week day plot :
+Weekday is another significant variable. It is also a categorical variable. 
+
+```{r, echo=T}
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=post.weekday))+
+  geom_point()+
+  geom_smooth(method="lm")
+
+plot2<- ggplot(merged, aes(x = post.weekday, y = `Exit rate`)) +
+  geom_bar(stat = "identity")
+grid.arrange(plot1, plot2, ncol=2)
+```
+The plot shows significant difference of exit rate on mondays, consistent with the coefficients of all three models. 
+
+<!-- ```{r, echo=T} -->
+<!--  ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+ -->
+<!--   geom_point()+ -->
+<!--   geom_smooth(method="lm")+facet_wrap(~post.weekday) -->
+
+<!--  ggplot(merged, aes(x = n.comments, y = `Exit rate`)) + -->
+<!--   geom_bar(stat = "identity") -->
+
+<!-- ``` -->
+<!-- It appears that Monday and Tuesday this relationship between number of comments nad exit rate is the most pronounced.  -->
+
+
+As we reviewd distributions of  independent variables  per  Exit rate, we saw that author's comments  are not normally distributed, which might have contributed to curve in QQ plot. 
+
+### why is this here ? Scale-Location
+
+```{r, echo=T}
+# colnames(merged)
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + pct.positive +blocked.sum+ post.weekday +n.comments, data = merged.2022)
+
+par(mfrow = c(2,3))
+plot(model.all, which = 3)
+plot(model.2021, which = 3)
+plot(model.2022, which = 3)
+```
+ While 
+ 
+ We can conclude that the  heteroskedasticity of the data
+ 
+# Modifying auth.sum to address variability of residuals:  
+ 
+```{r, echo=T}
+merged <- merged %>%
+  mutate (author.sum = author.sum+0.001)
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged)
+# Since lo(0) is not allowe,  I will add a pseudocount ot auth.sum to be able to take log()
+merged <- merged %>%
+  mutate (author.sum = author.sum+0.001)
+model.7<-lm(`Exit rate` ~ log(Uniques)+ log(author.sum)   +n.comments  +blocked.sum + post.weekday , data = merged)
+model.8 <-  lm(`Exit rate` ~ log(Uniques) +I(author.sum^2)  + n.comments  +blocked.sum + post.weekday , data = merged)
+library(stargazer)
+stargazer(model.6, model.7, model.8 , type = 'text')
+```
+Despite our suggestion that logging or squaring of author'sum might lead to a better model, leaving this variable as is produces better result.  
+ I will now see if  that changes if we create a model from a subsets of our data : 2021 and 2022:
+ 
+```{r, echo=T}
+
+
+model.6<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged)
+model.6.5<-lm(`Exit rate` ~ log(Uniques)+ I(author.sum^2)    +n.comments  +blocked.sum + post.weekday , data = merged)
+model.7<- lm(`Exit rate` ~ log(Uniques)+ author.sum +n.comments  +blocked.sum + post.weekday , data = merged.2021)
+model.8<- lm(`Exit rate` ~ log(Uniques)+ I(author.sum^2) +n.comments  +blocked.sum + post.weekday , data = merged.2021)
+model.9<- lm(`Exit rate` ~ log(Uniques)+ author.sum +n.comments  +blocked.sum + post.weekday , data = merged.2022)
+model.10<- lm(`Exit rate` ~ log(Uniques)+ I(author.sum^2) +n.comments  +blocked.sum + post.weekday , data = merged.2022)  
+
+library(stargazer)
+stargazer(model.6,model.6.5,  model.7, model.8,model.9, model.10,type = 'text')
+```
+ 
+### Re-checling diagnostics : 
+Residuals vs fitted values for squared models.
+
+For model based on all data, non-squared and squared author comments in the model: 
+```{r, echo=T}
+model.all <- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged)
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2021)
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum + blocked.sum+ post.weekday +n.comments, data = merged.2022)
+par(mfrow = c(3,2))
+plot(model.6, which = 1)
+plot(model.6.5, which = 1)
+```
+For 2021 : non-squared and squared author comments in the model: 
+```{r, echo=T}
+plot(model.7, which = 1)
+plot(model.8, which = 1)
+```
+For 2022 : non-squared and squared author comments in the model 
+```{r, echo=T}
+
+plot(model.9, which = 1)
+plot(model.10, which = 1)
+```
+ 
+From the plots above we can conclude that using Author comments's squared value did not impact fit of the model and the issue with variability of residuals persisted.  I conclude that this curve is caused by another variable, and not authors comments. 
+ 
+ 
+ 
+# Modifying n.comments to address variability of residuals:  
+ Since the residuals issue only pertains to models derived from 2022 data,  I will test three mdocifications of the model on the same 2022 dataset: 
+```{r, echo=T}
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday , data = merged.2022)
+
+model.7<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +I(n.comments^2)  +blocked.sum + post.weekday , data = merged.2022)
+model.8<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +log(n.comments)  +blocked.sum + post.weekday , data = merged.2022)
+
+library(stargazer)
+stargazer(model.6, model.7,model.8, type = 'text')
+```
+ 
+### Residuals vs fitted values for squared models 
+normal, log and squareds for 2022 data models: 
+```{r, echo=T}
+par(mfrow = c(3,3))
+plot(model.6, which = 1)
+plot(model.7, which = 1)
+plot(model.8, which = 1)
+```
+Here we can see the residual issue is still curved and modification of n.comments variable did not address the issue. 
+
+
+
+
+# adding google variable: 
+We saw earlier that the value of google variable significantly increases in  2022. I will add it to the model to see how much it impoves fit and residuals variability. 
+
+```{r, echo=T}
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google , data = merged.2022)
+
+model.7<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday+log(google) , data = merged.2022)
+model.8<-lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + I(google^2), data = merged.2022)
+
+library(stargazer)
+stargazer(model.6, model.7,model.8, type = 'text')
+```
+Here we see that google appears as a significant independent variable. The model with  IV as log(google) demonstrates the best fit. 
+
+Diagnostocs: 
+```{r, echo=T}
+par(mfrow = c(1,3))
+plot(model.6, which = 1)
+plot(model.7, which = 1)
+plot(model.8, which = 1)
+```
+ It also significantly i,mproved the issue with residuals variability
+
+Next, I will plot google variable against DV: 
+```{r, echo=T}
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=google))+
+  geom_point()
+
+plot2<- ggplot (merged, mapping =aes(y=`Exit rate`, x=I(google^2)))+
+  geom_point()
+
+plot3<-ggplot (merged, mapping =aes(y=`Exit rate`, x=log(google)))+
+  geom_point()
+
+grid.arrange(plot1, plot2,plot3, ncol=2)
+```
+This shows that  a percent increase of google referrals correspond with decrease of engagement. 
+I will add the rest of referral sources as Independent variables to my model, to see if that improves the fit and resolves residuals issue: 
+
+google ="Search + amp referral visits",
+direct ="Direct (non-email) referral visits",
+other.web = "Other website referral visits",
+social= "Social referral visits",
+bdc= "BDC referral visits",
+ll= "Visits when post was on LL HP" )
+
+# Modifying the model:adding referral sources
+```{r, echo=T}
+model.6<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct  , data = merged.2022)
+model.7<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web , data = merged.2022)
+model.8<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web +social, data = merged.2022)
+model.9<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web +social +bdc , data = merged.2022)
+model.10<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday +google +direct +other.web +social +bdc +ll, data = merged.2022)
+
+library(stargazer)
+stargazer(model.6, model.7,model.8, model.9,model.10,  type = 'text')
+
+```
+
+
+Now I will plot  distribution of exit rates per referral sources: 
+```{r, echo=T}
+plot.6<- ggplot (merged, mapping =aes(y=`Exit rate`, x=google))+
+  geom_point()+
+  labs(title="Google")
+
+plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=direct))+
+  geom_point()+
+  labs(title="Direct")
+
+plot2<- ggplot (merged, mapping =aes(y=`Exit rate`, x=other.web))+
+  geom_point()+
+  labs(title="Other web")
+
+plot3<-ggplot (merged, mapping =aes(y=`Exit rate`, x=social))+
+  geom_point()+
+  labs(title="Social")
+
+plot4<-ggplot (merged, mapping =aes(y=`Exit rate`, x=bdc))+
+  geom_point()+
+  labs(title="BDC")
+
+plot5<-ggplot (merged, mapping =aes(y=`Exit rate`, x=ll))+
+  geom_point()+
+  labs(title="LL")
+
+grid.arrange(plot.6, plot1, plot2,plot3,plot4,plot5, ncol=2)
+```
+
+From the plots we can see that Other web sources have similar distribution as google, bur were not significant IV for the model. Direct and BDC are positively correlated with exit rate, but this relationship is more linear. 
+Social and LL referrals seem have much smaller coefficient, but are significant for the model.
+
+Next, I will modify the model and  use the same variables for the whole data set and 2021:  
+```{r, echo=T}
+
+model.1<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged)
+
+model.2<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2021)
+
+model.3<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+library(stargazer)
+stargazer(model.1, model.2, model.3,  type = 'text')
+```
+Removing unsignificant variables: 
+unlogging google: 
+```{r, echo=T}
+
+model.1<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments   + post.weekday + google + direct  +social +bdc +ll  , data = merged)
+
+model.2<- lm(`Exit rate` ~ log(Uniques)  +n.comments   + post.weekday + google + direct  +social +bdc +ll  , data = merged.2021)
+
+model.3<- lm(`Exit rate` ~ log(Uniques)+ author.sum  + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+library(stargazer)
+stargazer(model.1, model.2, model.3,  type = 'text')
+```
+
+```{r, echo=T}
+
+model.all<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments   + post.weekday + google + direct   +bdc +ll  , data = merged)
+
+model.2021<- lm(`Exit rate` ~ log(Uniques)  +n.comments   + post.weekday  + direct   +bdc +ll  , data = merged.2021)
+
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum  + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+library(stargazer)
+stargazer(model.all, model.2021,model.2022,  type = 'text')
+```
+
+This table demonstrates difference in models depending on the data set used for its production.  Specifically, the difference between 2021 and 2022 demonstrates : 
+
+        1. Authors comments impact Exit rate engagement in 2022, but not in 2021
+        2. Number of comments impacts engagement in 2021, but not in 2022. 
+        3. weekday Tuesday significantly impact engagement, but even more in 2022. 
+        4. Google referrals make difference on engagement in 2022
+        5. Direct referrals always impacted engagement, by increasing it. 
+        6. social referrals increase engagement only in 2022
+        7. Interla bds referrals assocoated with lower engagement for both 2021 and 2022.         8. LL referrals assocoated with lower engagement for both 2021 and 2022. 
+
+ 
+## 3.4 Diagnostic of  corrected models (with referral sources):
+### Residuals vs fitted values
+```{r, echo=T}
+
+model.all<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged)
+
+model.2021<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2021)
+
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments  +blocked.sum + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+par(mfrow = c(2,3))
+plot(model.all, which = 1)
+plot(model.2021, which = 1)
+plot(model.2022, which = 1)
+```
+WE can see that 2022 dataset produced curved line of residuals, suggesting  that quadratic model might be a better fit for 2022 data.
+
+### QQ plot
+This plot is testing for normality of residual distribution.
+```{r, echo=T}
+
+plot(model.all, which = 2)
+plot(model.2021, which =2)
+plot(model.2022, which = 2)
+```
+
+### Scale-location
+
+```{r, echo=T}
+
+plot(model.all, which = 3)
+plot(model.2021, which =3)
+plot(model.2022, which = 3)
+```
+This results improved in compare with earlier model. 
+
+### Cooks distance:
+```{r, echo=T}
+
+par(mfrow = c(2,3))
+plot(model.all, which = 4)
+plot(model.2021, which =4)
+plot(model.2022, which = 4)
+```
+### Residuals vs Leverage:
+```{r, echo=T}
+plot(model.all, which = 5)
+plot(model.2021, which =5)
+plot(model.2022, which = 5)
+```
+### Cook's distanc vs Leverage: 
+```{r, echo=T}
+plot(model.all, which = 6)
+plot(model.2021, which =6)
+plot(model.2022, which = 6)
+```
+"Cook's distance vs Leverage" also improved for 2022. 
+
+### Summary: 
+The model, that takes into account referral sources demonstrated a better fit, and addressed issue with residuals identified in diagnostics, especially for 2022.
+
+ 
+
+# 4. N.comments :
+Now as I have created a model for exit rate,  I will do the same for n.comments as dependent variable, which represents the measurement of engagement of loyal readers. 
+google ="Search + amp referral visits",
+direct ="Direct (non-email) referral visits",
+other.web = "Other website referral visits",
+social= "Social referral visits",
+bdc= "BDC referral visits",
+ll= "Visits when post was on LL HP" )
+```{r, echo=T}
+
+model.all<- lm(n.comments ~ log(Uniques)+ author.sum   +pct.positive  +blocked.sum + post.weekday + google + direct  + other.web +social +bdc +ll  , data = merged)
+model.2021<- lm(n.comments ~ log(Uniques)+ author.sum   +pct.positive  +blocked.sum + post.weekday + google + direct  + other.web +social +bdc +ll  , data = merged.2021)
+model.2022<- lm(n.comments ~ log(Uniques)+ author.sum   +pct.positive  +blocked.sum + post.weekday + google + direct  + other.web +social +bdc +ll  , data = merged.2022)
+
+library(stargazer)
+stargazer(model.all, model.2021, model.2022,  type = 'text')
+```
+We can see here , that popularity of the post is not nearly as important for loyal readers.Thus, we can only see significance of this variable for the complete dat set model, and not is separated datasets. Removing the log transformation made Unies variable significant for 2021 and did not change 2022. 
+Blocked comments also  have no significance on separated dataset, but appears significant on the complete model
+
+Authors sum appears not significant in any combination of variables for n.comments as dependent variable. 
+
+Now  I remove variables that showed no significance 
+```{r, echo=T}
+model.all<- lm(n.comments ~log(Uniques)  +pct.positive  +blocked.sum + post.weekday + google + direct   +social +bdc +ll  , data = merged)
+
+model.2021<- lm(n.comments ~ Uniques     + post.weekday + google + direct   +social +bdc +ll  , data = merged.2021)
+
+model.2022<- lm(n.comments ~ pct.positive  + post.weekday  +social  +ll  , data = merged.2022)
+
+library(stargazer)
+stargazer(model.all, model.2021, model.2022,  type = 'text')
+
+```
+
+## N.comments model. Diagnostics: 
+```{r, echo=T}
+model.all<- lm(n.comments ~log(Uniques)  +pct.positive  +blocked.sum + post.weekday + google + direct   +social +bdc +ll  , data = merged)
+
+model.2021<- lm(n.comments ~ Uniques     + post.weekday + google + direct   +social +bdc +ll  , data = merged.2021)
+
+model.2022<- lm(n.comments ~ pct.positive  + post.weekday  +social  +ll  , data = merged.2022)
+
+
+par(mfrow = c(2,3))
+plot(model.all, which = 1)
+plot(model.2021, which = 1)
+plot(model.2022, which = 1)
+
+
+
+```
+WE can see that 2022 dataset produced curved line of residuals, suggesting  that quadratic model might be a better fit for 2022 data.
+
+### QQ plot
+This plot is testing for normality of residual distribution.
+```{r, echo=T}
+
+plot(model.all, which = 2)
+plot(model.2021, which =2)
+plot(model.2022, which = 2)
+```
+
+### Scale-location
+
+```{r, echo=T}
+
+plot(model.all, which = 3)
+plot(model.2021, which =3)
+plot(model.2022, which = 3)
+```
+This results improved in compare with earlier model. 
+
+### Cooks distance:
+```{r, echo=T}
+
+par(mfrow = c(2,3))
+plot(model.all, which = 4)
+plot(model.2021, which =4)
+plot(model.2022, which = 4)
+```
+### Residuals vs Leverage:
+```{r, echo=T}
+
+plot(model.all, which = 5)
+plot(model.2021, which =5)
+plot(model.2022, which = 5)
+```
+### Cook's distanc vs Leverage: 
+```{r, echo=T}
+
+plot(model.all, which = 6)
+plot(model.2021, which =6)
+plot(model.2022, which = 6)
+```
+"Cook's distance vs Leverage" also improved for 2022. 
+
+### Summary: 
+The models for  loyal readers' engagemnt also demonstrate heteroskedestisity visible on the scale-location graph for combined dataset model. It is consistent with our other findings that 2022 added significant amount of "outliers" which changed dataset,  created a skew in distributions of engagement ,  impacted overall variance and therefore distribution of residuals. 
+
+Since thise datapoints are added in 2022, comparinng 2021 and 2022 models can give us significant insight intyo how these additional datapoints impacted the model. 
+
+
+# Comparative table of all models: 
+```{r, echo=T}
+# __________________#exit rate
+model.all<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments   + post.weekday + google + direct   +bdc +ll  , data = merged)
+
+model.2021<- lm(`Exit rate` ~ log(Uniques)  +n.comments   + post.weekday  + direct   +bdc +ll  , data = merged.2021)
+
+model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum  + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+
+# ___________________#n.com:
+
+model.all.ncom<- lm(n.comments ~log(Uniques)  +pct.positive  +blocked.sum + post.weekday + google + direct   +social +bdc +ll  , data = merged)
+
+model.2021.ncom<- lm(n.comments ~ Uniques     + post.weekday + google + direct   +social +bdc +ll  , data = merged.2021)
+
+model.2022.ncom<- lm(n.comments ~ pct.positive  + post.weekday  +social  +ll  , data = merged.2022)
+
+
+# _____________________# Stargazer: 
+#2021 and all 
+
+stargazer(model.all,  model.all.ncom, model.2021,  model.2021.ncom,  type = "text")
+
+
+# all: 
+
+stargazer(model.all,  model.all.ncom,   type = "text")
+
+stargazer(model.2021,  model.2021.ncom, type = "text")
+
+stargazer( model.2022, model.2022.ncom,  type = "text")
+
+
+library(stargazer)
+stargazer(model.all, model.2021, model.2022,  type = 'text')
+```
+
+Using x_table to display my models: 
+```{r, echo=T}
+# install.packages("xtable")
+# library(xtable)
+# # __________________#exit rate
+# model.all<- lm(`Exit rate` ~ log(Uniques)+ author.sum   +n.comments   + post.weekday + google + direct  +social +bdc +ll  , data = merged)
+# xt_model.all <- xtable(model.all)
+# 
+# model.2021<- lm(`Exit rate` ~ log(Uniques)  +n.comments   + post.weekday  + direct  +social +bdc +ll  , data = merged.2021)
+# xt_model.2021 <- xtable(model.2021)
+# 
+# model.2022<- lm(`Exit rate` ~ log(Uniques)+ author.sum  + post.weekday + log(google) + direct  +social +bdc +ll  , data = merged.2022)
+# xt_model.2022 <- xtable(model.2022)
+# 
+# xt_combined <- rbind(xt_model.all, xtable(model.2021),  xtable(model.2022))
+# print(xt_combined, type = "Latex")
+# print.xtable(xt_combined)
+# 
+# 
+# 
+# # ___________________#n.com:
+# 
+# model.all.ncom<- lm(n.comments ~log(Uniques)  +pct.positive  +blocked.sum + post.weekday + google + direct   +social +bdc +ll  , data = merged)
+# 
+# model.2021.ncom<- lm(n.comments ~ Uniques     + post.weekday + google + direct   +social +bdc +ll  , data = merged.2021)
+# 
+# model.2022.ncom<- lm(n.comments ~ pct.positive  + post.weekday  +social  +ll  , data = merged.2022)
+# 
+# library(xtable)
+
+```
+
+
+```
+
+
+
+
+
+
+
+# 4. Conlusion
+
+This study explored the connection between user's online engagement and bolg's author engagement.  To do so, we
+1) also analyzed the impact of post popularity on engagement, and found significant connection
+2) compared year 2021 and 2022 and found difference in relationships between DV and IV variables. 
+3)Found that author's engagement does impact users engagement, but mostly in 2022 and towards all viewers and less through  loyal readers. 
+
+```{r, echo=T}
+# knitr::include_graphics("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP_diagram.png")
+
+
+img <- readPNG("C:\\Users\\Diana\\OneDrive - University Of Massachusetts Medical School\\Documents\\R\\R working directory\\DACSS\\603\\my study files for dacss603\\FP_diagram.png")
+grid.raster(img)
+```
+
+The results showed that the post popularity is the major factor for online engagement and that more popular posts tend to be less engaging.    
+
+We also identified two groups of users, whose engagement is measured with different metrics. We explored how blog author's comments impact engagement of each group. We found  than there is some  impact of authors engagement on overall user engagement, but not on loyal readers' engagement.  Such characteristics, as post mood and blocked comments, and  days of the week showed some connection with engagement of loyal readers.  
+
+
+
+ 
