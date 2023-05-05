@@ -1,0 +1,110 @@
+---
+title: "Homework - 1"
+author: "Hannah Rosenbaum"
+description: "Homework 1"
+date: "05/04/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1
+
+## a
+
+First, let's read in the data from the Excel file:
+
+```{r, echo=T}
+#library(readxl)
+library(dplyr)
+#df <- read_excel("_data/LungCapData.xls")
+df <- LungCapData
+```
+
+The distribution of LungCap looks as follows:
+
+```{r, echo=T}
+hist(df$LungCap)
+```
+
+The distribution of the histogram reflects a pattern that is symmetric unimodal.
+
+### b
+
+```{r, echo=TRUE}
+box <- boxplot(df$LungCap ~ df$Gender)
+box
+summary(box)
+```
+We denote that the probability in respect to gender shows female (7.45, 8.03) compared to (8.04227, 8.66499). Thus, this relationship indicates that when females are compared to male counterparts for lung capacity strength we see that men have a higer lung capacity than that of women.
+
+### c
+
+```{r, echo=TRUE}
+df %>% group_by(Smoke) %>% summarise(LungCap = mean(LungCap))
+```
+No, the lung capacity dataset does not indicate a clear causal relationship due to the implication of smokers having a higer lung capacity than non-smoker counterparts. Thus, we can infer that this relationship has a more spurious and intervening effect in regards to this relationship.
+
+### d and e
+```{r, echo=TRUE}
+df[df$Age <= 13, ] %>% group_by(Smoke) %>% summarise(LungCap = mean(LungCap))
+df[df$Age > 13 & df$Age <= 15, ] %>% group_by(Smoke) %>% summarise(LungCap = mean(LungCap))
+df[df$Age > 15 & df$Age <= 17, ] %>% group_by(Smoke) %>% summarise(LungCap = mean(LungCap))
+df[df$Age > 17, ] %>% group_by(Smoke) %>% summarise(LungCap = mean(LungCap))
+```
+For the the thirteen and below answer we see the same effect as in part c. However, for all other age groups we see the effect reverse. Starting at age 14-15 we see a slightly lower lung capacity between smokers to non-smokers being that of a .747143 difference. This effect is also seen with the age range of 16-17 with there being a lower lung capacity of smokers by 1.0860, this denotes a difference of smoking at an earlier age impacts health by a .338917 with more lasting effects starting in the length of smoke time. There is a .5552 difference between smokers and non-smokers from 18 and above. Thus, denoting that smoking starts to impact health the longer smoking occurs and reduces lung capacity.
+
+# Question 2
+
+## a
+
+= 160 / 810
+
+= 0.198
+
+## b
+
+= 128 + 434 / 810
+
+= 0.694
+
+## c
+
+= 128 + 434 + 160 / 810
+
+= 0.891
+
+## d
+
+= 64 + 24 / 810
+
+= 0.109
+
+## e
+
+E(x) = 0 \* 128/810 + 1 \* 434/810 + 2 \* 160/810 + 3 \* 64/810 + 4 \* 24/810
+
+= 0 + 0.536 + 0.395 + 0.237 + 0.119
+
+= 1.287
+
+## f
+
+Var(x) = (0\^2 \* 128/810 + 1\^2 \* 434/810 + 2\^2 \* 160/810 + 3\^2 \* 64/810 + 4\^2 \* 24/810) * (5 / 4)
+
+= (0 + 0.536 + 0.79 + 0.711 + 0.796) * 0.8
+
+= 2.2664
+
+Std Dev = SQRT(Var(x))
+
+= SQRT(2.2664)
+
+= 1.505
