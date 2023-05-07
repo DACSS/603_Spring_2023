@@ -1,0 +1,228 @@
+---
+title: "Homework 5"
+author: "Alexa Potter"
+description: "DACSS 603"
+date: "05/07/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(car)
+library(smss)
+data("house.selling.price.2", package = "smss")
+df <- house.selling.price.2
+library(alr4)
+data("florida", package = "alr4")
+df <- florida
+library(flexmix)
+library(ggplot2)
+library(stargazer)
+```
+
+
+# Question 1
+
+(Data file: house.selling.price.2 from smss R package)   
+
+For the house.selling.price.2 data the tables below show a correlation matrix and a model fit using  four predictors of selling price.    
+  
+(Hint 1: You should be able to answer A, B, C just using the tables below, although you should  feel free to load the data in R and work with it if you so choose. They will be consistent with what  you see on the tables.  
+
+Hint 2: The p-value of a variable in a simple linear regression is the same p-value one would get  from a Pearson’s correlation (cor.test). The p-value is a function of the magnitude of the correlation  coefficient (the higher the coefficient, the lower the p-value) and of sample size (larger samples  lead to smaller p-values). For the correlations shown in the tables, they are between variables of  the same length.) 
+With these four predictors,   
+
+
+## A 
+
+For backward elimination, which variable would be deleted first? Why?  
+
+Beds would be eliminated first as it has the highest p-value. 
+
+## B  
+
+For forward selection, which variable would be added first? Why?      
+
+Size would be added first because it is the most significant with the highest correlation to price.   
+
+## C  
+
+Why do you think that BEDS has such a large P-value in the multiple regression model,  even though it has a substantial correlation with PRICE?   
+ 
+It may be because with the influence of other variables, beds is not as important to price as new or size is. These then diminish the influence of beds on price when factored together and controlled for.  
+ 
+## D
+
+Using software with these four predictors, find the model that would be selected using each  criterion:   
+
+```{r}
+lm_1 <- (lm(P ~ S, data= house.selling.price.2))
+
+lm_2 <- (lm(P ~ S + New, data= house.selling.price.2))
+
+lm_3 <- (lm(P ~ S + Ba + New, data= house.selling.price.2))
+
+lm_4 <- (lm(P ~ S + Be + Ba + New, data= house.selling.price.2))
+
+stargazer(lm_1, lm_2, lm_3, lm_4, type = 'text')
+```
+
+1. R2   
+
+Model 4
+
+2. Adjusted R2   
+
+Model 3
+
+3. PRESS   
+
+
+```{r}
+PRESS <- function(model) {
+    i <- residuals(model)/(1 - lm.influence(model)$hat)
+    sum(i^2)
+}
+PRESS(lm_1)
+PRESS(lm_2)
+PRESS(lm_3)
+PRESS(lm_4)
+```
+Model 3 
+
+4. AIC   
+
+```{r}
+AIC(lm_1, k=2)
+AIC(lm_2, k=2)
+AIC(lm_3, k=2)
+AIC(lm_4, k=2)
+```
+Model 3
+
+5. BIC   
+
+```{r}
+BIC(lm_1)
+BIC(lm_2)
+BIC(lm_3)
+BIC(lm_4)
+```
+Model 3
+
+
+## E  
+
+Explain which model you prefer and why. 
+
+The model diagnostics point to Model 3 (P ~ S + Ba + New) as being the best fit model. This is the best fit model for all the diagnostic tests except for R2. This model has all significant variables except for Beds, which was not significant.    
+
+# Question 2  
+
+(Data file: trees from base R) 
+
+From the documentation:   
+
+“This data set provides measurements of the diameter, height and volume of timber in 31 felled  black cherry trees. Note that the diameter (in inches) is erroneously labeled Girth in the data. It is  measured at 4 ft 6 in above the ground.”   
+
+Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build  a basic model of tree volume prediction. In particular, 
+
+
+## A  
+
+Fit a multiple regression model with the Volume as the outcome and Girth and Height as  the explanatory variables   
+
+```{r}
+trees
+
+lm_trees <- lm(Volume ~ Girth + Height, data = trees)
+summary(lm_trees)
+```
+
+
+
+## B  
+
+Run regression diagnostic plots on the model. Based on the plots, do you think any of the  regression assumptions is violated?   
+
+```{r}
+plot(lm_trees, which = 1)
+plot(lm_trees, which = 2)
+plot(lm_trees, which = 3)
+plot(lm_trees, which = 4)
+```
+
+Residuals vs. Fitted  
+
+The assumption of linearity seems to be violated here. The graph shows a curve rather than a straight line.   
+
+Normal Q-Q  
+
+The assumption of normality does appear to not be violated here. The dots generally fall along the line.   
+
+Scale-Location 
+
+The assumption of constant variance does not appear violated here. While the line does not appear "approximately horizontal", the dots do not have an increasing or decreasing trend.  
+
+
+Cook's Distance   
+
+To calculate the baseline here, it is 4/n. n= number of trees (31). ~ 0.13. The graph displays 3-4 points above this value, meaning the assumption of influential observation is violated.  
+```{r}
+4/31
+```
+
+
+
+# Question 3  
+
+(Data file: florida in alr R package)   
+
+In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm  Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe  that the layout of the ballot caused some voters to cast votes for Buchanan when their intended  choice was Gore.    
+
+The data has variables for the number of votes for each candidate—Gore, Bush, and Buchanan.   
+
+
+## A  
+
+Run a simple linear regression model where the Buchanan vote is the outcome and the  Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach  County an outlier based on the diagnostic plots? Why or why not?     
+
+```{r}
+florida
+lm_florida <- lm(Buchanan ~ Bush, data = florida)
+summary(lm_florida)
+plot(lm_florida,which=1)
+plot(lm_florida,which=2)
+plot(lm_florida,which=3)
+plot(lm_florida,which=4)
+```
+
+Palm Beach does appear to be an outlier in all the diagnostic plots as it is furthest away from the red baselines. In the Cook's distance plot, the 4/n is 4/67 = 0.0597, which both Dade and Palm Beach exceed. 
+
+```{r}
+4/67
+```
+
+
+## B  
+
+Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in  (A.) Does your findings change?
+
+```{r}
+
+lm_floridalog <- lm((log(Buchanan)) ~ (log(Bush)), data = florida)
+summary(lm_floridalog)
+plot(lm_floridalog,which=1)
+plot(lm_floridalog,which=2)
+plot(lm_floridalog,which=3)
+plot(lm_floridalog,which=4)
+```
+
+The results here are similar, but less drastic in difference when it comes to Palm Beach. In the Cook's Distance plot, it's also now apparent that other counties also violate the assumption. 
