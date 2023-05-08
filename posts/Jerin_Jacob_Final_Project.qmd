@@ -10,143 +10,305 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - finalpart1
+  
+  - finalproject
 ---
 
 Now a days, movies are a well marketed entertainment product. Just like any other products in the market, movies are also having an allocated a marketing budget and promotional activities are done in scale. This often result in the opening weekend's gross ticketing volume to rise. But are the pre-release promotional activities helping the movie to collect more or is it just creating a hype initially? Or does the movie's gross collection is not at all dependant on pre release promotions? This dataset has 200 highest grossing movies of 2022. It has both the opening week's gross as well as the total gross collection of the movies, along with other variables. Assuming that opening week's collection is depending on the pre-release promotion, by looking on the relationship between opening week's gross and total gross, I am trying to see how the pre-release activities help the producers earn more in boxoffice.
 
-**Research Question**: Is the total collection of a movie depending on the pre-release promotional activities?
+**Research Question**: To what extent does the success of a movie depend on its opening week's collection?
 
-**Null hypothesis**: The total gross collection of a movie is not dependant on the opening week's collection
+**Hypothesis**: Opening week's collection is positively correlated with the Box Office total collection.
 
-**Alternative hypotheses**: Total gross collection is positively dependant on the opening week's collection
 
-## Reading the data
 
+Loading all the packages required for the project. 
 ```{r, echo=T}
 library(readxl)
 library(tidyverse)
 library(lubridate)
 library(dplyr)
+library(stringr)
 ```
-
+## Reading the data
 ```{r}
-df <- read.csv("_data/project_data.csv") 
-df$Open <- ymd(df$Open)
-df$Close <- ymd(df$Close)
-df<- df|>
-  mutate(open_day = yday(Open), close_day = yday(Close), days_of_show = case_when(close_day < open_day ~ (365-open_day)+close_day, close_day >= 0 ~ close_day-open_day)) 
-df
+df <- read_excel("_data/project_data.xlsx") |>
+  as.data.frame()
+head(df)
 
 ```
 
-There are 10 variables with 200 rows.
+
+There are 14 variables with 200 rows.
 
 ### **COLUMN DESCRIPTION**
 
--   'Rank': rank of the movie
+'Rank': rank of the movie
+'Release': release date of the movie
+'Budget': The budget of the movie production
+'Box Office': The total Box Office collection
+'Gross': domestic gross of the movie
+'max_th': maximum number of theaters the movie was released in
+'Opening': gross on opening weekend
+'perc_tot_gr': domestic percentage of the total gross
+'open_th': number of theaters the movie opened in
+'Open': opening date
+'Close': closing date
+'Distributor': name of the distributor
+'int_gross': international gross
+'world_gross': worldwide gross
 
 -   'Release': release date of the movie
 
--   'Gross': domestic gross of the movie
+-   'Distributor': name of the distributor
 
--   'max_th': maximum number of theaters the movie was released in
+-   'Small_Dist': Whether a small distributor or not
+
+-   
+
+-   'Open_date': Date of release
+
+-   'season': The season in which the movie was released
 
 -   'Opening': gross on opening weekend
 
--   'perc_tot_gr': domestic percentage of the total gross
-
 -   'open_th': number of theaters the movie opened in
 
--   'Open': opening date
+-   'max_th': maximum number of theaters the movie was released in
 
--   'Close': closing date
+  
+## Cleaning the Data
+For our purpose of analysis, we need to clean and transform the data a bit. 
 
--   'Distributor': name of the distributor
-
--   'int_gross': international gross
-
--   'world_gross': worldwide gross
-
-## Summary of each variables
-
-```{r, echo=T}
-summary(df)
-```
+First, the Budget and Boxoffice columns are cleaned using stringr function so that the column values are numeric. We are getting rid of the character part in those values including '$' and the value unit. Also, there are certain values which are in Indian Rupees and South Korean won. So we need to convert thoses values to US dollars. The data for columns Budget and Box office were taken from Wikipedia. 
 ```{r}
-unique(df$Distributor)
-movies_per_distributor <- df |>
-  group_by(Distributor) |>
-  count(Distributor)
-movies_per_distributor  
-ggplot(movies_per_distributor, aes(x=Distributor, y=n)) +
-  geom_bar(position = 'dodge', stat = 'identity')
+df <- df |> 
+  mutate(Budget = gsub("\\$", "", Budget)) |>
+  mutate(Budget = sub(".*-", "", Budget)) |>
+  mutate(`Box Office` = gsub("\\$", "", `Box Office`)) 
+
+df[c('Budget', 'Unit')] <- str_split_fixed(df$Budget, ' ', 2)
+
+df$Budget <- as.numeric(df$Budget)
+
+df$Budget <- ifelse(df$Unit == "million", df$Budget * 1000000,
+                    ifelse(df$Unit == "billion", df$Budget * 1000000000,
+                           ifelse(df$Unit == "Kmillion", df$Budget * 1000000*0.00074,
+                                  ifelse(df$Unit == "Kbillion", df$Budget * 1000000000*0.00074,
+                                         ifelse(df$Unit == "crore", df$Budget * 10000000*80, df$Budget)))))
+
+df[c('Box Office', 'BXUnit')] <- str_split_fixed(df$`Box Office`, ' ', 2)
+
+df$`Box Office` <- as.numeric(df$`Box Office`)
+
+df$`Box Office` <- ifelse(df$BXUnit == "million", df$`Box Office` * 1000000,
+                    ifelse(df$BXUnit == "billion", df$`Box Office` * 1000000000,
+                           ifelse(df$BXUnit == "Kmillion", df$`Box Office` * 1000000*0.00074,
+                                  ifelse(df$BXUnit == "Kbillion", df$`Box Office` * 1000000000*0.00074,
+                                         ifelse(df$BXUnit == "crore", df$`Box Office` * 10000000*80, df$`Box Office`)))))
+```
+
+Since the original dataset from Kaggle had a column named world_gross, we can compare both variables and assume that the highest value in either of the column can be considerd as the final world_gross.  
+
+```{r}
+df$`Box Office` <- ifelse(df$`Box Office` < df$world_gross, df$world_gross, df$`Box Office`)
 
 ```
+
+We can count the number of movies in the list for each distributor and any distributor who don't have more than 3 movies in their name can be considered as a smaller distributor and thus assuming that they won't have cash rich promotional campaigns that would lead to an audience pull to the theatre in the initial week.  
+```{r}
+df <- df %>% group_by(Distributor) %>% mutate(Count=n_distinct(`Box Office`)) 
+
+df$Small_Dist <- ifelse(df$Count <= 3, 1, 0)
+```
+
+We can convert the dbl to date format and set the reference date so that the dates are correct. After that, from the Open_date, we can categorize thsoe dates to the season so that it can be used as a confounder. Seasons might have some effect on the theatre footfall and thereby, box office collections.
+```{r}
+df$Open_date <- as.Date(df$Open, origin = "1899-12-30")
+
+# Create a new column with the season for each date
+df <- df %>% 
+  mutate(season = case_when(
+    between(month(Open_date), 3, 5) ~ "Spring",
+    between(month(Open_date), 6, 8) ~ "Summer",
+    between(month(Open_date), 9, 11) ~ "Fall",
+    TRUE ~ "Winter"
+  ))
+```
+
+
+```{r}
+head(df)
+```
+
+Checking for NA values in each variable. There are 90 NA values in Budget variable, 38 in Box Office, 155 in Close date variable and 3 in int_gross. All othe variables seems to be good in terms of NA values.
 ```{r}
 
+colSums(is.na(df))
+table(df$Small_Dist)
+```
+Since 155 values of Close are NAs, it is better not to include that variable in the analysis. Most of the NA values are for the movies by small distributors, which need to be noted.
+```{r}
+df <- subset(df, select = -Close)
+
+df <- na.omit(df)
 
 ```
 
+Have an idea about the structure of the dataset.
+```{r}
+str(df)
+
+```
 
 Using the glimpse() function, let's have a look at how our data would look like!
 
 ```{r}
-glimpse(df)
+glimpse(df )
 ```
-Code sample
+
+
+
+## Summary of each variables
+
+
 ```{r}
-# Load necessary libraries
-library(dplyr) # for data manipulation
-library(ggplot2) # for data visualization
+summary(df)
+```
 
-# Load data into a data frame
-movie_data <- read.csv("_data/project_data.csv") 
+Let's look on the distribution of data
 
-# Rename columns for clarity
-colnames(movie_data) <- c("rank", "release_date", "domestic_gross", "max_theaters", "opening_weekend_gross", "domestic_percentage", "opening_theaters", "opening_date", "closing_date", "distributor", "international_gross", "worldwide_gross")
+```{r}
+hist(df$`Box Office`)
+hist(df$Opening)
 
-# Subset data to include only relevant columns
-movie_data <- select(movie_data, opening_weekend_gross, worldwide_gross)
+```
+### Check correlation between Box Office and Opening
+```{r}
+cor.test(df$Opening, df$`Box Office`)
 
-# Check data for any missing values or outliers
-summary(movie_data)
+cor.test(log(df$Opening), log(df$`Box Office`))
+```
 
-# Calculate descriptive statistics
-initial_week_mean <- mean(movie_data$opening_weekend_gross)
-initial_week_sd <- sd(movie_data$opening_weekend_gross)
-total_mean <- mean(movie_data$worldwide_gross)
-total_sd <- sd(movie_data$worldwide_gross)
+The data appears to be skewed. Therefore we can try some data transformation. Log transformation would be the first option.
+Let's visualize the correlation of variables in the dataset.
+```{r}
 
-# Create scatterplot to visualize the relationship between the variables
-ggplot(data = movie_data, aes(x = opening_weekend_gross, y = worldwide_gross)) +
-  geom_point() +
-  labs(x = "Opening Weekend Gross", y = "Worldwide Gross")
+pairs_df <- df[, c("Budget", "Box Office", "Opening", "open_th", "max_th")]
+pairs_df
+pairs(pairs_df)
+#cor(df)
 
-# Calculate correlation coefficient between the two variables
-correlation <- cor(movie_data$opening_weekend_gross, movie_data$worldwide_gross)
+```
+From the visualization, we can conclude that all the variables are correlated by open_th and max_th are moving exactly the same in the graph which means we should drop one of them to avoid the multicollinearity.
 
-# Create linear regression model
-lm_model <- lm(worldwide_gross ~ opening_weekend_gross, data = movie_data)
-
-# View summary of the linear regression model
-summary(lm_model)
-
-# Perform hypothesis test
-# Null hypothesis: The total gross collection of a movie is not dependent on the opening week's collection
-# Alternative hypothesis: The total gross collection of a movie is dependent on the opening week's collection
-#test <- t.test(movie_data$worldwide_gross ~ movie_data$opening_weekend_gross, var.equal = TRUE)
-
-# View results of hypothesis test
-#test
-
+```{r}
+hist(log(df$`Box Office`))
+hist(log(df$Opening))
 
 ```
 
+The log transformation made the data look like a normal distribution.
 
+## Running different models to get the best fit
+Log transformed model with only the predictor and the dependant variable
+```{r}
+
+# Fit the multiple regression model using the log-transformed data
+model1 <- lm(log(`Box Office`) ~ log(Opening), data = df)
+
+# Print the model summary
+summary(model1)
+plot(model1)
+```
+
+
+Log trasnformation for all continous variables.
+```{r}
+model2 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + log(open_th) + Small_Dist + season, data = df)
+summary(model2)
+plot(model2)
+```
+The R-square has significantly improved for this model. Let us try more models.
+
+Log transformation for only Box Office, Opening and Budget. 
+```{r}
+model3 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + open_th + Small_Dist + season, data = df)
+summary(model3)
+plot(model3)
+```
+Log transformation for only Box Office, Opening and Budget. Removing season confounder.
+
+```{r}
+model4 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + open_th + Small_Dist, data = df)
+summary(model4)
+plot(model4)
+```
+R square values are further below the previous model.
+Let us try the log transformed model with only the Budget and Small_Distributor as confounders.
+```{r}
+model5 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + open_th, data = df)
+summary(model5)
+plot(model5)
+```
+Now, we can run a log transformed model with only the Opening and Budget.
+
+```{r}
+model6 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget), data = df)
+summary(model6)
+plot(model6)
+```
+Let us run models after quadratic transformation
+
+```{r}
+model_quad1 <- lm(log(`Box Office`) ~ poly(Opening, 2, raw=TRUE) + log(Budget) + open_th + Small_Dist + season, data = df)
+summary(model_quad1)
+plot(model_quad1)
+```
+## Selecting a model and Interpretation of the result
+
+Out of all the models we ran, model3 looks as the best fit.
+
+The linear regression model predicts the logarithm of Box Office collections based on the logarithm of Opening weekend collections, logarithm of Budget, number of theaters the movie opened in, Small_Dist (a binary variable indicating whether the distributor is small or not), and the season in which the movie was released (Spring, Summer, or Winter). 
+
+The coefficients of the independent variables show the direction and magnitude of their effect on the dependent variable. The p-value associated with each coefficient indicates whether the coefficient is statistically significant or not.
+
+The intercept coefficient is -3.845, which means that if all independent variables are zero, the model predicts that the logarithm of Box Office collections is -3.845. However, since all the independent variables are not zero in practice, this value is not meaningful.
+
+The coefficient of the logarithm of Opening weekend collections is 0.792, which means that a one percent increase in Opening weekend collections is associated with a 0.792 percent increase in Box Office collections.
+
+The coefficient of the logarithm of Budget is 0.642, which means that a one percent increase in Budget is associated with a 0.642 percent increase in Box Office collections.
+
+The coefficient of the number of theaters the movie opened in (open_th) is negative (-0.00068), which means that as the number of theaters increases by one, the predicted logarithm of Box Office collections decreases by 0.00068. This is something to be studied further, as it goes against our logic and expectation.
+
+The coefficient of Small_Dist is 0.649, which means that the Box Office collections of movies released by small distributors are 0.649 times higher than those of movies released by large distributors, holding other variables constant. This also need more detailed study.
+
+The coefficients associated with season indicate the difference in Box Office collections between movies released in that season and movies released in Fall (omitted reference level). For example, the coefficient of season Spring is 0.88, which means that the predicted Box Office collections of movies released in Spring are 0.88 times higher than those of movies released in Fall.
+
+The adjusted R-squared of the model is 0.7155, which means that 71.55% of the variation in the logarithm of Box Office collections can be explained by the independent variables in the model.
+
+## Visualising the regression model.
+
+```{r}
+
+# Diagnostic plots
+par(mfrow=c(2,2))
+plot(model3)
+```
+
+
+## Conclusion:
+
+The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after takeing into account the intercept(-3.845).
+
+The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection. 
 
 ## References:
 
 1.  Nasir, Suphan & Öcal, Figen. (2016). Film Marketing: The Impact of Publicity Activities on Demand Generation. 10.4018/978-1-5225-0143-5.ch019.
 
 2.  *Elizabeth Cooper-Martin (1991) ,"Consumers and Movies: Some Findings on Experiential Products", in NA - Advances in Consumer Research Volume 18, eds. Rebecca H. Holman and Michael R. Solomon, Provo, UT : Association for Consumer Research, Pages: 372-378.*
+
+3. Kaggle.com (Original dataset)
+
+4. Wikipedia.com (Movie pages to get budget and box office collections)
