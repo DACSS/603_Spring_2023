@@ -1,0 +1,167 @@
+---
+title: "HW_5_Diana_Rinker"
+author: "Diana_Rinker"
+editor: visual
+---
+
+------------------------------------------------------------------------
+
+# DACSS 603, spring 2023
+
+# Homework 5, Diana Rinker.
+
+Loading necessary libraries:
+
+```{r, echo=T}
+library(dplyr)
+library(ggplot2)
+library(alr4)
+library(smss)
+data(house.selling.price.2)
+
+
+
+```
+
+# Question 1
+
+## A. For backward elimination, which variable would be deleted first? Why?
+
+"Beds" variable would be deleted first because it has the highest p-value of 0.487, meaning no statistical significance.
+
+## B. For forward selection, which variable would be added first? Why?
+I will sstart with the value that is most significant,which is size. Size variable also has the highest correlation coefficient on the matrix.
+
+## C. Why do you think that BEDS has such a large P-value in the multiple regression model,even though it has a substantial correlation with PRICE?
+
+I think that is because the number of beds is highly correlated with the size of the house and the number of baths in the house, representing almost the same thing.
+
+## D. Using software with these four predictors, find the model that would be selected using each criterion:
+
+```{r, echo=T}
+cor.matrix <-   cor(house.selling.price.2)
+cor.matrix
+colnames(house.selling.price.2)
+
+model.1 <-lm(P~ S +Be+Ba+New, data = house.selling.price.2)
+model.2 <-lm(P~ S +Ba+New, data = house.selling.price.2)
+
+
+library(stargazer)
+stargazer(model.1, model.2, type = 'text')
+
+```
+
+1\. R2
+The first model has higher R^2.
+
+2\. Adjusted R2
+The second model has better adjusted R^2,since unsignificant  IV was remoded (bedrooms) 
+
+3\. PRESS
+
+```{r, echo=T}
+y_pred.1 <- predict(model.1, newdata = house.selling.price.2)
+PRESS.1 <- sum((house.selling.price.2$P - y_pred.1)^2)
+y_pred.2 <- predict(model.2, newdata = house.selling.price.2)
+PRESS.2 <- sum((house.selling.price.2$P - y_pred.1)^2)
+
+PRESS.1
+PRESS.2
+```
+PRESS values are identical for tho models. 
+
+4\. AIC
+
+```{r, echo=T}
+
+AIC(model.1) 
+AIC(model.2)
+```
+ I select model 2, as its AIC is lower 
+ 
+5\. BIC
+```{r, echo=T}
+
+BIC(model.1) 
+BIC(model.2)
+```
+BIC is also lower in the second model, so I prefer the second.  
+
+## E. Explain which model you prefer and why.
+
+
+Second model has fewer variables  and therefore lower AIC, BIC and adjusted R^2. All its independent variables have  high significance, therefore i select the second model. 
+
+# Question 2
+(Data file: trees from base R)
+From the documentation:
+“This data set provides measurements of the diameter, height and volume of timber in 31 felled
+black cherry trees. Note that the diameter (in inches) is erroneously labeled Girth in the data. It is
+measured at 4 ft 6 in above the ground.”
+Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build
+a basic model of tree volume prediction. In particular,
+### A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables
+
+```{r, echo=T}
+data(trees)
+colnames(trees)
+model.1 <- lm(Volume~ Height + Girth + Height*Girth, data =trees)
+summary (model.1)
+```
+### B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the
+regression assumptions is violated?
+
+```{r, echo=T}
+par(mfrow = c(2,3))
+plot(model.1, which = 1:6)
+
+```
+None of diagnostic plots suggest violation of regression assumptions.
+
+
+# Question 3
+
+```{r, echo=T}
+data(florida)
+```
+
+In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm
+Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe
+that the layout of the ballot caused some voters to cast votes for Buchanan when their intended
+choice was Gore.
+The data has variables for the number of votes for each candidate—Gore, Bush, and Buchanan.
+
+
+### A. Run a simple linear regression model where the Buchanan vote is the outcome and the Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach County an outlier based on the diagnostic plots? Why or why not?
+
+```{r, echo=T}
+data(florida)
+colnames(florida)
+model.1 <- lm(Buchanan~ Bush, data= florida)
+summary(model.1)
+
+par(mfrow = c(2,3))
+plot(model.1, which = 1:6)
+
+```
+Scale-location plot 
+
+Yes, Palm Beach and Dade are clear outliers for the model, as demonstrated by cooks distance. The scale-location plot also showing upward trend meaning that the residuals are larger with larger fitted values. We can see that Palm Beach and Dade are the observations that pull the line upwards. 
+
+
+### B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in (A.) Does your findings change?
+
+```{r, echo=T}
+data(florida)
+colnames(florida)
+model.2 <- lm(log(Buchanan) ~ log(Bush), data= florida)
+summary(model.2)
+
+par(mfrow = c(2,3))
+plot(model.2, which = 1:6)
+
+```
+while Palm Beach still standing out as one of the most extreme values and can be considered an outlier, it is now within acceptable boundaries on residuals vs leverage plot.  Scale-location plot looks more even as well. 
+
+The model shows that there is a connection between Bunchian and Bush, and that logarithmic transformation made the model a better fit. 
