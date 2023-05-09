@@ -165,6 +165,12 @@ I prefer P ~ S + Ba + New. All coefficients are statistically significant. It ou
 
 # Question 2
 
+```{r}
+data(trees)
+head(trees)
+str(trees)
+```
+
 ### background 
 (Data file: trees from base R)
 From the documentation:
@@ -175,9 +181,32 @@ Tree volume estimation is a big deal, especially in the lumber industry. Use the
 
 A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables
 
+```{r}
+fit <- lm(Volume ~ Girth + Height, data = trees)
+summary(fit)
+```
+
+
 ### B
 
-B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the regression assumptions is violated?
+
+**Residuals vs Fitted**
+
+The curved shape of the line suggests this model violates our assumption of linearity that the relationship between the independent and dependent variables is linear.
+
+**Scale-Location*
+
+The curved shape of the line suggests this model violates our assumption of constant variance, or homoskedacity, which affects the statisical significance of the model.
+
+**Cooks Distance,  Residuals vs Leverage, Cooks dist vs Leverage**
+
+- All three charts show there is single, potentially influence point, which can impact whether our model meets the assumptions of linear regression and can disproportionately affect our regression coefficients. 
+
+```{r cache=TRUE}
+par(mfrow = c(2,3))
+plot(fit, which = 1:6)
+```
+
 
 # Question 3
 ### background
