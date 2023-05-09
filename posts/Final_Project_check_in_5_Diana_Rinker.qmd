@@ -186,13 +186,12 @@ select (merged, `Exit rate`, e.rate)
 # merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
 
 ggplot(data=merged, mapping=aes(x=e.rate))+
-  geom_histogram()
+    geom_histogram(binwidth = 0.02, fill = "grey50", alpha = 0.9)+
+    geom_histogram(binwidth = 0.01, fill = "sandybrown", alpha = 0.7)
 
 ```
 
-We can also see consistent increase of this value over time, similar to
-the trend seen before:
-
+Distribution of exit rate over time:
 ```{r, echo=T}
 ggplot(merged, mapping = aes(x=year_month , y=`e.rate`, fill=year_month ))+
   geom_boxplot() +
@@ -424,12 +423,12 @@ It is possible that these two groups of readers  respond differently to populari
 Now, lets consider independent variables of our main hypothesis. 
 # 2. Independent variables (IV):
 
-Due to dataset  of comments having more data than post dataset,  I will cut them to match: 
+
 ```{r, echo=T}
+# Due to dataset of comments having more data than post dataset,  I will cut them to match: 
 merged <- merged %>%
   filter (!is.na(merged$pct.positive))
 ```
-
 
 ### Authors comments
 
@@ -551,95 +550,188 @@ plot(model.2, which = 1)
 plot(model.3, which = 1)
 ```
 
-This table showing that google referrals are significant in either form - squared or logged. However, its coefficient is much higher when logged. Uniques variables's coefficient al;so changes significantly as I am modifying google variable. That migh indicate interaction between them.
+This table showing that google referrals are significant in either form - squared or logged. However, its coefficient is much higher when logged. Uniques variables's coefficient also changes significantly as I am modifying google variable. That migh indicate interaction between them.
 First ,  I will log the rest of referral variables. 
 
-
 ```{r, echo=T}
-model.4 <- lm(e.rate ~ log(Uniques)*I(google^2) +direct +other.web +social +bdc  +weekday , data = merged)
-
+#original model
+model.1 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
 # all source variables are logged: 
-model.5 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +log(other.web) +log(social) +log(bdc)  +weekday , data = merged)
+model.3 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +log(other.web) +log(social) +log(bdc)  +weekday , data = merged)
 
-model.1,
-library(stargazer)
-stargazer( model.2,model.3, model.4,model.5, type = 'text')
+stargazer( model.1,model.3, type = 'text')
 
-par(mfrow = c(1,1))
-plot(model.2, which = 1)
+par(mfrow = c(1,2))
+plot(model.1, which = 1)
 plot(model.3, which = 1)
-plot
-
-
-
-(model.5, which = 1)
 ```
 
-Next,  I will check if the other referral varibles have ineraction with popularity (Uniques)
- 
-Calculation of AIC and BIC: 
+All referral sources except "other.web" and "social" show better fit when logged. Moving forward I will use these variables not logeed. Also, we still observe curvi-linear distribution of residuals. 
+
+Next,  I will check if the referral variables have  an ineraction with popularity (Uniques)
+
 ```{r, echo=T}
-AIC(model.2) 
-BIC
-```
-All six graphs demonstrate that residuals are 
+# last model
+model.3 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) + other.web +social +log(bdc)  +weekday , data = merged)
+# adding interaction: 
+model.4 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
 
-### QQ plot
-This plot is testing for normality of residual distribution.
-```{r, echo=T}
-plot(model.all, which = 2)
-plot(model.2021, which =2)
-plot(model.2022, which = 2)
-```
-QQ plots showing some deviation from  straight line on the edges, suggesting skewed distribution of residuals from all three models. 
+stargazer( model.3,model.4, type = 'text')
 
-### Scale-Location
-```{r, echo=T}
-plot(model.all, which = 3)
-plot(model.2021, which =3)
-plot(model.2022, which = 3)
-```
-Scale-location of compete dataset, combining 2021 and 2022 showing also some heteroscedasticity in distribution oif the data. Since 2021 and 2022 seem more heteroscedastistic,  this difference in the combined dataset might indicate significant differences betweek 2021 and 2022 data. 
-### Cooks distance 
-```{r, echo=T}
-plot(model.all, which = 4)
-plot(model.2021, which =4)
-plot(model.2022, which = 4)
-```
-Cooks distance demonstrates some outliers in each dataset.  We can review REsidualsvs Leverage plot to find out if these outliers impact our regression models: 
-### Residuals vs leverage
-```{r, echo=T}
-plot(model.all, which = 5)
-plot(model.2021, which =5)
-plot(model.2022, which = 5)
+par(mfrow = c(1,2))
+plot(model.3, which = 1)
+plot(model.4, which = 1)
 ```
 
-### Cooks distance vs Leverage
+Adding interaction between popularity and google referrals significcntly improved the model: 
+interaction term has negative correlation with  dependent variable,  it also made "social" referrals significant, and improved models R^2 and adjusted R^2.
+
+It also significantly changed distribution of residuals: now distribution is equally spread around 0. 
+
+
+Lets review other diagnostic plots: 
 ```{r, echo=T}
-plot(model.all, which = 6)
-plot(model.2021, which =6)
-plot(model.2022, which = 6)
+# last model
+model.4 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+
+par(mfrow = c(1,2))
+plot(model.3, which = 2)
+plot(model.4, which = 2)
+
+par(mfrow = c(1,2))
+plot(model.3, which = 3)
+plot(model.4, which = 3)
+
+par(mfrow = c(2,2))
+plot(model.3, which = 4)
+plot(model.4, which = 4)
+
+par(mfrow = c(2,2))
+plot(model.3, which = 5)
+plot(model.4, which = 5)
+
+par(mfrow = c(2,2))
+plot(model.3, which = 6)
+plot(model.4, which = 6)
+
+```
+We can see from both models, that variable 231 is an outlier that significantly impacts the model. 
+I will remove that observation and re-evaluate the model: 
+```{r, echo=T}
+merged.old <- merged
+merged <- merged[-c(231), ]
+model.4 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged.old)
+model.5 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+
+stargazer( model.4,model.5, type = 'text')
+
+par(mfrow = c(1,2))
+plot(model.4, which = 1)
+plot(model.5, which = 1)
+
+par(mfrow = c(1,2))
+plot(model.4, which = 2)
+plot(model.5, which = 2)
+
+par(mfrow = c(1,2))
+plot(model.4, which = 2)
+plot(model.5, which = 2)
+
+par(mfrow = c(1,2))
+plot(model.4, which = 3)
+plot(model.5, which = 3)
+
+par(mfrow = c(2,2))
+plot(model.4, which = 4)
+plot(model.5, which = 4)
+
+par(mfrow = c(2,2))
+plot(model.4, which = 5)
+plot(model.5, which = 5)
+
+par(mfrow = c(2,2))
+plot(model.4, which = 6)
+plot(model.5, which = 6)
+
+```
+ New, the variable "other.web" became unsignificant, but model fit improved. 
+
+I will check whether other referral sources have an interaction with popularity: 
+
+```{r, echo=T}
+
+model.5 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+model.6 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +log(Uniques)*other.web +log(Uniques)*social +log(Uniques)*log(bdc)  +log(Uniques)*weekday , data = merged)
+
+model.7 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+
+stargazer( model.5,model.6, model.7 , type = 'text')
+
+par(mfrow = c(1,3))
+plot(model.5, which = 1)
+plot(model.6, which = 1)
+plot(model.7, which = 1)
+
+par(mfrow = c(1,3))
+plot(model.5, which = 2)
+plot(model.6, which = 2)
+plot(model.7, which = 2)
+
+par(mfrow = c(1,3))
+plot(model.5, which = 3)
+plot(model.6, which = 3)
+plot(model.7, which = 3)
+
+par(mfrow = c(1,3))
+plot(model.5, which = 4)
+plot(model.6, which = 4)
+plot(model.7, which = 4)
+
+par(mfrow = c(1,3))
+plot(model.5, which = 5)
+plot(model.6, which = 5)
+plot(model.7, which = 5)
+
+par(mfrow = c(1,3))
+plot(model.5, which = 6)
+plot(model.6, which = 6)
+plot(model.7, which = 6)
 ```
 
+All models have similar R^2 and adjusted R^2. However,  the last model (model.7) best accounts for all source variables. 
 
-Since the diagnostic lots suggested non-linearity as the way to improve the model,  I will plot dependent variable against each Iv to see which of them might need to be logged or squared: 
+
+ Calculation of AIC and BIC: 
+```{r, echo=T}
+
+AIC(model.5) 
+AIC(model.6) 
+AIC(model.7) 
+
+BIC(model.5) 
+BIC(model.6) 
+BIC(model.7) 
+```
+
+AIC and BIC are very close to each other in all three models. 
+
+
 
 ## Plotting DV~IV distributions
 ### Authors comments: 
 
 ```{r, echo=T}
 library(gridExtra)
-
-
-plot1<- ggplot (merged, mapping =aes(y=log(`Exit rate`), x=author.sum))+
+plot1<- ggplot (merged, mapping =aes(y=log(e.rate), x=author.sum))+
   geom_point()+
   geom_smooth(method="lm")
-plot2<- ggplot(merged, aes(x = as.factor(author.sum), y = log(`Exit rate`))) +
+
+plot2<-   ggplot(merged, aes(x = as.factor(author.sum), y = e.rate) )+
   geom_bar(stat = "identity")
 
 dev.off()
 grid.arrange(plot1, plot2, ncol=2)
-plot1
+
 
 ```
 
