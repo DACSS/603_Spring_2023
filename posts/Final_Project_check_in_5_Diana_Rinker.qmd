@@ -738,11 +738,11 @@ grid.arrange(plot1, plot2, ncol=2)
 ### Exit rate ~ Number of comments plot : 
 Lets also look at distribution of exit rate per n.comments. 
 ```{r, echo=T}
-plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+
+plot1<- ggplot (merged, mapping =aes(y=e.rate, x=n.comments))+
   geom_point()+
   geom_smooth(method="lm")
 
-plot2<- ggplot(merged, aes(x = n.comments, y = `Exit rate`)) +
+plot2<- ggplot(merged, aes(x = n.comments, y = e.rate)) +
   geom_bar(stat = "identity")
 
 grid.arrange(plot1, plot2, ncol=2)
@@ -753,29 +753,16 @@ Despite this distribution being  skewed, its shape is close to normal.
 Weekday is another significant variable. It is also a categorical variable. 
 
 ```{r, echo=T}
-plot1<- ggplot (merged, mapping =aes(y=`Exit rate`, x=post.weekday))+
+plot1<- ggplot (merged, mapping =aes(y=e.rate, x=weekday))+
+  geom_boxplot()+
   geom_point()+
   geom_smooth(method="lm")
 
-plot2<- ggplot(merged, aes(x = post.weekday, y = `Exit rate`)) +
-  geom_bar(stat = "identity")
-grid.arrange(plot1, plot2, ncol=2)
 ```
-The plot shows significant difference of exit rate on mondays, consistent with the coefficients of all three models. 
-
-<!-- ```{r, echo=T} -->
-<!--  ggplot (merged, mapping =aes(y=`Exit rate`, x=n.comments))+ -->
-<!--   geom_point()+ -->
-<!--   geom_smooth(method="lm")+facet_wrap(~post.weekday) -->
-
-<!--  ggplot(merged, aes(x = n.comments, y = `Exit rate`)) + -->
-<!--   geom_bar(stat = "identity") -->
-
-<!-- ``` -->
-<!-- It appears that Monday and Tuesday this relationship between number of comments nad exit rate is the most pronounced.  -->
+The plot shows significant difference of exit rate on Tuesday, consistent.
 
 
-As we reviewd distributions of  independent variables  per  Exit rate, we saw that author's comments  are not normally distributed, which might have contributed to curve in QQ plot. 
+
 
 ### why is this here ? Scale-Location
 
