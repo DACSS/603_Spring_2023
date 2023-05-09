@@ -39,28 +39,10 @@ library(smss)
 ```
 
 
-
-```{r}
-# Create a matrix with the correlation values
-cor_mat <- matrix(c(1, 0.899, 0.590, 0.714, 0.357,
-                    0.899, 1, 0.669, 0.662, 0.176,
-                    0.590, 0.669, 1, 0.334, 0.267,
-                    0.714, 0.662, 0.334, 1, 0.182,
-                    0.357, 0.176, 0.267, 0.182, 1),
-                  nrow = 5, ncol = 5, byrow = TRUE,
-                  dimnames = list(c("Price", "Size", "Beds", "Baths", "New"),
-                                  c("Price", "Size", "Beds", "Baths", "New")))
-
-# Print the correlation matrix
-cor_mat
-
-
-```
-
 # Question 1 
 
 ```{r}
-hsp <- data(house.selling.price.2)
+data(house.selling.price.2)
 ```
 
 
@@ -100,16 +82,86 @@ The first fit would be an intercept only model, which means there is no explanat
 
 C. Why do you think that BEDS has such a large P-value in the multiple regression model, even though it has a substantial correlation with PRICE?
 
+Beds also has relatively strong relationship with size, which has a strong relationship with size. This means that this current model suffers multicollinearity, which is obscuring the potential relationship between size and price. It makes sense that number of beds would correlate with both the size of the house and the price of the house. 
 
-D. Using software with these four predictors, find the model that would beselected using each criterion:
+### D
 
-1. R2
-2. Adjusted R2
-3. PRESS
 4. AIC
 5. BIC
-E. Explain which model you prefer and why.
 
+```{r}
+fit_S <- lm(P ~ S + Ba + New, data = house.selling.price.2)
+fit_Be <- lm(P ~ S + New, data = house.selling.price.2)
+fit_Ba <- lm(P ~ New, data = house.selling.price.2)
+fit_New <- lm(P ~ 1, data = house.selling.price.2)
+```
+
+
+#### R2
+
+- With an R2 of 0.87: S + Ba + New
+
+```{r}
+summary(fit_S)$r.squared
+summary(fit_Be)$r.squared
+summary(fit_Ba)$r.squared
+summary(fit_New)$r.squared
+```
+#### Adjusted R2
+
+- With an Adjusted R2 of 0.86: S + Ba + New
+
+```{r}
+summary(fit_S)$adj.r.squared
+summary(fit_Be)$adj.r.squared
+summary(fit_Ba)$adj.r.squared
+summary(fit_New)$adj.r.squared
+```
+#### PRESS
+
+- Again, S + Ba + New, has the smallest PRESS, which means it has the best 'predictive' power compared to the other models
+
+```{r}
+press_stat <- function(model) {
+  # Calculate PRESS residuals
+  pr <- resid(model) / (1 - lm.influence(model)$hat)
+  
+  # Compute the PRESS statistic
+  press <- sum(pr^2)
+  
+  return(press)
+}
+```
+
+```{r}
+press_stat(fit_S)
+press_stat(fit_Be)
+press_stat(fit_Ba)
+press_stat(fit_New)
+```
+#### AIC
+
+- Again, S + Ba + New has the smallest AIC, which suggests it does a better job of fitting the data without overfitting
+
+```{r}
+AIC(fit_S)
+AIC(fit_Be)
+AIC(fit_Ba)
+AIC(fit_New)
+```
+#### BIC
+- Again, S + Ba + New has the smallest BIC, which suggests it does a better job of fitting the data without overfitting
+
+```{r}
+BIC(fit_S)
+BIC(fit_Be)
+BIC(fit_Ba)
+BIC(fit_New)
+```
+
+### E
+
+I prefer P ~ S + Ba + New. All coefficients are statistically significant. It outperforms the 'less complex' models on all metrics. It also make sense that several different factors influence home price.
 
 # Question 2
 
