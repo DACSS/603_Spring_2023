@@ -1,0 +1,339 @@
+---
+title: "Homework 5"
+author: "Young Soo Choi"
+description: "hw5"
+date: "05/08/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+---
+
+# Question 1
+
+```{r}
+library(smss)
+data(house.selling.price.2)
+
+cor<-cor(house.selling.price.2)
+reg_tot<-lm(P~., house.selling.price.2)
+```
+
+```{r}
+cor
+summary(reg_tot)
+```
+
+## (A)
+
+The backward elimation method is a method of excluding the highest p value from the model while including all variables. According to this, the "Beds(Be)" variable, which is the variable with the highest p value in the regression model above, becomes the first variable to be deleted.
+
+## (B)
+
+The forward selection method starts with a model that does not include any variables and fits the dependent variable and the regression equation one by one for all variables, and among them, the variable with the lowest p value is included in the regression model one by one.
+
+To this end, the p value of each variable was derived through Pearson's correlation analysis between each independent variable in this model and the dependent variable P.
+
+```{r}
+lapply(house.selling.price.2[, -1], function(x) cor.test(house.selling.price.2$P, x))
+```
+
+As a result, it may be seen that the p value of the independent variable size(S) is the smallest(2.2e-16). Therefore, the first variable to be added is the size.
+
+
+## (C)
+
+It is likely that the Beds variable has high multicollinearity, contains outliers, or distortion due to small samples.
+Looking at one by one, according to the correlation matrix seen earlier, the Beds variable shows a correlation coefficient of .6 or more with some variables, but it is difficult to judge that it has particular multicollinearity.
+Next, I checked out the outliers.
+
+```{r}
+summary(house.selling.price.2$Be)
+table(house.selling.price.2$Be)
+```
+It has a range from a minimum value of 1 to a maximum value of 5, and among them, more than half are 3. Therefore, it cannot be said to be an outlier problem.
+
+The multicollinearity of the Beds variable is not high and no special abnormal values are included.
+So I think that this result is due to bias due to small sample numbers.
+
+## (D)
+
+### forward selection
+
+I proceeded to select a model according to each criterion using forward selection.
+
+First, four models including only one variable were created and each value was compared.
+
+```{r}
+# 1st step: fitting 4 models with one variable
+reg_S<-lm(P~S, house.selling.price.2)
+reg_Be<-lm(P~Be, house.selling.price.2)
+reg_Ba<-lm(P~Ba, house.selling.price.2)
+reg_New<-lm(P~New, house.selling.price.2)
+
+# model with S
+summary(reg_S)
+price<-house.selling.price.2$P
+sum((price - predict(reg_S, newdata = house.selling.price.2))^2)
+AIC(reg_S)
+BIC(reg_S)
+
+# model with Be
+summary(reg_Be)
+sum((price - predict(reg_Be, newdata = house.selling.price.2))^2)
+AIC(reg_Be)
+BIC(reg_Be)
+
+# model with Ba
+summary(reg_Ba)
+sum((price - predict(reg_Ba, newdata = house.selling.price.2))^2)
+AIC(reg_Ba)
+BIC(reg_Ba)
+
+# model with New
+summary(reg_New)
+sum((price - predict(reg_New, newdata = house.selling.price.2))^2)
+AIC(reg_New)
+BIC(reg_New)
+```
+
+Models including S show the best performance on all criteria. So in step 1, S is included in the model.
+
+Second, a regression model including one variable was fitted again to a model containing S(Size) and compared according to each criterion.
+
+```{r}
+# 2nd step: fitting 3 models with two variables
+reg_S_Be<-lm(P~S+Be, house.selling.price.2)
+reg_S_Ba<-lm(P~S+Ba, house.selling.price.2)
+reg_S_New<-lm(P~S+New, house.selling.price.2)
+
+# model with S and Be
+summary(reg_S_Be)
+sum((price - predict(reg_S_Be, newdata = house.selling.price.2))^2)
+AIC(reg_S_Be)
+BIC(reg_S_Be)
+
+# model with S and Ba
+summary(reg_S_Ba)
+sum((price - predict(reg_S_Ba, newdata = house.selling.price.2))^2)
+AIC(reg_S_Ba)
+BIC(reg_S_Ba)
+
+# model with S and New
+summary(reg_S_New)
+sum((price - predict(reg_S_New, newdata = house.selling.price.2))^2)
+AIC(reg_S_New)
+BIC(reg_S_New)
+```
+
+In addition to "S", the model with "New" performs best on all criteria, so I included the "New" variable in the model at this stage.
+
+Third, the model containing the remaining "Be" and "Ba" in the model containing "S" and "New" is compared by fitting.
+
+```{r}
+# 3rd step: fitting 2 models with three variables
+reg_S_N_Be<-lm(P~S+New+Be, house.selling.price.2)
+reg_S_N_Ba<-lm(P~S+New+Ba, house.selling.price.2)
+
+# model with S and New and Be
+summary(reg_S_N_Be)
+sum((price - predict(reg_S_N_Be, newdata = house.selling.price.2))^2)
+AIC(reg_S_N_Be)
+BIC(reg_S_N_Be)
+
+# model with S and New and Ba
+summary(reg_S_N_Ba)
+sum((price - predict(reg_S_N_Ba, newdata = house.selling.price.2))^2)
+AIC(reg_S_N_Ba)
+BIC(reg_S_N_Ba)
+```
+
+This time, the model with "Ba" is superior to the model with "Be" in all criteria. So, in this step, "Ba" is included in the model.
+
+Finally, I compared this third model with a model including "Be".
+
+```{r}
+# 4th step: fitting 1 models with every variables
+summary(reg_tot)
+sum((price - predict(reg_tot, newdata = house.selling.price.2))^2)
+AIC(reg_tot)
+BIC(reg_tot)
+```
+
+All analysis is now complete. The model to be selected according to each criterion is as follows,
+
+1. R-squared: Since the R-squared value of the model including all variables is the highest, by this criterion the model including all variables is selected.
+
+2. Adj. R-squared: Since the adj. R-squared value of the model including three variables(excluding "Be") is the highest, by this criterion the model including three variables("S","Ba","New") is selected.
+
+3. PRESS: Since the PRESS value of the model including all variables is the lowest, by this criterion the model including all variables is selected.
+
+4. AIC: Since the AIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.
+
+5. BIC: Since the BIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.
+
+Overall, the model including every variables is selected according to the R-squared and PRESS criteria, and the model including "S", "New", "Ba" variables is selected according to the adj. R-squared, AIC, and BIC.
+
+### backward method
+
+In the same way, I proceeded with model selection using the backward method.
+
+Four models in which variables were omitted one by one from a model including all variables were fitted and compared.
+
+```{r}
+# 1st step: fitting 4 models without one variable
+reg_no_S<-lm(P~.-S, house.selling.price.2)
+reg_no_Be<-lm(P~.-Be, house.selling.price.2)
+reg_no_Ba<-lm(P~.-Ba, house.selling.price.2)
+reg_no_New<-lm(P~.-New, house.selling.price.2)
+
+# model without S
+summary(reg_no_S)
+sum((price - predict(reg_no_S, newdata = house.selling.price.2))^2)
+AIC(reg_no_S)
+BIC(reg_no_S)
+
+# model without Be
+summary(reg_no_Be)
+sum((price - predict(reg_no_Be, newdata = house.selling.price.2))^2)
+AIC(reg_no_Be)
+BIC(reg_no_Be)
+
+# model without Ba
+summary(reg_no_Ba)
+sum((price - predict(reg_no_Ba, newdata = house.selling.price.2))^2)
+AIC(reg_no_Ba)
+BIC(reg_no_Ba)
+
+# model without New
+summary(reg_no_New)
+sum((price - predict(reg_no_New, newdata = house.selling.price.2))^2)
+AIC(reg_no_New)
+BIC(reg_no_New)
+```
+
+The performance of the model without "Be" is the best in all criteria. However, according to the R-squared and PRESS criteria, the performance of the model without "Be" falls short of that of the model with all variables.
+
+```{r}
+# 2nd step: fitting 3 models without two variable
+reg_no_Be_S<-lm(P~.-Be-S, house.selling.price.2)
+reg_no_Be_Ba<-lm(P~.-Be-Ba, house.selling.price.2)
+reg_no_Be_New<-lm(P~.-Be-New, house.selling.price.2)
+
+# model without Be and S
+summary(reg_no_Be_S)
+sum((price - predict(reg_no_Be_S, newdata = house.selling.price.2))^2)
+AIC(reg_no_Be_S)
+BIC(reg_no_Be_S)
+
+# model without Be and Ba
+summary(reg_no_Be_Ba)
+sum((price - predict(reg_no_Be_Ba, newdata = house.selling.price.2))^2)
+AIC(reg_no_Be_Ba)
+BIC(reg_no_Be_Ba)
+
+# model without Be and New
+summary(reg_no_Be_New)
+sum((price - predict(reg_no_Be_New, newdata = house.selling.price.2))^2)
+AIC(reg_no_Be_New)
+BIC(reg_no_Be_New)
+```
+
+There is no model that improves performance compared to the existing model that includes four or three variables.So there are no more variables to exclude.
+
+In other words, the results of model selection using the backward method are as follows.
+
+1. R-squared: Since the R-squared value of the model including all variables is the highest, by this criterion the model including all variables is selected.
+
+2. Adj. R-squared: Since the adj. R-squared value of the model including three variables(excluding "Be") is the highest, by this criterion the model including three variables("S","Ba","New") is selected.
+
+3. PRESS: Since the PRESS value of the model including all variables is the lowest, by this criterion the model including all variables is selected.
+
+4. AIC: Since the AIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.
+
+5. BIC: Since the BIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.
+
+Overall, the results were the same as the forward method.
+
+## (E)
+
+It is natural that the explanatory power of the model increases as the number of variables included in the model increases. However, as the number of variables increases, it becomes difficult to understand the model, and overfitting may occur, which increases errors when applied to new data. Therefore, when selecting a model, indicators have been released to correct the explanatory power that increases due to the increase in the number of variables, and these are adj. R-squared, AIC, and BIC. From this point of view, I prefer models that include "S", "Ba", and "New", which are selected according to these criteria.
+
+# Question 2
+
+```{r}
+data(trees)
+names(trees)
+names(trees)[1] <- "Diameter"
+names(trees)
+nrow(trees)
+```
+
+## (A)
+
+```{r}
+tree_reg<-lm(Volume~., trees)
+summary(tree_reg)
+```
+
+Volume = -57.9877 + 4.7082*Diameter + 0.3393*Height
+
+## (B)
+
+```{r}
+par(mfrow=c(2:3))
+plot(tree_reg, which=1:6)
+```
+
+"Residuals vs. Since the fitted values plot" is curved, it can be seen that the linearity assumption of this model is violated. In addition, the shape of the "Scale Location Plot" is rapidly changing, indicating that the homoskedasticity assumption is violated. Normality is satisfied according to "Normal Q-Q plot". According to the rest of the plot, some variables have a high influence on the model but are not considered problematic (3 out of 31 observations)
+
+Next, I checked the residual plot to check the independence of the error.
+
+```{r}
+res<-trees$Volume-predict(tree_reg, newdata = trees)
+plot(res)
+```
+
+Since no unusual pattern is seen, the assumption of the independence of the error is satisfied.
+
+# Question 3
+
+```{r}
+library(alr4)
+data("florida")
+florida["PALM BEACH",]
+```
+
+## (A)
+
+```{r}
+reg_vote<-lm(Buchanan~Bush, florida)
+summary(reg_vote)
+
+par(mfrow=c(2:3))
+plot(reg_vote, which=1:6)
+```
+
+According to these graphs, Palm Beach corresponds to an outlier, and in all graphs, the data of Palm Beach is not on the trend line, but is far from it.
+
+## (B)
+
+```{r}
+# logarithm
+florida$log_Buchanan<-log(florida$Buchanan)
+florida$log_Bush<-log(florida$Bush)
+
+# fitting
+log_reg<-lm(log_Buchanan~log_Bush, florida)
+summary(log_reg)
+
+# diagnosis
+par(mfrow=c(2:3))
+plot(log_reg, which=1:6)
+```
+
+Although the fluctuation of the data has been reduced through logarithm, it still has high leverage and the cook's distance still exceeds the 4/n standard, so I think it is an outlier.
