@@ -415,6 +415,40 @@ dbl (7): year, games, win, lose, tie, runs scored, runs allowed
  Max.   :135.00  </code></pre>
 </div>
 </div>
+<p>Before finishing this task, I will modified the column name as a whole, delete one duplicate column, and save it as a csv file to facilitate the next task.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>,<span class="st">"team"</span>,<span class="st">"game"</span>, <span class="st">"win"</span>, <span class="st">"lose"</span>, <span class="st">"tie"</span>, <span class="st">"run_scored"</span>, <span class="st">"run_allowed"</span>, <span class="st">"game</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="st">                  _played"</span>, <span class="st">"batters"</span>, <span class="st">"tpa"</span>, <span class="st">"ab"</span>, <span class="st">"hit"</span>, <span class="st">"double"</span>, <span class="st">"triple"</span>, <span class="st">"hr"</span>, <span class="st">"bb"</span>, <span class="st">"ibb"</span>, <span class="st">"hbp"</span>, <span class="st">"so"</span>, <span class="st">"rbi"</span>, <span class="st">"r"</span>, <span class="st">"sh"</span>, <span class="st">"sf"</span>, <span class="st">"sb"</span>, <span class="st">"cs"</span>, <span class="st">"gidp"</span>, <span class="st">"e"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span>df[,<span class="sc">-</span><span class="dv">9</span>]</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  year     team game win lose tie run_scored run_allowed batters  tpa   ab hit
+1 1982    Bears   80  56   24   0        399         318     930 3098 2745 778
+2 1982   Giants   80  31   49   0        353         385     863 3062 2628 674
+3 1982    Lions   80  54   26   0        429         257     887 3043 2647 705
+4 1982   Tigers   80  38   42   0        374         388     873 2990 2665 696
+5 1982    Twins   80  46   34   0        419         350     952 3061 2686 757
+6 1982 Unicorns   80  15   65   0        302         574     867 2954 2653 637
+  double triple hr  bb ibb hbp  so rbi   r sh sf  sb cs gidp   e
+1    137     23 57 247  22  41 254 362 399 46 18 106 61   35  98
+2    112      8 59 326   8  40 315 325 353 41 27  83 53   61  97
+3    126     18 57 307   2  30 349 374 429 36 18 147 42   50  81
+4    110     14 84 235  12  41 296 332 374 28 21 155 52   59 102
+5    124     12 65 268  20  47 316 381 419 32 27 134 60   56 105
+6    117     20 40 221   3  29 369 272 302 33 17  74 43   44 117</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"~/R/603_Spring_2023/posts"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df, <span class="st">"~/R/603_Spring_2023/posts/_data/kbo_df.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 <!-- -->
@@ -823,99 +857,114 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb19" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project Check In"</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Young Soo Choi"</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final Project Check In"</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/22/2023"</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Intro</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>Spring is the season when baseball starts. In Korea, baseball is also the most popular league that attracts the largest number of spectators among all professional sports, and I have been a big fan since I was young. As you know, baseball is a sport with countless numbers, and this data analysis is actually done a lot. I can't think of an interesting way to use and learn various statistical techniques in the subject of quantity analysis than using the sport of baseball. Therefore, I chose baseball as the my final project topic. </span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setting Research Problem</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>Baseball is a game in which each nine-member team competes for nine innings to score more points. It is obviously a player who participates here. However, the baseball team is not made up of only players. Each baseball team has a manager, who decides who will participate in the game before the game, sets the batting order, and during the game, replaces pitchers, uses pinch hitters, and steals.</span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>However, there are various controversies over how much of these managers account for in this game. This controversy varies from league to league, for example, in the U.S. Major League Baseball, the manager tends to be viewed as an organization manager, and in Asia, such as Japan and Korea, the manager is often treated as a general commanding the army in battle. In other words, in the case of the Asian league, there are many views that the manager actually has the ability to increase the team's score and reduce the number of runs by performing various operations within the game. On the contrary, in the case of Major League Baseball, the prevailing perception is that the proportion of manager actually involved in the team's scoring and losing points in the game is very small.</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>There may be various opinions on where this difference in perception comes from. Of course, it should be considered that the environment of the game called baseball is very different from country to country. However, in the United States, various empirical studies have been conducted on these topics using vast amounts of actual data, but in Korea, these studies are still in their early stages. With this in mind, I would like to use actual data from Korean baseball to empirically check how the manager's intervention affects a single game. In other words, the manager's organizational management capabilities, the ability to manage and motivate players, are separate, and simply want to find out how often he operates in a game, that is, how much he intervenes in the game, affects the team's scoring ability.(Here, the correlation between the team's ability to curb losing points and the manager's intervention is also important, but it will be excluded from this project. This is because unlike batting, in the case of defense, it is not only difficult to quantify related variables, but also difficult to obtain such data.)</span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>In conclusion, the research question of this project that I set is, will the more intervention from the coach, the better the scoring ability of the baseball team?</span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>Accordingly, the research hypothesis will be set as "the more intervention the coach has, the more points the team has." At this time, the null hypothesis is that "the manager's intervention in the game does not increase the team's score."</span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Design</span></span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## Key Concepts and Operational Definitions</span></span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>A baseball team's score is simply available. However, it is necessary to first determine how to define the manager's intervention. There are various roles that managers can play in baseball's offense. They include determining the batting order, using pinch-hitters, bunting, etc. Although it has not been confirmed yet, the director's intervention in this project will be determined by the number of attempts to steal and bunt in consideration of the ease of obtaining data.</span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>In summary, the independent variable is the baseball manager's intervention in the game(offense), and the dependent variable is the team's score.</span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to test hypothesis</span></span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>There are many ways to do this.</span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>First of all, it is possible to simply compare the average score between teams with a lot of manager intervention and teams with less manager intervention.</span>
-<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>However, this simple comparison may not take into account the team's differences in offensive power. In other words, if a team with strong offensive power (i.e., a team with the ability to score more points without the manager's intervention) had more coach intervention, the conclusion could be distorted.</span>
-<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>Therefore, considering this, a method of obtaining the expected score level of each team using a regression model and comparing how much the actual score was can be used.</span>
-<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="fu"># Explore the data</span></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>The Korean professional baseball league was launched in 1982 and is called the KBO(Korea Baseball Organization) League. Fortunately, a jounalist provided a career record of the kbo league from 1982 to 2020 and I used it, and all Korean words included in the data were modified in English.</span>
-<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>source: https://github.com/bigkini/kindeR</span>
-<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>batting <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"_data/kbo_team_batting_eng.csv"</span>)</span>
-<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>win_lose <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"_data/kbo_win_lose_eng.csv"</span>)</span>
-<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>'batting' is a team-specific batting record related to the offense, and 'win_lose' is a team-specific winning and losing record by year.</span>
-<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a>For easy analysis, these two data are combined into one.</span>
-<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">merge</span>(win_lose, batting, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"team"</span>))</span>
-<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a>Now, let's briefly explore the data as an introduction to the kbo league.(For reference, each team's name has been unified to the most recent name if it has been changed.)</span>
-<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
-<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(df)</span>
-<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>year)</span>
-<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>team)</span>
-<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>You can see the number of teams participating in the league by year and know the number of years participating in the league for each team. In other words, in the 39 years leading up to 2020, the number of participating teams increased from 6 to 10, and the total number of teams that existed was 12. (2 teams disbanded, Unicorns and Raiders)</span>
-<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df<span class="sc">$</span>year, df<span class="sc">$</span>games)</span>
-<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>Looking at the number of games played by each team by year, it can be seen that it increased from 80 games d in 1982 to 144 games in 2020.</span>
-<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a>Finally, let's briefly look at various variables related to hitting.</span>
-<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df[,<span class="dv">10</span><span class="sc">:</span><span class="dv">28</span>])</span>
-<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb22" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project Check In"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Young Soo Choi"</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final Project Check In"</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/22/2023"</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalpart1</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Intro</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>Spring is the season when baseball starts. In Korea, baseball is also the most popular league that attracts the largest number of spectators among all professional sports, and I have been a big fan since I was young. As you know, baseball is a sport with countless numbers, and this data analysis is actually done a lot. I can't think of an interesting way to use and learn various statistical techniques in the subject of quantity analysis than using the sport of baseball. Therefore, I chose baseball as the my final project topic. </span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setting Research Problem</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>Baseball is a game in which each nine-member team competes for nine innings to score more points. It is obviously a player who participates here. However, the baseball team is not made up of only players. Each baseball team has a manager, who decides who will participate in the game before the game, sets the batting order, and during the game, replaces pitchers, uses pinch hitters, and steals.</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>However, there are various controversies over how much of these managers account for in this game. This controversy varies from league to league, for example, in the U.S. Major League Baseball, the manager tends to be viewed as an organization manager, and in Asia, such as Japan and Korea, the manager is often treated as a general commanding the army in battle. In other words, in the case of the Asian league, there are many views that the manager actually has the ability to increase the team's score and reduce the number of runs by performing various operations within the game. On the contrary, in the case of Major League Baseball, the prevailing perception is that the proportion of manager actually involved in the team's scoring and losing points in the game is very small.</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>There may be various opinions on where this difference in perception comes from. Of course, it should be considered that the environment of the game called baseball is very different from country to country. However, in the United States, various empirical studies have been conducted on these topics using vast amounts of actual data, but in Korea, these studies are still in their early stages. With this in mind, I would like to use actual data from Korean baseball to empirically check how the manager's intervention affects a single game. In other words, the manager's organizational management capabilities, the ability to manage and motivate players, are separate, and simply want to find out how often he operates in a game, that is, how much he intervenes in the game, affects the team's scoring ability.(Here, the correlation between the team's ability to curb losing points and the manager's intervention is also important, but it will be excluded from this project. This is because unlike batting, in the case of defense, it is not only difficult to quantify related variables, but also difficult to obtain such data.)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>In conclusion, the research question of this project that I set is, will the more intervention from the coach, the better the scoring ability of the baseball team?</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>Accordingly, the research hypothesis will be set as "the more intervention the coach has, the more points the team has." At this time, the null hypothesis is that "the manager's intervention in the game does not increase the team's score."</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Design</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## Key Concepts and Operational Definitions</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>A baseball team's score is simply available. However, it is necessary to first determine how to define the manager's intervention. There are various roles that managers can play in baseball's offense. They include determining the batting order, using pinch-hitters, bunting, etc. Although it has not been confirmed yet, the director's intervention in this project will be determined by the number of attempts to steal and bunt in consideration of the ease of obtaining data.</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>In summary, the independent variable is the baseball manager's intervention in the game(offense), and the dependent variable is the team's score.</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to test hypothesis</span></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>There are many ways to do this.</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>First of all, it is possible to simply compare the average score between teams with a lot of manager intervention and teams with less manager intervention.</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>However, this simple comparison may not take into account the team's differences in offensive power. In other words, if a team with strong offensive power (i.e., a team with the ability to score more points without the manager's intervention) had more coach intervention, the conclusion could be distorted.</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>Therefore, considering this, a method of obtaining the expected score level of each team using a regression model and comparing how much the actual score was can be used.</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a><span class="fu"># Explore the data</span></span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>The Korean professional baseball league was launched in 1982 and is called the KBO(Korea Baseball Organization) League. Fortunately, a jounalist provided a career record of the kbo league from 1982 to 2020 and I used it, and all Korean words included in the data were modified in English.</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>source: https://github.com/bigkini/kindeR</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>batting <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"_data/kbo_team_batting_eng.csv"</span>)</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>win_lose <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"_data/kbo_win_lose_eng.csv"</span>)</span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>'batting' is a team-specific batting record related to the offense, and 'win_lose' is a team-specific winning and losing record by year.</span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>For easy analysis, these two data are combined into one.</span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">merge</span>(win_lose, batting, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"team"</span>))</span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a>Now, let's briefly explore the data as an introduction to the kbo league.(For reference, each team's name has been unified to the most recent name if it has been changed.)</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(df)</span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>year)</span>
+<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>team)</span>
+<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>You can see the number of teams participating in the league by year and know the number of years participating in the league for each team. In other words, in the 39 years leading up to 2020, the number of participating teams increased from 6 to 10, and the total number of teams that existed was 12. (2 teams disbanded, Unicorns and Raiders)</span>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df<span class="sc">$</span>year, df<span class="sc">$</span>games)</span>
+<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a>Looking at the number of games played by each team by year, it can be seen that it increased from 80 games d in 1982 to 144 games in 2020.</span>
+<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a>Finally, let's briefly look at various variables related to hitting.</span>
+<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df[,<span class="dv">10</span><span class="sc">:</span><span class="dv">28</span>])</span>
+<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a>Before finishing this task, I will modified the column name as a whole, delete one duplicate column, and save it as a csv file to facilitate the next task.</span>
+<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-112"><a href="#cb22-112" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>,<span class="st">"team"</span>,<span class="st">"game"</span>, <span class="st">"win"</span>, <span class="st">"lose"</span>, <span class="st">"tie"</span>, <span class="st">"run_scored"</span>, <span class="st">"run_allowed"</span>, <span class="st">"game</span></span>
+<span id="cb22-113"><a href="#cb22-113" aria-hidden="true" tabindex="-1"></a><span class="st">                  _played"</span>, <span class="st">"batters"</span>, <span class="st">"tpa"</span>, <span class="st">"ab"</span>, <span class="st">"hit"</span>, <span class="st">"double"</span>, <span class="st">"triple"</span>, <span class="st">"hr"</span>, <span class="st">"bb"</span>, <span class="st">"ibb"</span>, <span class="st">"hbp"</span>, <span class="st">"so"</span>, <span class="st">"rbi"</span>, <span class="st">"r"</span>, <span class="st">"sh"</span>, <span class="st">"sf"</span>, <span class="st">"sb"</span>, <span class="st">"cs"</span>, <span class="st">"gidp"</span>, <span class="st">"e"</span>)</span>
+<span id="cb22-114"><a href="#cb22-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-115"><a href="#cb22-115" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span>df[,<span class="sc">-</span><span class="dv">9</span>]</span>
+<span id="cb22-116"><a href="#cb22-116" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"~/R/603_Spring_2023/posts"</span>)</span>
+<span id="cb22-123"><a href="#cb22-123" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df, <span class="st">"~/R/603_Spring_2023/posts/_data/kbo_df.csv"</span>)</span>
+<span id="cb22-124"><a href="#cb22-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
