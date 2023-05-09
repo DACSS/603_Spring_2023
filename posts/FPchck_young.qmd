@@ -92,3 +92,18 @@ Finally, let's briefly look at various variables related to hitting.
 summary(df[,10:28])
 ```
 
+Before finishing this task, I will modified the column name as a whole, delete one duplicate column, and save it as a csv file to facilitate the next task.
+
+```{r}
+colnames(df) <- c("year","team","game", "win", "lose", "tie", "run_scored", "run_allowed", "game
+                  _played", "batters", "tpa", "ab", "hit", "double", "triple", "hr", "bb", "ibb", "hbp", "so", "rbi", "r", "sh", "sf", "sb", "cs", "gidp", "e")
+
+df<-df[,-9]
+head(df)
+```
+
+```{r}
+setwd("~/R/603_Spring_2023/posts")
+write.csv(df, "~/R/603_Spring_2023/posts/_data/kbo_df.csv")
+```
+
