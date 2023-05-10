@@ -10,7 +10,7 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - hw1
+  - hw5
 
 ---
 
@@ -18,23 +18,12 @@ categories:
 knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,
-  message = FALSE,
-  fig.width = 6,
-  fig.height = 4,
-  fig.align = 'center'
+  message = FALSE
 )
-
 library("dplyr")
 library("knitr")
-library(kableExtra)
-library(xtable)
 library(ggplot2)
-library(GGally)
-library(lme4)
-library(car)
-library(dplyr)
 library(alr4)
-library(stargazer)
 library(smss)
 ```
 
@@ -45,49 +34,19 @@ library(smss)
 data(house.selling.price.2)
 ```
 
-
-### background
-(Data file: house.selling.price.2 from smss R package)
-
-For the house.selling.price.2 data the tables below show a correlation matrix and a model fit using four predictors of selling price.
-
-Correlation Matrix:
-Price Size Beds Baths
-New 0.357 0.176 0.267 0.182 1
-      Price 1 Size 0.899 Beds 0.590 Baths 0.714 New 0.357
-0.899 0.590 0.714 1 0.669 0.662 0.669 1 0.334 0.662 0.334 1 0.176 0.267 0.182
-       
-Regression Output (Outcome: House Price):
-     (Intercept) -41.795 Size 64.761 Beds -2.766 Baths 19.203 New 18.984
-12.104 5.630 3.960 5.650 3.873
-Estimate Std. Error
-t value -3.453 11.504 -0.698 3.399 4.902
-Pr(> | t| ) 0.001
-0
-0.487 0.001 0.00000
-
-
- (Hint 1: You should be able to answer A, B, C just using the tables below, although you should feel free to load the data in R and work with it if you so choose. They will be consistent with what you see on the tables.
-Hint 2: The p-value of a variable in a simple linear regression is the same p-value one would get from a Pearson’s correlation (cor.test). The p-value is a function of the magnitude of the correlation coefficient (the higher the coefficient, the lower the p-value) and of sample size (larger samples lead to smaller p-values). For the correlations shown in the tables, they are between variables of the same length.)
-
 ### A
 
 Beds would be deleted first. It has the highest p-value of 0.487, which also happens to not be statistically significant.
 
 ### B
 
-The first fit would be an intercept only model, which means there is no explanatory variable. This becomes our 'baseline' against which we can evaluate our model as we added explanatory variables.
+The first fit would be an intercept only model, which means there is no explanatory variable. This becomes our 'baseline' against which we can evaluate our model as we add explanatory variables.
 
 ### C
 
-C. Why do you think that BEDS has such a large P-value in the multiple regression model, even though it has a substantial correlation with PRICE?
-
-Beds also has relatively strong relationship with size, which has a strong relationship with size. This means that this current model suffers multicollinearity, which is obscuring the potential relationship between size and price. It makes sense that number of beds would correlate with both the size of the house and the price of the house. 
+Beds has relatively strong relationship with size, which has a strong relationship with size. This means that this current model suffers from multicollinearity, which is obscuring the relationship between size and price.  
 
 ### D
-
-4. AIC
-5. BIC
 
 ```{r}
 fit_S <- lm(P ~ S + Ba + New, data = house.selling.price.2)
@@ -119,7 +78,7 @@ summary(fit_New)$adj.r.squared
 ```
 #### PRESS
 
-- Again, S + Ba + New, has the smallest PRESS, which means it has the best 'predictive' power compared to the other models
+- Again, S + Ba + New has the smallest PRESS, which means it has the best 'predictive' power compared to the other models.
 
 ```{r}
 press_stat <- function(model) {
@@ -141,7 +100,7 @@ press_stat(fit_New)
 ```
 #### AIC
 
-- Again, S + Ba + New has the smallest AIC, which suggests it does a better job of fitting the data without overfitting
+- Again, S + Ba + New has the smallest AIC, which suggests it does a better job of fitting the data without overfitting.
 
 ```{r}
 AIC(fit_S)
@@ -171,15 +130,7 @@ head(trees)
 str(trees)
 ```
 
-### background 
-(Data file: trees from base R)
-From the documentation:
-“This data set provides measurements of the diameter, height and volume of timber in 31 felled black cherry trees. Note that the diameter (in inches) is erroneously labeled Girth in the data. It is measured at 4 ft 6 in above the ground.”
-Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build a basic model of tree volume prediction. In particular,
-
 ### A
-
-A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables
 
 ```{r}
 fit <- lm(Volume ~ Girth + Height, data = trees)
@@ -196,7 +147,7 @@ The curved shape of the line suggests this model violates our assumption of line
 
 **Scale-Location*
 
-The curved shape of the line suggests this model violates our assumption of constant variance, or homoskedacity, which affects the statisical significance of the model.
+The curved shape of the line suggests this model violates our assumption of constant variance, or homoscedasticity, which affects the statistical significance of the model.
 
 **Cooks Distance,  Residuals vs Leverage, Cooks dist vs Leverage**
 
@@ -209,23 +160,39 @@ plot(fit, which = 1:6)
 
 
 # Question 3
-### background
 
-(Data file: florida in alr R package)
 
-In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe that the layout of the ballot caused some voters to cast votes for Buchanan when their intended choice was Gore.
-The data has variables for the number of votes for each candidate—Gore, Bush, and Buchanan.
+```{r}
+data("florida")
+```
 
 ### A
 
-A. Run a simple linear regression model where the Buchanan vote is the outcome and the Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach County an outlier based on the diagnostic plots? Why or why not?
+Palm Beach is clearly an outlier. For all other counties, there is a relatively weak but clear relationship between the number of Bush votes and Buchanan votes. The diagnostic plots show that the model largely obeys the relevant assumptions for linear regression of homoscedasticity, linearity, and normality of errors. However, it also highlights how the pattern observed in most counties in Florida does not hold in Palm Beach.
+
+```{r}
+fit <- lm(Buchanan ~ Bush, data = florida)
+summary(fit)
+```
+```{r}
+par(mfrow = c(2,3))
+plot(fit, which = 1:6)
+```
+
 
 ### B
 
-B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in (A.) Does your findings change?
+While taking the log of the independent and dependent variable increases the r-squared and reduces the p-value, Palm Beach continues to be an outlier, which suggests there is something 'different' about that county, compared to other counties in Florida.
 
 
-
+```{r}
+fit <- lm(log(Buchanan) ~ log(Bush), data=florida)
+summary(fit)
+```
+```{r}
+par(mfrow = c(2,3))
+plot(fit, which = 1:6)
+```
 
 
 
