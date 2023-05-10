@@ -1,8 +1,8 @@
 ---
-title: "Check-in 2: DACSS 603 Final Project"
+title: "DACSS 603 Final Project"
 author: "Laura Collazo"
-desription: ""
-date: "2023-4-15"
+desription: "Final project for DACSS 603."
+date: "2023-5-10"
 format:
   html:
     toc: true
@@ -10,7 +10,7 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - finalpart2
+  - final
 ---
 
 ```{r setup, warning=FALSE, message=FALSE}
@@ -20,12 +20,15 @@ library(psych)
 library(lattice)
 library(FSA)
 library(kableExtra)
+library(lmtest)
+library(stargazer)
+
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # Research Question
 
-Many studies exist on how belonging influences in-person students yet there is an absence of literature related to this topic for online learners. This is surprising given that even before the COVID-19 pandemic students studying exclusively online experienced year-over-year growth since at least 2016 (National Center for Educational Statistics, n.d.). High levels of social belonging have repeatedly being found to influence the persistence of in-person students (Fleming et al., 2017; Johnson et al., 2007; Sriram, 2017). With this in mind, the role belonging plays among online students should not be overlooked.
+Many studies exist on how belonging influences in-person university students yet there is an absence of literature related to this topic for online learners. This is surprising given that even before the COVID-19 pandemic students studying exclusively online have experienced year-over-year growth since at least 2016 (National Center for Educational Statistics, n.d.). High levels of social belonging have repeatedly being found to influence the persistence of in-person students (Fleming et al., 2017; Johnson et al., 2007; Sriram, 2017). With this in mind, the role belonging plays among online students should not be overlooked.
 
 There is no universal definition of belonging, but one way to think about it is a "students' sense of being accepted, valued, included, and encouraged by others (teacher and peers) in the academic classroom setting and of feeling oneself to be an important part of the life and activity of the class" (Goodenow, 1993). In studies of in-person students, it has been found that not all students experience belonging equally. Some of the student populations that report lower levels of belonging include:
 
@@ -36,13 +39,13 @@ There is no universal definition of belonging, but one way to think about it is 
 
 Experiencing a lack of belonging is not innate to these students, though, but rather a reflection of social structural inequalities present in educational systems (Brock, 2019). This reality makes belonging important to explore among students not just generally, but specifically, and is why this study will ask:
 
-**How does race influence belonging of online students?**
+**How does race influence belonging of online undergraduate students?**
 
 # Hypothesis
 
-Literature on how demographics influence the social belonging of online students is elusive making it difficult to develop a hypothesis rooted in previous literature. Therefore, since the data for this study comes from online statistics students, the hypotheses for this study will be based on the notion that underrepresented minorities (URM) in STEM experience a lower sense of belonging that students who are not URMs (Thacker et al., 2022). 
+Literature on how demographics influence the social belonging of online students is elusive making it difficult to develop a hypothesis rooted in previous literature. Therefore, since the data for this study comes from students in an online statistics course, the hypotheses for this study will be based on the notion that underrepresented minorities (URM) in STEM experience a lower sense of belonging that students who are not URMs (Thacker et al., 2022). 
 
-To understand representation in STEM by race it is helpful to examine this table which shows the breakdown of workers in all jobs compared to all STEM jobs (Fry et al., 2021).
+To understand representation in STEM by race it is helpful to examine the data in this table which shows the breakdown of workers in all jobs compared to all STEM jobs (Fry et al., 2021).
 
 ```{r}
 
@@ -59,7 +62,7 @@ kable(jobs, caption = "Employed adults age 25+ in the 2017-19 American Community
 
 ```
 
-Employees who are White make up the majority of workers in STEM, yet employees who are Asian hold more than double the percentage of STEM jobs compared to the percentage of all jobs held by workers who are Asian (Fry et al., 2021). For this reason, Asian students will not be included as an underrepresented minority group in STEM. However, it is important to be mindful that many ethnic groups fall under a racial category and not all are equally represented in STEM. For instance, although Asians as a whole racial group are not underrepresented in STEM, those who are from Southeast Asia are underrepresented (Shivaram, 2021). Future studies should be mindful of this and seek to explore for both racial and ethnic demographic data.    
+Employees who are White make up the majority of workers in STEM, yet employees who are Asian hold more than double the percentage of STEM jobs compared to the percentage of all jobs held by workers who are Asian (Fry et al., 2021). For this reason, Asian students will not be included as an underrepresented minority group in STEM. However, it is important to be mindful that many ethnic groups fall under a racial category and not all are equally represented in STEM. For instance, although Asians as a whole racial group are not underrepresented in STEM, those who are from Southeast Asia are underrepresented (Shivaram, 2021). Future studies should be mindful of this and seek to explore both racial and ethnic demographic data.    
 
 **Hypothesis**
 
@@ -69,7 +72,7 @@ Employees who are White make up the majority of workers in STEM, yet employees w
 
 ## Dataset
 
-The data for this study was collected during the last month of the Fall 2021 semester at a large public university in the mid-west of the United States (Jeng et al., 2023). Students were recruited through voluntary response sampling in an online introduction to statistics course and received extra credit for participating in the study. The instructor of this course was not a member of the research team. A total of 240 students completed the survey and responses from 17 students were removed due to either missing demographics, the same rating for every example, or identical response made to more than 50% of open-ended questions. In total, responses from 223 students are included.
+The data for this study was collected during the last month of the Fall 2021 semester at a large public university in the mid-west of the United States (Jeng et al., 2023). Students were recruited through voluntary response sampling in an online introduction to statistics course and received extra credit for participating in the study. The instructor of this course was not a member of the research team. A total of 240 students completed the survey and responses from 17 students were removed due to either missing demographics, the same rating for every example, or identical response made to more than 50% of open-ended questions. In total, responses from 223 students were included in the original dataset.
 
 The full dataset can be found [here](https://databank.illinois.edu/datasets/IDB-2872989).
 
@@ -90,11 +93,11 @@ To answer the research question for the present study, the following variables h
 * `bel_5_r`
 * `bel_6`
 
-Using the above variables, additional variables were created to aid in analysis. The variable `bel_sum` was created to sum an overall belonging score for each participant. In addition, the variable `urm` was created to indicate if a student belongs to an underrepresented minority group or not.
+Using the above variables, additional variables were created to aid in analysis. The variable `bel_sum` sums each question in the belonging scale to create an overall belonging score for every participant and the variable `urm` indicates if a student belongs to underrepresented or non-underrepresented minority (URM) group in STEM given their reported race.
 
 #### Race/Ethnicity
 
-The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5). Students who reported their race as "Other" (n = 10) have been removed from this analysis as it cannot be determined if they belong to an underrepresented minority group or not.
+The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5). Students who reported their race as "Other" (n = 10) have been removed from this analysis as it cannot be determined if they belong to an underrepresented minority group or not. Therefore, a total of 213 response were examined in this analysis. 
 
 #### Gender
 
@@ -147,10 +150,10 @@ data <- belonging_data %>%
 
 # create variable is_urm which turns race into a binary variable
 
-  mutate(urm = case_when(race == 1 ~ "not underrepresented",
-                         race == 4 ~ "not underrepresented",
-                         race == 2 ~ "underrepresented",
-                         race == 3 ~ "underrepresented",))
+  mutate(urm = case_when(race == 1 ~ "non-URM",
+                         race == 4 ~ "non-URM",
+                         race == 2 ~ "URM",
+                         race == 3 ~ "URM"))
 
 ### Create new variables with Likert scores as an ordered factor
 
@@ -203,9 +206,13 @@ data <- data %>%
                              `5` = "Completely true"))) %>% 
   mutate(year = recode(year,
                         `1` = "Freshman",
-                        `2` = "Sophmore",
+                        `2` = "Sophomore",
                         `3` = "Junior",
                         `4` = "Senior")) 
+
+# order year
+
+data$year <- factor(data$year, levels = c("Freshman", "Sophomore", "Junior", "Senior"))
 
 ```
 
@@ -240,7 +247,8 @@ kable(xt_race) %>%
 
 barplot(xt_race, 
         xlab = "Race",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # urm
 
@@ -251,7 +259,8 @@ kable(xt_urm) %>%
 
 barplot(xt_urm, 
         xlab = "URM",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # gender
 
@@ -262,7 +271,20 @@ kable(xt_gender) %>%
 
 barplot(xt_gender, 
         xlab = "Gender",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
+
+# year
+
+xt_year <- xtabs(~year, data = data)
+
+kable(xt_year) %>% 
+  kable_styling("striped")
+
+barplot(xt_year, 
+        xlab = "Year",
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # bel_sum
 
@@ -273,7 +295,8 @@ kable(xt_sum) %>%
 
 barplot(xt_sum, 
         xlab = "Belonging",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_1
 
@@ -284,7 +307,8 @@ kable(xt_1) %>%
 
 barplot(xt_1, 
         xlab = "I feel like a real part of this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_2
 
@@ -295,7 +319,8 @@ kable(xt_2) %>%
 
 barplot(xt_2, 
         xlab = "Sometimes I feel as if I don’t belong in this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_3
 
@@ -306,7 +331,8 @@ kable(xt_3) %>%
 
 barplot(xt_3, 
         xlab = "I am included in lots of activities in this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_4
 
@@ -317,7 +343,8 @@ kable(xt_4) %>%
 
 barplot(xt_4, 
         xlab = "I feel very different from most other students in this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_5
 
@@ -328,7 +355,8 @@ kable(xt_5) %>%
 
 barplot(xt_5, 
         xlab = "I wish I were in a different class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_6
 
@@ -339,7 +367,8 @@ kable(xt_6) %>%
 
 barplot(xt_6, 
         xlab = "I feel proud of belonging to this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 ```
 
@@ -347,7 +376,7 @@ barplot(xt_6,
 
 Before conducting hypothesis testing and fitting regression models, it is helpful to examine key variables through visualization. 
 
-The first visualization is a boxplot with the dependent variable `bel_sum` on the y-axis and independent variable `urm` on the x-axis. It reveals that the mean belonging score is similar for both groups, however the range of responses is greater among students who belong to a URM group. 
+The first visualization is a boxplot which examines the dependent variable `bel_sum` and the independent variable `urm`. It reveals that the mean belonging score is similar for both groups, however the range of responses is greater among students who belong to a URM group. 
 
 ```{r  echo=TRUE, warning=FALSE}
 
@@ -355,10 +384,12 @@ The first visualization is a boxplot with the dependent variable `bel_sum` on th
 
 ggplot(data, aes(x = urm, y = bel_sum, color = urm))+
     geom_boxplot()+
-    ylab("Belonging")+xlab("URM")
+    ylab("Belonging")+xlab("URM") +
+  scale_color_manual(values = c("#1c8888", "#881C1C"))
+  
 
 ```
-The second boxplot adds `gender`, one of the control variables selected for this study. It reveals the mean belonging score is similar for females in both URM groups and males in both URM groups. It can also be observed that males, compared to females, have lower means among both URM groups and that the range of belonging scores is greater for URM students than non-URM students. 
+The second boxplot adds `gender`, one of the control variables selected for this study. It shows the mean belonging score is similar for females in both groups as well as  males. It can also be observed that males, compared to females, have lower means among both groups and that the range of belonging scores is greater for URM students than non-URM students. 
 
 ```{r  echo=TRUE, warning=FALSE}
 
@@ -366,11 +397,12 @@ The second boxplot adds `gender`, one of the control variables selected for this
 
 ggplot(data, aes(x = urm, y = bel_sum, color = gender))+
     geom_boxplot()+
-    ylab("Belonging")+xlab("URM")
+    ylab("Belonging")+xlab("URM") +
+   scale_color_manual(values = c("#1c8888", "#881C1C"))
 
 ```
 
-This final boxplot examines `year`, another control variable. This visualization reveals more variability between the two URM groups than seen in previous visualizations. Where students are URMs, the mean belonging score decreases as year in school increases. An additional observation among students who are non-URMs is that the mean belonging score appears to be consistent for students in their 1st, 2nd, and 4th year of studies, but drops for students in their 3rd year. 
+This final boxplot examines `year`, another control variable. This visualization indicates more variability between the two `urm` groups than seen in previous visualizations. Where students are URMs, the mean belonging score decreases as year in school increases. An additional observation among students who are non-URMs is that the mean belonging score appears to be consistent for students in their 1st, 2nd, and 4th year of studies, but drops for students in their 3rd year. 
 
 ```{r  echo=TRUE, warning=FALSE}
 
@@ -378,11 +410,12 @@ This final boxplot examines `year`, another control variable. This visualization
 
 data %>% 
   mutate(year = as.factor(year)) %>% 
-ggplot(aes(x = urm, y = bel_sum, color = factor(year, levels = c("Freshman", "Sophmore", "Junior", "Senior")))) +
+ggplot(aes(x = urm, y = bel_sum, color = factor(year, levels = c("Freshman", "Sophomore", "Junior", "Senior")))) +
     geom_boxplot() +
     ylab("Belonging") +
       xlab("URM") +
-  labs(color = "Year")
+  labs(color = "Year") +
+   scale_color_manual(values = c("#1c8888", "#881C1C", "#1c881c", "#881c88"))
 ```
 
 In the next section of visualizations, stacked bar charts have been selected to examine the explanatory variable `urm` against each of the 6 individual belonging questions which have been selected as response variables (`bel_1`:`bel_6`). A couple initial observations that stand out are:
@@ -406,7 +439,9 @@ bel_plot <-function(myxvar, myxlabel) {
     geom_bar(stat = "identity", position = "fill") + 
     labs(y = "Percent", 
          x = myxlabel,
-         title = "Sense of belonging by whether students' race is underrepresented in STEM " )
+         title = "Belonging and URM status: A comparison of student responses") +
+    scale_fill_manual(values = c("#1c8888", "#881C1C"))
+    
 }
 
 bel_plot(bel_1, "I feel like a real part of this class")
@@ -457,7 +492,8 @@ The first chi-squared test examines `bel_1`, which includes responses to the sta
 chi_bel_plot <- function(mydata, myxvar, mytitle) {
   ggplot({{mydata}}, aes(x=factor ({{myxvar}}, levels = c("Not at all true", "Slightly true", "Moderately true", "Mostly true", "Completely true")),y=Freq, fill=urm)) +
   geom_bar(stat="identity",position="dodge") +
-  labs(x = mytitle)
+  labs(x = mytitle) +
+    scale_fill_manual(values = c("#1c8888", "#881C1C"))
 }
 
 # chisq and bel_1
@@ -542,74 +578,115 @@ chi_bel_plot(bel_6_urm, bel_6, "I feel proud of belonging to this class")
 
 To recap the results of these six chi-squared tests, `bel_2`, "Sometimes I feel as if I don’t belong in this class", and `bel_5`, "I wish I were in a different class", were both statistically significant. This indicates a relationship between each of these two specific measure of belonging and `urm`.
 
-## Model comparision
+## Linear Regression
 
 In this section regression models will be compared to determine which has the best fit. In addition to the variables used in hypothesis testing, `gender` and `year` will be include as control variables and `urm` * `gender` as an interaction term. This interaction term has been included as previous research indicates the intersection of gender and racial identities can reveal significant differences (Rainey et al., 2018).
 
-The first regression model examines `bel_sum` and `urm`. Note that the p-value, 0.05841, is identical to what is seen in the ANOVA results above. The adjusted R-squared, 0.01221, is very close to 0 which indicates the response variable, `bel_sum`, is not explained by the predictor variable, `urm`. Another way to think of this is that belonging to an URM group only explains 1.22% of the variation in a student's sense of belonging. 
+The first regression model examines `bel_sum` and `urm`. The adjusted R-squared of this model is 0.01221, and as this is very close to zero it indicates the response variable `bel_sum` is not explained by the predictor variable `urm`. Another way to think of this is that belonging to an URM group only explains 1.22% of the variation in a student's sense of belonging. 
 
-From this model it can be concluded that being part of a URM group leads to a -1.3386 decrease in belonging compared to those who are not-URM.
+From this model it can be concluded that being part of a URM group leads to a -1.34 lower belonging score compared to those who are non-URM students.
 
 ```{r}
 
 # bel_sum & urm
 
-summary(lm(bel_sum ~ urm, data = data))
+model_urm <- lm(bel_sum ~ urm, data = data)
 
-# Fit the linear model
-model <- lm(bel_sum ~ urm, data = data)
+summary(lm(bel_sum ~ urm, data = data))
 
 ```
 
-The second regression model examines `bel_sum`, `urm`, and `gender`. The p-value, 0.0114, is significant, however, the adjusted R-square is low. This indicates the relationship between these variables is not strong enough to explain the variation between the response and predictor variables. 
+The second regression model examines `bel_sum`, `urm`, and `gender`. The adjusted R-square is low, 0.03259, which indicates the relationship between these variables is not strong enough to explain the variation between the response and predictor variables. 
 
-From this model it can be concluded that `gender` is statistically significant. Identifying as male leads to a -1.6454 decrease in belonging compared to females.
+From this model it can be concluded that `gender` is statistically significant. Identifying as male leads to a -1.65 lower belonging score compared to females when other variables are held constant.
 
 ```{r}
 
 # bel_sum, urm & gender
 
+model_gender <- lm(bel_sum ~ urm + gender, data = data)
+
 summary(lm(bel_sum ~ urm + gender, data = data))
 
 ```
 
-The third regression model replaces `gender` with `year`. The overall p-value, 0.003374, in this model is more significant than the last, however the adjusted R-squared is still low. This model explains just 5.47% of the variation between the response and predictor variables.
+The third regression model replaces `gender` with `year`. The adjusted R-squared in this model is still low. This model explains just 5.47% of the variation between the response and predictor variables.
 
-From this model it can be concluded that being a Junior or Senior is statistically significant. Being a Senior leads to the greatest decrease, -3.2020, in belonging compared to students in other years of their studies. Being a Junior shows a -2.6332 decrease in belonging compared to students in other groups.
+From this model it can be concluded that being a Junior or Senior is statistically significant when compared to Freshman. Seniors have a belonging score -3.2 points lower than Freshman and Juniors have a belonging score -2.6 points lower than Freshman when holding other variables constant. 
 
 ```{r}
 
 # bel_sum, urm & year
 
+model_year <- lm(bel_sum ~ urm + year, data = data)
+
 summary(lm(bel_sum ~ urm + year, data = data))
 
 ```
 
-This next regression model includes `bel_sum`, `urm`, `gender` and `year`. It has the most significant p-value, 0.001652, of any model yet. The adjusted R-squared value is also higher, however it only explains 6.63%  percent of the variation which is still rather low. 
+This next regression model includes `bel_sum`, `urm`, `gender` and `year`. The adjusted R-squared of this model is higher than others, however it only explains 6.63% of the variation which is still rather low. 
 
-This model also shows that being a Junior or Senior is statistically significant. Being Male is now just slightly above p < .05. 
+This model also shows that when variables are held constant being a Junior or Senior is statistically significant. Identifying as Male has a p-value of .0576 which is just slightly above p < .05. 
 
 ```{r}
 
 # bel_sum, urm, gender & year
 
+model_all <- lm(bel_sum ~ urm + gender + year, data = data)
+
 summary(lm(bel_sum ~ urm + gender + year, data = data))
 
 ```
 
-The final regression model using `bel_sum` includes the interaction between `urm` and `gender` as the explanatory variable. It has a significant p-value, 0.008266, but the adjusted R-squared is again low explaining just 4.1% of the variation between variables.
+The final regression model using `bel_sum` includes the interaction between `urm` and `gender` as the explanatory variable. The adjusted R-squared of this model is again low explaining just 4.1% of the variation between variables. No variables are significant in this model at the 5% level, however the interaction between being underrepresented and male is significant at the 10% level. 
 
 ```{r}
 
 # bel_sum, urm * gender
 
+model_interaction <- lm(bel_sum ~ urm * gender, data = data)
+
 summary(lm(bel_sum ~ urm * gender, data = data))
 
 ```
 
+# Model Comparison
+
+To determine which of the five linear regression models has the best fit, AIC and BIC is examined alongside adjusted R-squared.
+
+```{r, warning=FALSE}
+
+models <- list(model_urm, model_gender, model_year, model_all, model_interaction)
+
+column_labels <- c("urm", "urm + gender", "urm + year", "urm + gender + year", "urm * gender" )
+
+stargazer(models, 
+          title = "Linear Regression Models", 
+          align = TRUE, 
+          type = "text", 
+          column.labels = column_labels, 
+          font.size = "small",
+          omit.stat=c("f", "ser", "rsq"),
+          add.lines = list(c("AIC", 
+                             round(AIC(model_urm), 2), 
+                             round(AIC(model_gender), 2), 
+                             round(AIC(model_year), 2), 
+                             round(AIC(model_all), 2), 
+                             round(AIC(model_interaction), 2)), 
+                           c("BIC", 
+                             round(BIC(model_urm), 2), 
+                             round(BIC(model_gender), 2), 
+                             round(BIC(model_year), 2), 
+                             round(BIC(model_all), 2), 
+                             round(BIC(model_interaction), 2))))
+
+```
+
+After examining the results, it is clear that model four, `bel_sum ~ urm + gender + year`, is the best fitting model of those tested. This can be inferred as it has both the highest adjusted R-squared and lowest AIC. Although this model does has the highest BIC, this is not surprising as BIC can penalize models with more complexity.    
+
 # Diagnostics
 
-The regression model that stood out as being the strongest is the one that includes both control variables, `gender` and `year`. It was selected as it has the highest adjusted R-squared value. Therefore, the regression model that will be used to preform diagnostics is `lm(bel_sum ~ urm + gender + year, data = data)`.
+The final step of analysis is performing diagnostics on model four, `bel_sum ~ urm + gender + year`, which has been selected as the best fitting model.
 
 ## Residuals vs Fitted
 
@@ -633,11 +710,25 @@ plot(lm(bel_sum ~ urm + gender + year, data = data), which = 2)
 
 ## Scale-Location
 
-In the Scale-Location plot the red line is not horizontal, rather it is decreasing. The variance of the points is also not equal which indicates heteroskedasticity. This is a violation of the constant variance assumption.
+In the Scale-Location plot the red line is decreasing rather than being horizontal and the variance of points do not appear equal. 
 
 ```{r}
 
 plot(lm(bel_sum ~ urm + gender + year, data = data), which = 3)
+
+```
+
+To test for heteroscedasticity a Breusch-Pagan Test is used. This test results in a p-value less than .05 allowing the null hypothesis, that the residuals are homoscedastic, to be rejected. This is a violation of the constant variance assumption.
+
+```{r}
+
+model_all <- lm(bel_sum ~ urm + gender + year, data = data)
+
+# Breusch-Pagan test
+
+bp_test <- bptest(model_all)
+
+bp_test
 
 ```
 
@@ -681,9 +772,3 @@ Shivaram, D. (2021, December 12). Southeast Asians are underrepresented in STEM.
 Sriram, R. (2017). Student affairs by the numbers: Quantitative research and statistics for professionals. Stylus Publishing, LLC.
 
 Thacker, I., Seyranian, V., Madva, A., Duong, N.T., & Beardsley, P. (2022). Social connectedness in physical isolation: Online teaching practices that support under-represented undergraduate students’ feelings of belonging and engagement in STEM. Education Sciences, 12(2), 61-83. [https://doi.org/10.3390/educsci12020061](https://doi.org/10.3390/educsci12020061)
-
-
-
-
-
-
