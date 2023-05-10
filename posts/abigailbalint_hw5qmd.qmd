@@ -1,0 +1,144 @@
+---
+title: "Homework 5"
+author: "Abigail Balint"
+desription: "HW5 Responses"
+date: "05/08/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - homework5
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(alr4)
+library(smss)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+
+a) With backward elimination we would remove Beds variable first because the p value is highest at .487.
+b) With forward selection we would add New first because the opposite is true, the p value is lowest for this at 0.000.
+c) Beds likely has a high p value because there are other confounding variables contributing to the correlation with Price, but Beds alone isn't significant. I can see from the correlation table that Size and Baths are more strongly correlated with Price anyways so these likely may be the confounding variables.
+
+Exploring variables and fitting models for d):
+```{r} 
+data("house.selling.price.2")
+head(house.selling.price.2)
+```
+```{r}
+m1 <- (lm(P ~ New, data=house.selling.price.2))
+m2 <- (lm(P ~ New + Ba, data=house.selling.price.2))
+m3 <- (lm(P ~ New + Ba + Be, data=house.selling.price.2))
+m4 <- (lm(P ~ New + Ba + Be + S, data=house.selling.price.2))
+```
+
+```{r}
+summary(m1)
+```
+
+```{r}
+summary(m2)
+```
+```{r}
+summary(m3)
+```
+```{r}
+summary(m4)
+```
+d) Best model fit for each of the following:
+1. R2: m4 ( using all four variables)
+2. Adjusted R2: m4 ( using all four variables)
+3. PRESS: m4 ( using all four variables)
+4. AIC: m4 ( using all four variables)
+5. BIC: m4 ( using all four variables)
+
+I generated a model with an additional variable added each time and then ran the above five stats on all and got that the model with all four variables included would be the best fit every time so that is the one I would go with here. 
+```{r}
+
+PRESS <- function(linear.model) 
+  {pr <- residuals(linear.model)/(1-lm.influence(linear.model)$hat)
+  PRESS <- sum(pr^2)
+  
+  return(PRESS)}
+
+pressm1 <- PRESS(m1)
+pressm2 <- PRESS(m2)
+pressm3 <- PRESS(m3)
+pressm4 <- PRESS(m4)
+
+print(pressm1)
+print(pressm2)
+print(pressm3)
+print(pressm4)
+```
+```{r}
+AIC(m1)
+AIC(m2)
+AIC(m3)
+AIC(m4)
+```
+
+```{r}
+BIC(m1)
+BIC(m2)
+BIC(m3)
+BIC(m4)
+```
+
+
+# Question 2
+
+
+Below I have fit a model for Volume with the two predictor variables of Height and Girth, then run diagnostics on it. All looks normal with the exception of the first graph, Residual vs Fitted. Instead of being a relatively straight line with a random distribution around the line, the line is instead curved, so this would be the regression assumption that was violated.
+```{r}
+head(trees)
+```
+
+```{r}
+tree1 <- (lm(Volume ~ Girth + Height, data=trees))
+summary(tree1)
+```
+```{r}
+plot(tree1)
+```
+
+# Question 3
+
+a) I ran the regression and diagnostic below and Palm Beach is definitely an outlier. In every plot including residuals, normal distribution, and scale, Palm Beach is a clear outlier compared to the other counties.
+
+b) As shown in my second model and diagnostics, taking the log definitely helps but it still doesn't bring Palm Beach in line with the other counties enough to make it no longer look like an outlier which indicates that this county actually was an outlier in this dataset.
+
+
+```{r}
+head(florida)
+```
+```{r}
+florida1 <- (lm(Buchanan ~ Bush, data=florida))
+summary(florida1)
+```
+```{r}
+plot(florida1)
+```
+```{r}
+florida2 <- (lm(log(Buchanan) ~ log(Bush), data=florida))
+summary(florida2)
+```
+```{r}
+plot(florida2)
+```
+
