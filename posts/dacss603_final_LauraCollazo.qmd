@@ -1,8 +1,8 @@
 ---
-title: "Check-in 2: DACSS 603 Final Project"
+title: "DACSS 603 Final Project"
 author: "Laura Collazo"
-desription: ""
-date: "2023-4-15"
+desription: "Final project for DACSS 603."
+date: "2023-5-10"
 format:
   html:
     toc: true
@@ -10,7 +10,7 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - finalpart2
+  - final
 ---
 
 ```{r setup, warning=FALSE, message=FALSE}
@@ -62,7 +62,7 @@ kable(jobs, caption = "Employed adults age 25+ in the 2017-19 American Community
 
 ```
 
-Employees who are White make up the majority of workers in STEM, yet employees who are Asian hold more than double the percentage of STEM jobs compared to the percentage of all jobs held by workers who are Asian (Fry et al., 2021). For this reason, Asian students will not be included as an underrepresented minority group in STEM. However, it is important to be mindful that many ethnic groups fall under a racial category and not all are equally represented in STEM. For instance, although Asians as a whole racial group are not underrepresented in STEM, those who are from Southeast Asia are underrepresented (Shivaram, 2021). Future studies should be mindful of this and seek to explore for both racial and ethnic demographic data.    
+Employees who are White make up the majority of workers in STEM, yet employees who are Asian hold more than double the percentage of STEM jobs compared to the percentage of all jobs held by workers who are Asian (Fry et al., 2021). For this reason, Asian students will not be included as an underrepresented minority group in STEM. However, it is important to be mindful that many ethnic groups fall under a racial category and not all are equally represented in STEM. For instance, although Asians as a whole racial group are not underrepresented in STEM, those who are from Southeast Asia are underrepresented (Shivaram, 2021). Future studies should be mindful of this and seek to explore both racial and ethnic demographic data.    
 
 **Hypothesis**
 
@@ -72,7 +72,7 @@ Employees who are White make up the majority of workers in STEM, yet employees w
 
 ## Dataset
 
-The data for this study was collected during the last month of the Fall 2021 semester at a large public university in the mid-west of the United States (Jeng et al., 2023). Students were recruited through voluntary response sampling in an online introduction to statistics course and received extra credit for participating in the study. The instructor of this course was not a member of the research team. A total of 240 students completed the survey and responses from 17 students were removed due to either missing demographics, the same rating for every example, or identical response made to more than 50% of open-ended questions. In total, responses from 223 students are included.
+The data for this study was collected during the last month of the Fall 2021 semester at a large public university in the mid-west of the United States (Jeng et al., 2023). Students were recruited through voluntary response sampling in an online introduction to statistics course and received extra credit for participating in the study. The instructor of this course was not a member of the research team. A total of 240 students completed the survey and responses from 17 students were removed due to either missing demographics, the same rating for every example, or identical response made to more than 50% of open-ended questions. In total, responses from 223 students were included in the original dataset.
 
 The full dataset can be found [here](https://databank.illinois.edu/datasets/IDB-2872989).
 
@@ -93,11 +93,11 @@ To answer the research question for the present study, the following variables h
 * `bel_5_r`
 * `bel_6`
 
-Using the above variables, additional variables were created to aid in analysis. The variable `bel_sum` sums each question in the belonging scale to create an overall belonging score for every participant and the variable `urm` indicates if a student belongs to a represented or underrepresented minority (URM) group in STEM given their reported race.
+Using the above variables, additional variables were created to aid in analysis. The variable `bel_sum` sums each question in the belonging scale to create an overall belonging score for every participant and the variable `urm` indicates if a student belongs to underrepresented or non-underrepresented minority (URM) group in STEM given their reported race.
 
 #### Race/Ethnicity
 
-The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5). Students who reported their race as "Other" (n = 10) have been removed from this analysis as it cannot be determined if they belong to an underrepresented minority group or not.
+The response options for `race` include "Asian or Asian American" (1), "Black or African American" (2), "Hispanic or Latino" (3), "White" (4), and "Other" (5). Students who reported their race as "Other" (n = 10) have been removed from this analysis as it cannot be determined if they belong to an underrepresented minority group or not. Therefore, a total of 213 response were examined in this analysis. 
 
 #### Gender
 
@@ -150,10 +150,10 @@ data <- belonging_data %>%
 
 # create variable is_urm which turns race into a binary variable
 
-  mutate(urm = case_when(race == 1 ~ "not underrepresented",
-                         race == 4 ~ "not underrepresented",
-                         race == 2 ~ "underrepresented",
-                         race == 3 ~ "underrepresented",))
+  mutate(urm = case_when(race == 1 ~ "non-URM",
+                         race == 4 ~ "non-URM",
+                         race == 2 ~ "URM",
+                         race == 3 ~ "URM"))
 
 ### Create new variables with Likert scores as an ordered factor
 
@@ -206,9 +206,13 @@ data <- data %>%
                              `5` = "Completely true"))) %>% 
   mutate(year = recode(year,
                         `1` = "Freshman",
-                        `2` = "Sophmore",
+                        `2` = "Sophomore",
                         `3` = "Junior",
                         `4` = "Senior")) 
+
+# order year
+
+data$year <- factor(data$year, levels = c("Freshman", "Sophomore", "Junior", "Senior"))
 
 ```
 
@@ -243,7 +247,8 @@ kable(xt_race) %>%
 
 barplot(xt_race, 
         xlab = "Race",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # urm
 
@@ -254,7 +259,8 @@ kable(xt_urm) %>%
 
 barplot(xt_urm, 
         xlab = "URM",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # gender
 
@@ -265,7 +271,20 @@ kable(xt_gender) %>%
 
 barplot(xt_gender, 
         xlab = "Gender",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
+
+# year
+
+xt_year <- xtabs(~year, data = data)
+
+kable(xt_year) %>% 
+  kable_styling("striped")
+
+barplot(xt_year, 
+        xlab = "Year",
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # bel_sum
 
@@ -276,7 +295,8 @@ kable(xt_sum) %>%
 
 barplot(xt_sum, 
         xlab = "Belonging",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_1
 
@@ -287,7 +307,8 @@ kable(xt_1) %>%
 
 barplot(xt_1, 
         xlab = "I feel like a real part of this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_2
 
@@ -298,7 +319,8 @@ kable(xt_2) %>%
 
 barplot(xt_2, 
         xlab = "Sometimes I feel as if I don’t belong in this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_3
 
@@ -309,7 +331,8 @@ kable(xt_3) %>%
 
 barplot(xt_3, 
         xlab = "I am included in lots of activities in this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_4
 
@@ -320,7 +343,8 @@ kable(xt_4) %>%
 
 barplot(xt_4, 
         xlab = "I feel very different from most other students in this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_5
 
@@ -331,7 +355,8 @@ kable(xt_5) %>%
 
 barplot(xt_5, 
         xlab = "I wish I were in a different class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 # f_bel_6
 
@@ -342,7 +367,8 @@ kable(xt_6) %>%
 
 barplot(xt_6, 
         xlab = "I feel proud of belonging to this class",
-        ylab = "Frequency")
+        ylab = "Frequency",
+        col = c("#1c8888"))
 
 ```
 
@@ -358,7 +384,9 @@ The first visualization is a boxplot which examines the dependent variable `bel_
 
 ggplot(data, aes(x = urm, y = bel_sum, color = urm))+
     geom_boxplot()+
-    ylab("Belonging")+xlab("URM")
+    ylab("Belonging")+xlab("URM") +
+  scale_color_manual(values = c("#1c8888", "#881C1C"))
+  
 
 ```
 The second boxplot adds `gender`, one of the control variables selected for this study. It shows the mean belonging score is similar for females in both groups as well as  males. It can also be observed that males, compared to females, have lower means among both groups and that the range of belonging scores is greater for URM students than non-URM students. 
@@ -369,7 +397,8 @@ The second boxplot adds `gender`, one of the control variables selected for this
 
 ggplot(data, aes(x = urm, y = bel_sum, color = gender))+
     geom_boxplot()+
-    ylab("Belonging")+xlab("URM")
+    ylab("Belonging")+xlab("URM") +
+   scale_color_manual(values = c("#1c8888", "#881C1C"))
 
 ```
 
@@ -381,11 +410,12 @@ This final boxplot examines `year`, another control variable. This visualization
 
 data %>% 
   mutate(year = as.factor(year)) %>% 
-ggplot(aes(x = urm, y = bel_sum, color = factor(year, levels = c("Freshman", "Sophmore", "Junior", "Senior")))) +
+ggplot(aes(x = urm, y = bel_sum, color = factor(year, levels = c("Freshman", "Sophomore", "Junior", "Senior")))) +
     geom_boxplot() +
     ylab("Belonging") +
       xlab("URM") +
-  labs(color = "Year")
+  labs(color = "Year") +
+   scale_color_manual(values = c("#1c8888", "#881C1C", "#1c881c", "#881c88"))
 ```
 
 In the next section of visualizations, stacked bar charts have been selected to examine the explanatory variable `urm` against each of the 6 individual belonging questions which have been selected as response variables (`bel_1`:`bel_6`). A couple initial observations that stand out are:
@@ -409,7 +439,9 @@ bel_plot <-function(myxvar, myxlabel) {
     geom_bar(stat = "identity", position = "fill") + 
     labs(y = "Percent", 
          x = myxlabel,
-         title = "Sense of belonging by whether students' race is underrepresented in STEM " )
+         title = "Belonging and URM status: A comparison of student responses") +
+    scale_fill_manual(values = c("#1c8888", "#881C1C"))
+    
 }
 
 bel_plot(bel_1, "I feel like a real part of this class")
@@ -460,7 +492,8 @@ The first chi-squared test examines `bel_1`, which includes responses to the sta
 chi_bel_plot <- function(mydata, myxvar, mytitle) {
   ggplot({{mydata}}, aes(x=factor ({{myxvar}}, levels = c("Not at all true", "Slightly true", "Moderately true", "Mostly true", "Completely true")),y=Freq, fill=urm)) +
   geom_bar(stat="identity",position="dodge") +
-  labs(x = mytitle)
+  labs(x = mytitle) +
+    scale_fill_manual(values = c("#1c8888", "#881C1C"))
 }
 
 # chisq and bel_1
@@ -632,6 +665,8 @@ stargazer(models,
           align = TRUE, 
           type = "text", 
           column.labels = column_labels, 
+          font.size = "small",
+          omit.stat=c("f", "ser", "rsq"),
           add.lines = list(c("AIC", 
                              round(AIC(model_urm), 2), 
                              round(AIC(model_gender), 2), 
@@ -644,7 +679,6 @@ stargazer(models,
                              round(BIC(model_year), 2), 
                              round(BIC(model_all), 2), 
                              round(BIC(model_interaction), 2))))
-
 
 ```
 
