@@ -1,0 +1,244 @@
+---
+title: "Homework 5"
+author: "Felix Betanourt"
+desription: "DACSS 603 HW5"
+date: "05/10/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - multiple regression
+  - simple regression
+  - correlation
+  - regression assumptions
+  - p value
+  - model fit
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+## Homework 5
+
+DACSS 603, Spring 2023
+
+```{r}
+# Loading packages
+
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(tidyverse))
+library(formattable)
+suppressPackageStartupMessages(library(kableExtra))
+library(ggplot2)
+suppressPackageStartupMessages(library(alr4))
+suppressPackageStartupMessages(library(smss))
+suppressPackageStartupMessages(library(broom))
+
+
+```
+
+Question 1
+(Data file: house.selling.price.2 from smss R package)
+For the house.selling.price.2 data the tables below show a correlation matrix and a model fit using four predictors of selling price.
+
+(Hint 1: You should be able to answer A, B, C just using the tables below, although you should 
+feel free to load the data in R and work with it if you so choose. They will be consistent with what you see on the tables.
+
+(Hint 2: The p-value of a variable in a simple linear regression is the same p-value one would get from a Pearson’s correlation (cor.test). The p-value is a function of the magnitude of the correlation coefficient (the higher the coefficient, the lower the p-value) and of sample size (larger samples lead to smaller p-values). For the correlations shown in the tables, they are between variables of the same length.)
+
+```{r}
+
+data("house.selling.price.2")
+house <- house.selling.price.2
+house <- rename(house, price = P
+         , size = S
+       , beds = Be
+       , baths = Ba
+       )
+str(house)
+```
+
+Correlation Matrix:
+
+```{r}
+# Cor Matrix
+cor_matrix <- cor(house[, c("price", "size", "beds", "baths", "New")], use = "complete.obs")
+round(cor_matrix, 2)
+```
+Regression model:
+
+```{r}
+
+# Fit a multiple regression model with predictor variables
+lm.model1 <- lm(price ~ size + beds + baths + New, data = house)
+summary(lm.model1)
+
+```
+
+
+With these four predictors,
+
+A. For backward elimination, which variable would be deleted first? Why?
+
+Number of bedrooms as is has the highest p-value.
+
+
+B. For forward selection, which variable would be added first? Why?
+
+Size as is has the lowest p-value.
+
+C. Why do you think that BEDS has such a large P-value in the multiple regression model, 
+even though it has a substantial correlation with PRICE?
+
+When including other variables in the regression model, Beds lose predictability power for Price. Since Baths and Size are highly correlated to Price, they might be capturing part of the impact for Beds. In particular there is a high correlation between Size and Beds, so it might means multicollinearity.
+
+D. Using software with these four predictors, find the model that would be selected using each 
+criterion:
+
+1. R2
+2. Adjusted R2
+3. PRESS
+4. AIC
+5. BIC
+
+Let's compare Model 1 (above) with a model excluding Beds:
+
+```{r}
+
+# Fit a multiple regression model with predictor variables (-Beds)
+lm.model2 <- lm(price ~ size + baths + New, data = house)
+summary(lm.model2)
+```
+
+
+Model 1 (all variables):
+
+```{r}
+
+glance(lm.model1) %>%
+  dplyr::select(r.squared, adj.r.squared, AIC, BIC)
+
+#PRESS
+pr <- resid(lm.model1)/(1 - lm.influence(lm.model1)$hat)
+sum(pr^2)
+
+```
+
+Model 2 (excluding Beds):
+
+```{r}
+
+glance(lm.model2) %>%
+  dplyr::select(r.squared, adj.r.squared, AIC, BIC)
+
+
+#PRESS
+pr2 <- resid(lm.model2)/(1 - lm.influence(lm.model2)$hat)
+sum(pr2^2)
+
+
+
+```
+
+E. Explain which model you prefer and why.
+
+I prefer Model 2 it keeps the explanation power while simpler.
+
+Question 2
+(Data file: trees from base R)
+
+```{r}
+data("trees")
+str(trees)
+
+```
+
+
+From the documentation:
+
+“This data set provides measurements of the diameter, height and volume of timber in 31 felled 
+black cherry trees. Note that the diameter (in inches) is erroneously labeled Girth in the data. It is measured at 4 ft 6 in above the ground.”
+
+Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build a basic model of tree volume prediction. In particular, 
+
+A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables 
+
+```{r}
+
+lm.model3 <- lm(Volume ~ Girth + Height, data = trees)
+summary(lm.model3)
+```
+
+
+B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the regression assumptions is violated?
+
+```{r}
+par(mfrow = c(2,3))
+plot(lm.model3, which = 1:6)
+
+```
+
+Yes, there is a violation of one assumption.There is Heteroskedasticity, the variance is not constant. We can see that red line with almost a funnel shape in the residual vs fitted graph and the trend line in the scale-location graph.
+
+
+
+Question 3
+
+(Data file: florida in alr R package)
+
+In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe that the layout of the ballot caused some voters to cast votes for Buchanan when their intended choice was Gore.
+
+The data has variables for the number of votes for each candidate—Gore, Bush, and Buchanan.
+
+```{r}
+data("florida")
+florida
+
+
+```
+
+A. Run a simple linear regression model where the Buchanan vote is the outcome and the Bush vote is the explanatory variable. Produce the regression diagnostic plots.
+
+
+```{r}
+
+lm.model4 <- lm(Buchanan ~ Bush, data = florida)
+summary(lm.model4)
+
+par(mfrow = c(2,3))
+plot(lm.model4, which = 1:6)
+```
+
+Is Palm Beach County an outlier based on the diagnostic plots? Why or why not?
+
+Yes Palm Beach is an outliner. It stands out from the basic random pattern of residuals as we can see in the residual vs fitted plot. Also, in the Normal Q-Q plot, we can see how Palm Beach  falls far from the red line.
+
+
+B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in 
+(A.) Does your findings change?
+
+
+```{r}
+
+lm.model5 <- lm(log(Buchanan) ~ log(Bush), data = florida)
+summary(lm.model5)
+
+par(mfrow = c(2,3))
+plot(lm.model5, which = 1:6)
+```
+
+Yes, it make a correction of the model to make more precise but Palm Beach is still an outliner affecting the model along with other outliners like Calhoun and Collier.
+
+
+
