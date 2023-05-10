@@ -1,0 +1,101 @@
+---
+title: "Homework 5"
+author: "Xiaoyan"
+description: "Template of course blog qmd file"
+date: "05/09/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - 
+  - 
+---
+```{r}
+library(tidyr)
+library(dplyr)
+library(readxl)
+library(ggplot2)
+library(smss)
+library(alr4)
+```
+# Question 1
+Question 1
+(Data file: house.selling.price.2 from smss R package)
+For the house.selling.price.2 data the tables below show a correlation matrix and a model fit using four predictors of selling price.
+(Hint 1: You should be able to answer A, B, C just using the tables below, although you should feel free to load the data in R and work with it if you so choose. They will be consistent with what you see on the tables.
+Hint 2: The p-value of a variable in a simple linear regression is the same p-value one would get from a Pearson’s correlation (cor.test). The p-value is a function of the magnitude of the correlation coefficient (the higher the coefficient, the lower the p-value) and of sample size (larger samples lead to smaller p-values). For the correlations shown in the tables, they are between variables of the same length.)
+With these four predictors,
+A. For backward elimination, which variable would be deleted first? Why?
+Backward elmination asks to delete the largest p-value which is beds vs house and all other p-values are inside significant level
+```{r}
+
+```
+
+B. For forward selection, which variable would be added first? Why?
+
+Size would be added first because size has smallest significant value
+```{r}
+
+```
+C. Why do you think that BEDS has such a large P-value in the multiple regression model, even though it has a substantial correlation with PRICE?
+the varible beds is not precisely describe the room number. It may also be described as study, lounge and so on. therefore, it has large p value. 
+```{r}
+
+```
+D. Using software with these four predictors,find the model that would beselectedusing each criterion:1. R2
+2. Adjusted R2
+3. PRESS
+4. AIC
+5. BIC
+```{r}
+
+```
+E. Explain which model you prefer and why.
+```{r}
+
+```
+# Question 2
+(Data file: trees from base R)
+From the documentation:
+“This data set provides measurements of the diameter, height and volume of timber in 31 felled black cherry trees. Note that the diameter (in inches) is erroneously labeled Girth in the data. It is measured at 4 ft 6 in above the ground.”
+Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build a basic model of tree volume prediction. In particular,
+A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables
+
+```{r}
+head(trees)
+fit<-lm(Volume~Girth+Height, data=trees)
+summary(fit)
+```
+B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the regression assumptions is violated?
+```{r}
+par(mfrow = c(2,3))
+plot(fit,which = 1:6)
+```
+
+
+# Question 3
+(Data file: florida in alr R package)
+In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe that the layout of the ballot caused some voters to cast votes for Buchanan when their intended choice was Gore.
+The data has variables for the number of votes for each candidate—Gore, Bush, and Buchanan.
+A. Run a simple linear regression model where the Buchanan vote is the outcome and the Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach County an outlier based on the diagnostic plots? Why or why not?
+
+```{r}
+head(florida)
+fit2<-lm(Buchanan~Bush, data = florida)
+plot(fit2,which = 1:6)
+```
+B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in (A.) Does your findings change?
+```{r}
+fit2<-lm(log(Buchanan)~log(Bush), data = florida)
+plot(fit2,which = 1:6)
+```
+
+```{r}
+```
+
+```{r}
+```
