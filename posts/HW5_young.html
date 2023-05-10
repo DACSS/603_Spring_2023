@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Young Soo Choi">
+<meta name="dcterms.date" content="2023-05-08">
+<meta name="description" content="hw5">
+
+<title>Homework 5</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/DACSS_Round_Network.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<meta name="twitter:title" content="Homework 5">
+<meta name="twitter:description" content="hw5">
+<meta name="twitter:image" content="https://dacss.github.io/603_Spring_2023/posts/HW5_young_files/figure-html/unnamed-chunk-13-1.png">
+<meta name="twitter:creator" content="@UMassDACSS">
+<meta name="twitter:site" content="@UMassDACSS">
+<meta name="twitter:image-height" content="960">
+<meta name="twitter:image-width" content="1344">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/UMass White Wordmark Horiz.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="true"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/" rel="" target="">
+ <span class="menu-text">Spring 2023 Posts</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">Contributors</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://umass.edu/sbs/dacss" rel="" target="">
+ <span class="menu-text">DACSS</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://dacss.github.io/603_Spring_2023/" rel="" target=""><i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link active" data-scroll-target="#question-1">Question 1</a>
+  <ul class="collapse">
+  <li><a href="#a" id="toc-a" class="nav-link" data-scroll-target="#a">(A)</a></li>
+  <li><a href="#b" id="toc-b" class="nav-link" data-scroll-target="#b">(B)</a></li>
+  <li><a href="#c" id="toc-c" class="nav-link" data-scroll-target="#c">(C)</a></li>
+  <li><a href="#d" id="toc-d" class="nav-link" data-scroll-target="#d">(D)</a>
+  <ul class="collapse">
+  <li><a href="#forward-selection" id="toc-forward-selection" class="nav-link" data-scroll-target="#forward-selection">forward selection</a></li>
+  <li><a href="#backward-method" id="toc-backward-method" class="nav-link" data-scroll-target="#backward-method">backward method</a></li>
+  </ul></li>
+  <li><a href="#e" id="toc-e" class="nav-link" data-scroll-target="#e">(E)</a></li>
+  </ul></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a>
+  <ul class="collapse">
+  <li><a href="#a-1" id="toc-a-1" class="nav-link" data-scroll-target="#a-1">(A)</a></li>
+  <li><a href="#b-1" id="toc-b-1" class="nav-link" data-scroll-target="#b-1">(B)</a></li>
+  </ul></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3">Question 3</a>
+  <ul class="collapse">
+  <li><a href="#a-2" id="toc-a-2" class="nav-link" data-scroll-target="#a-2">(A)</a></li>
+  <li><a href="#b-2" id="toc-b-2" class="nav-link" data-scroll-target="#b-2">(B)</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Homework 5</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">hw5</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    hw5
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Young Soo Choi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 8, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="question-1" class="level1">
+<h1>Question 1</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(smss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'smss' was built under R version 4.2.3</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>cor<span class="ot">&lt;-</span><span class="fu">cor</span>(house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>reg_tot<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>., house.selling.price<span class="fl">.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            P         S        Be        Ba       New
+P   1.0000000 0.8988136 0.5902675 0.7136960 0.3565540
+S   0.8988136 1.0000000 0.6691137 0.6624828 0.1762879
+Be  0.5902675 0.6691137 1.0000000 0.3337966 0.2672091
+Ba  0.7136960 0.6624828 0.3337966 1.0000000 0.1820651
+New 0.3565540 0.1762879 0.2672091 0.1820651 1.0000000</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_tot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ ., data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-36.212  -9.546   1.277   9.406  71.953 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -41.795     12.104  -3.453 0.000855 ***
+S             64.761      5.630  11.504  &lt; 2e-16 ***
+Be            -2.766      3.960  -0.698 0.486763    
+Ba            19.203      5.650   3.399 0.001019 ** 
+New           18.984      3.873   4.902  4.3e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 16.36 on 88 degrees of freedom
+Multiple R-squared:  0.8689,    Adjusted R-squared:  0.8629 
+F-statistic: 145.8 on 4 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<section id="a" class="level2">
+<h2 class="anchored" data-anchor-id="a">(A)</h2>
+<p>The backward elimation method is a method of excluding the highest p value from the model while including all variables. According to this, the “Beds(Be)” variable, which is the variable with the highest p value in the regression model above, becomes the first variable to be deleted.</p>
+</section>
+<section id="b" class="level2">
+<h2 class="anchored" data-anchor-id="b">(B)</h2>
+<p>The forward selection method starts with a model that does not include any variables and fits the dependent variable and the regression equation one by one for all variables, and among them, the variable with the lowest p value is included in the regression model one by one.</p>
+<p>To this end, the p value of each variable was derived through Pearson’s correlation analysis between each independent variable in this model and the dependent variable P.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(house.selling.price<span class="fl">.2</span>[, <span class="sc">-</span><span class="dv">1</span>], <span class="cf">function</span>(x) <span class="fu">cor.test</span>(house.selling.price<span class="fl">.2</span><span class="sc">$</span>P, x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$S
+
+    Pearson's product-moment correlation
+
+data:  house.selling.price.2$P and x
+t = 19.561, df = 91, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.8509019 0.9318957
+sample estimates:
+      cor 
+0.8988136 
+
+
+$Be
+
+    Pearson's product-moment correlation
+
+data:  house.selling.price.2$P and x
+t = 6.9756, df = 91, p-value = 4.759e-10
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.4393929 0.7087536
+sample estimates:
+      cor 
+0.5902675 
+
+
+$Ba
+
+    Pearson's product-moment correlation
+
+data:  house.selling.price.2$P and x
+t = 9.7197, df = 91, p-value = 9.839e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.5967461 0.8009566
+sample estimates:
+     cor 
+0.713696 
+
+
+$New
+
+    Pearson's product-moment correlation
+
+data:  house.selling.price.2$P and x
+t = 3.6406, df = 91, p-value = 0.0004515
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.1648168 0.5223243
+sample estimates:
+     cor 
+0.356554 </code></pre>
+</div>
+</div>
+<p>As a result, it may be seen that the p value of the independent variable size(S) is the smallest(2.2e-16). Therefore, the first variable to be added is the size.</p>
+</section>
+<section id="c" class="level2">
+<h2 class="anchored" data-anchor-id="c">(C)</h2>
+<p>It is likely that the Beds variable has high multicollinearity, contains outliers, or distortion due to small samples. Looking at one by one, according to the correlation matrix seen earlier, the Beds variable shows a correlation coefficient of .6 or more with some variables, but it is difficult to judge that it has particular multicollinearity. Next, I checked out the outliers.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(house.selling.price<span class="fl">.2</span><span class="sc">$</span>Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   3.000   3.000   3.183   4.000   5.000 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(house.selling.price<span class="fl">.2</span><span class="sc">$</span>Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 1  2  3  4  5 
+ 1  6 62 23  1 </code></pre>
+</div>
+</div>
+<p>It has a range from a minimum value of 1 to a maximum value of 5, and among them, more than half are 3. Therefore, it cannot be said to be an outlier problem.</p>
+<p>The multicollinearity of the Beds variable is not high and no special abnormal values are included. So I think that this result is due to bias due to small sample numbers.</p>
+</section>
+<section id="d" class="level2">
+<h2 class="anchored" data-anchor-id="d">(D)</h2>
+<section id="forward-selection" class="level3">
+<h3 class="anchored" data-anchor-id="forward-selection">forward selection</h3>
+<p>I proceeded to select a model according to each criterion using forward selection.</p>
+<p>First, four models including only one variable were created and each value was compared.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1st step: fitting 4 models with one variable</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>reg_S<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>reg_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>reg_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>reg_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ S, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-56.407 -10.656   2.126  11.412  85.091 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -25.194      6.688  -3.767 0.000293 ***
+S             75.607      3.865  19.561  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.47 on 91 degrees of freedom
+Multiple R-squared:  0.8079,    Adjusted R-squared:  0.8058 
+F-statistic: 382.6 on 1 and 91 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>price<span class="ot">&lt;-</span>house.selling.price<span class="fl">.2</span><span class="sc">$</span>P</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 34508.4</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 820.1439</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 827.7417</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with Be</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ Be, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-72.079 -19.679  -3.779  14.352 174.752 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   -37.23      19.95  -1.866   0.0653 .  
+Be             42.97       6.16   6.976 4.76e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 35.86 on 91 degrees of freedom
+Multiple R-squared:  0.3484,    Adjusted R-squared:  0.3413 
+F-statistic: 48.66 on 1 and 91 DF,  p-value: 4.759e-10</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 117028.4</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 933.7168</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 941.3146</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with Ba</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ Ba, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-52.903 -21.003  -2.703  12.197 130.571 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -49.248     15.644  -3.148  0.00222 ** 
+Ba            76.026      7.822   9.720 9.84e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 31.12 on 91 degrees of freedom
+Multiple R-squared:  0.5094,    Adjusted R-squared:  0.504 
+F-statistic: 94.47 on 1 and 91 DF,  p-value: 9.839e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 88121.47</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 907.3327</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 914.9305</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with New</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ New, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-71.749 -21.249  -7.449  17.251 190.751 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   89.249      5.148  17.336  &lt; 2e-16 ***
+New           34.158      9.383   3.641 0.000451 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 41.51 on 91 degrees of freedom
+Multiple R-squared:  0.1271,    Adjusted R-squared:  0.1175 
+F-statistic: 13.25 on 1 and 91 DF,  p-value: 0.0004515</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 156772.4</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 960.908</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 968.5058</code></pre>
+</div>
+</div>
+<p>Models including S show the best performance on all criteria. So in step 1, S is included in the model.</p>
+<p>Second, a regression model including one variable was fitted again to a model containing S(Size) and compared according to each criterion.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2nd step: fitting 3 models with two variables</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>reg_S_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>reg_S_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>reg_S_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and Be</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ S + Be, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-56.797 -11.751   2.859  10.817  84.417 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -22.393     10.937  -2.048   0.0435 *  
+S             76.742      5.227  14.682   &lt;2e-16 ***
+Be            -1.468      4.523  -0.325   0.7462    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.57 on 90 degrees of freedom
+Multiple R-squared:  0.8081,    Adjusted R-squared:  0.8038 
+F-statistic: 189.5 on 2 and 90 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 34468.04</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 822.0351</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 832.1655</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and Ba</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ S + Ba, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-41.158 -10.984   1.658  12.792  81.058 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -49.752      9.183  -5.418    5e-07 ***
+S             63.863      4.840  13.194  &lt; 2e-16 ***
+Ba            22.448      6.130   3.662 0.000422 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.27 on 90 degrees of freedom
+Multiple R-squared:  0.8328,    Adjusted R-squared:  0.8291 
+F-statistic: 224.1 on 2 and 90 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 30032.81</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 809.2251</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 819.3555</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and New</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ S + New, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-47.207  -9.763  -0.091   9.984  76.405 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -26.089      5.977  -4.365 3.39e-05 ***
+S             72.575      3.508  20.690  &lt; 2e-16 ***
+New           19.587      3.995   4.903 4.16e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.4 on 90 degrees of freedom
+Multiple R-squared:  0.8484,    Adjusted R-squared:  0.845 
+F-statistic: 251.8 on 2 and 90 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 27233.66</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 800.1262</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 810.2566</code></pre>
+</div>
+</div>
+<p>In addition to “S”, the model with “New” performs best on all criteria, so I included the “New” variable in the model at this stage.</p>
+<p>Third, the model containing the remaining “Be” and “Ba” in the model containing “S” and “New” is compared by fitting.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3rd step: fitting 2 models with three variables</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>reg_S_N_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>New<span class="sc">+</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>reg_S_N_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>New<span class="sc">+</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and New and Be</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_N_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ S + New + Be, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-47.184  -8.815   1.550   9.943  73.261 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -15.215      9.771  -1.557    0.123    
+S             76.825      4.621  16.624  &lt; 2e-16 ***
+New           20.749      4.059   5.112 1.81e-06 ***
+Be            -5.729      4.085  -1.402    0.164    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.3 on 89 degrees of freedom
+Multiple R-squared:  0.8516,    Adjusted R-squared:  0.8466 
+F-statistic: 170.3 on 3 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_N_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 26644.82</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_N_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 800.0934</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_N_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 812.7564</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and New and Ba</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_N_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ S + New + Ba, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-34.804  -9.496   0.917   7.931  73.338 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -47.992      8.209  -5.847 8.15e-08 ***
+S             62.263      4.335  14.363  &lt; 2e-16 ***
+New           18.371      3.761   4.885 4.54e-06 ***
+Ba            20.072      5.495   3.653 0.000438 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 16.31 on 89 degrees of freedom
+Multiple R-squared:  0.8681,    Adjusted R-squared:  0.8637 
+F-statistic: 195.3 on 3 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_N_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23683.53</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_N_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 789.1366</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_N_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 801.7996</code></pre>
+</div>
+</div>
+<p>This time, the model with “Ba” is superior to the model with “Be” in all criteria. So, in this step, “Ba” is included in the model.</p>
+<p>Finally, I compared this third model with a model including “Be”.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4th step: fitting 1 models with every variables</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_tot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ ., data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-36.212  -9.546   1.277   9.406  71.953 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -41.795     12.104  -3.453 0.000855 ***
+S             64.761      5.630  11.504  &lt; 2e-16 ***
+Be            -2.766      3.960  -0.698 0.486763    
+Ba            19.203      5.650   3.399 0.001019 ** 
+New           18.984      3.873   4.902  4.3e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 16.36 on 88 degrees of freedom
+Multiple R-squared:  0.8689,    Adjusted R-squared:  0.8629 
+F-statistic: 145.8 on 4 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_tot, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23552.98</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_tot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 790.6225</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_tot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 805.8181</code></pre>
+</div>
+</div>
+<p>All analysis is now complete. The model to be selected according to each criterion is as follows,</p>
+<ol type="1">
+<li><p>R-squared: Since the R-squared value of the model including all variables is the highest, by this criterion the model including all variables is selected.</p></li>
+<li><p>Adj. R-squared: Since the adj. R-squared value of the model including three variables(excluding “Be”) is the highest, by this criterion the model including three variables(“S”,“Ba”,“New”) is selected.</p></li>
+<li><p>PRESS: Since the PRESS value of the model including all variables is the lowest, by this criterion the model including all variables is selected.</p></li>
+<li><p>AIC: Since the AIC value of the model including three variables(excluding “Be”) is the lowest, by this criterion the model including three variables(“S”,“Ba”,“New”) is selected.</p></li>
+<li><p>BIC: Since the BIC value of the model including three variables(excluding “Be”) is the lowest, by this criterion the model including three variables(“S”,“Ba”,“New”) is selected.</p></li>
+</ol>
+<p>Overall, the model including every variables is selected according to the R-squared and PRESS criteria, and the model including “S”, “New”, “Ba” variables is selected according to the adj. R-squared, AIC, and BIC.</p>
+</section>
+<section id="backward-method" class="level3">
+<h3 class="anchored" data-anchor-id="backward-method">backward method</h3>
+<p>In the same way, I proceeded with model selection using the backward method.</p>
+<p>Four models in which variables were omitted one by one from a model including all variables were fitted and compared.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1st step: fitting 4 models without one variable</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>reg_no_S<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>S, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>reg_no_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>reg_no_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>reg_no_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="co"># model without S</span></span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - S, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-46.066 -17.066  -4.607   9.384 115.151 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -106.101     16.892  -6.281 1.21e-08 ***
+Be            26.175      4.811   5.440 4.63e-07 ***
+Ba            60.184      6.900   8.722 1.41e-13 ***
+New           15.099      6.070   2.487   0.0147 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 25.74 on 89 degrees of freedom
+Multiple R-squared:  0.6717,    Adjusted R-squared:  0.6606 
+F-statistic: 60.69 on 3 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_S, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 58971.87</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 873.9787</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 886.6417</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - Be, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-34.804  -9.496   0.917   7.931  73.338 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -47.992      8.209  -5.847 8.15e-08 ***
+S             62.263      4.335  14.363  &lt; 2e-16 ***
+Ba            20.072      5.495   3.653 0.000438 ***
+New           18.371      3.761   4.885 4.54e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 16.31 on 89 degrees of freedom
+Multiple R-squared:  0.8681,    Adjusted R-squared:  0.8637 
+F-statistic: 195.3 on 3 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23683.53</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 789.1366</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 801.7996</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Ba</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - Ba, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-47.184  -8.815   1.550   9.943  73.261 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -15.215      9.771  -1.557    0.123    
+S             76.825      4.621  16.624  &lt; 2e-16 ***
+Be            -5.729      4.085  -1.402    0.164    
+New           20.749      4.059   5.112 1.81e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.3 on 89 degrees of freedom
+Multiple R-squared:  0.8516,    Adjusted R-squared:  0.8466 
+F-statistic: 170.3 on 3 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 26644.82</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 800.0934</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 812.7564</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model without New</span></span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - New, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-40.199 -10.462   1.167  12.612  81.724 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -53.382     13.319  -4.008 0.000127 ***
+S             62.354      6.292   9.910 4.91e-16 ***
+Be             1.636      4.327   0.378 0.706299    
+Ba            22.915      6.282   3.648 0.000445 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.36 on 89 degrees of freedom
+Multiple R-squared:  0.8331,    Adjusted R-squared:  0.8274 
+F-statistic:   148 on 3 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 29984.66</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 811.0758</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 823.7388</code></pre>
+</div>
+</div>
+<p>The performance of the model without “Be” is the best in all criteria. However, according to the R-squared and PRESS criteria, the performance of the model without “Be” falls short of that of the model with all variables.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2nd step: fitting 3 models without two variable</span></span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>reg_no_Be_S<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be<span class="sc">-</span>S, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>reg_no_Be_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be<span class="sc">-</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>reg_no_Be_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be<span class="sc">-</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be and S</span></span>
+<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - Be - S, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-45.947 -22.301  -7.501  14.153 119.618 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -47.113     14.869  -3.169  0.00209 ** 
+Ba            71.480      7.553   9.463 3.74e-15 ***
+New           22.454      6.793   3.305  0.00136 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 29.55 on 90 degrees of freedom
+Multiple R-squared:  0.5625,    Adjusted R-squared:  0.5528 
+F-statistic: 57.85 on 2 and 90 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be_S, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 78581.72</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 898.677</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be_S)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 908.8074</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be and Ba</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - Be - Ba, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-47.207  -9.763  -0.091   9.984  76.405 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -26.089      5.977  -4.365 3.39e-05 ***
+S             72.575      3.508  20.690  &lt; 2e-16 ***
+New           19.587      3.995   4.903 4.16e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.4 on 90 degrees of freedom
+Multiple R-squared:  0.8484,    Adjusted R-squared:  0.845 
+F-statistic: 251.8 on 2 and 90 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 27233.66</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 800.1262</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be_Ba)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 810.2566</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be and New</span></span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = P ~ . - Be - New, data = house.selling.price.2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-41.158 -10.984   1.658  12.792  81.058 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -49.752      9.183  -5.418    5e-07 ***
+S             63.863      4.840  13.194  &lt; 2e-16 ***
+Ba            22.448      6.130   3.662 0.000422 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.27 on 90 degrees of freedom
+Multiple R-squared:  0.8328,    Adjusted R-squared:  0.8291 
+F-statistic: 224.1 on 2 and 90 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 30032.81</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 809.2251</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be_New)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 819.3555</code></pre>
+</div>
+</div>
+<p>There is no model that improves performance compared to the existing model that includes four or three variables.So there are no more variables to exclude.</p>
+<p>In other words, the results of model selection using the backward method are as follows.</p>
+<ol type="1">
+<li><p>R-squared: Since the R-squared value of the model including all variables is the highest, by this criterion the model including all variables is selected.</p></li>
+<li><p>Adj. R-squared: Since the adj. R-squared value of the model including three variables(excluding “Be”) is the highest, by this criterion the model including three variables(“S”,“Ba”,“New”) is selected.</p></li>
+<li><p>PRESS: Since the PRESS value of the model including all variables is the lowest, by this criterion the model including all variables is selected.</p></li>
+<li><p>AIC: Since the AIC value of the model including three variables(excluding “Be”) is the lowest, by this criterion the model including three variables(“S”,“Ba”,“New”) is selected.</p></li>
+<li><p>BIC: Since the BIC value of the model including three variables(excluding “Be”) is the lowest, by this criterion the model including three variables(“S”,“Ba”,“New”) is selected.</p></li>
+</ol>
+<p>Overall, the results were the same as the forward method.</p>
+</section>
+</section>
+<section id="e" class="level2">
+<h2 class="anchored" data-anchor-id="e">(E)</h2>
+<p>It is natural that the explanatory power of the model increases as the number of variables included in the model increases. However, as the number of variables increases, it becomes difficult to understand the model, and overfitting may occur, which increases errors when applied to new data. Therefore, when selecting a model, indicators have been released to correct the explanatory power that increases due to the increase in the number of variables, and these are adj. R-squared, AIC, and BIC. From this point of view, I prefer models that include “S”, “Ba”, and “New”, which are selected according to these criteria.</p>
+</section>
+</section>
+<section id="question-2" class="level1">
+<h1>Question 2</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(trees)</span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Girth"  "Height" "Volume"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trees)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Diameter"</span></span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Diameter" "Height"   "Volume"  </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(trees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 31</code></pre>
+</div>
+</div>
+<section id="a-1" class="level2">
+<h2 class="anchored" data-anchor-id="a-1">(A)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>tree_reg<span class="ot">&lt;-</span><span class="fu">lm</span>(Volume<span class="sc">~</span>., trees)</span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tree_reg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Volume ~ ., data = trees)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.4065 -2.6493 -0.2876  2.2003  8.4847 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -57.9877     8.6382  -6.713 2.75e-07 ***
+Diameter      4.7082     0.2643  17.816  &lt; 2e-16 ***
+Height        0.3393     0.1302   2.607   0.0145 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.882 on 28 degrees of freedom
+Multiple R-squared:  0.948, Adjusted R-squared:  0.9442 
+F-statistic:   255 on 2 and 28 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Volume = -57.9877 + 4.7082<em>Diameter + 0.3393</em>Height</p>
+</section>
+<section id="b-1" class="level2">
+<h2 class="anchored" data-anchor-id="b-1">(B)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tree_reg, <span class="at">which=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW5_young_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>“Residuals vs.&nbsp;Since the fitted values plot” is curved, it can be seen that the linearity assumption of this model is violated. In addition, the shape of the “Scale Location Plot” is rapidly changing, indicating that the homoskedasticity assumption is violated. Normality is satisfied according to “Normal Q-Q plot”. According to the rest of the plot, some variables have a high influence on the model but are not considered problematic (3 out of 31 observations)</p>
+<p>Next, I checked the residual plot to check the independence of the error.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a>res<span class="ot">&lt;-</span>trees<span class="sc">$</span>Volume<span class="sc">-</span><span class="fu">predict</span>(tree_reg, <span class="at">newdata =</span> trees)</span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW5_young_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Since no unusual pattern is seen, the assumption of the independence of the error is satisfied.</p>
+</section>
+</section>
+<section id="question-3" class="level1">
+<h1>Question 3</h1>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'alr4' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: car</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: effects</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'effects' was built under R version 4.2.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>lattice theme set by effectsTheme()
+See ?effectsTheme for details.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"florida"</span>)</span>
+<span id="cb167-2"><a href="#cb167-2" aria-hidden="true" tabindex="-1"></a>florida[<span class="st">"PALM BEACH"</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Gore   Bush Buchanan
+PALM BEACH 268945 152846     3407</code></pre>
+</div>
+</div>
+<section id="a-2" class="level2">
+<h2 class="anchored" data-anchor-id="a-2">(A)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a>reg_vote<span class="ot">&lt;-</span><span class="fu">lm</span>(Buchanan<span class="sc">~</span>Bush, florida)</span>
+<span id="cb169-2"><a href="#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_vote)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Buchanan ~ Bush, data = florida)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-907.50  -46.10  -29.19   12.26 2610.19 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 4.529e+01  5.448e+01   0.831    0.409    
+Bush        4.917e-03  7.644e-04   6.432 1.73e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 353.9 on 65 degrees of freedom
+Multiple R-squared:  0.3889,    Adjusted R-squared:  0.3795 
+F-statistic: 41.37 on 1 and 65 DF,  p-value: 1.727e-08</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_vote, <span class="at">which=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW5_young_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>According to these graphs, Palm Beach corresponds to an outlier, and in all graphs, the data of Palm Beach is not on the trend line, but is far from it.</p>
+</section>
+<section id="b-2" class="level2">
+<h2 class="anchored" data-anchor-id="b-2">(B)</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a href="#cb172-1" aria-hidden="true" tabindex="-1"></a><span class="co"># logarithm</span></span>
+<span id="cb172-2"><a href="#cb172-2" aria-hidden="true" tabindex="-1"></a>florida<span class="sc">$</span>log_Buchanan<span class="ot">&lt;-</span><span class="fu">log</span>(florida<span class="sc">$</span>Buchanan)</span>
+<span id="cb172-3"><a href="#cb172-3" aria-hidden="true" tabindex="-1"></a>florida<span class="sc">$</span>log_Bush<span class="ot">&lt;-</span><span class="fu">log</span>(florida<span class="sc">$</span>Bush)</span>
+<span id="cb172-4"><a href="#cb172-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb172-5"><a href="#cb172-5" aria-hidden="true" tabindex="-1"></a><span class="co"># fitting</span></span>
+<span id="cb172-6"><a href="#cb172-6" aria-hidden="true" tabindex="-1"></a>log_reg<span class="ot">&lt;-</span><span class="fu">lm</span>(log_Buchanan<span class="sc">~</span>log_Bush, florida)</span>
+<span id="cb172-7"><a href="#cb172-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(log_reg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_Buchanan ~ log_Bush, data = florida)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.96075 -0.25949  0.01282  0.23826  1.66564 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -2.57712    0.38919  -6.622 8.04e-09 ***
+log_Bush     0.75772    0.03936  19.251  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4673 on 65 degrees of freedom
+Multiple R-squared:  0.8508,    Adjusted R-squared:  0.8485 
+F-statistic: 370.6 on 1 and 65 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb174"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb174-1"><a href="#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="co"># diagnosis</span></span>
+<span id="cb174-2"><a href="#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb174-3"><a href="#cb174-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(log_reg, <span class="at">which=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="HW5_young_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Although the fluctuation of the data has been reduced through logarithm, it still has high leverage and the cook’s distance still exceeds the 4/n standard, so I think it is an outlier.</p>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb175" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb175-2"><a href="#cb175-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Homework 5"</span></span>
+<span id="cb175-3"><a href="#cb175-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Young Soo Choi"</span></span>
+<span id="cb175-4"><a href="#cb175-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "hw5"</span></span>
+<span id="cb175-5"><a href="#cb175-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "05/08/2023"</span></span>
+<span id="cb175-6"><a href="#cb175-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb175-7"><a href="#cb175-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb175-8"><a href="#cb175-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb175-9"><a href="#cb175-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb175-10"><a href="#cb175-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb175-11"><a href="#cb175-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb175-12"><a href="#cb175-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb175-13"><a href="#cb175-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - hw5</span></span>
+<span id="cb175-14"><a href="#cb175-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb175-15"><a href="#cb175-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-16"><a href="#cb175-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1</span></span>
+<span id="cb175-17"><a href="#cb175-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-20"><a href="#cb175-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-21"><a href="#cb175-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(smss)</span>
+<span id="cb175-22"><a href="#cb175-22" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-23"><a href="#cb175-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-24"><a href="#cb175-24" aria-hidden="true" tabindex="-1"></a>cor<span class="ot">&lt;-</span><span class="fu">cor</span>(house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-25"><a href="#cb175-25" aria-hidden="true" tabindex="-1"></a>reg_tot<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>., house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-26"><a href="#cb175-26" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-27"><a href="#cb175-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-30"><a href="#cb175-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-31"><a href="#cb175-31" aria-hidden="true" tabindex="-1"></a>cor</span>
+<span id="cb175-32"><a href="#cb175-32" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_tot)</span>
+<span id="cb175-33"><a href="#cb175-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-34"><a href="#cb175-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-35"><a href="#cb175-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## (A)</span></span>
+<span id="cb175-36"><a href="#cb175-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-37"><a href="#cb175-37" aria-hidden="true" tabindex="-1"></a>The backward elimation method is a method of excluding the highest p value from the model while including all variables. According to this, the "Beds(Be)" variable, which is the variable with the highest p value in the regression model above, becomes the first variable to be deleted.</span>
+<span id="cb175-38"><a href="#cb175-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-39"><a href="#cb175-39" aria-hidden="true" tabindex="-1"></a><span class="fu">## (B)</span></span>
+<span id="cb175-40"><a href="#cb175-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-41"><a href="#cb175-41" aria-hidden="true" tabindex="-1"></a>The forward selection method starts with a model that does not include any variables and fits the dependent variable and the regression equation one by one for all variables, and among them, the variable with the lowest p value is included in the regression model one by one.</span>
+<span id="cb175-42"><a href="#cb175-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-43"><a href="#cb175-43" aria-hidden="true" tabindex="-1"></a>To this end, the p value of each variable was derived through Pearson's correlation analysis between each independent variable in this model and the dependent variable P.</span>
+<span id="cb175-44"><a href="#cb175-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-47"><a href="#cb175-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-48"><a href="#cb175-48" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(house.selling.price<span class="fl">.2</span>[, <span class="sc">-</span><span class="dv">1</span>], <span class="cf">function</span>(x) <span class="fu">cor.test</span>(house.selling.price<span class="fl">.2</span><span class="sc">$</span>P, x))</span>
+<span id="cb175-49"><a href="#cb175-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-50"><a href="#cb175-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-51"><a href="#cb175-51" aria-hidden="true" tabindex="-1"></a>As a result, it may be seen that the p value of the independent variable size(S) is the smallest(2.2e-16). Therefore, the first variable to be added is the size.</span>
+<span id="cb175-52"><a href="#cb175-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-53"><a href="#cb175-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-54"><a href="#cb175-54" aria-hidden="true" tabindex="-1"></a><span class="fu">## (C)</span></span>
+<span id="cb175-55"><a href="#cb175-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-56"><a href="#cb175-56" aria-hidden="true" tabindex="-1"></a>It is likely that the Beds variable has high multicollinearity, contains outliers, or distortion due to small samples.</span>
+<span id="cb175-57"><a href="#cb175-57" aria-hidden="true" tabindex="-1"></a>Looking at one by one, according to the correlation matrix seen earlier, the Beds variable shows a correlation coefficient of .6 or more with some variables, but it is difficult to judge that it has particular multicollinearity.</span>
+<span id="cb175-58"><a href="#cb175-58" aria-hidden="true" tabindex="-1"></a>Next, I checked out the outliers.</span>
+<span id="cb175-59"><a href="#cb175-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-62"><a href="#cb175-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-63"><a href="#cb175-63" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(house.selling.price<span class="fl">.2</span><span class="sc">$</span>Be)</span>
+<span id="cb175-64"><a href="#cb175-64" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(house.selling.price<span class="fl">.2</span><span class="sc">$</span>Be)</span>
+<span id="cb175-65"><a href="#cb175-65" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-66"><a href="#cb175-66" aria-hidden="true" tabindex="-1"></a>It has a range from a minimum value of 1 to a maximum value of 5, and among them, more than half are 3. Therefore, it cannot be said to be an outlier problem.</span>
+<span id="cb175-67"><a href="#cb175-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-68"><a href="#cb175-68" aria-hidden="true" tabindex="-1"></a>The multicollinearity of the Beds variable is not high and no special abnormal values are included.</span>
+<span id="cb175-69"><a href="#cb175-69" aria-hidden="true" tabindex="-1"></a>So I think that this result is due to bias due to small sample numbers.</span>
+<span id="cb175-70"><a href="#cb175-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-71"><a href="#cb175-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## (D)</span></span>
+<span id="cb175-72"><a href="#cb175-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-73"><a href="#cb175-73" aria-hidden="true" tabindex="-1"></a><span class="fu">### forward selection</span></span>
+<span id="cb175-74"><a href="#cb175-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-75"><a href="#cb175-75" aria-hidden="true" tabindex="-1"></a>I proceeded to select a model according to each criterion using forward selection.</span>
+<span id="cb175-76"><a href="#cb175-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-77"><a href="#cb175-77" aria-hidden="true" tabindex="-1"></a>First, four models including only one variable were created and each value was compared.</span>
+<span id="cb175-78"><a href="#cb175-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-81"><a href="#cb175-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-82"><a href="#cb175-82" aria-hidden="true" tabindex="-1"></a><span class="co"># 1st step: fitting 4 models with one variable</span></span>
+<span id="cb175-83"><a href="#cb175-83" aria-hidden="true" tabindex="-1"></a>reg_S<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-84"><a href="#cb175-84" aria-hidden="true" tabindex="-1"></a>reg_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-85"><a href="#cb175-85" aria-hidden="true" tabindex="-1"></a>reg_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-86"><a href="#cb175-86" aria-hidden="true" tabindex="-1"></a>reg_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-87"><a href="#cb175-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-88"><a href="#cb175-88" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S</span></span>
+<span id="cb175-89"><a href="#cb175-89" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S)</span>
+<span id="cb175-90"><a href="#cb175-90" aria-hidden="true" tabindex="-1"></a>price<span class="ot">&lt;-</span>house.selling.price<span class="fl">.2</span><span class="sc">$</span>P</span>
+<span id="cb175-91"><a href="#cb175-91" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-92"><a href="#cb175-92" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S)</span>
+<span id="cb175-93"><a href="#cb175-93" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S)</span>
+<span id="cb175-94"><a href="#cb175-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-95"><a href="#cb175-95" aria-hidden="true" tabindex="-1"></a><span class="co"># model with Be</span></span>
+<span id="cb175-96"><a href="#cb175-96" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_Be)</span>
+<span id="cb175-97"><a href="#cb175-97" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-98"><a href="#cb175-98" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_Be)</span>
+<span id="cb175-99"><a href="#cb175-99" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_Be)</span>
+<span id="cb175-100"><a href="#cb175-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-101"><a href="#cb175-101" aria-hidden="true" tabindex="-1"></a><span class="co"># model with Ba</span></span>
+<span id="cb175-102"><a href="#cb175-102" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_Ba)</span>
+<span id="cb175-103"><a href="#cb175-103" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-104"><a href="#cb175-104" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_Ba)</span>
+<span id="cb175-105"><a href="#cb175-105" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_Ba)</span>
+<span id="cb175-106"><a href="#cb175-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-107"><a href="#cb175-107" aria-hidden="true" tabindex="-1"></a><span class="co"># model with New</span></span>
+<span id="cb175-108"><a href="#cb175-108" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_New)</span>
+<span id="cb175-109"><a href="#cb175-109" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-110"><a href="#cb175-110" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_New)</span>
+<span id="cb175-111"><a href="#cb175-111" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_New)</span>
+<span id="cb175-112"><a href="#cb175-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-113"><a href="#cb175-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-114"><a href="#cb175-114" aria-hidden="true" tabindex="-1"></a>Models including S show the best performance on all criteria. So in step 1, S is included in the model.</span>
+<span id="cb175-115"><a href="#cb175-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-116"><a href="#cb175-116" aria-hidden="true" tabindex="-1"></a>Second, a regression model including one variable was fitted again to a model containing S(Size) and compared according to each criterion.</span>
+<span id="cb175-117"><a href="#cb175-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-120"><a href="#cb175-120" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-121"><a href="#cb175-121" aria-hidden="true" tabindex="-1"></a><span class="co"># 2nd step: fitting 3 models with two variables</span></span>
+<span id="cb175-122"><a href="#cb175-122" aria-hidden="true" tabindex="-1"></a>reg_S_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-123"><a href="#cb175-123" aria-hidden="true" tabindex="-1"></a>reg_S_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-124"><a href="#cb175-124" aria-hidden="true" tabindex="-1"></a>reg_S_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-125"><a href="#cb175-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-126"><a href="#cb175-126" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and Be</span></span>
+<span id="cb175-127"><a href="#cb175-127" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_Be)</span>
+<span id="cb175-128"><a href="#cb175-128" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-129"><a href="#cb175-129" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_Be)</span>
+<span id="cb175-130"><a href="#cb175-130" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_Be)</span>
+<span id="cb175-131"><a href="#cb175-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-132"><a href="#cb175-132" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and Ba</span></span>
+<span id="cb175-133"><a href="#cb175-133" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_Ba)</span>
+<span id="cb175-134"><a href="#cb175-134" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-135"><a href="#cb175-135" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_Ba)</span>
+<span id="cb175-136"><a href="#cb175-136" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_Ba)</span>
+<span id="cb175-137"><a href="#cb175-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-138"><a href="#cb175-138" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and New</span></span>
+<span id="cb175-139"><a href="#cb175-139" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_New)</span>
+<span id="cb175-140"><a href="#cb175-140" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-141"><a href="#cb175-141" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_New)</span>
+<span id="cb175-142"><a href="#cb175-142" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_New)</span>
+<span id="cb175-143"><a href="#cb175-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-144"><a href="#cb175-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-145"><a href="#cb175-145" aria-hidden="true" tabindex="-1"></a>In addition to "S", the model with "New" performs best on all criteria, so I included the "New" variable in the model at this stage.</span>
+<span id="cb175-146"><a href="#cb175-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-147"><a href="#cb175-147" aria-hidden="true" tabindex="-1"></a>Third, the model containing the remaining "Be" and "Ba" in the model containing "S" and "New" is compared by fitting.</span>
+<span id="cb175-148"><a href="#cb175-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-151"><a href="#cb175-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-152"><a href="#cb175-152" aria-hidden="true" tabindex="-1"></a><span class="co"># 3rd step: fitting 2 models with three variables</span></span>
+<span id="cb175-153"><a href="#cb175-153" aria-hidden="true" tabindex="-1"></a>reg_S_N_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>New<span class="sc">+</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-154"><a href="#cb175-154" aria-hidden="true" tabindex="-1"></a>reg_S_N_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>S<span class="sc">+</span>New<span class="sc">+</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-155"><a href="#cb175-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-156"><a href="#cb175-156" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and New and Be</span></span>
+<span id="cb175-157"><a href="#cb175-157" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_N_Be)</span>
+<span id="cb175-158"><a href="#cb175-158" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_N_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-159"><a href="#cb175-159" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_N_Be)</span>
+<span id="cb175-160"><a href="#cb175-160" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_N_Be)</span>
+<span id="cb175-161"><a href="#cb175-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-162"><a href="#cb175-162" aria-hidden="true" tabindex="-1"></a><span class="co"># model with S and New and Ba</span></span>
+<span id="cb175-163"><a href="#cb175-163" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_S_N_Ba)</span>
+<span id="cb175-164"><a href="#cb175-164" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_S_N_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-165"><a href="#cb175-165" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_S_N_Ba)</span>
+<span id="cb175-166"><a href="#cb175-166" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_S_N_Ba)</span>
+<span id="cb175-167"><a href="#cb175-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-168"><a href="#cb175-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-169"><a href="#cb175-169" aria-hidden="true" tabindex="-1"></a>This time, the model with "Ba" is superior to the model with "Be" in all criteria. So, in this step, "Ba" is included in the model.</span>
+<span id="cb175-170"><a href="#cb175-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-171"><a href="#cb175-171" aria-hidden="true" tabindex="-1"></a>Finally, I compared this third model with a model including "Be".</span>
+<span id="cb175-172"><a href="#cb175-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-175"><a href="#cb175-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-176"><a href="#cb175-176" aria-hidden="true" tabindex="-1"></a><span class="co"># 4th step: fitting 1 models with every variables</span></span>
+<span id="cb175-177"><a href="#cb175-177" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_tot)</span>
+<span id="cb175-178"><a href="#cb175-178" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_tot, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-179"><a href="#cb175-179" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_tot)</span>
+<span id="cb175-180"><a href="#cb175-180" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_tot)</span>
+<span id="cb175-181"><a href="#cb175-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-182"><a href="#cb175-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-183"><a href="#cb175-183" aria-hidden="true" tabindex="-1"></a>All analysis is now complete. The model to be selected according to each criterion is as follows,</span>
+<span id="cb175-184"><a href="#cb175-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-185"><a href="#cb175-185" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>R-squared: Since the R-squared value of the model including all variables is the highest, by this criterion the model including all variables is selected.</span>
+<span id="cb175-186"><a href="#cb175-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-187"><a href="#cb175-187" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Adj. R-squared: Since the adj. R-squared value of the model including three variables(excluding "Be") is the highest, by this criterion the model including three variables("S","Ba","New") is selected.</span>
+<span id="cb175-188"><a href="#cb175-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-189"><a href="#cb175-189" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>PRESS: Since the PRESS value of the model including all variables is the lowest, by this criterion the model including all variables is selected.</span>
+<span id="cb175-190"><a href="#cb175-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-191"><a href="#cb175-191" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>AIC: Since the AIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.</span>
+<span id="cb175-192"><a href="#cb175-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-193"><a href="#cb175-193" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>BIC: Since the BIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.</span>
+<span id="cb175-194"><a href="#cb175-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-195"><a href="#cb175-195" aria-hidden="true" tabindex="-1"></a>Overall, the model including every variables is selected according to the R-squared and PRESS criteria, and the model including "S", "New", "Ba" variables is selected according to the adj. R-squared, AIC, and BIC.</span>
+<span id="cb175-196"><a href="#cb175-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-197"><a href="#cb175-197" aria-hidden="true" tabindex="-1"></a><span class="fu">### backward method</span></span>
+<span id="cb175-198"><a href="#cb175-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-199"><a href="#cb175-199" aria-hidden="true" tabindex="-1"></a>In the same way, I proceeded with model selection using the backward method.</span>
+<span id="cb175-200"><a href="#cb175-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-201"><a href="#cb175-201" aria-hidden="true" tabindex="-1"></a>Four models in which variables were omitted one by one from a model including all variables were fitted and compared.</span>
+<span id="cb175-202"><a href="#cb175-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-205"><a href="#cb175-205" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-206"><a href="#cb175-206" aria-hidden="true" tabindex="-1"></a><span class="co"># 1st step: fitting 4 models without one variable</span></span>
+<span id="cb175-207"><a href="#cb175-207" aria-hidden="true" tabindex="-1"></a>reg_no_S<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>S, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-208"><a href="#cb175-208" aria-hidden="true" tabindex="-1"></a>reg_no_Be<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-209"><a href="#cb175-209" aria-hidden="true" tabindex="-1"></a>reg_no_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-210"><a href="#cb175-210" aria-hidden="true" tabindex="-1"></a>reg_no_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-211"><a href="#cb175-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-212"><a href="#cb175-212" aria-hidden="true" tabindex="-1"></a><span class="co"># model without S</span></span>
+<span id="cb175-213"><a href="#cb175-213" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_S)</span>
+<span id="cb175-214"><a href="#cb175-214" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_S, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-215"><a href="#cb175-215" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_S)</span>
+<span id="cb175-216"><a href="#cb175-216" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_S)</span>
+<span id="cb175-217"><a href="#cb175-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-218"><a href="#cb175-218" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be</span></span>
+<span id="cb175-219"><a href="#cb175-219" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be)</span>
+<span id="cb175-220"><a href="#cb175-220" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-221"><a href="#cb175-221" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be)</span>
+<span id="cb175-222"><a href="#cb175-222" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be)</span>
+<span id="cb175-223"><a href="#cb175-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-224"><a href="#cb175-224" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Ba</span></span>
+<span id="cb175-225"><a href="#cb175-225" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Ba)</span>
+<span id="cb175-226"><a href="#cb175-226" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-227"><a href="#cb175-227" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Ba)</span>
+<span id="cb175-228"><a href="#cb175-228" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Ba)</span>
+<span id="cb175-229"><a href="#cb175-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-230"><a href="#cb175-230" aria-hidden="true" tabindex="-1"></a><span class="co"># model without New</span></span>
+<span id="cb175-231"><a href="#cb175-231" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_New)</span>
+<span id="cb175-232"><a href="#cb175-232" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-233"><a href="#cb175-233" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_New)</span>
+<span id="cb175-234"><a href="#cb175-234" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_New)</span>
+<span id="cb175-235"><a href="#cb175-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-236"><a href="#cb175-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-237"><a href="#cb175-237" aria-hidden="true" tabindex="-1"></a>The performance of the model without "Be" is the best in all criteria. However, according to the R-squared and PRESS criteria, the performance of the model without "Be" falls short of that of the model with all variables.</span>
+<span id="cb175-238"><a href="#cb175-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-241"><a href="#cb175-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-242"><a href="#cb175-242" aria-hidden="true" tabindex="-1"></a><span class="co"># 2nd step: fitting 3 models without two variable</span></span>
+<span id="cb175-243"><a href="#cb175-243" aria-hidden="true" tabindex="-1"></a>reg_no_Be_S<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be<span class="sc">-</span>S, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-244"><a href="#cb175-244" aria-hidden="true" tabindex="-1"></a>reg_no_Be_Ba<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be<span class="sc">-</span>Ba, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-245"><a href="#cb175-245" aria-hidden="true" tabindex="-1"></a>reg_no_Be_New<span class="ot">&lt;-</span><span class="fu">lm</span>(P<span class="sc">~</span>.<span class="sc">-</span>Be<span class="sc">-</span>New, house.selling.price<span class="fl">.2</span>)</span>
+<span id="cb175-246"><a href="#cb175-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-247"><a href="#cb175-247" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be and S</span></span>
+<span id="cb175-248"><a href="#cb175-248" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be_S)</span>
+<span id="cb175-249"><a href="#cb175-249" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be_S, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-250"><a href="#cb175-250" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be_S)</span>
+<span id="cb175-251"><a href="#cb175-251" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be_S)</span>
+<span id="cb175-252"><a href="#cb175-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-253"><a href="#cb175-253" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be and Ba</span></span>
+<span id="cb175-254"><a href="#cb175-254" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be_Ba)</span>
+<span id="cb175-255"><a href="#cb175-255" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be_Ba, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-256"><a href="#cb175-256" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be_Ba)</span>
+<span id="cb175-257"><a href="#cb175-257" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be_Ba)</span>
+<span id="cb175-258"><a href="#cb175-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-259"><a href="#cb175-259" aria-hidden="true" tabindex="-1"></a><span class="co"># model without Be and New</span></span>
+<span id="cb175-260"><a href="#cb175-260" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_no_Be_New)</span>
+<span id="cb175-261"><a href="#cb175-261" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>((price <span class="sc">-</span> <span class="fu">predict</span>(reg_no_Be_New, <span class="at">newdata =</span> house.selling.price<span class="fl">.2</span>))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-262"><a href="#cb175-262" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(reg_no_Be_New)</span>
+<span id="cb175-263"><a href="#cb175-263" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(reg_no_Be_New)</span>
+<span id="cb175-264"><a href="#cb175-264" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-265"><a href="#cb175-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-266"><a href="#cb175-266" aria-hidden="true" tabindex="-1"></a>There is no model that improves performance compared to the existing model that includes four or three variables.So there are no more variables to exclude.</span>
+<span id="cb175-267"><a href="#cb175-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-268"><a href="#cb175-268" aria-hidden="true" tabindex="-1"></a>In other words, the results of model selection using the backward method are as follows.</span>
+<span id="cb175-269"><a href="#cb175-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-270"><a href="#cb175-270" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>R-squared: Since the R-squared value of the model including all variables is the highest, by this criterion the model including all variables is selected.</span>
+<span id="cb175-271"><a href="#cb175-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-272"><a href="#cb175-272" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Adj. R-squared: Since the adj. R-squared value of the model including three variables(excluding "Be") is the highest, by this criterion the model including three variables("S","Ba","New") is selected.</span>
+<span id="cb175-273"><a href="#cb175-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-274"><a href="#cb175-274" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>PRESS: Since the PRESS value of the model including all variables is the lowest, by this criterion the model including all variables is selected.</span>
+<span id="cb175-275"><a href="#cb175-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-276"><a href="#cb175-276" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>AIC: Since the AIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.</span>
+<span id="cb175-277"><a href="#cb175-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-278"><a href="#cb175-278" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>BIC: Since the BIC value of the model including three variables(excluding "Be") is the lowest, by this criterion the model including three variables("S","Ba","New") is selected.</span>
+<span id="cb175-279"><a href="#cb175-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-280"><a href="#cb175-280" aria-hidden="true" tabindex="-1"></a>Overall, the results were the same as the forward method.</span>
+<span id="cb175-281"><a href="#cb175-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-282"><a href="#cb175-282" aria-hidden="true" tabindex="-1"></a><span class="fu">## (E)</span></span>
+<span id="cb175-283"><a href="#cb175-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-284"><a href="#cb175-284" aria-hidden="true" tabindex="-1"></a>It is natural that the explanatory power of the model increases as the number of variables included in the model increases. However, as the number of variables increases, it becomes difficult to understand the model, and overfitting may occur, which increases errors when applied to new data. Therefore, when selecting a model, indicators have been released to correct the explanatory power that increases due to the increase in the number of variables, and these are adj. R-squared, AIC, and BIC. From this point of view, I prefer models that include "S", "Ba", and "New", which are selected according to these criteria.</span>
+<span id="cb175-285"><a href="#cb175-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-286"><a href="#cb175-286" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb175-287"><a href="#cb175-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-290"><a href="#cb175-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-291"><a href="#cb175-291" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(trees)</span>
+<span id="cb175-292"><a href="#cb175-292" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trees)</span>
+<span id="cb175-293"><a href="#cb175-293" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trees)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Diameter"</span></span>
+<span id="cb175-294"><a href="#cb175-294" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(trees)</span>
+<span id="cb175-295"><a href="#cb175-295" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(trees)</span>
+<span id="cb175-296"><a href="#cb175-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-297"><a href="#cb175-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-298"><a href="#cb175-298" aria-hidden="true" tabindex="-1"></a><span class="fu">## (A)</span></span>
+<span id="cb175-299"><a href="#cb175-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-302"><a href="#cb175-302" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-303"><a href="#cb175-303" aria-hidden="true" tabindex="-1"></a>tree_reg<span class="ot">&lt;-</span><span class="fu">lm</span>(Volume<span class="sc">~</span>., trees)</span>
+<span id="cb175-304"><a href="#cb175-304" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tree_reg)</span>
+<span id="cb175-305"><a href="#cb175-305" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-306"><a href="#cb175-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-307"><a href="#cb175-307" aria-hidden="true" tabindex="-1"></a>Volume = -57.9877 + 4.7082*Diameter + 0.3393*Height</span>
+<span id="cb175-308"><a href="#cb175-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-309"><a href="#cb175-309" aria-hidden="true" tabindex="-1"></a><span class="fu">## (B)</span></span>
+<span id="cb175-310"><a href="#cb175-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-313"><a href="#cb175-313" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-314"><a href="#cb175-314" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb175-315"><a href="#cb175-315" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tree_reg, <span class="at">which=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb175-316"><a href="#cb175-316" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-317"><a href="#cb175-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-318"><a href="#cb175-318" aria-hidden="true" tabindex="-1"></a>"Residuals vs. Since the fitted values plot" is curved, it can be seen that the linearity assumption of this model is violated. In addition, the shape of the "Scale Location Plot" is rapidly changing, indicating that the homoskedasticity assumption is violated. Normality is satisfied according to "Normal Q-Q plot". According to the rest of the plot, some variables have a high influence on the model but are not considered problematic (3 out of 31 observations)</span>
+<span id="cb175-319"><a href="#cb175-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-320"><a href="#cb175-320" aria-hidden="true" tabindex="-1"></a>Next, I checked the residual plot to check the independence of the error.</span>
+<span id="cb175-321"><a href="#cb175-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-324"><a href="#cb175-324" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-325"><a href="#cb175-325" aria-hidden="true" tabindex="-1"></a>res<span class="ot">&lt;-</span>trees<span class="sc">$</span>Volume<span class="sc">-</span><span class="fu">predict</span>(tree_reg, <span class="at">newdata =</span> trees)</span>
+<span id="cb175-326"><a href="#cb175-326" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res)</span>
+<span id="cb175-327"><a href="#cb175-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-328"><a href="#cb175-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-329"><a href="#cb175-329" aria-hidden="true" tabindex="-1"></a>Since no unusual pattern is seen, the assumption of the independence of the error is satisfied.</span>
+<span id="cb175-330"><a href="#cb175-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-331"><a href="#cb175-331" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 3</span></span>
+<span id="cb175-332"><a href="#cb175-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-335"><a href="#cb175-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-336"><a href="#cb175-336" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span>
+<span id="cb175-337"><a href="#cb175-337" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"florida"</span>)</span>
+<span id="cb175-338"><a href="#cb175-338" aria-hidden="true" tabindex="-1"></a>florida[<span class="st">"PALM BEACH"</span>,]</span>
+<span id="cb175-339"><a href="#cb175-339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-340"><a href="#cb175-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-341"><a href="#cb175-341" aria-hidden="true" tabindex="-1"></a><span class="fu">## (A)</span></span>
+<span id="cb175-342"><a href="#cb175-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-345"><a href="#cb175-345" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-346"><a href="#cb175-346" aria-hidden="true" tabindex="-1"></a>reg_vote<span class="ot">&lt;-</span><span class="fu">lm</span>(Buchanan<span class="sc">~</span>Bush, florida)</span>
+<span id="cb175-347"><a href="#cb175-347" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg_vote)</span>
+<span id="cb175-348"><a href="#cb175-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-349"><a href="#cb175-349" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb175-350"><a href="#cb175-350" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_vote, <span class="at">which=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb175-351"><a href="#cb175-351" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-352"><a href="#cb175-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-353"><a href="#cb175-353" aria-hidden="true" tabindex="-1"></a>According to these graphs, Palm Beach corresponds to an outlier, and in all graphs, the data of Palm Beach is not on the trend line, but is far from it.</span>
+<span id="cb175-354"><a href="#cb175-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-355"><a href="#cb175-355" aria-hidden="true" tabindex="-1"></a><span class="fu">## (B)</span></span>
+<span id="cb175-356"><a href="#cb175-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-359"><a href="#cb175-359" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb175-360"><a href="#cb175-360" aria-hidden="true" tabindex="-1"></a><span class="co"># logarithm</span></span>
+<span id="cb175-361"><a href="#cb175-361" aria-hidden="true" tabindex="-1"></a>florida<span class="sc">$</span>log_Buchanan<span class="ot">&lt;-</span><span class="fu">log</span>(florida<span class="sc">$</span>Buchanan)</span>
+<span id="cb175-362"><a href="#cb175-362" aria-hidden="true" tabindex="-1"></a>florida<span class="sc">$</span>log_Bush<span class="ot">&lt;-</span><span class="fu">log</span>(florida<span class="sc">$</span>Bush)</span>
+<span id="cb175-363"><a href="#cb175-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-364"><a href="#cb175-364" aria-hidden="true" tabindex="-1"></a><span class="co"># fitting</span></span>
+<span id="cb175-365"><a href="#cb175-365" aria-hidden="true" tabindex="-1"></a>log_reg<span class="ot">&lt;-</span><span class="fu">lm</span>(log_Buchanan<span class="sc">~</span>log_Bush, florida)</span>
+<span id="cb175-366"><a href="#cb175-366" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(log_reg)</span>
+<span id="cb175-367"><a href="#cb175-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-368"><a href="#cb175-368" aria-hidden="true" tabindex="-1"></a><span class="co"># diagnosis</span></span>
+<span id="cb175-369"><a href="#cb175-369" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>))</span>
+<span id="cb175-370"><a href="#cb175-370" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(log_reg, <span class="at">which=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb175-371"><a href="#cb175-371" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb175-372"><a href="#cb175-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb175-373"><a href="#cb175-373" aria-hidden="true" tabindex="-1"></a>Although the fluctuation of the data has been reduced through logarithm, it still has high leverage and the cook's distance still exceeds the 4/n standard, so I think it is an outlier.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+</body></html>
