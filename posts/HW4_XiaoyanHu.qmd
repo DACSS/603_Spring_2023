@@ -11,14 +11,15 @@ format:
     code-tools: true
 categories:
   - hw4
-  - desriptive statistics 
-  - probability
+  - 
+  - 
 ---
 ```{r}
 library(tidyr)
 library(dplyr)
 library(readxl)
 library(ggplot2)
+library(alr4)
 ```
 # Question 1
 For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home
@@ -28,35 +29,43 @@ For recent data in Jacksonville, Florida, on y = selling price of home (in dolla
 A. A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000.
 Find the predicted selling price and the residual, and interpret.
 ```{r}
+(-10536) + 53.8*1240 + 2.84*18000
 ```
 B. For fixed lot size, how much is the house selling price predicted to increase for each square-
 foot increase in home size? Why?
+
+53.8
+
+C. According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size?
 ```{r}
-```
-C. According to this prediction equation, for fixed home size, how much would lot size need
-to increase to have the same impact as a one-square-foot increase in home size?
-```{r}
+53.8 / 2.84
 ```
 # Question 2
-(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all
-faculty in a small Midwestern college collected in the early 1980s for presentation in legal
-proceedings for which discrimination against women in salary was at issue. All persons in the data
-hold tenured or tenure track positions; temporary faculty are not included. The variables include
-degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a
-factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree,
-and salary, academic year salary in dollars.
+(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all faculty in a small Midwestern college collected in the early 1980s for presentation in legal proceedings for which discrimination against women in salary was at issue. All persons in the data hold tenured or tenure track positions; temporary faculty are not included. The variables include degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree, and salary, academic year salary in dollars.
 
 A. Test the hypothesis that the mean salary for men and women is the same, without regard to
 any other variable but sex. Explain your findings.
 ```{r}
+head(salary)
+unique(salary$rank)
+summary(lm(salary~sex, data=salary))
 ```
 B. Run a multiple linear regression with salary as the outcome variable and everything else as
 predictors, including sex. Assuming no interactions between sex and the other predictors,
 obtain a 95% confidence interval for the difference in salary between males and females.
 ```{r}
+lm(salary~degree+rank+sex+year+ysdeg, data=salary)|>
+  confint()
 ```
-C. Interpret your finding for each predictor variable; discuss (a) statistical significance, (b)
+C. Interpret your finding for each predictor variable; discuss (a) statistical significance, 
+```{r}
+summary(lm(salary~degree+rank+sex+year+ysdeg, data=salary))
+```
+(b)
 interpretation of the coefficient / slope in relation to the outcome variable and other variables
+
+degree is not statistically significant at this situation. 
+Associate professor make 5292 more than asisstant professor and professor makes 11118 more than assitant professor. 
 ```{r}
 ```
 D. Change the baseline category for the rank variable. Interpret the coefficients related to rank
