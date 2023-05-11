@@ -323,13 +323,13 @@ JOIN_UNICEF_VDEM_IMF_EI <- full_join(JOIN_UNICEF_VDEM_IMF, UNICEF_EI, by = "Coun
 # remove the last 56 rows, which include notes, countries, and regions not in the original UN data
 MMR_Combined <- slice(JOIN_UNICEF_VDEM_IMF_EI, 1:(nrow(JOIN_UNICEF_VDEM_IMF_EI) - 56)) 
 
-# remove NAs for anlaysis
+# remove NAs for analysis
 MMR_Combined <- na.omit(MMR_Combined)
 
 # rename our variables for ease of use
 MMR_Analysis <-rename(MMR_Combined, "Country" = Countries_and_areas, 
-                      "GenderExclusion" = v2xpe_exlgender, "Democracy" = e_p_polity, 
-                      "GDP_2017" = `2017`)
+                      "GenderExclusion" = v2xpe_exlgender, 
+                      "Democracy" = e_p_polity, "GDP_2017" = `2017`)
 ```
 
 Two additional variables will be created for this analysis: First, the GDP per capita variable needs to be logged so that linear regression analysis can be performed, creating a new logged GDP per capita variable. Second, the GDP variable will be binned into quartiles to use for grouping when describing and visualizing the data. This second variable will not be used in analysis since the same information is captured in the `logGDP2017` variable.
@@ -591,7 +591,7 @@ ggpairs(MMR_num, title="Correlogram of key variables")
 
 All of these variables have some kind of correlation. `Democracy` and `Maternal_Mortality_Ratio_2017` have the lowest correlation. The highest correlation on this graph is between `Maternal_Mortality_Ratio_2017` and `SkilledBirthAtt`, which is a negative relationship. The variable `logGDP2017` is also highly correlated with `Maternal_Mortality_Ratio_2017` as well as `Expend_Health_pct_GDP`. The explanatory variable `GenderExclusion` has the highest correlation with `Expend_Health_pct_GDP` and it is a negative correlation. The explanatory variable also shows a moderate negative correlation with `SkilledBirthAtt` and `logGDP2017`. `Democracy` looks to have the lowest correlations with other variables in this analysis.
 
-The following scatterplot shows the positive relationship between the key variables of this analysis, `Maternal_Mortality_Ratio_2017` and `GenderExclusion`. This graph also shows some heteroskedasticity.
+The following scatterplot shows the positive relationship between the key variables of this analysis, `Maternal_Mortality_Ratio_2017` and `GenderExclusion`. This graph also shows some heteroskedasticity, which means we will need to explore logging these variables.
 
 ```{r}
 MMR_Analysis %>% 
@@ -606,7 +606,7 @@ MMR_Analysis %>%
   geom_smooth(method = "lm")
 ```
 
-The following two graphs explore the relationships important to the mediator analysis that will be central to hypothesis #2. These graphs look at the relationship between the explanatory variable (`GenderExclusion`) and both the dependent variable (`Maternal_Mortality_Ratio_2017`) and the mediator variable (`SkilledBirthAtt`).
+The following two graphs explore the relationships important to the mediator analysis that will be central to hypothesis #2. These graphs look at the relationship between the explanatory variable (`GenderExclusion`) and the mediator variable (`SkilledBirthAtt`), and the relationship between the mediator variable (`SkilledBirthAtt`) and the dependent variable (`Maternal_Mortality_Ratio_2017`). 
 
 ```{r}
 MMR_Analysis %>% 
@@ -619,25 +619,11 @@ MMR_Analysis %>%
   geom_smooth(method = "lm")
 
 MMR_Analysis %>% 
-  ggplot(aes(x = Maternal_Mortality_Ratio_2017, y = GenderExclusion)) + 
+  ggplot(aes(x = Maternal_Mortality_Ratio_2017, y = SkilledBirthAtt)) + 
   geom_point() +
-  labs(title = "Gender Exclusion and Maternal Mortality Ratio", 
+  labs(title = "Presence of Skilled Attendant at Birth and Maternal Mortality Ratio", 
        x = "Maternal Mortality Ratio",
-       y = "Gender Exclusion") +
-  theme_bw() +
-  geom_smooth(method = "lm")
-```
-
-Another way to visualize the relationship between these three variables is in the graph below. The clustering of the data points in the upper lefthand corner make it difficult to notice any change in the size of the point, thereby losing a meaningful understanding of how the `GenderExclusion` variable layers in here.
-
-```{r}
-MMR_Analysis %>% 
-  ggplot(aes(x = Maternal_Mortality_Ratio_2017, y = SkilledBirthAtt, size = GenderExclusion)) + 
-  geom_point() +
-  labs(title = "Gender Exclusion, Skilled Attendant at Birth, and Maternal Mortality",
-       x = "MMR",
-       y = "Skilled Attendant at Birth", 
-       size = "Gender Exclusion") +
+       y = "Skilled Attendant at Birth") +
   theme_bw() +
   geom_smooth(method = "lm")
 ```
@@ -727,6 +713,7 @@ MMR_2 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
                                 Expend_Health_pct_GDP*logGDP2017,
                               data = MMR_Analysis))
 
+# model without interaction term and without Expend_Health_pct_GDP variable
 MMR_3 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
                                 Democracy +
                                 SkilledBirthAtt +
@@ -736,24 +723,51 @@ MMR_3 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
 stargazer(MMR_1, MMR_2, MMR_3, type = 'text')
 ```
 
-It does not appear that the interaction term improved the model (the R\^2 value is the same as the model without the interaction term, but the adjusted R\^2 is slightly lower as we were penalized for adding another variable). The interaction term was also not significant, indicating that we do not need to keep it. Interestingly, the model without the interaction term or the `Expend_Health_pct_GDP` variable was the weakest of the three, with the lowest R\^2 value. This indicates that while the `Expend_Health_pct_GDP` variable is not significant, its presence improves the model. Since the first two models have such similar R\^2 values, we can review the AIC and BIC values to compare these models.
+It does not appear that the interaction term improved the model (the R\^2 value is the same as the model without the interaction term, but the adjusted R\^2 is slightly lower as we were penalized for adding another variable). The interaction term was also not significant, indicating that we do not need to keep it. The model without the interaction term or the `Expend_Health_pct_GDP` variable has the lowest R\^2 value, although that may be because it has fewer variables than the other two models. The AIC and BIC values can be used to further compare these models.
 
 ```{r}
 broom::glance(MMR_1)
 broom::glance(MMR_2)
+broom::glance(MMR_3)
 ```
 
-The model without the interaction term is slightly stronger as the AIC and BIC are slightly smaller. The model without the interaction term has an AIC of 392.101 and a BIC of 413.405 The model with the interaction term has an AIC of 393.7846 and a BIC of 418.132.
+Despite the lower R^2 values, the model without the interaction term and without the `Expend_Health_pct_GDP` variable (MMR_3) has the lowest AIC and BIC numbers, with 391.8238 and 410.0844 respectively. The model without the interaction term (MMR_1) is slightly weaker as the AIC and BIC are slightly larger, with the AIC 392.101 and BIC 413.405. The model with the interaction term (MMR_2) is the weakest, as it has the largest AIC and BIC: 393.7846 and 418.132, respectively.
 
-The strongest model that will be used in diagnostics will be MMR_1, the model without the interaction term. This model supports the hypothesis that women's political inclusion has an effect on maternal mortality. While the `logGenderExclusion` variable was found to have a more significant effect on `logMMR2017` without any confounders, once control variables were introduced the model became stronger and a better fit and the effect of `logGenderExclusion` remained statistically significant.
+Finally, let's compare the PRESS statistic of all three models. 
+
+```{r}
+PRESS <- function(MMR_2) {
+  pr <- residuals(MMR_2)/(1 - lm.influence(MMR_2)$hat)
+  sum(pr^2)
+}
+
+models <- list(MMR_1, MMR_2, MMR_3)
+data.frame(models = c('MMR_1', 'MMR_2', 'MMR_3'),
+           PRESS = sapply(models, PRESS),
+           AIC = sapply(models, AIC),
+           BIC = sapply(models, BIC)
+) %>% 
+  print()
+```
+
+Since MMR_3 has the smallest PRESS statistic, AIC, and BIC, we will use that model for diagnostics. This model supports the hypothesis that women's political inclusion has an effect on maternal mortality. While the `logGenderExclusion` variable was found to have a more significant effect on `logMMR2017` without any confounders, once control variables were introduced, the model became stronger and a better fit and the effect of `logGenderExclusion` remained statistically significant.
+
+```{r}
+summary(MMR_3)
+```
 
 The final model can be written:
 
-**logMMR2017 = 12.28 + 0.2799logGenderExclusion + 0.0126Democracy - 0.0236SkilledBirthAttendant - 0.6601logGDP2017 - 0.0679Expend_Health_Pct_GDP**
+**logMMR2017 = 12.60 + 0.3347logGenderExclusion + 0.0128Democracy - 0.0246SkilledBirthAttendant - 0.7031logGDP2017**
 
-Which indicates that, controlling for democracy, the percentage of births with skilled attendants, GDP, and the percentage of GDP spent on health, a one unit increase in logGenderExclusion increases logMMR2017 by 0.28. A 1% increase in `GenderExclusion` leads to a 0.2785% increase in `Maternal_Mortality_2017`.
+Which indicates that, controlling for democracy, the percentage of births with skilled attendants, and GDP, a one unit increase in logGenderExclusion increases logMMR2017 by 0.3347. A 1% increase in `GenderExclusion` leads to a 0.3336% increase in `Maternal_Mortality_2017`.
 
-*Formula:* 1% increase in x multiplies y by exp(0.2799\*log(1.01)), and increases y by 0.2799\*log(1.01) = 0.2785
+*Formula:* 1% increase in x multiplies y by (exp(0.3347\*log(1.01)) - 1)\*100 = 0.3336%
+
+```{r}
+# log-log interpretation formula
+round((exp(0.3347*log(1.01)) - 1)*100, 4)
+```
 
 ### Hypothesis #2
 
@@ -777,14 +791,8 @@ TotEff_wCov <- (lm(formula = logMMR2017 ~ logGenderExclusion +
                                  logGDP2017 +
                                  Expend_Health_pct_GDP,
                                data = MMR_Analysis))
-# Attempt with the unlogged version of GenderExclusion variable
-TotEff_wCov_noL <- (lm(formula = logMMR2017 ~ GenderExclusion + 
-                                 Democracy +
-                                 logGDP2017 +
-                                 Expend_Health_pct_GDP,
-                               data = MMR_Analysis))
 
-stargazer(TotEff_noCov, TotEff_wCov, TotEff_wCov_noL, type = 'text')
+stargazer(TotEff_noCov, TotEff_wCov, type = 'text')
 ```
 
 As noted in the section on hypothesis #1, the effect of the `logGenderExclusion` variable on `logMMR2017` is significant without covariates at the level of 0.01 (1%). Once control variables are added the model is much stronger, as evidenced by the higher R-squared values, but the explanatory variable is a little less significant (it is now at the level of 0.05 (5%)).
@@ -804,14 +812,8 @@ IndEff1_wCov <- (lm(formula = SkilledBirthAtt ~ logGenderExclusion +
                                 logGDP2017 +
                                 Expend_Health_pct_GDP,
                               data = MMR_Analysis))
-# effect between the explanatory variable and the mediator, with covariates, GenderExclusion not logged
-IndEff1_wCov_noL <- (lm(formula = SkilledBirthAtt ~ GenderExclusion +
-                                Democracy + 
-                                logGDP2017 +
-                                Expend_Health_pct_GDP,
-                              data = MMR_Analysis))
 
-stargazer(IndEff1_noCov, IndEff1_wCov, IndEff1_wCov_noL, type = 'text')
+stargazer(IndEff1_noCov, IndEff1_wCov, type = 'text')
 
 ## question should we drop the Democracy and Expend_Health_pct_GDP variables because they are no longer significant here? 
 # Also should we try the interaction term again?
@@ -853,7 +855,7 @@ In all of these second indirect effect models the explanatory variable is still 
 
 Since it is not entirely clearly which model is stronger - the one with the `logGenderExclusion` explanatory variable, or the model with the unlogged `GenderExclusion` explanatory variable, we will include both version in a mediation analysis here.
 
-#### Mediation analysis: logged IV
+#### Mediation analysis
 
 The `mediate()` function takes both indirect effect models to perform the mediation analysis and estimates whether there is a mediator effect by the `SkilledBirthAtt` variable between the `logGenderExclusion` and the `logMMR2017` variables.
 
@@ -871,33 +873,9 @@ The **ACME** **(average causal mediation effects)** accounts for the indirect ef
 
 The **Total** **Effect** reports the sum of the direct and indirect effects of the explanatory variable on the dependent variable. This was also found in the first step of this process when the total effect was calculated. The effect of the explanatory variable on the dependent variable was found to be significant at the 0.5 (5%) level in the calculation above and here it has been found at the 0.01 (1%) level.
 
-Finally, **Prop. Mediated** indicates the proportion of the effect of the explanatory variable on the dependent variable that goes through the mediator. In this analysis it is not significant.
+Finally, **Prop. Mediated** indicates the proportion of the effect of the explanatory variable on the dependent variable that goes through the mediator. The ACME has already shown that the explanatory variable's effect on the dependent variable does not go through the mediator, so this is also not significant. 
 
 In sum, this model shows that while gender exclusion has a direct effect on maternal mortality, there is no statistically significant evidence that it was mediated via the presence of skilled birth attendants.
-
-#### Mediation analysis: unlogged IV
-
-Here we'll perform the analysis with the `mediate()` function again so that we can estimate whether there is a mediator effect by the `SkilledBirthAtt` variable between the `GenderExclusion` and the `logMMR2017` variables.
-
-```{r}
-results_noL <- mediation::mediate(IndEff1_wCov_noL, IndEff2_wCov_noL, treat='GenderExclusion', mediator='SkilledBirthAtt', boot=T)
-
-summary(results_noL)
-
-plot(results_noL)
-```
-
-The **ACME** **(average causal mediation effects)** accounts for the indirect effect of the explanatory variable (`GenderExclusion`) on the dependent variable (`logMMR2017`) that goes through the mediator (`SkilledBirthAtt`). This was found to be significant at the 0.05 (5%) level.
-
-**ADE (average direct effects)** shows the direct effect of the explanatory variable on the dependent variable. This was also calculated in the second indirect effect model above. In both cases the relationship between the explanatory variable and the dependent variable was found to be significant at the 0.1 (10%) level.
-
-The **Total** **Effect** reports the sum of the direct and indirect effects of the explanatory variable on the dependent variable. This was also found in the first step of this process when the total effect was calculated. In both cases the effect of the explanatory variable on the dependent variable was found to be significant at the 0.1 (10%) level.
-
-Finally, **Prop. Mediated** indicates the proportion of the effect of the explanatory variable on the dependent variable that goes through the mediator. In this analysis it is significant at the 0.1 (10%) level.
-
-In sum, for this model the effect of gender exclusion on maternal mortality was mediated via the presence of skilled birth attendants.
-
-*Note to prof: I think there is likely more to say here about this analysis and interpretation of the plot in particular, but I don't know this well yet, would be great to discuss further.*
 
 ## Model Diagnostics
 
@@ -906,7 +884,7 @@ In sum, for this model the effect of gender exclusion on maternal mortality was 
 In this test the red line shows some curvature, but is mostly horizontal, suggesting that the linearity assumption has been met. The distribution of residuals is fairly even, which indicates that the assumption of constant variance has been met. Some residuals appear to stand out, indicating the existence of outliers.
 
 ```{r}
-plot(MMR_1, which = 1)
+plot(MMR_3, which = 1)
 ```
 
 ### Normal Q-Q Plot
@@ -914,7 +892,7 @@ plot(MMR_1, which = 1)
 Most of the points in the middle of this graph fall along the line, but the points at either end diverge from the line, especially at the bottom left. This indicates that the assumption of normality has been met.
 
 ```{r}
-plot(MMR_2, which = 2)
+plot(MMR_3, which = 2)
 ```
 
 ### Scale-Location
@@ -922,7 +900,13 @@ plot(MMR_2, which = 2)
 The red line in this graph has some curvature to it, it trends up and then back down again, creating a slight hump in the middle. This indicates that the assumption of constant variance has possibly not been fully met.
 
 ```{r}
-plot(MMR_2, which = 3)
+plot(MMR_3, which = 3)
+```
+
+We can take a closer look at the heteroskedasticity of this model with the Breusch Pagan test. The null hypothesis of this test is homoskedasticity and the high p-value here means we cannot fully reject the null. This indicates that the model has marginal heteroskedasticity at the .1 (10%) level, but not at the 0.05 (5%) level or below.
+
+```{r}
+lmtest::bptest(MMR_3)
 ```
 
 ### Cook's Distance
@@ -930,5 +914,12 @@ plot(MMR_2, which = 3)
 This graph shows that this model violates the influential observation assumption because several points are larger than 4/n, which for this model is 4/155 = 0.0258.
 
 ```{r}
-plot(MMR_2, which = 4)
+plot(MMR_3, which = 4)
 ```
+
+## Conclusion
+
+This analysis supports the first hypothesis, that where gender exclusion is low and political inclusion of women is high, maternal mortality is also lower. This held true even when controlling for democracy, GDP, and the presence of skilled birth attendants. 
+
+This analysis did not, however, support the hypothesis that the effect of political inclusion of women on maternal mortality was mediated by the presence of skilled attendants at birth. In fact, this research found that women's political inclusion did not have a significant effect on the presence of skilled birth attendants. This suggests that the way in which women's political inclusion and empowerment impacts maternal mortality is through another mechanism that was not explored in this analysis. 
+
