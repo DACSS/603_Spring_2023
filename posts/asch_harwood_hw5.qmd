@@ -1,0 +1,193 @@
+---
+title: "Homework 5"
+author: "Asch Harwood"
+description: "Homework 5"
+date: "5/9/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+library("dplyr")
+library("knitr")
+library(ggplot2)
+library(alr4)
+library(smss)
+```
+
+# Question 1
+
+```{r}
+data(house.selling.price.2)
+```
+
+### A
+
+Beds would be deleted first. It has the highest p-value of 0.487, which also happens to not be statistically significant.
+
+### B
+
+The first fit would be an intercept only model, which means there is no explanatory variable. This becomes our 'baseline' against which we can evaluate our model as we add explanatory variables.
+
+### C
+
+Beds has relatively strong relationship with size, which also has a strong relationship with price. This means that this current model suffers from multicollinearity, which is obscuring the relationship between size and price.
+
+### D
+
+```{r}
+fit_S <- lm(P ~ S + Ba + New, data = house.selling.price.2)
+fit_Be <- lm(P ~ S + New, data = house.selling.price.2)
+fit_Ba <- lm(P ~ New, data = house.selling.price.2)
+fit_New <- lm(P ~ 1, data = house.selling.price.2)
+```
+
+#### R2
+
+-   With an R2 of 0.87: S + Ba + New
+
+```{r}
+summary(fit_S)$r.squared
+summary(fit_Be)$r.squared
+summary(fit_Ba)$r.squared
+summary(fit_New)$r.squared
+```
+
+#### Adjusted R2
+
+-   With an Adjusted R2 of 0.86: S + Ba + New
+
+```{r}
+summary(fit_S)$adj.r.squared
+summary(fit_Be)$adj.r.squared
+summary(fit_Ba)$adj.r.squared
+summary(fit_New)$adj.r.squared
+```
+
+#### PRESS
+
+-   Again, S + Ba + New has the smallest PRESS, which means it has the best 'predictive' power compared to the other models.
+
+```{r}
+press_stat <- function(model) {
+  # Calculate PRESS residuals
+  pr <- resid(model) / (1 - lm.influence(model)$hat)
+  
+  # Compute the PRESS statistic
+  press <- sum(pr^2)
+  
+  return(press)
+}
+```
+
+```{r}
+press_stat(fit_S)
+press_stat(fit_Be)
+press_stat(fit_Ba)
+press_stat(fit_New)
+```
+
+#### AIC
+
+-   Again, S + Ba + New has the smallest AIC, which suggests it does a better job of fitting the data without overfitting.
+
+```{r}
+AIC(fit_S)
+AIC(fit_Be)
+AIC(fit_Ba)
+AIC(fit_New)
+```
+
+#### BIC
+
+-   Again, S + Ba + New has the smallest BIC, which suggests it does a better job of fitting the data without overfitting
+
+```{r}
+BIC(fit_S)
+BIC(fit_Be)
+BIC(fit_Ba)
+BIC(fit_New)
+```
+
+### E
+
+I prefer P \~ S + Ba + New. All coefficients are statistically significant. It outperforms the 'less complex' models on all metrics. It also make sense that several different factors influence home price.
+
+# Question 2
+
+```{r}
+data(trees)
+head(trees)
+str(trees)
+```
+
+### A
+
+```{r}
+fit <- lm(Volume ~ Girth + Height, data = trees)
+summary(fit)
+```
+
+### B
+
+**Residuals vs Fitted**
+
+The curved shape of the line suggests this model violates our assumption of linearity that the relationship between the independent and dependent variables is linear.
+
+**Scale-Location**
+
+The curved shape of the line suggests this model violates our assumption of constant variance, or homoscedasticity, which affects the statistical significance of the model.
+
+**Cooks Distance, Residuals vs Leverage, Cooks dist vs Leverage**
+
+All three charts show there is single, potentially influence point, which can impact whether our model meets the assumptions of linear regression and can disproportionately affect our regression coefficients.
+
+```{r cache=TRUE}
+par(mfrow = c(2,3))
+plot(fit, which = 1:6)
+```
+
+# Question 3
+
+```{r}
+data("florida")
+```
+
+### A
+
+Palm Beach is clearly an outlier. For all other counties, there is a relatively weak but clear relationship between the number of Bush votes and Buchanan votes. The diagnostic plots show that the model largely obeys the relevant assumptions for linear regression of homoscedasticity, linearity, and normality of errors. However, it also highlights how the pattern observed in most counties in Florida does not hold in Palm Beach.
+
+```{r}
+fit <- lm(Buchanan ~ Bush, data = florida)
+summary(fit)
+```
+
+```{r}
+par(mfrow = c(2,3))
+plot(fit, which = 1:6)
+```
+
+### B
+
+While taking the log of the independent and dependent variable increases the r-squared and reduces the p-value, Palm Beach continues to be an outlier, which suggests there is something 'different' about that county, compared to other counties in Florida.
+
+```{r}
+fit <- lm(log(Buchanan) ~ log(Bush), data=florida)
+summary(fit)
+```
+
+```{r}
+par(mfrow = c(2,3))
+plot(fit, which = 1:6)
+```
