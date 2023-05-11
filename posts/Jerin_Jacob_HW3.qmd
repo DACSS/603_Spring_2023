@@ -1,0 +1,122 @@
+---
+title: "Homework 3"
+author: "Jerin Jacob"
+desription: "Homework 3- 603 Spring 2023"
+date: "05/09/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - challenge3
+  - Jerin Jacob
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(readxl)
+library(dplyr)
+library(magrittr)
+library(alr4)
+library(smss)
+library(ggplot2)
+library(stargazer)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data("UN11", package = "alr4")
+head(UN11)
+```
+Question 1:
+  a. Predictor is ppgdp and response is fertility
+  b.
+
+```{r}
+ggplot(data = UN11, aes(x = ppgdp, y = fertility)) +
+  geom_point()
+
+```
+A straigt line won't be plausible unless an untill some kind of data transformation is done.
+
+c.
+```{r}
+ggplot(data = UN11, aes(x = log(ppgdp), y = log(fertility))) +
+  geom_point()
+
+```
+Yes, now the plot looks like a straight line would fit in for a plausible simple linear regression. The relationship is negative which means as the log of GDP increase, there is a decrease in the log of Fertility.
+
+Question 2:
+a.
+The conversion results in dividing the USD value by 1.33 which means the slope also will become divided by 1.33
+
+b.
+The correlation will not change as the unit of measurement change because it is a standardized measure. All the values will change in the same amount.
+
+```{r}
+data("water")
+pairs(water)
+
+```
+
+Year appears to be largely unrelated to each of the other variables.
+The three variables starting with “O” seem to be correlated with each other, meaning that all the plot including two of these variables exhibit a dependence between the variables that is stronger than the dependence between the “O” variables and other variables. The three variables starting with “A” also seem to be another correlated group.
+BSAAM is more closely related to the “O” variables than the “A” variables.
+
+Question 4:
+
+```{r}
+data("Rateprof")
+pairs(Rateprof[,c('quality', 'clarity', 'helpfulness', 'easiness', 'raterInterest')])
+```
+
+Quality, Clarity and Helpfulness seems to have a strong correlation between them. Easiness is fairly correlated with the other three variables. raterInterest is also moderately correlated but the raters say that they almost always have fairly good interest in the subject. Overall, it means that professors doing well in on of these variables are doing pretty well in others too.
+
+Question 5:
+a.
+
+```{r}
+data(student.survey)
+ggplot(data = student.survey, aes(x = re, fill = pi)) +
+    geom_bar(position = "fill")
+```
+```{r}
+ggplot(data = student.survey, aes(x = tv, y = hi)) +
+  geom_point() 
+```
+
+b.
+
+```{r}
+model1 <- lm(as.numeric(pi) ~ as.numeric(re),
+             data = student.survey)
+
+model2 <- lm(hi ~ tv, ,data = student.survey)
+```
+
+```{r}
+stargazer(model1, model2, type = 'text', 
+          dep.var.labels = c('Pol. Ideology', 'HS GPA'),
+          covariate.labels = c('Religiosity', 'Hours of TV')
+          )
+
+```
+
+Religiosity is positively and statistically significantly (at the 0.01 significance level) associated with conservatism.
+
+Hours of TV is negatively and statistically significantly (at the 0.05 significance level) associated with High School GPA. Watching an average of 1 more hour of TV per week is associated with a 0.018 decline in High School GPA.
+
+
+
+
+
+
+
+
+  
