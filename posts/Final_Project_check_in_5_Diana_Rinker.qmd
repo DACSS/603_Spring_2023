@@ -78,6 +78,7 @@ library(png)
 library(grid)
 library(gridExtra)
 library(stargazer)
+library(jtools)
 ```
 
 ### Data source and description.
@@ -197,27 +198,22 @@ ggplot(merged, mapping = aes(x=year_month , y=n.comments, fill=year_month ))+
 
 # 2.IV. Independent variables:
 
-```{r, echo=T}
-
-```
-
 ### 2.1.Popularity
 
 "Uniques" variable represents number of unique people who came to the
 page and viewed it at least once, his metric represents popularity of
-the post. It's distribution shows us that not all posts are equally
-popular:
+the post. It has Poisson distribution:
 
 ```{r, echo=T}
 # colnames(merged)
 ggplot(data=merged, mapping=aes(x=Uniques))+
     geom_histogram(fill = "purple2")
-
 ```
-
 We can see a long tail on the right, showing that there is a number of
 posts who are way more popular than the majority of the sample.
 
+
+Distribution of popularity over time also showing significant variance: 
 ```{r, echo=T}
 
 ggplot( data=merged, mapping=aes(y=Uniques, x=merged$year_month))+
@@ -227,17 +223,17 @@ ggplot( data=merged, mapping=aes(y=Uniques, x=merged$year_month))+
 
 ```
 
-Next plot will illustrate connection between popularity and engagement
+Next plot is illustrating connection between popularity and engagement
 metrics:
 
 ```{r, echo=T}
 pairs(subset (merged, select=c(Uniques, e.rate, n.comments )))
 ```
 
-We can see that popularity strongly correlated with exit rate,where an
-increase in popularity causes decrease of engagement.It is not as
-strongly correlated with number of comments. Engagement rate and number
-of comments dont show obvious pattern between each other.
+We can see that popularity strongly correlated with exit rate, where an
+increase in popularity causes decrease of engagement.
+It is not as strongly correlated with number of comments. Engagement rate and number
+of comments don't show obvious pattern between each other.
 
 ### 2.2. Referral sources.
 
@@ -305,9 +301,13 @@ post.date  <-post.date %>%
 comments.data <- merge(comments.data, post.date , by = "post_id", all = TRUE)
 merged <- merge( merged, post.date , by = "post_id", all = TRUE)
 
-
 ```
 
+```{r, echo=T}
+ggplot(merged, mapping=aes(x=direct , y=e.rate))+
+  geom_point()
+
+```
 ### 2.3. Post weekdays
 
 The posts are being published Monday through Friday (with rare
@@ -414,9 +414,7 @@ Distribution of mood over time:
 
 ### 2.6. Blocked comments per post.
 
-Now I will visualize amount of blocked comments per post: Distribution
-of blocked comments:
-
+Now I will visualize amount of blocked comments per post. It  also has Poisson distribution. 
 ```{r, echo=T}
  ggplot (merged,  mapping=aes(x=blocked.sum) )+
   geom_histogram(fill = "brown")+
@@ -455,85 +453,87 @@ and then eliminating ones that are not significant.
 
 ```{r, echo=T}
 # colnames(merged)
-model.1 <- lm(e.rate ~ log(Uniques)+ author.sum +n.comments +google +direct +other.web +social +bdc + ll + blocked.sum + pct.positive +weekday , data = merged)
+model.1 <- lm(e.rate ~ log(Uniques) +google +direct +other.web +social +bdc + ll + author.sum +n.comments +blocked.sum + pct.positive +weekday , data = merged)
 
-model.2 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
+merged<- merged %>%
+     mutate (author.sum =author.sum +0.001,
+          blocked.sum =blocked.sum +0.001)
 
-stargazer( model.1,model.2, type = 'text')
+# logging variables with Poisson distribution to see if that increases significantce.
+model.2 <- lm(e.rate ~ log(Uniques) +google +direct +other.web +social +bdc + ll + log(author.sum) +n.comments + log(blocked.sum) + pct.positive +weekday , data = merged)
+
+model.3 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
+
+stargazer( model.1, model.2, model.3,  type = 'text')
 ```
 
 Elimination of non-significant factors slightly impacted coefficients of
 significant variables, and did not change R\^2 or adjusted R\^2 much.
 
-My next step is to diagnoze this model:
+My next step is to diagnose this model:
 
 ### 3.2. Diagnostic of linear models:
 
 ```{r, echo=T}
 
-model.2 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
+model.3 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
 
-plot(model.2, which = 1:6)
+plot(model.3, which = 1:6)
+
 ```
 
 We can see the issue with distribution of residuals in "Residuals vs
-fitted" plot. This suggests non-linear relationship between variables. I
-will transform some of my variables to see if that gives me a better
+fitted" plot. This suggests non-linear relationship between variables.
+
+
+I will transform some referral variables to see if that gives me a better
 model:
 
 ```{r, echo=T}
 #original model
-model.1 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
+model.3 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
 # Logging Google referrals
-model.2 <- lm(e.rate ~ log(Uniques)+log(google) +direct +other.web +social +bdc  +weekday , data = merged)
-# squaring google referrals
-model.3 <- lm(e.rate ~ log(Uniques)+I(google^2) +direct +other.web +social +bdc  +weekday , data = merged)
-stargazer( model.1, model.2, model.3,type = 'text')
+model.4 <- lm(e.rate ~ log(Uniques)+log(google) +direct +other.web +social +bdc  +weekday , data = merged)
+
+stargazer( model.3, model.4, model.5,    type = 'text')
 ```
-This table showing that google referrals are significant in either
-form - squared or logged. However, its coefficient is much higher when
-logged. Uniques variables's coefficient also changes significantly as I
-am modifying google variable. That migh indicate interaction between
-them.
+This table showing better fit when google variable is logged.  Uniques' coefficient also changed significantly as I am modified google variable. That might indicate interaction between
+them, which I will explore later in this  paper.
 
-Comparing diagnostic plots for model 2 (google logged) and  3 (google squared):
-```{r, echo=T}
-par(mfrow = c(1,2))
-plot(model.2, which = 1)
-plot(model.3, which = 1)
-```
-These two plots show ineven distribution of residuals around zero line. To address it,  I will transform  the variables further. 
-
-
-
- First , I will log the rest of referral variables.
+Now, I will log the rest of referral variables.
 
 ```{r, echo=T}
-#original model
-model.1 <- lm(e.rate ~ log(Uniques)+ google +direct +other.web +social +bdc  +weekday , data = merged)
-# all source variables are logged: 
-model.3 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +log(other.web) +log(social) +log(bdc)  +weekday , data = merged)
-stargazer( model.1,model.3, type = 'text')
+model.4 <- lm(e.rate ~ log(Uniques)+log(google) +direct +other.web +social +bdc  +weekday , data = merged)
+model.5 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +log(other.web) +log(social) +log(bdc)  +weekday , data = merged)
+model.6 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+
+stargazer( model.4,model.5,model.6,  type = 'text')
 ```
 All referral sources except "other.web" and "social" show better fit
-when logged. Moving forward I will use these variables not logeed.
-
+when logged. 
+Moving forward, I will use these two variables not logeed:
 ```{r, echo=T}
-par(mfrow = c(1,2))
-plot(model.1, which = 1)
-plot(model.3, which = 1)
+model.7 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +other.web+social +log(bdc)  +weekday , data = merged)
+
+stargazer(model.7,  type = 'text')
+```
+
+Diagnostics of model.7:
+```{r, echo=T}
+par(mfrow = c(2,3))
+plot(model.7, which = 1:6)
 ```
 We still observe curvi-linear distribution of residuals.
 
-Next, I will check if the referral variables have an ineraction with
-popularity (Uniques)
+Now I will explore an ineraction with popularity (Uniques)
 
 ```{r, echo=T}
 # last model
-model.3 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) + other.web +social +log(bdc)  +weekday , data = merged)
+model.7 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +other.web +log(bdc)+social  +weekday , data = merged)
+
 # adding interaction: 
-model.4 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
-stargazer( model.3,model.4, type = 'text')
+model.8 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+stargazer( model.7,model.8, type = 'text')
 ```
 Adding interaction between popularity and google referrals significcntly
 improved the model: interaction term has negative correlation with
@@ -543,36 +543,32 @@ improved models R\^2 and adjusted R\^2.
 It also significantly changed distribution of residuals: now distribution is equally spread around 0.
 ```{r, echo=T}
 par(mfrow = c(1,2))
-plot(model.3, which = 1)
-plot(model.4, which = 1)
+plot(model.7, which = 1)
+plot(model.8, which = 1)
 ```
 
 
 Lets review other diagnostic plots:
-
 ```{r, echo=T}
-# last model
-model.4 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+par(mfrow = c(1,2))
+plot(model.7, which = 2)
+plot(model.8, which = 2)
 
 par(mfrow = c(1,2))
-plot(model.3, which = 2)
-plot(model.4, which = 2)
-
-par(mfrow = c(1,2))
-plot(model.3, which = 3)
-plot(model.4, which = 3)
+plot(model.7, which = 3)
+plot(model.8, which = 3)
 
 par(mfrow = c(2,2))
-plot(model.3, which = 4)
-plot(model.4, which = 4)
+plot(model.7, which = 4)
+plot(model.8, which = 4)
 
 par(mfrow = c(2,2))
-plot(model.3, which = 5)
-plot(model.4, which = 5)
+plot(model.7, which = 5)
+plot(model.8, which = 5)
 
 par(mfrow = c(2,2))
-plot(model.3, which = 6)
-plot(model.4, which = 6)
+plot(model.7, which = 6)
+plot(model.8, which = 6)
 
 ```
 
@@ -582,39 +578,37 @@ re-evaluate the model:
 
 ```{r, echo=T}
 merged.old <- merged
-merged <- merged[-c(231), ]
-model.4 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged.old)
-model.5 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+dim(merged)
+dim(merged.old)
+merged <- merged[-c(235), ]
+model.8 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged.old)
+model.9 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
 
-stargazer( model.4,model.5, type = 'text')
-
-par(mfrow = c(1,2))
-plot(model.4, which = 1)
-plot(model.5, which = 1)
+stargazer( model.8,model.9, type = 'text')
 
 par(mfrow = c(1,2))
-plot(model.4, which = 2)
-plot(model.5, which = 2)
+plot(model.8, which = 1)
+plot(model.9, which = 1)
 
 par(mfrow = c(1,2))
-plot(model.4, which = 2)
-plot(model.5, which = 2)
+plot(model.8, which = 2)
+plot(model.9, which = 2)
 
 par(mfrow = c(1,2))
-plot(model.4, which = 3)
-plot(model.5, which = 3)
+plot(model.8, which = 3)
+plot(model.9, which = 3)
 
 par(mfrow = c(2,2))
-plot(model.4, which = 4)
-plot(model.5, which = 4)
+plot(model.8, which = 4)
+plot(model.9, which = 4)
 
 par(mfrow = c(2,2))
-plot(model.4, which = 5)
-plot(model.5, which = 5)
+plot(model.8, which = 5)
+plot(model.9, which = 5)
 
 par(mfrow = c(2,2))
-plot(model.4, which = 6)
-plot(model.5, which = 6)
+plot(model.8, which = 6)
+plot(model.9, which = 6)
 
 ```
 
@@ -628,73 +622,107 @@ popularity:
 
 ```{r, echo=T}
 
-model.5 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
-model.6 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +log(Uniques)*other.web +log(Uniques)*social +log(Uniques)*log(bdc)  +log(Uniques)*weekday , data = merged)
+model.9 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+# adding interactions to all IVs
+model.10 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +log(Uniques)*other.web +log(Uniques)*social +log(Uniques)*log(bdc)  +log(Uniques)*weekday , data = merged)
+# removing interations from thos that are not significant 
+model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +log(Uniques)*weekday , data = merged)
 
-model.7 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
-
-stargazer( model.5,model.6, model.7 , type = 'text')
-
-par(mfrow = c(1,3))
-plot(model.5, which = 1)
-plot(model.6, which = 1)
-plot(model.7, which = 1)
+stargazer( model.9,model.10,model.11, type = 'text')
 
 par(mfrow = c(1,3))
-plot(model.5, which = 2)
-plot(model.6, which = 2)
-plot(model.7, which = 2)
+plot(model.9, which = 1)
+plot(model.10, which = 1)
+plot(model.11, which = 1)
 
 par(mfrow = c(1,3))
-plot(model.5, which = 3)
-plot(model.6, which = 3)
-plot(model.7, which = 3)
+plot(model.9, which = 2)
+plot(model.10, which = 2)
+plot(model.11, which = 2)
 
 par(mfrow = c(1,3))
-plot(model.5, which = 4)
-plot(model.6, which = 4)
-plot(model.7, which = 4)
+plot(model.9, which = 3)
+plot(model.10, which = 3)
+plot(model.11, which = 3)
 
 par(mfrow = c(1,3))
-plot(model.5, which = 5)
-plot(model.6, which = 5)
-plot(model.7, which = 5)
+plot(model.9, which = 4)
+plot(model.10, which = 4)
+plot(model.11, which = 4)
 
 par(mfrow = c(1,3))
-plot(model.5, which = 6)
-plot(model.6, which = 6)
-plot(model.7, which = 6)
+plot(model.9, which = 5)
+plot(model.10, which = 5)
+plot(model.11, which = 5)
+
+par(mfrow = c(1,3))
+plot(model.9, which = 6)
+plot(model.10, which = 6)
+plot(model.11, which = 6)
 ```
 
 All models have similar R\^2 and adjusted R\^2. However, the last model
-(model.7) best accounts for all source variables.
+(model.11) best accounts for all source variables.
 
 Calculation of AIC and BIC:
 
 ```{r, echo=T}
 
-AIC(model.5) 
-AIC(model.6) 
-AIC(model.7) 
+AIC(model.9) 
+AIC(model.10) 
+AIC(model.11) 
 
-BIC(model.5) 
-BIC(model.6) 
-BIC(model.7) 
+BIC(model.9) 
+BIC(model.10) 
+BIC(model.11) 
 ```
 
 AIC and BIC are very close to each other in all three models.
 
-To summarize, the model \# 7 demonstrated the best fit with high R\^2
+To summarize, the model \# 11 demonstrated the best fit with high R\^2
 value and good results in diagnostic plots.
 
-Te resulting model of my analysis is:
+Te final model of my analysis is:
 
 ```{r, echo=T}
-summary(model.7)
-model.7 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
-
-
+model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +log(Uniques)*weekday , data = merged)
+summary(model.11)
 ```
+## 3.4. Visualizing interaction wbetween variables for the exit rate model: 
+
+```{r, echo=T}
+library(jtools)
+library(interactions)
+model.12 <- lm(e.rate ~ log(Uniques)+ log(google)*log(direct) +other.web +social +log(bdc)   , data = merged)
+# summ(model.12)
+stargazer( model.9,model.10,model.11, model.12, type = 'text')
+
+model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)   , data = merged)
+# summary(x.model <- lm(google~ direct+other.web+social+bdc+ll, data=merged))
+interact_plot(model.11, pred =Uniques , modx =  google, plot.points = TRUE )
+```
+
+
+### Moderating impact of google referrals on relationship between popularity and engagement: 
+
+```{r, echo=T}
+# interact_plot(model.11, pred = google, modx = Uniques)
+
+interact_plot(model.11, pred =Uniques , modx =  google, plot.points = TRUE )
+```
+At lower levels of Google referrals, increase of popularity (uniques) decreases engagement more rapidly, than at higher levels of google referrals.  I.e. at some level of Google referrals (~15-30K) poupularity impacts engagement not as strongly. 
+
+
+
+### Moderating impact of direct referrals on relationship between popularity and engagement: 
+```{r, echo=T}
+
+interact_plot(model.11, pred = Uniques, modx = direct, plot.points = TRUE )
+# sum(is.na(merged$direct))
+```
+Similarly, at lower levels 
+
+This graph demonstrates that with the lower values of direct referrals, exit rates are higher for the same amout of unique users. 
 
 
 
