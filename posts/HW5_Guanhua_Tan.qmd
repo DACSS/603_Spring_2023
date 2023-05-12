@@ -1,0 +1,130 @@
+---
+title: "Homework 5"
+author: "Guanhua Tan"
+description: "Homework 5"
+date: "05/07/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - regression analysis
+---
+
+```{r}
+library(tidyverse)
+library(smss)
+library(alr4)
+library(ggplot2)
+```
+
+# Question 1
+A. For backward elimination, which variable would be deleted first? Why?
+
+The variable Beds would be deleted first because the p-value is greatest.
+
+B. For forward selection, which variable would be added first? Why?
+
+The variable Size would be first added because the p-value is smallest.
+
+C. Why do you think that BEDS has such a large P-value in the multiple regression model,
+even though it has a substantial correlation with PRICE?
+
+I believe Beds is highly identical to Size, which causes the multicollinearity.
+
+D. Using software with these four predictors, find the model that would be selected using each
+criterion:
+
+1. R2
+2. Adjusted R2
+3. PRESS
+4. AIC
+5. BIC
+
+```{r}
+data("house.selling.price.2")
+model_house <- lm(P~S+Be+Ba+New, data=house.selling.price.2)
+model_house_no_Be <- lm(P~S+Ba+New, data=house.selling.price.2)
+
+# Press
+pr <- resid(model_house)/(1 - lm.influence(model_house)$hat)
+sum(pr^2)
+
+pr <- resid(model_house_no_Be)/(1 - lm.influence(model_house_no_Be)$hat)
+sum(pr^2)
+
+# AIC
+broom::glance(model_house)
+broom::glance(model_house_no_Be)
+```
+R2: model_house is 0.87; model_house_no_be is 0.87.
+
+Adjusted R2: model_house is 0.86; model_house_no_be is 0.86.
+
+Press:model_house is 28390.22; model_house_no_be is 27860.05.
+
+AIC: model_house is 790.6225; model_house_no_be is 789.1366.
+
+BIC: model_house is 805.8181; model_house_no_be is 801.7996.
+
+E Explain which model you prefer and why
+
+I'd like to prefer model_house_no_b because the AIC, BIC and Press are smaller than those of model_house.
+
+
+
+# Question 2
+
+```{r}
+data("trees")
+head(trees)
+```
+
+A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as
+the explanatory variables
+
+```{r}
+trees_model_1 <- lm(Volume~Girth+Height, data=trees)
+summary(trees_model_1)
+```
+
+
+
+B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the
+regression assumptions is violated?
+```{r}
+par(mfrow=c(2,3))
+plot(trees_model_1, which= 1:6)
+```
+
+I have noted that several plots show clear patterns. the line shows curvature in thhe Residue and Fitted plot. The same shaple has been found in the Scale-location plot. Normal Q-Q demonstrates that points larele don't fall along the line.
+
+
+# Question 3
+```{r}
+data("florida")
+head(florida)
+```
+A. Run a simple linear regression model where the Buchanan vote is the outcome and the
+Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach
+County an outlier based on the diagnostic plots? Why or why not?
+```{r}
+votes_2000 <-lm(Buchanan~Bush, data=florida)
+summary(votes_2000)
+par(mfrow=c(2,3))
+plot(votes_2000, which= 1:6)
+```
+According to the Cook's distance plots, Palm Beach County is a outlier.
+
+B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in
+(A.) Does your findings change?
+
+```{r}
+votes_2000_trans <-lm(log(Buchanan)~log(Bush), data=florida)
+par(mfrow=c(2,3))
+plot(votes_2000_trans, which= 1:6)
+```
+According to the Cook's distance of the new model, although it seems disclose more outlies, Palm Beach is still a significant one.
