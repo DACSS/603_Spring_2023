@@ -1,0 +1,128 @@
+---
+title: "HW5"
+author: "Liam Tucksmith"
+desription: "HW5"
+date: "05/12/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - Liam Tucksmith
+
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, echo=T}
+#| label: setup
+#| warning: false
+
+library(smss)
+library(alr4)
+knitr::opts_chunk$set(echo = TRUE)
+```
+1. 
+
+A. For backward elimination, which variable would be deleted first? Why?
+
+Beds would be the first variable removed because it has the highest p-value. 
+
+B. For forward selection, which variable would be added first? Why?
+
+Size would be the first variable added because in the correlation matrix it has the highest correlation with Price which translates to the lowest p-value.
+
+C. Why do you think that BEDS has such a large P-value in the multiple regression model,
+even though it has a substantial correlation with PRICE?
+
+Even though Beds has a substantial correlation with price, it could be that there is a confounding variable that is raising the correlation. Beds has the highest correlation with Size, which has the highest correlation with Price, so it could be that the Size variable is interfering with the true correlation between Beds and Price. 
+
+D. Using software with these four predictors, find the model that would be selected using each
+criterion:
+
+1. R2 - S + New + Ba + Be
+2. Adjusted R2 - S + New + Ba
+3. PRESS - S + New + Ba
+4. AIC - S + New + Ba
+5. BIC - S + New + Ba
+
+```{r}
+m1 <- lm(formula = P ~ S, data = house.selling.price.2)
+m2 <- lm(formula = P ~ S + New, data = house.selling.price.2)
+m3 <- lm(formula = P ~ S + New + Ba, data = house.selling.price.2)
+m4 <- lm(formula = P ~ S + New + Ba + Be, data = house.selling.price.2)
+
+print("M1")
+summary(m1)$r.squared
+summary(m1)$adj.r.squared
+print(PRESS(m1))
+print(AIC(m1))
+print(BIC(m1))
+
+print("M2")
+summary(m2)$r.squared
+summary(m2)$adj.r.squared
+print(PRESS(m2))
+print(AIC(m2))
+print(BIC(m2))
+
+print("M3")
+summary(m3)$r.squared
+summary(m3)$adj.r.squared
+print(PRESS(m3))
+print(AIC(m3))
+print(BIC(m3))
+
+print("M4")
+summary(m4)$r.squared
+summary(m4)$adj.r.squared
+print(PRESS(m4))
+print(AIC(m4))
+print(BIC(m4))
+
+```
+E. Explain which model you prefer and why.
+I prefer the model that uses Size, New, and Bath. Given the original correlation matrix, and observing the p-values of the different models has shown these three variables to have high correlation to price. 
+
+2.
+
+A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as
+the explanatory variables
+
+```{r}
+m1 <- lm(formula = Volume ~ Girth + Height, data = trees)
+summary(m1)
+```
+B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the
+regression assumptions is violated?
+
+```{r}
+plot(m1)
+```
+We can see from the Scale-Location plot that the assumption of equal variance plot is likely not met, as the line deviates on the plot rather than remaining generally horizontal throughout. Additionally, there is one overly influential data point in the model, as shown by the Residuals vs Leverage plot. 
+
+3.
+
+A. Run a simple linear regression model where the Buchanan vote is the outcome and the
+Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach
+County an outlier based on the diagnostic plots? Why or why not?
+
+```{r}
+data("florida")
+m1 <- lm(Buchanan ~ Bush, data = florida)
+plot(m1)
+```
+Palm Beach is an outlier based on the diagnostic plots because the plots show Palm Beach plotted far outside the average line on all 4 plots. 
+
+B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in
+(A.) Does your findings change?
+
+```{r}
+m1 <- lm(log(Buchanan) ~ log(Bush), data = florida)
+plot(m1)
+```
+Taking the log of both variables does place Palm Beach outside Cook's distance, but it' otherwise it's still close to it. Given the nearness to Cook's distance and otherwise still being plotted far outside the average on all plots, I would still consider Palm Beach an outlier. 
