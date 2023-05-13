@@ -110,6 +110,8 @@ ggplot(data, aes(x = T1depression, y = BMI)) +
   geom_smooth(method = "lm", se = FALSE)
 cor.test(data$T1depression, data$BMI,method = c("spearman"))
 cor.test(data$T1depression, data$BMI,method = c("pearson"))
+summary(lm(T1depression ~ BMI+NS+TFE+TME, data = data))
+
 ```
 The Pearson correlation test is a statistical test used to measure the linear relationship between two continuous variables.The Spearman's rank correlation coefficient (rho) measures the strength and direction of the association between two variables which don't have to be both continuous or have a linear relationship. It ranges between -1 and 1, where -1 indicates a perfect negative correlation, 1 indicates a perfect positive correlation, and 0 indicates no correlation.
 Due to the High p value of both test, the depression rate is less likely related to BMI. 
@@ -121,6 +123,8 @@ ggplot(data, aes(x = FS, y = BMI)) +
   geom_smooth(method = "lm", se = FALSE)
 cor.test(data$FS, data$BMI,method = c("spearman"))
 cor.test(data$FS, data$BMI,method = c("pearson"))
+fit2<-lm(FS ~ BMI, data = data)
+summary(fit2)
 ```
 No significant corelationship on family financial status and obesity. 
 
@@ -143,12 +147,14 @@ Therefore, we can conclude that there is a significant positive correlation betw
 By carrying out a Welch t-test, the group with more siblings have higher depression index and p value <0.05 indicates the result is siginifcant. (Not sure why the confident interval is negtive and none of the data was negative. )
 
 ```{r}
+print(data$NS)
 ggplot(data, aes(x = NS, y = T1anxiety)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
 data$NS <- as.numeric(data$NS)
 cor.test(data$T1anxiety,data$NS, method = c("spearman"))
-
+fit3<-lm(T1anxiety ~ NS, data = data)
+summary(fit3)
 ```
 ### others
 ```{r}

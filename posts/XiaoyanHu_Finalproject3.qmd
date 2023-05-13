@@ -1,8 +1,8 @@
 ---
-title: "Final Project Checkin-2"
+title: "Final Project "
 author: "Xiaoyan"
 description: "Template of course blog qmd file"
-date: "04/17/2023"
+date: "05/17/2023"
 format:
   html:
     toc: true
@@ -17,6 +17,7 @@ library(tidyr)
 library(dplyr)
 library(readxl)
 library(ggplot2)
+library(MASS)
 ```
 # {.tabset}
 
@@ -27,13 +28,13 @@ library(ggplot2)
 
 ## research questions
 1. Does obesity positively related to mental health?
-2. what are factors that affects mental healthy?
-3. does sibling or obeisty directily related to mental health?
+2. What are factors that affects mental healthy?
+3. Does sibling or obesity directly related to mental health?
 
 ## key predictors
-1. mental health
+1. depression rate
 2. sibling number
-3. obisity rate
+3. obesity rate
 4. Family location, finance and education
 
 
@@ -42,7 +43,7 @@ library(ggplot2)
 2. higher family income increase the rate of obesity
 3. More sibling reduce the risk of both depression and anxiety. 
 
-In these hypothesis, the response variables are depression rate, axiety rate and BMI index. The explanatory variables can be factors listed below. Analysis is needed to identify the control variables. For exapmle, in hypothesis 2, family income is the explanatory varible and rate of obsity(BMI) is response varible, the control varible may also be family financial situation. 
+In these hypothesis, the response variables are depression rate, axiety rate and BMI index. The explanatory variables can be factors listed below. Analysis is needed to identify the control variables. For exapmle, in hypothesis 2, family income is the explanatory varible and rate of obsity inidcated as BMI is response varible, the control varible may also be family financial situation. 
 
 ## data description
 ### overlook of data
@@ -54,6 +55,8 @@ plot(data$T0depression~data$BMI)
 ```
 This dataset including 1348 variables and 29 columns. there are 728 NA in this data set. all variables was presented as numberic data. descriptive data was also presented as degrees such as education level, family financial situation and depression rate. By pre-plotting depression rate vs BMI, we can see that some ouliers may need to deal with and there is no siginifcant disrtibution on graph. More data processing is needed in future process.
 
+
+Modified column name and 
 ```{r}
 variables <- c("Internalizing problem - Depression (SDS)", "Internalizing problem - Anxiety (SAS)", 
                "Obesity parameters - BMI", "Obesity parameters - WC", "Obesity parameters - WHR",
@@ -73,27 +76,13 @@ variable_table
 ```
 ### parameter explaination
 ```{r}
-# Create the data frame for SAS and SDS scales
-sas_levels <- c("Normal", "Mild to Moderate", "Marked to Severe", "Extreme")
-sas_scores <- c("<45", "45-59", "60-74", ">=75")
-sas_table <- data.frame(Level = sas_levels, Score = sas_scores)
 
-sds_levels <- c("Normal", "Mild", "Moderate to Marked Major", "Severe or Extreme Major")
-sds_scores <- c("<50", "50-59", "60-69", ">=70")
-sds_table <- data.frame(Level = sds_levels, Score = sds_scores)
 
 # Create the data frame for BMI categories
 bmi_levels <- c("Underweight", "Normal Weight", "Overweight", "Obesity")
 bmi_values <- c("<18.5", "18.5-24.9", "25-29.9", ">=30")
 bmi_table <- data.frame(Category = bmi_levels, BMI = bmi_values)
 
-# Print the SAS scale table
-cat("Self-rating Anxiety Scale (SAS)\n")
-print(sas_table)
-
-# Print the SDS scale table
-cat("\nSDS scores (SDS)\n")
-print(sds_table)
 
 # Print the BMI category table
 cat("\nBMI Categories\n")
@@ -102,39 +91,66 @@ print(bmi_table)
 ## hypothesis test
 
 ### 1. Higher obesity rate increase the risk of depression
+
+In order to 
 ```{r}
 colnames(data)<-c("T0depression","T0anxiety","T1depression","T1anxiety","Height","Weight","WC","HC","SBP","DBP","FBG","TC","TG","HDL-C","LDL-C","BMI","WHR","WtHR","FL", "NS", "TFE", "TME", "FEL", "MEL", "FS", "SL", "SB","Vigorous","Moderate")
 
-ggplot(data, aes(x = T1depression, y = BMI)) +
+ggplot(data, aes(x = BMI, y = T1depression)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
-cor.test(data$T1depression, data$BMI,method = c("spearman"))
-cor.test(data$T1depression, data$BMI,method = c("pearson"))
-summary(lm(T1depression ~ BMI+NS+TFE+TME, data = data))
+lm1<-lm(T1depression ~ BMI+NS+TFE+TME+FEL+MEL+FL+SL+SB, data = data)
+summary(lm1)
+plot(lm1)
+```
+```{r}
+lm2<-lm(T1depression ~ BMI+NS+TFE+FEL+SB, data = data)
+summary(lm2)
+par(mfrow = c(2,3))
+plot(lm2)
+lm3<-lm(T1depression ~ TFE, data = data)
+plot_data <- data.frame(Predicted_value = predict(lm3),  
+                       Observed_value = data$T1depression[1:length(predict(lm3))])
+ggplot(plot_data, aes(x = Predicted_value, y = Observed_value)) +
+                  geom_point() +
+                 geom_abline(intercept = 0, slope = 1, color = "green")
+ggplot(data, aes(x = T1depression, y = SB)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
 
 ```
-The Pearson correlation test is a statistical test used to measure the linear relationship between two continuous variables.The Spearman's rank correlation coefficient (rho) measures the strength and direction of the association between two variables which don't have to be both continuous or have a linear relationship. It ranges between -1 and 1, where -1 indicates a perfect negative correlation, 1 indicates a perfect positive correlation, and 0 indicates no correlation.
-Due to the High p value of both test, the depression rate is less likely related to BMI. 
 
 ### 2. higher family income increase the rate of obesity
 ```{r}
-ggplot(data, aes(x = FS, y = BMI)) +
+unique(data$FS)
+ggplot(data, aes(x = SL, y = BMI)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
-cor.test(data$FS, data$BMI,method = c("spearman"))
-cor.test(data$FS, data$BMI,method = c("pearson"))
-fit2<-lm(FS ~ BMI, data = data)
-summary(fit2)
+
+summary(lm(BMI~FS+SL+SB, data = data))
+data$BMI_category <- cut(data$BMI, 
+                       breaks = c(-Inf, 18.5, 24.9, Inf),
+                       labels = c("Underweight", "Normal weight", "Overweight"))
+data$BMI_rank <- as.factor(unclass(data$BMI_category))
+LR1<-polr(BMI_rank~SL+SB+FS, data = data, Hess = TRUE, method = "logistic")
+
+SUM1<-summary(LR1)
+coef(SUM1)
+exp(coef(SUM1))
+
 ```
-No significant corelationship on family financial status and obesity. 
+ 
 
 ### 3. More sibling reduce the risk of both depression and anxiety. 
 ```{r}
+unique(data$NS)
 ggplot(data, aes(x = NS, y = T1depression)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
-cor.test(data$T1depression,data$NS, method = c("spearman"))
-cor.test(data$T1depression,data$NS, method = c("pearson"))
+ggplot(data, aes(x = NS, y = T1depression)) +
+  geom_boxplot()
+  
+
 data$NS <- factor(data$NS)
 t.test(T1depression ~ NS, data = data)
 ```
@@ -147,7 +163,7 @@ Therefore, we can conclude that there is a significant positive correlation betw
 By carrying out a Welch t-test, the group with more siblings have higher depression index and p value <0.05 indicates the result is siginifcant. (Not sure why the confident interval is negtive and none of the data was negative. )
 
 ```{r}
-print(data$NS)
+
 ggplot(data, aes(x = NS, y = T1anxiety)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
@@ -158,6 +174,22 @@ summary(fit3)
 ```
 ### others
 ```{r}
+# Create the data frame for SAS and SDS scales
+sas_levels <- c("Normal", "Mild to Moderate", "Marked to Severe", "Extreme")
+sas_scores <- c("<45", "45-59", "60-74", ">=75")
+sas_table <- data.frame(Level = sas_levels, Score = sas_scores)
+
+sds_levels <- c("Normal", "Mild", "Moderate to Marked Major", "Severe or Extreme Major")
+sds_scores <- c("<50", "50-59", "60-69", ">=70")
+sds_table <- data.frame(Level = sds_levels, Score = sds_scores)
+# Print the SAS scale table
+cat("Self-rating Anxiety Scale (SAS)\n")
+print(sas_table)
+
+# Print the SDS scale table
+cat("\nSDS scores (SDS)\n")
+print(sds_table)
+
 
 # Create sample data
 

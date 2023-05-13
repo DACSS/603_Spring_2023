@@ -64,13 +64,17 @@ summary(lm(salary~degree+rank+sex+year+ysdeg, data=salary))
 (b)
 interpretation of the coefficient / slope in relation to the outcome variable and other variables
 
-degree is not statistically significant at this situation. 
+degree, sex, and ysdeg are not statistically significant at this situation. 
 Associate professor make 5292 more than asisstant professor and professor makes 11118 more than assitant professor. 
-```{r}
-```
+As year is a continues varible, one year increase makes 476 more salary
+
 D. Change the baseline category for the rank variable. Interpret the coefficients related to rank
 again.
+
+Based on this analysis, the assitant professor makes 11118 less then full professor and associate professor make 5826 less than full professor. 
 ```{r}
+salary$rank<-relevel(salary$rank, ref = "Prof")
+summary(lm(salary~., data = salary))
 ```
 E. Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote,
 “[a] variable may reflect a position or status bestowed by the employer, in which case if there
@@ -79,6 +83,7 @@ for example, if discrimination is at work in promotion of faculty to higher rank
 adjust salaries before comparing the sexes may not be acceptable to the courts.
 Exclude the variable rank, refit, and summarize how your findings changed, if they did.
 ```{r}
+summary(lm(salary~degree+sex+year+ysdeg, data=salary))
 ```
 F. Everyone in this dataset was hired the year they earned their highest degree. It is also
 known that a new Dean was appointed 15 years ago, and everyone in the dataset who
@@ -91,6 +96,12 @@ regression model to test this. Select variables carefully to make sure there is 
 multicollinearity. Explain why multicollinearity would be a concern in this case and how
 you avoided it. Do you find support for the hypothesis that the people hired by the new
 Dean are making higher than those that were not?
+```{r}
+salary$newyear<-ifelse(salary$year <= 20,10,0)
+cor.test(salary$newyear, salary$year)
+summary(lm(salary~degree+sex+newyear+ysdeg, data=salary))
+summary(lm(salary~degree+sex+newyear+ysdeg+year, data=salary))
+```
 # Question 3
 (Data file: house.selling.price in smss R package)
 
