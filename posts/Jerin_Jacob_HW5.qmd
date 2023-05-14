@@ -1,0 +1,147 @@
+---
+title: "Homework 5"
+author: "Jerin Jacob"
+desription: "Homework 5- 603 Spring 2023"
+date: "05/13/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - challenge5
+  - Jerin Jacob
+  
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(readxl)
+library(dplyr)
+library(magrittr)
+library(alr4)
+library(smss)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Question 1:
+A)
+For backward elimination, `Beds` would be deleted first because it has the largest p-value. .487 is a very high p-value based on any conventional level of significance.
+
+B)
+For forward selection, I would add `Size` first. It has the highest correlation coefficient. Also, this variable is statistically significant.
+
+C)
+Once other variables are controlled for, most of the explanation done by Beds is instead done by other variables. For example, houses with more beds are also larger in size. When Beds is the only explanatory variable, the model attributes the effect of the Size variable to Beds. However, once Size is also in the model and thus controlled for, the p-value of Beds gets larger as it doesn't really have much explanatory power when it comes to variation in Price that remains unexplained after accounting for Size.
+
+
+D)
+```{r}
+data("house.selling.price.2", package = "smss")
+head(house.selling.price.2)
+
+```
+Running all regression models
+```{r}
+full_model <- lm(P ~ ., data = house.selling.price.2)
+model_noBeds <- lm(P ~ .-Be, data = house.selling.price.2)
+model_noBeds_noBaths <- lm(P ~ S + New, data = house.selling.price.2)
+model_size_only <- lm(P ~ S, data = house.selling.price.2)
+
+```
+
+Create a functions to get R-squared, Adjusted R-squared & PRESS 
+```{r}
+rsquared <- function(fit) summary(fit)$r.squared
+adj_rsquared <- function(fit) summary(fit)$adj.r.squared
+PRESS <- function(fit) {
+  pr <- residuals(fit)/(1-lm.influence(fit)$hat)
+  sum(pr^2)
+}
+
+```
+
+For AIC and BIC, the functions AIC() and BIC() can be used
+
+Now, applying the functions to model objects
+
+```{r}
+models <- list(full_model, model_noBeds, model_noBeds_noBaths, model_size_only)
+data.frame(models = c('full_model', 'model_noBeds', 'model_noBeds&Baths', 'model_only_size'),
+           rSquared = sapply(models, rsquared),
+           adj_rSquared = sapply(models, adj_rsquared),
+           PRESS = sapply(models, PRESS),
+           AIC = sapply(models, AIC),
+           BIC = sapply(models, BIC)) |>
+  print()
+
+```
+For R-Squared and Adjusted R-Squared, larger values are preferred while for PRESS, AIC and BIC, smaller values are the best.
+
+Here, model using all the variables (full_model) has the highest R-Squared while model with no Beds(model_noBeds) has the highest Adjusted R-Squared.
+
+model_noBeds has the lowest PRESS, AIC and BIC
+
+
+E)
+Since R-Squared value always increase as the new variables are added, it is not usefull for our analysis. So, considering other 4 criteria, we can select the model with no Beds(model_noBeds) as it's Adjusted R-Squared is the highest and PRESS, AIC & BIC are the lowest.
+
+
+Question 2:
+
+Loading the data
+```{r}
+head(trees)
+```
+A)
+Fitting a model with the Volume as outcome and Girth and Height as the explanatory variables
+```{r}
+tree_model <- lm(Volume ~ Girth + Height, data = trees)
+summary(tree_model)
+
+```
+
+B)
+Creating regression diagnostic plots
+```{r}
+
+par(mfrow=c(2,3))
+plot(tree_model, which = 1:6)
+
+```
+Residuals vs Fitted plot should bounce randomly around the '0' line. Here it is a curve which suggests the violation of linearity assumption. The Scale-Location plot should be approximately horizontal but here it is a curve, eventhough not a perfect one. This suggests the violation of the assumption of Constant Variance. Cook's distance for observation 31 is clearly larger than 4/n which is 4/31 = 0.129. This is a violation of the assumption of Influential Observation.
+
+
+Question 3:
+A)
+```{r}
+data('florida')
+
+florida_model <- lm(Buchanan ~ Bush, data = florida)
+par(mfrow = c(2,3))
+plot(florida_model, which = 1:6)
+
+```
+
+From the plot, Palm Beach County is largely an outlier.
+
+B)
+```{r}
+log_florida_model <- lm(log(Buchanan) ~ log(Bush), data = florida)
+par(mfrow = c(2,3))
+plot(log_florida_model, which = 1:6)
+
+```
+When we did the log transformation for each variable, the Palm Beach County became less of an outlier but still stands out.
+
+
+
+
+
+
+
+
