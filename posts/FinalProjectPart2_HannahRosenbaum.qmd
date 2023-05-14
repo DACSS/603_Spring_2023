@@ -1,0 +1,320 @@
+---
+title: "Final Project Part 2"
+author: "Hannah Rosenbaum"
+format: pdf
+editor: visual
+---
+
+## Background
+
+Fifty years after the passage of the Title IX Amendment, collegial sports equity has shown relatively minimal change. Allocations of sports budgets often highlight pay discrepancies in participants being "spent \[on\] \$4,285 per men's participant versus \$2,588 per women's participant." (Feinberg, D., & Hunzinger, E) With these vast differences in individual spending by gender, we see this phenomenon only heightened in the NCAA with women's basketball. Women's basketball not only fares having lower budgets from the NCAA but also, per an ESPN report, "is underpaying the NCAA for the tournament rights for 29 championships causing the association to lose out on substantial and crucial revenue\... denoting that the current budget of \$81 million to \$112 million multiples more than what the network currently gives." (Zimmbalist) Thus, there is not only a discrepancy in budget allocations among the participants by gender but also amongst large broadcast networks.
+
+Significant systemic issues occur within the gendered branding of 'March Madness.' This can be seen with differentiated treatment of male versus female brackets due to the lack of general awareness of when the women's bracket games even occur. Largely the inequity of the 'March Madness' tournament derives from a differentiation from the NCAA in "distribution agreements, corporate sponsorships, distribution of revenue, organizational structure and culture all to prioritize Division I men's basketball over everything else\... to perpetuate gender inequities." (Blinder) Likewise, this institutional creation of a high investment in TV rights for men's basketball and minimal airtime for the women's bracket has led to smaller budgeting and fewer avenues to earn revenue. This has led women's teams to be "starved of a starring role in the national discourse." (Blinder) Thus, it creates a circular effect in women's basketball, deriding fewer resources even within facilities at the NCAA tournament in 2021 and in general awareness of TV times.
+
+I am primarily interested in discussing sports equity in women's basketball due to my own personal experience at UF of wanting to watch NCAA basketball for women but having no general knowledge of when women play. I believe that the discussion of equity in sports for women is essential because of the common dismissal of watching women's sports as a pastime.
+
+## 
+
+**Research Questions**
+
+1.  What is the relationship between female students' post-secondary education enrollment compared to the ratio of female athletes at those institutions?
+
+2.  How does the expenditure of those sports programs impact the percentage of females in university sports?
+
+3.  How does the revenue allocate to university sports reflect the percentage of females in university sports?
+
+## Hypothesis Testing
+
+1.  There is a relationship between a higher percentage of female students in post-secondary education and the rate of female athletes.
+2.  There is a relationship between expenditure on university sports programs and the percentage of females in university sports programs.
+3.  There is a relationship between revenue from university sports programs and the percentage of females in sports programs.
+
+## Descriptive Statistics
+
+The Equity in Athletics Disclosures Act requires the full financial disclosure of total expenditures, revenue, staffing, and recruiting efforts by men's and women's athletic programs (Mock, J.T.). Data provided by the Equity in Sports project is from all postsecondary programs that receive government funding from Title IV funding and is an online database of funding expenses from 2015-2019.
+
+There are 132,327 rows and a total of 28 columns.
+
+\-\-\-- ANSWERING 3. ------
+
+To measure female participation, I will create a model with `sum_partic_women` as the dependent variable and `ef_female_count` as the explanatory variable.
+
+\-\-\-\-\-\-\-- ANSWERING 6. -----
+
+The null data in the `data` matrix exist because a given entry has no male or female participation. The columns with null data are `rev_men`, `rev_women`, `exp_men`, `exp_women`.
+
+### Read in Sports Equity data-set
+
+```{r}
+sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-29/sports.csv')
+```
+
+```{r}
+library(dplyr)
+library(wesanderson)
+library(ggplot2)
+```
+
+### Removing \`Ottawa University-Pheonix\` due to having zero total male and female attendance
+
+```{r}
+sports = filter(sports, institution_name != "Ottawa University-Phoenix")
+```
+
+### Create data-frames: Critical dimensions, Attendance specific, Basketball specific
+
+```{r}
+data <- as.data.frame(sports[, c("year", "institution_name", "sports", "ef_male_count", "ef_female_count", "sum_partic_men", "sum_partic_women", 'rev_men', 'rev_women', 'exp_men', 'exp_women')])
+
+attendance_data <- data[,c("institution_name", "sports", "ef_male_count", "ef_female_count", "sum_partic_men", "sum_partic_women")] %>% group_by(institution_name, sports) %>% summarise(across(everything(), mean), .groups='drop')
+
+basketball <- as.data.frame(sports[, c("year", "institution_name", "sports", "ef_male_count", "ef_female_count", "sum_partic_men", "sum_partic_women", 'rev_men', 'rev_women', 'exp_men', 'exp_women')])
+basketball <- filter(basketball, sports=='Basketball')
+```
+
+```{r}
+institute_lbl <- distinct(as.data.frame(data[, c("institution_name")]))
+sport_lbl <- distinct(as.data.frame(data[, c("sports")]))
+```
+
+### Scatter plots comparing Expenditures against Revenue by Gender
+
+```{r}
+#data[is.na(data)] <- 0
+plot(data$exp_men, data$rev_men)
+#ggplot(data = data, aes(x=exp_men, y=rev_men), fill = institute_lbl) + 
+#geom_point() +
+#scale_fill_manual(values = wes_palette(length(institute_lbl), name = "GrandBudapest1", type = "continuous")
+```
+
+```{r}
+plot(data$exp_women, data$rev_women)
+```
+
+### Descriptive Statistics
+
+```{r}
+glimpse(data)
+```
+
+```{r}
+summary(data)
+```
+
+### Scatter plots comparing Institution Attendance against Participation by Gender
+
+```{r}
+plot(attendance_data$ef_male_count, attendance_data$sum_partic_men)
+```
+
+```{r}
+plot(attendance_data$ef_female_count, attendance_data$sum_partic_women)
+```
+
+### Scatter plots comparing basketball Participation against Expenditures by Gender
+
+```{r}
+plot(basketball$sum_partic_men, basketball$exp_men)
+```
+
+```{r}
+plot(basketball$sum_partic_women, basketball$exp_women)
+```
+
+```         
+For the dataset, I could extrapolate my variables of interest as seen here: <https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-03-29/readme.md>.
+```
+
+### Hypothesis Test 1
+
+\
+Response variable: sum_partic_women
+
+Explanatory variable: sum_partic_women / ef_female_count
+
+Control variable: sum_partic_men / ef_male_count
+
+```{r}
+attendance_data$female_participation_ratio <- attendance_data$sum_partic_women / attendance_data$ef_female_count
+attendance_data$female_athlete_participation_ratio <- attendance_data$sum_partic_women / (attendance_data$sum_partic_women + attendance_data$sum_partic_men)
+attendance_data$male_participation_ratio <- attendance_data$sum_partic_men / attendance_data$ef_male_count
+
+#ggplot(data = attendance_data, aes(x=ef_female_count, y=female_participation_ratio)) + geom_point() + scale_color_gradientn(colors=wes_palette("GrandBudapest1"))
+plot(attendance_data$ef_female_count, attendance_data$female_participation_ratio)
+plot(attendance_data$ef_female_count, attendance_data$female_athlete_participation_ratio)
+plot(attendance_data$ef_male_count, attendance_data$male_participation_ratio)
+```
+
+```{r}
+hyp_1_fit_1 <- lm(female_participation_ratio ~ ef_female_count, data = filter(attendance_data, female_participation_ratio != Inf))
+hyp_1_fit_2 <- lm(female_participation_ratio ~ ef_female_count, data = filter(attendance_data, female_participation_ratio != Inf & sum_partic_women > 0))
+hyp_1_fit_3 <- lm(female_athlete_participation_ratio ~ ef_female_count, data = filter(attendance_data, female_athlete_participation_ratio != Inf & sum_partic_women > 0))
+summary(hyp_1_fit_1)
+summary(hyp_1_fit_2)
+summary(hyp_1_fit_3)
+AIC(hyp_1_fit_2)
+BIC(hyp_1_fit_2)
+plot(hyp_1_fit_2)
+```
+
+```{r}
+hist(filter(attendance_data, female_athlete_participation_ratio != Inf & sum_partic_women > 0)$female_athlete_participation_ratio)
+```
+
+### Hypothesis Test 2
+
+```{r}
+basketball$female_participation_ratio <- basketball$sum_partic_women / basketball$ef_female_count
+basketball$female_athlete_participation_ratio <- basketball$sum_partic_women / (basketball$sum_partic_women + basketball$sum_partic_men)
+
+basketball$male_participation_ratio <- basketball$sum_partic_men / basketball$ef_male_count
+```
+
+#### Transform basketball table to separate men and women by column
+
+```{r}
+female <- as.data.frame(basketball[, c("year", "institution_name", "sports", "ef_female_count", "sum_partic_women", 'rev_women', 'exp_women')])
+female$gender <- "Female"
+female <- female %>% rename("ef_count"="ef_female_count", "sum_partic"="sum_partic_women", "rev"="rev_women", "exp"="exp_women")
+
+male <- as.data.frame(basketball[, c("year", "institution_name", "sports", "ef_male_count", "sum_partic_men", 'rev_men', 'exp_men')])
+male$gender <- "Male"
+male <- male %>% rename("ef_count"="ef_male_count", "sum_partic"="sum_partic_men", "rev"="rev_men", "exp"="exp_men")
+basketball_hist <- rbind(male, female)
+basketball_hist <- filter(basketball_hist, sum_partic > 0)
+```
+
+```{r}
+plot(basketball$female_participation_ratio, basketball$exp_women)
+plot(filter(basketball, sum_partic_women > 0)$female_participation_ratio, filter(basketball, sum_partic_women > 0)$exp_women)
+plot(filter(basketball, sum_partic_women > 0)$female_athlete_participation_ratio, filter(basketball, sum_partic_women > 0)$exp_women)
+plot(basketball$male_participation_ratio, basketball$exp_men)
+```
+
+```{r}
+hyp_2_fit_1 <- lm(exp_women ~ female_participation_ratio, data = filter(basketball, female_participation_ratio != Inf))
+hyp_2_fit_2 <- lm(exp_women ~ female_participation_ratio, data = filter(basketball, female_participation_ratio != Inf & sum_partic_women > 0))
+hyp_2_fit_3 <- lm(exp_women ~ female_athlete_participation_ratio, data = filter(basketball, female_participation_ratio != Inf & sum_partic_women > 0))
+summary(hyp_2_fit_1)
+summary(hyp_2_fit_2)
+summary(hyp_2_fit_3)
+AIC(hyp_2_fit_3)
+BIC(hyp_2_fit_3)
+plot(hyp_2_fit_3)
+```
+
+```{r}
+hist(filter(basketball, female_athlete_participation_ratio != Inf & sum_partic_women > 0)$exp_women)
+```
+
+```{r}
+boxplot(exp ~ gender, data=basketball_hist)
+```
+
+### Hypothesis Test 3
+
+```{r}
+plot(basketball$female_participation_ratio, basketball$rev_women)
+plot(basketball$female_athlete_participation_ratio, basketball$rev_women)
+plot(basketball$male_participation_ratio, basketball$rev_men)
+```
+
+```{r}
+hyp_3_fit_1 <- lm(rev_women ~ female_participation_ratio, data = filter(basketball, female_participation_ratio != Inf))
+hyp_3_fit_2 <- lm(rev_women ~ female_participation_ratio, data = filter(basketball, female_participation_ratio != Inf & sum_partic_women > 0))
+hyp_3_fit_3 <- lm(rev_women ~ female_athlete_participation_ratio, data = filter(basketball, female_participation_ratio != Inf))
+summary(hyp_3_fit_1)
+summary(hyp_3_fit_2)
+summary(hyp_3_fit_3)
+AIC(hyp_3_fit_3)
+BIC(hyp_3_fit_3)
+plot(hyp_3_fit_3)
+```
+
+```{r}
+hist(filter(basketball, female_athlete_participation_ratio != Inf & sum_partic_women > 0)$rev_women)
+```
+
+```{r}
+boxplot(rev ~ gender, data=basketball_hist)
+```
+
+My critical variables of interest are the following items:
+
+-   year: Period year
+
+-   institution name: School name
+
+-   sports: Sport name
+
+-   ef_male_count: Total male population
+
+-   ef_female_count: Total female population
+
+-   sum_partic_men: Total male participation
+
+-   sum_partic_women: Total female participation
+
+-   rev_men: Revenue in USD for men
+
+-   rev_women: Revenue in USD for women
+
+-   exp_men: Expenditures in USD for men
+
+-   exp_women: Expenditures in USD for women
+
+## Analysis:
+
+For hypothesis 1, I added these new columns to the `attendance_data` data set:
+
+1.  female_participation_ratio
+2.  female_athlete_participation_ratio
+3.  male_participation_ratio
+
+I used these metrics to test different approaches to measuring female participation at the collegial level to compare against males.
+
+For hypotheses 2 & 3, I transformed the `basketball` data set to separate men and women by a new column `gender`, and also de-gendered the metrics to accommodate. The main reason was to use a histogram to better view data and compare gendered differences.
+
+### Model Comparisons and Diagnostics
+
+#### Hypothesis 1 Models:
+
+a.  The first model wusednthe female participation ratio as the dependent and effective female count as the explanatory variable. The regression yielded .01809 for an R-Squared, denoting a low correlation between female participation to effective female count, thus indicating a failed hypothesis test.
+
+b.  The second model filters female participation greater thparticipationan 0. The R-Squared is at .1217, ; this a slight performance improvement but still is statistically insignificant. Thus, the hypothesis still fails on this test. However, in comparision to .013807 and .01809 the best performing model is in the second test and is what is chosen to represent the data set.
+
+c.  The third model is female athlete participation ratio (female participation divided by female and male participation) explained by ef_female_count. The third hypothesis 1 model shows slightly better performance at .013807 but still fails the hypothesis test.
+
+#### Hypothesis 2 Models:
+
+a\. The second model measures the expenditure as a dependent and female participation as an explanatory. The R-Squared is .0409.
+
+b\. We see the same R-Squared in a and b due to the filter not removing the used observations.
+
+c\. I then use expenditures by the female athlete participation ratio ; we the R-Squared at .0657. Due to .0657 still being higher than the other R-Squared, , we use this as the model comparisons. However, we still reject this hypothesis.
+
+#### Hypothesis 3 Models:
+
+a\. The third model measures the revenue as a dependent and female participation as an explanatory. The R-Squared is 0.03354.
+
+b\. We see the same R-Squared in a and b due to the filter not removing the used observations.
+
+c\. I then use revenue by the female athlete participation ratio; we the R-Squared at 0.04079. Due to 0.04079 still being higher than the other R-Squared, we use this as the model comparison. However, we still reject this hypothesis.
+
+### Interesting Plot Takeaways
+
+For the boxplot comparing gender to revenue, we see that at the maximum, women make a quarter of the revenue. For the boxplot comparing gender to expenditures, we see that women are given half as much in funding for basketball.
+
+#### Future Points of Project
+
+I will add aes features to the plots and in the colors of basketball.
+
+## References
+
+-   Blinder, A. (2021, August 3). *Report: N.C.A.A. Prioritized Men's Basketball 'Over Everything Else.'* The New York Times. Retrieved April 12, 2023, from https://www.nytimes.com/2021/08/03/sports/ncaabasketball/ncaa-gender-equity-investigation.html?partner=slack&smid=sl-share.
+
+-   Feinberg, D., & Hunzinger, E. (2021, October 26). *Second NCAA Gender Equity Report Shows Spending Disparities*. US News. Retrieved April 11, 2023, from https://www.usnews.com/news/sports/articles/2021-10-26/second-ncaa-gender-equity-report-shows-spending-disparities#:\~:text=The%20NCAA%20spent%20%244%2C285%20per,championships%20than%20for%20the%20women%27s.
+
+-   Mock, J. T. (2022, March 29). *rfordatascience/tidytuesday*. GitHub. Retrieved April 10, 2023, from https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-03-29/readme.md.
+
+-   Zimbalist, A. (2022, October 12). *Female Athletes Are Undervalued, In Both Money And Media Terms*. Forbes. Retrieved April 12, 2023, from https://www.forbes.com/sites/andrewzimbalist/2019/04/10/female-athletes-are-undervalued-in-both-money-and-media-terms/?sh=5006015513ed.
