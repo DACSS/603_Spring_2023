@@ -1,0 +1,239 @@
+---
+title: "Homework 5"
+author: "Caitlin Rowley"
+description: "Homework 5"
+date: "05/09/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - desriptive statistics 
+  - probability
+---
+
+```{r}
+# load libraries
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(markdown)
+library(ggtext)
+library(readxl)
+library(alr4)
+library(smss)
+library(stargazer)
+library(MPV)
+library(AICcmodavg)
+```
+
+### Question 1
+
+(Data file: house.selling.price.2 from smss R package)
+
+```{r}
+data("house.selling.price.2")
+head(house.selling.price.2)
+```
+
+| For the house.selling.price.2 data the tables below show a correlation matrix and a model fit using
+| four predictors of selling price.
+
+| Regression Output (Outcome: House Price):
+|                           Estimate Std. Error t value Pr(\> \| t\| )
+| (Intercept) -41.795 12.104 -3.453 0.001
+| Size 64.761 5.630 11.504 0
+| Beds -2.766 3.960 -0.698 0.487
+| Baths 19.203 5.650 3.399 0.001
+| New 18.984 3.873 4.902 0.00000
+| 
+| (Hint 1: You should be able to answer A, B, C just using the tables below, although you should
+| feel free to load the data in R and work with it if you so choose. They will be consistent with what
+| you see on the tables.
+| 
+| Hint 2: The p-value of a variable in a simple linear regression is the same p-value one would get
+| from a Pearson's correlation (cor.test). The p-value is a function of the magnitude of the correlation
+| coefficient (the higher the coefficient, the lower the p-value) and of sample size (larger samples
+| lead to smaller p-values). For the correlations shown in the tables, they are between variables of
+| the same length.)
+
+With these four predictors,
+
+A. For backward elimination, which variable would be deleted first? Why?
+
+-   The first variable to be deleted using backward elimination would be BEDS because it is the least statistically significant with a p-value of 0.487.
+
+B. For forward selection, which variable would be added first? Why?
+
+```{r}
+reg <- lm(P ~ S + Ba + Be + New, data=house.selling.price.2)
+summary(reg)
+```
+
+-   The first variable to be added using forward selection would be SIZE because it has the highest level of statistical significance with a p-value of 2e-16.
+
+C. Why do you think that BEDS has such a large P-value in the multiple regression model, even though it has a substantial correlation with PRICE?
+
+-   Correlation does not equal causation. So, it is possible that BEDS is highly correlated with PRICE, but that does not mean that there is a statistically significant relationship between the two variables. It is more likely that BEDS has a more statistically significant relationship with SIZE, which we know has a statistically significant relationship with PRICE.
+
+D. Using software with these four predictors, find the model that would be selected using each criterion:
+
+-   reg_1 = SIZE, BEDS, BATHS, NEW (all four predictors)
+
+-   reg_2 = SIZE, BATHS, NEW (backwards elimination - remove BEDS)
+
+-   reg_3 = SIZE (forward selection - add SIZE first)
+
+1\. R2
+
+```{r}
+
+reg_1 <- lm(P ~ S + Ba + Be + New, data=house.selling.price.2)
+
+reg_2 <- lm(P ~ S + Ba + New, data=house.selling.price.2)
+            
+reg_3 <- lm(P ~ S, data=house.selling.price.2)
+
+stargazer(reg_1, reg_2, reg_3, type='text')
+```
+
+-   Based on the stargazer table above, the highest R-squared value across the three models is for reg_1, which includes all four predictors (R-squared = 0.869). This indicates a good level of fit for the model, but we should be wary of its accuracy, as R-squared does not decrease based on poor model fit.
+
+2\. Adjusted R2
+
+-   Based on the stargazer table above, the highest adjusted R-squared value across the three models is for reg_2, which excludes BEDS as a predictor. This indicates a good level of fit for the model, and it is a more reliable measure than R-squared due to it being adjusted for the number of predictors.
+
+3\. PRESS
+
+```{r}
+PRESS(reg_1)
+```
+
+```{r}
+PRESS(reg_2)
+```
+
+```{r}
+PRESS(reg_3)
+```
+
+We can see in the above PRESS tests that reg_2 has the lowest value, which indicates that it is the best fit model.
+
+4\. AIC
+
+```{r}
+models <- list(reg_1, reg_2, reg_3)
+mod.names <- c('reg_1', 'reg_2', 'reg_3')
+
+aictab(cand.set = models, modnames = mod.names)
+```
+
+We can see based on the above AIC model that reg_2 has the lowest AIC value. Therefore, because minimizing the AICc value equates to minimizing the number of unnecessary model parameters, reg_2 is the best fit.
+
+5\. BIC
+
+```{r}
+BIC(reg_1)
+```
+
+```{r}
+BIC(reg_2)
+```
+
+```{r}
+BIC(reg_3)
+```
+
+We can see in the above BIC models, which penalize the unnecessary addition of variables to the model, that reg_2 has the lowest value. Thus, it is the best fit model.
+
+E. Explain which model you prefer and why.
+
+Because we saw that reg_2, or the regression model that excluded BEDS as a predictor, was the best fit model based on the above comparison methods (adjusted R-squared, PRESS, AIC, and BIC) I would prefer this model. The comparison models for which reg_2 was deemed the best fit all account for additional predictor variables, so it is the most comprehensively significant model.
+
+### Question 2
+
+(Data file: trees from base R)
+
+| From the documentation:
+| "This data set provides measurements of the diameter, height and volume of timber in 31 felled
+| black cherry trees. Note that the diameter (in inches) is erroneously labeled Girth in the data. It is
+| measured at 4 ft 6 in above the ground."
+| 
+| Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build
+| a basic model of tree volume prediction. In particular,
+
+A. Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables.
+
+```{r}
+data(trees)
+
+tree <- lm(Volume ~ Girth + Height, data=trees)
+summary(tree)
+```
+
+-   We can see based on this regression model that both height (p-value=0.0145) and girth (p-value\<2e-16) are statistically significant predictor variables. The adjusted R-squared value is also very close to 1 (0.9442), so this is a well-fitted model.
+
+B. Run regression diagnostic plots on the model. Based on the plots, do you think any of the regression assumptions is violated?
+
+```{r}
+par(mfrow=c(2,3))
+plot(tree, which=1:6)
+```
+
+-   **Residuals vs. Fitted**: In applying the Residuals vs. Fitted plot, we can observe a violation due to the curvature of the red line. We also see that the distribution of data points does not "bounce randomly" about the 0 line. This plot is therefore a **bad fit** for this regression model.
+
+-   **Normal Q-Q**: In applying the Normal Q-Q plot, we observe that the data points do generally fall along the 0 line and do not curve off into extremities, which is indicative of a **good fit** for this regression model.
+
+-   **Scale-Location**: In applying the Scale-Location plot, we observe heteroscedasticity across the data points as well as a non-horizontal red line. Thus, we observe a violation of this plot due to the increase and decrease in the trend line. This plot is therefore a **bad fit** for this regression model.
+
+-   **Cook's Distance**: In applying the Cook's Distance plot, we observe a violation due to several data points yielding a Cook's distance value greater than 1. This plot is therefore a **bad fit** for this regression model.
+
+-   **Residuals vs. Leverage**: In applying the Residuals vs. Leverage plot, we can see that there are no data points outside of the dashed lines marked with '0.5.' This plot is therefore a **good fit** for this regression model.
+
+-   **Cook's Distance vs. Leverage**: In applying the Cook's Distance vs. Leverage plot, we do not really observe any influential data points. This plot does not contribute any value to this regression model.
+
+### Question 3
+
+(Data file: florida in alr R package)
+
+| In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm
+| Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe
+| that the layout of the ballot caused some voters to cast votes for Buchanan when their intended
+| choice was Gore.
+| 
+| The data has variables for the number of votes for each candidate---Gore, Bush, and Buchanan.
+
+A. Run a simple linear regression model where the Buchanan vote is the outcome and the Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach County an outlier based on the diagnostic plots? Why or why not?
+
+```{r}
+data(florida)
+
+vote <- lm(Buchanan ~ Bush, data=florida)
+summary(vote)
+
+par(mfrow=c(2,3))
+plot(vote, which=1:6)
+```
+
+-   Based on the above diagnostic plots, Palm Beach appears to be an outlier in each example. Palm Beach violates the regression assumptions in all plots except for the Cook's Distance vs Leverage plot, which we know is not particularly informative.
+
+B. Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in (A.) Does your findings change?
+
+```{r}
+
+log_florida <- florida %>%
+  transform(log_Bush=log(Bush)) %>%
+  transform(log_Buchanan=log(Buchanan))
+
+log_vote <- lm(log_Buchanan ~ log_Bush, data=log_florida)
+summary(log_vote)
+
+par(mfrow=c(2,3))
+plot(log_vote, which=1:6)
+```
+
+After logging both variables, we can see that Palm Beach is still an outlier in each of the diagnostic plots, and it results in the same regression assumption violations (though to a slightly lesser degree).
