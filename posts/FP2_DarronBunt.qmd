@@ -12,7 +12,7 @@ format:
 categories:
   - finalproject
 ---
-
+::: panel-tabset
 ```{r}
 library(tidyverse)
 library(ggplot2)
@@ -114,15 +114,15 @@ And then I need to add columns with the daily volume for the following times:
 
 ```{r}
 # Read in data
-TournamentVariables <- read_csv("_data/MMVariables.csv")
-MMVolume <- read_csv("_data/MentionsPerDayALL.csv")
+TournamentVariables <- read_csv("_data/MMVariables.csv", show_col_types = FALSE)
+MMVolume <- read_csv("_data/MentionsPerDayALL.csv", show_col_types = FALSE)
 
 # Join data
 MMVolumeVar <- MMVolume %>%
   left_join(TournamentVariables, by = "School")
 
 # Calculate pre-tournament average daily volume 
-MMVolumeVar$VolBefore <- format(round(rowMeans(MMVolumeVar[, 2:73]), digits = 0), big.mark = ",")
+MMVolumeVar$VolBefore <- (round(rowMeans(MMVolumeVar[, 2:73]), digits = 0))
 
 # Create a function to pull the rows needed to calculate "during tournament" for each of the schools
 fun1 <- function(row) {
@@ -213,6 +213,7 @@ MMVolAvgs <- MMVolumeVar %>%
 MMVolAvgs
 ```
 This data frame shows:
+
 * Average daily volume 
   + during the tournament
   + outside of the tournament
@@ -228,6 +229,7 @@ This data frame shows:
 #### Data Manipulation for Independent Variables and Game Day Volume
 
 Independent variables include:
+
 * Game Date
 * Round 
 * Seed 
@@ -243,7 +245,7 @@ And I will be also adding game day volume during this step.
 
 ```{r}
 # Read in game scores, dates, etc.
-DateAndTeam <- read_csv("_data/MBBMMGameData.csv")
+DateAndTeam <- read_csv("_data/MBBMMGameData.csv", show_col_types = FALSE)
 
 DateAndTeam$GameDate <- as.Date(DateAndTeam$Date, format = "%m/%d/%Y")
 DateAndTeam$Time <- DateAndTeam$Time <- gsub(" ET", "", DateAndTeam$Time)
@@ -316,27 +318,25 @@ TVariables2 <- TVariables %>%
 
 TVariables3 <- TVariables2 %>%
    select(School, GameDate, Time, TournamentRound, GameDayVolume, IsFavorite, IsWinner, Upset, FavoriteWin, UnderdogWin)
-```
 
-```{r}
 # Read in data for enrollment 
-SchoolNameToSchool <- read_csv("_data/SchoolNameToSchool.csv") 
-EnrollmentData <- read_csv("_data/CCIHE2021PublicData.csv")
+SchoolNameToSchool <- read_csv("_data/SchoolNameToSchool.csv", show_col_types = FALSE) 
+EnrollmentData <- read_csv("_data/CCIHE2021PublicData.csv", show_col_types = FALSE)
 SchoolEnrollmentData <- SchoolNameToSchool %>%
-  left_join(EnrollmentData)
+  left_join(EnrollmentData, by = "SchoolName")
 
 # Add School Size data to TVariables3
 TVariables4 <- TVariables3 %>%
-  left_join(SchoolEnrollmentData)
+  left_join(SchoolEnrollmentData, by = "School")
 
 # Read in Is Major Variable
-DateRoundTeamSeedMajor <- read_csv("_data/DateRoundTeamSeedMajor.csv") %>%
+DateRoundTeamSeedMajor <- read_csv("_data/DateRoundTeamSeedMajor.csv", show_col_types = FALSE) %>%
   select(School, Major)
 
 # Add Is Major to TVariables4
 TVariables4 <- TVariables4 %>%
-  left_join(DateRoundTeamSeedMajor) 
-
+  left_join(DateRoundTeamSeedMajor, by = "School", relationship =
+  "many-to-many") 
 
 # Create data frame with all variables 
 VolumeFull <- TVariables4 %>%
@@ -366,4 +366,4 @@ MMVolDiffs <- MMVolAvgs %>%
 MMVolDiffs
 ```
 
-
+:::
