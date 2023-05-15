@@ -1,0 +1,234 @@
+---
+title: "Blog Post #5"
+author: "Alexis Gamez"
+description: "DACSS 603 HW#5"
+date: "05/13/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - correlation
+  - regressional analysis
+  - diagnostics
+---
+
+```{r, warning = F, message = F}
+# setup
+library(tidyverse)
+library(alr4)
+library(smss)
+library(stargazer)
+library(MPV)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+```{r}
+# loading data
+data("house.selling.price.2")
+```
+
+*For the house.selling.price.2 data the tables below show a correlation matrix and a model fit using four predictors of selling price.*
+
+## A)
+
+**For backward elimination, which variable would be deleted first? Why?**
+
+Using backward elimination, I would delete the `Beds` variable first. The point of backward elimination is to fit a model using all possible variables provided and 1 by 1 eliminating the least significant variables from said model. In this case, the `Beds` variable is the least significant in the model with a p-value of 0.487.
+
+## B)
+
+**For forward selection, which variable would be added first? Why?**
+
+Forward selection works opposite to backward elimination where we start with an empty model and 1 by 1 add variables according to their significance level. Under these circumstances, I would add the `Size` variable first, as it is the most significant, with a p-value of 0.
+
+## C)
+
+**Why do you think that BEDS has such a large P-value in the multiple regression model, even though it has a substantial correlation with PRICE?**
+
+If there is 1 thing we've learned this semester, it's that correlation does not dictate causation. So while both are strongly correlated, it appears that the significance of the `Beds` variable within the model diminishes with the addition of the other variables. In other words, the effect of `Beds` on `Price` is not as significant in comparison to the effect of the other variables on `Price`. 
+
+## D)
+
+**Using software with these four predictors, find the model that would be selected using each criterion:**
+
+```{r}
+summary(house.selling.price.2)
+```
+
+For this question, I'll be utilizing stargazer to visualize the results to answer parts 1 & 2.
+```{r}
+fit1 <- (lm(P ~ S, data= house.selling.price.2))
+
+fit2 <- (lm(P ~ S + New, data= house.selling.price.2))
+
+fit3 <- (lm(P ~ S + Ba + New, data= house.selling.price.2))
+
+fit4 <- (lm(P ~ S + Be + Ba + New, data= house.selling.price.2))
+
+stargazer(fit1, fit2, fit3, fit4, type = 'text')
+```
+
+### 1. R^2
+
+The best model according to this criteria would be model 4, as its R^2 value is the closest to 1 (0.869).
+
+### 2. Adjusted R^2
+
+The best model according to this criteria would be model 3, as its adjusted R^2 value is the closest to 1 (0.864).
+
+### 3. PRESS
+
+Model 1
+```{r}
+PRESS(fit1)
+```
+
+Model 2
+```{r}
+PRESS(fit2)
+```
+
+Model 3
+```{r}
+PRESS(fit3)
+```
+
+Model 4
+```{r}
+PRESS(fit4)
+```
+
+Knowing that a lower PRESS value indicates a better fit model, I would select model 3 according to this criteria. 
+
+### 4. AIC
+
+Model 1
+```{r}
+AIC(fit1)
+```
+
+Model 2
+```{r}
+AIC(fit2)
+```
+
+Model 3
+```{r}
+AIC(fit3)
+```
+
+Model 4
+```{r}
+AIC(fit4)
+```
+
+Similar to the PRESS criteria, the lower the returned AIC value, the better the model fits. Again, under these circumstances I would select model 3 as the best fit.
+
+### 5. BIC
+
+Model 1
+```{r}
+BIC(fit1)
+```
+
+Model 2
+```{r}
+BIC(fit2)
+```
+
+Model 3
+```{r}
+BIC(fit3)
+```
+
+Model 4
+```{r}
+BIC(fit4)
+```
+
+Identical to AIC, the lowest BIC value indicates the best fit model. Once again, model 3 would be the best fit under these circumstances.
+
+## E)
+
+**Explain which model you prefer and why.**
+
+The only models proven to be significant through previous criterion are models 3 & 4. Even then, model 4 was only proven to be significant according to it's R^2 value and I would argue that the more significant value to consider would be the adjusted R^2. Thus, if I were to select 1 of these 2 models, I would select model 3 as the best fit model, especially when considering the criterion previously calculated.
+
+# Question 2
+
+```{r}
+# loading data
+data("trees")
+```
+
+**Tree volume estimation is a big deal, especially in the lumber industry. Use the trees data to build a basic model of tree volume prediction. In particular,**
+
+## A)
+
+**Fit a multiple regression model with the Volume as the outcome and Girth and Height as the explanatory variables.**
+
+```{r}
+summary(trees)
+```
+
+With the data loaded, I'll fit the model below:
+```{r}
+fit_t <- lm(Volume ~ Girth + Height, data = trees)
+
+summary(fit_t)
+```
+
+## B)
+
+**Run regression diagnostic plots on the model. Based on the plots, do you think any of the regression assumptions is violated?**
+
+```{r}
+par(mfrow = c(2, 3)); plot(fit_t, which = 1:6)
+```
+
+Immediately, it's apparent that at least a couple of regression assumptions are violated throughout the 6 diagnostic plots. Most noteworthy, are the Residuals vs Fitted, Scale-Location and Cook's Distance plots. It's obvious that the for the 1st plot that the linearity assumption is violated. Similarly, the lack of a steady horizontal trend in the Scale-Location plot indicates a violation of the constant variance assumption. Lastly, it's apparent in the Cook's distance plot that the 31st observation, which is also an extreme outlier, holds significantly more weight within the model than any other telling me that the significance of all observations is skewed and not well fit.
+
+# Question 3
+
+```{r}
+# loading data
+data("florida")
+```
+
+**In the 2000 election for U.S. president, the counting of votes in Florida was controversial. In Palm Beach County in south Florida, for example, voters used a so-called butterfly ballot. Some believe that the layout of the ballot caused some voters to cast votes for Buchanan when their intended choice was Gore.**
+
+## A)
+
+**Run a simple linear regression model where the Buchanan vote is the outcome and the Bush vote is the explanatory variable. Produce the regression diagnostic plots. Is Palm Beach County an outlier based on the diagnostic plots? Why or why not?**
+
+```{r}
+summary(florida)
+```
+
+With the data loaded, I've fit & visualized the requested model below:
+```{r}
+fit_f <- lm(Buchanan ~ Bush, data = florida)
+
+par(mfrow = c(2, 3)); plot(fit_f, which = 1:6)
+```
+
+With the model fit and the diagnostic plots created, it's extremely apparent that Palm Beach is indeed an outlier and an extreme one at that. In all plots, Palm Beach is shown to deviate entirely from any trend that might have been present among the other polling stations. For example, within the Residuals vs Fitted plot, the linearity assumption is relatively sound until one takes into consideration the Palm Beach and Dade sites. Both are blatant violations of said assumption and would lead any reasonable data scientist to believe that some sort of tampering/manipulation was involved.
+
+## B)
+
+**Take the log of both variables (Bush vote and Buchanan Vote) and repeat the analysis in (A.) Does your findings change?**
+
+```{r}
+fit_logf <- lm(log(Buchanan) ~ log(Bush), data = florida)
+
+par(mfrow = c(2, 3)); plot(fit_logf, which = 1:6)
+```
+
+While logging both the `Buchanan` & `Bush` variables seems to lessen the impact of the Palm Beach observation on the model, I would argue that the new results are still not significant enough to change my findings. I  would still consider Palm Beach an outlier.
