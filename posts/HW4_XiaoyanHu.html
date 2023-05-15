@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -160,6 +160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#question-1" id="toc-question-1" class="nav-link active" data-scroll-target="#question-1">Question 1</a></li>
   <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a></li>
+  <li><a href="#question-3" id="toc-question-3" class="nav-link" data-scroll-target="#question-3">Question 3</a></li>
   </ul>
 </nav>
     </div>
@@ -171,8 +172,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-title-block"><div><h1 class="title">Homework 4</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
   <div class="quarto-categories">
     <div class="quarto-category">hw4</div>
-    <div class="quarto-category">desriptive statistics</div>
-    <div class="quarto-category">probability</div>
+    <div class="quarto-category"></div>
+    <div class="quarto-category"></div>
   </div>
   </div>
 
@@ -228,25 +229,308 @@ Attaching package: 'dplyr'</code></pre>
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: car</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: effects</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>lattice theme set by effectsTheme()
+See ?effectsTheme for details.</code></pre>
+</div>
 </div>
 <section id="question-1" class="level1">
 <h1>Question 1</h1>
 <p>For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home (in square feet), and x2 = lot size (in square feet), the prediction equation is ŷ = −10,536 + 53.8x1 + 2.84x2.</p>
 <p>A. A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000. Find the predicted selling price and the residual, and interpret.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="sc">-</span><span class="dv">10536</span>) <span class="sc">+</span> <span class="fl">53.8</span><span class="sc">*</span><span class="dv">1240</span> <span class="sc">+</span> <span class="fl">2.84</span><span class="sc">*</span><span class="dv">18000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 107296</code></pre>
+</div>
+</div>
 <p>B. For fixed lot size, how much is the house selling price predicted to increase for each square- foot increase in home size? Why?</p>
+<p>53.8</p>
 <p>C. According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size?</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fl">53.8</span> <span class="sc">/</span> <span class="fl">2.84</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18.94366</code></pre>
+</div>
+</div>
 </section>
 <section id="question-2" class="level1">
 <h1>Question 2</h1>
 <p>(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all faculty in a small Midwestern college collected in the early 1980s for presentation in legal proceedings for which discrimination against women in salary was at issue. All persons in the data hold tenured or tenure track positions; temporary faculty are not included. The variables include degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree, and salary, academic year salary in dollars.</p>
 <p>A. Test the hypothesis that the mean salary for men and women is the same, without regard to any other variable but sex. Explain your findings.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(salary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   degree rank    sex year ysdeg salary
+1 Masters Prof   Male   25    35  36350
+2 Masters Prof   Male   13    22  35350
+3 Masters Prof   Male   10    23  28200
+4 Masters Prof Female    7    27  26775
+5     PhD Prof   Male   19    30  33696
+6 Masters Prof   Male   16    21  28516</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(salary<span class="sc">$</span>rank)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] Prof  Assoc Asst 
+Levels: Asst Assoc Prof</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>sex, <span class="at">data=</span>salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = salary ~ sex, data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8602.8 -4296.6  -100.8  3513.1 16687.9 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    24697        938  26.330   &lt;2e-16 ***
+sexFemale      -3340       1808  -1.847   0.0706 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5782 on 50 degrees of freedom
+Multiple R-squared:  0.0639,    Adjusted R-squared:  0.04518 
+F-statistic: 3.413 on 1 and 50 DF,  p-value: 0.0706</code></pre>
+</div>
+</div>
 <p>B. Run a multiple linear regression with salary as the outcome variable and everything else as predictors, including sex. Assuming no interactions between sex and the other predictors, obtain a 95% confidence interval for the difference in salary between males and females.</p>
-<p>C. Interpret your finding for each predictor variable; discuss (a) statistical significance, (b) interpretation of the coefficient / slope in relation to the outcome variable and other variables</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>rank<span class="sc">+</span>sex<span class="sc">+</span>year<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary)<span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">confint</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %      97.5 %
+(Intercept) 14134.4059 17357.68946
+degreePhD    -663.2482  3440.47485
+rankAssoc    2985.4107  7599.31080
+rankProf     8396.1546 13841.37340
+sexFemale    -697.8183  3030.56452
+year          285.1433   667.47476
+ysdeg        -280.6397    31.49105</code></pre>
+</div>
+</div>
+<p>C. Interpret your finding for each predictor variable; discuss (a) statistical significance,</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>rank<span class="sc">+</span>sex<span class="sc">+</span>year<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = salary ~ degree + rank + sex + year + ysdeg, data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4045.2 -1094.7  -361.5   813.2  9193.1 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 15746.05     800.18  19.678  &lt; 2e-16 ***
+degreePhD    1388.61    1018.75   1.363    0.180    
+rankAssoc    5292.36    1145.40   4.621 3.22e-05 ***
+rankProf    11118.76    1351.77   8.225 1.62e-10 ***
+sexFemale    1166.37     925.57   1.260    0.214    
+year          476.31      94.91   5.018 8.65e-06 ***
+ysdeg        -124.57      77.49  -1.608    0.115    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2398 on 45 degrees of freedom
+Multiple R-squared:  0.855, Adjusted R-squared:  0.8357 
+F-statistic: 44.24 on 6 and 45 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<ol start="2" type="a">
+<li>interpretation of the coefficient / slope in relation to the outcome variable and other variables</li>
+</ol>
+<p>degree, sex, and ysdeg are not statistically significant at this situation. Associate professor make 5292 more than asisstant professor and professor makes 11118 more than assitant professor. As year is a continues varible, one year increase makes 476 more salary</p>
 <p>D. Change the baseline category for the rank variable. Interpret the coefficients related to rank again.</p>
+<p>Based on this analysis, the assitant professor makes 11118 less then full professor and associate professor make 5826 less than full professor.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>salary<span class="sc">$</span>rank<span class="ot">&lt;-</span><span class="fu">relevel</span>(salary<span class="sc">$</span>rank, <span class="at">ref =</span> <span class="st">"Prof"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>., <span class="at">data =</span> salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = salary ~ ., data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4045.2 -1094.7  -361.5   813.2  9193.1 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  26864.81    1375.29  19.534  &lt; 2e-16 ***
+degreePhD     1388.61    1018.75   1.363    0.180    
+rankAsst    -11118.76    1351.77  -8.225 1.62e-10 ***
+rankAssoc    -5826.40    1012.93  -5.752 7.28e-07 ***
+sexFemale     1166.37     925.57   1.260    0.214    
+year           476.31      94.91   5.018 8.65e-06 ***
+ysdeg         -124.57      77.49  -1.608    0.115    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2398 on 45 degrees of freedom
+Multiple R-squared:  0.855, Adjusted R-squared:  0.8357 
+F-statistic: 44.24 on 6 and 45 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
 <p>E. Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote, “[a] variable may reflect a position or status bestowed by the employer, in which case if there is discrimination in the award of the position or status, the variable may be ‘tainted.’” Thus, for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to adjust salaries before comparing the sexes may not be acceptable to the courts. Exclude the variable rank, refit, and summarize how your findings changed, if they did.</p>
-<p>F. Everyone in this dataset was hired the year they earned their highest degree. It is also known that a new Dean was appointed 15 years ago, and everyone in the dataset who earned their highest degree 15 years ago or less than that has been hired by the new Dean. Some people have argued that the new Dean has been making offers that are a lot more generous to newly hired faculty than the previous one and that this might explain some of the variation in Salary. Create a new variable that would allow you to test this hypothesis and run another multiple regression model to test this. Select variables carefully to make sure there is no multicollinearity. Explain why multicollinearity would be a concern in this case and how you avoided it. Do you find support for the hypothesis that the people hired by the new Dean are making higher than those that were not? # Question 3 (Data file: house.selling.price in smss R package)</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>sex<span class="sc">+</span>year<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = salary ~ degree + sex + year + ysdeg, data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8146.9 -2186.9  -491.5  2279.1 11186.6 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 17183.57    1147.94  14.969  &lt; 2e-16 ***
+degreePhD   -3299.35    1302.52  -2.533 0.014704 *  
+sexFemale   -1286.54    1313.09  -0.980 0.332209    
+year          351.97     142.48   2.470 0.017185 *  
+ysdeg         339.40      80.62   4.210 0.000114 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3744 on 47 degrees of freedom
+Multiple R-squared:  0.6312,    Adjusted R-squared:  0.5998 
+F-statistic: 20.11 on 4 and 47 DF,  p-value: 1.048e-09</code></pre>
+</div>
+</div>
+<p>F. Everyone in this dataset was hired the year they earned their highest degree. It is also known that a new Dean was appointed 15 years ago, and everyone in the dataset who earned their highest degree 15 years ago or less than that has been hired by the new Dean. Some people have argued that the new Dean has been making offers that are a lot more generous to newly hired faculty than the previous one and that this might explain some of the variation in Salary. Create a new variable that would allow you to test this hypothesis and run another multiple regression model to test this. Select variables carefully to make sure there is no multicollinearity. Explain why multicollinearity would be a concern in this case and how you avoided it. Do you find support for the hypothesis that the people hired by the new Dean are making higher than those that were not?</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>salary<span class="sc">$</span>newyear<span class="ot">&lt;-</span><span class="fu">ifelse</span>(salary<span class="sc">$</span>year <span class="sc">&lt;=</span> <span class="dv">20</span>,<span class="dv">10</span>,<span class="dv">0</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(salary<span class="sc">$</span>newyear, salary<span class="sc">$</span>year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  salary$newyear and salary$year
+t = -3.5608, df = 50, p-value = 0.0008223
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.6436643 -0.2016149
+sample estimates:
+       cor 
+-0.4497686 </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>sex<span class="sc">+</span>newyear<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = salary ~ degree + sex + newyear + ysdeg, data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8248.6 -2611.6  -786.1  2910.8 11147.9 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 19996.62    4605.45   4.342 7.47e-05 ***
+degreePhD   -4087.81    1375.85  -2.971  0.00466 ** 
+sexFemale   -2693.61    1251.85  -2.152  0.03659 *  
+newyear      -161.96     432.94  -0.374  0.71001    
+ysdeg         467.24      66.54   7.022 7.57e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3973 on 47 degrees of freedom
+Multiple R-squared:  0.5845,    Adjusted R-squared:  0.5491 
+F-statistic: 16.53 on 4 and 47 DF,  p-value: 1.602e-08</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>sex<span class="sc">+</span>newyear<span class="sc">+</span>ysdeg<span class="sc">+</span>year, <span class="at">data=</span>salary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = salary ~ degree + sex + newyear + ysdeg + year, 
+    data = salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8314.2 -2146.3  -222.6  2240.8 11044.4 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 15012.81    4821.50   3.114 0.003175 ** 
+degreePhD   -3411.96    1335.79  -2.554 0.014017 *  
+sexFemale   -1233.85    1329.06  -0.928 0.358065    
+newyear       202.79     437.23   0.464 0.644984    
+ysdeg         341.08      81.38   4.191 0.000125 ***
+year          375.97     152.72   2.462 0.017633 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3775 on 46 degrees of freedom
+Multiple R-squared:  0.6329,    Adjusted R-squared:  0.593 
+F-statistic: 15.86 on 5 and 46 DF,  p-value: 4.589e-09</code></pre>
+</div>
+</div>
+</section>
+<section id="question-3" class="level1">
+<h1>Question 3</h1>
+<p>(Data file: house.selling.price in smss R package)</p>
 <p>A. Using the house.selling.price data, run and report regression results modeling y = selling price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 = yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the meaning of the coefficient.</p>
 <p>B. Report and interpret the prediction equation, and form separate equations relating selling price to size for new and for not new homes.</p>
 <p>C. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.</p>
@@ -663,126 +947,146 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Homework 4"</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Xiaoyan"</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Template of course blog qmd file"</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "04/17/2023"</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - hw4</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - desriptive statistics </span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - probability</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>(in square feet), and x2 = lot size (in square feet), the prediction equation is</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>ŷ = −10,536 + 53.8x1 + 2.84x2.</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>A. A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000.</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>Find the predicted selling price and the residual, and interpret.</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>B. For fixed lot size, how much is the house selling price predicted to increase for each square-</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>foot increase in home size? Why?</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>C. According to this prediction equation, for fixed home size, how much would lot size need</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>to increase to have the same impact as a one-square-foot increase in home size?</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>faculty in a small Midwestern college collected in the early 1980s for presentation in legal</span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>proceedings for which discrimination against women in salary was at issue. All persons in the data</span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>hold tenured or tenure track positions; temporary faculty are not included. The variables include</span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a</span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree,</span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>and salary, academic year salary in dollars.</span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>A. Test the hypothesis that the mean salary for men and women is the same, without regard to</span>
-<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>any other variable but sex. Explain your findings.</span>
-<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>B. Run a multiple linear regression with salary as the outcome variable and everything else as</span>
-<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>predictors, including sex. Assuming no interactions between sex and the other predictors,</span>
-<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>obtain a 95% confidence interval for the difference in salary between males and females.</span>
-<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>C. Interpret your finding for each predictor variable; discuss (a) statistical significance, (b)</span>
-<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>interpretation of the coefficient / slope in relation to the outcome variable and other variables</span>
-<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>D. Change the baseline category for the rank variable. Interpret the coefficients related to rank</span>
-<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>again.</span>
-<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>E. Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote,</span>
-<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>“<span class="co">[</span><span class="ot">a</span><span class="co">]</span> variable may reflect a position or status bestowed by the employer, in which case if there</span>
-<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>is discrimination in the award of the position or status, the variable may be ‘tainted.’ ” Thus,</span>
-<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to</span>
-<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>adjust salaries before comparing the sexes may not be acceptable to the courts.</span>
-<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>Exclude the variable rank, refit, and summarize how your findings changed, if they did.</span>
-<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>F. Everyone in this dataset was hired the year they earned their highest degree. It is also</span>
-<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>known that a new Dean was appointed 15 years ago, and everyone in the dataset who</span>
-<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>earned their highest degree 15 years ago or less than that has been hired by the new Dean.</span>
-<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>Some people have argued that the new Dean has been making offers that are a lot more</span>
-<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>generous to newly hired faculty than the previous one and that this might explain some of</span>
-<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>the variation in Salary.</span>
-<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>Create a new variable that would allow you to test this hypothesis and run another multiple</span>
-<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a>regression model to test this. Select variables carefully to make sure there is no</span>
-<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>multicollinearity. Explain why multicollinearity would be a concern in this case and how</span>
-<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>you avoided it. Do you find support for the hypothesis that the people hired by the new</span>
-<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>Dean are making higher than those that were not?</span>
-<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 3</span></span>
-<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>(Data file: house.selling.price in smss R package)</span>
-<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a>A. Using the house.selling.price data, run and report regression results modeling y = selling</span>
-<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 =</span>
-<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the</span>
-<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a>meaning of the coefficient.</span>
-<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>B. Report and interpret the prediction equation, and form separate equations relating selling</span>
-<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a>price to size for new and for not new homes.</span>
-<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>C. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.</span>
-<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a>D. Fit another model, this time with an interaction term allowing interaction between size and</span>
-<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>new, and report the regression results</span>
-<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>E. Report the lines relating the predicted selling price to the size for homes that are (i) new,</span>
-<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>(ii) not new.</span>
-<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>F. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.</span>
-<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a>G. Find the predicted selling price for a home of 1500 square feet that is (i) new, (ii) not new.</span>
-<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a>Comparing to (F), explain how the difference in predicted selling prices changes as the size</span>
-<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a>of home increases.</span>
-<span id="cb6-147"><a href="#cb6-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-148"><a href="#cb6-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-149"><a href="#cb6-149" aria-hidden="true" tabindex="-1"></a>H. Do you think the model with interaction or the one without it represents the relationship of</span>
-<span id="cb6-150"><a href="#cb6-150" aria-hidden="true" tabindex="-1"></a>size and new to the outcome price? What makes you prefer one model over another?</span>
-<span id="cb6-153"><a href="#cb6-153" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-154"><a href="#cb6-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb36" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Homework 4"</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Xiaoyan"</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Template of course blog qmd file"</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "04/17/2023"</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - hw4</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - </span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - </span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1</span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>For recent data in Jacksonville, Florida, on y = selling price of home (in dollars), x1 = size of home</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>(in square feet), and x2 = lot size (in square feet), the prediction equation is</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>ŷ = −10,536 + 53.8x1 + 2.84x2.</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>A. A particular home of 1240 square feet on a lot of 18,000 square feet sold for $145,000.</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>Find the predicted selling price and the residual, and interpret.</span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>(<span class="sc">-</span><span class="dv">10536</span>) <span class="sc">+</span> <span class="fl">53.8</span><span class="sc">*</span><span class="dv">1240</span> <span class="sc">+</span> <span class="fl">2.84</span><span class="sc">*</span><span class="dv">18000</span></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>B. For fixed lot size, how much is the house selling price predicted to increase for each square-</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>foot increase in home size? Why?</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>53.8</span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>C. According to this prediction equation, for fixed home size, how much would lot size need to increase to have the same impact as a one-square-foot increase in home size?</span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a><span class="fl">53.8</span> <span class="sc">/</span> <span class="fl">2.84</span></span>
+<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2</span></span>
+<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>(Data file: salary in alr4 R package). The data file concerns salary and other characteristics of all faculty in a small Midwestern college collected in the early 1980s for presentation in legal proceedings for which discrimination against women in salary was at issue. All persons in the data hold tenured or tenure track positions; temporary faculty are not included. The variables include degree, a factor with levels PhD and MS; rank, a factor with levels Asst, Assoc, and Prof; sex, a factor with levels Male and Female; Year, years in current rank; ysdeg, years since highest degree, and salary, academic year salary in dollars.</span>
+<span id="cb36-51"><a href="#cb36-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-52"><a href="#cb36-52" aria-hidden="true" tabindex="-1"></a>A. Test the hypothesis that the mean salary for men and women is the same, without regard to</span>
+<span id="cb36-53"><a href="#cb36-53" aria-hidden="true" tabindex="-1"></a>any other variable but sex. Explain your findings.</span>
+<span id="cb36-56"><a href="#cb36-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-57"><a href="#cb36-57" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(salary)</span>
+<span id="cb36-58"><a href="#cb36-58" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(salary<span class="sc">$</span>rank)</span>
+<span id="cb36-59"><a href="#cb36-59" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>sex, <span class="at">data=</span>salary))</span>
+<span id="cb36-60"><a href="#cb36-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-61"><a href="#cb36-61" aria-hidden="true" tabindex="-1"></a>B. Run a multiple linear regression with salary as the outcome variable and everything else as</span>
+<span id="cb36-62"><a href="#cb36-62" aria-hidden="true" tabindex="-1"></a>predictors, including sex. Assuming no interactions between sex and the other predictors,</span>
+<span id="cb36-63"><a href="#cb36-63" aria-hidden="true" tabindex="-1"></a>obtain a 95% confidence interval for the difference in salary between males and females.</span>
+<span id="cb36-66"><a href="#cb36-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>rank<span class="sc">+</span>sex<span class="sc">+</span>year<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary)<span class="sc">|&gt;</span></span>
+<span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">confint</span>()</span>
+<span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>C. Interpret your finding for each predictor variable; discuss (a) statistical significance, </span>
+<span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-74"><a href="#cb36-74" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>rank<span class="sc">+</span>sex<span class="sc">+</span>year<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary))</span>
+<span id="cb36-75"><a href="#cb36-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-76"><a href="#cb36-76" aria-hidden="true" tabindex="-1"></a>(b)</span>
+<span id="cb36-77"><a href="#cb36-77" aria-hidden="true" tabindex="-1"></a>interpretation of the coefficient / slope in relation to the outcome variable and other variables</span>
+<span id="cb36-78"><a href="#cb36-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a>degree, sex, and ysdeg are not statistically significant at this situation. </span>
+<span id="cb36-80"><a href="#cb36-80" aria-hidden="true" tabindex="-1"></a>Associate professor make 5292 more than asisstant professor and professor makes 11118 more than assitant professor. </span>
+<span id="cb36-81"><a href="#cb36-81" aria-hidden="true" tabindex="-1"></a>As year is a continues varible, one year increase makes 476 more salary</span>
+<span id="cb36-82"><a href="#cb36-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-83"><a href="#cb36-83" aria-hidden="true" tabindex="-1"></a>D. Change the baseline category for the rank variable. Interpret the coefficients related to rank</span>
+<span id="cb36-84"><a href="#cb36-84" aria-hidden="true" tabindex="-1"></a>again.</span>
+<span id="cb36-85"><a href="#cb36-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-86"><a href="#cb36-86" aria-hidden="true" tabindex="-1"></a>Based on this analysis, the assitant professor makes 11118 less then full professor and associate professor make 5826 less than full professor. </span>
+<span id="cb36-89"><a href="#cb36-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-90"><a href="#cb36-90" aria-hidden="true" tabindex="-1"></a>salary<span class="sc">$</span>rank<span class="ot">&lt;-</span><span class="fu">relevel</span>(salary<span class="sc">$</span>rank, <span class="at">ref =</span> <span class="st">"Prof"</span>)</span>
+<span id="cb36-91"><a href="#cb36-91" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>., <span class="at">data =</span> salary))</span>
+<span id="cb36-92"><a href="#cb36-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-93"><a href="#cb36-93" aria-hidden="true" tabindex="-1"></a>E. Finkelstein (1980), in a discussion of the use of regression in discrimination cases, wrote,</span>
+<span id="cb36-94"><a href="#cb36-94" aria-hidden="true" tabindex="-1"></a>“<span class="co">[</span><span class="ot">a</span><span class="co">]</span> variable may reflect a position or status bestowed by the employer, in which case if there</span>
+<span id="cb36-95"><a href="#cb36-95" aria-hidden="true" tabindex="-1"></a>is discrimination in the award of the position or status, the variable may be ‘tainted.’ ” Thus,</span>
+<span id="cb36-96"><a href="#cb36-96" aria-hidden="true" tabindex="-1"></a>for example, if discrimination is at work in promotion of faculty to higher ranks, using rank to</span>
+<span id="cb36-97"><a href="#cb36-97" aria-hidden="true" tabindex="-1"></a>adjust salaries before comparing the sexes may not be acceptable to the courts.</span>
+<span id="cb36-98"><a href="#cb36-98" aria-hidden="true" tabindex="-1"></a>Exclude the variable rank, refit, and summarize how your findings changed, if they did.</span>
+<span id="cb36-101"><a href="#cb36-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-102"><a href="#cb36-102" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>sex<span class="sc">+</span>year<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary))</span>
+<span id="cb36-103"><a href="#cb36-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-104"><a href="#cb36-104" aria-hidden="true" tabindex="-1"></a>F. Everyone in this dataset was hired the year they earned their highest degree. It is also</span>
+<span id="cb36-105"><a href="#cb36-105" aria-hidden="true" tabindex="-1"></a>known that a new Dean was appointed 15 years ago, and everyone in the dataset who</span>
+<span id="cb36-106"><a href="#cb36-106" aria-hidden="true" tabindex="-1"></a>earned their highest degree 15 years ago or less than that has been hired by the new Dean.</span>
+<span id="cb36-107"><a href="#cb36-107" aria-hidden="true" tabindex="-1"></a>Some people have argued that the new Dean has been making offers that are a lot more</span>
+<span id="cb36-108"><a href="#cb36-108" aria-hidden="true" tabindex="-1"></a>generous to newly hired faculty than the previous one and that this might explain some of</span>
+<span id="cb36-109"><a href="#cb36-109" aria-hidden="true" tabindex="-1"></a>the variation in Salary.</span>
+<span id="cb36-110"><a href="#cb36-110" aria-hidden="true" tabindex="-1"></a>Create a new variable that would allow you to test this hypothesis and run another multiple</span>
+<span id="cb36-111"><a href="#cb36-111" aria-hidden="true" tabindex="-1"></a>regression model to test this. Select variables carefully to make sure there is no</span>
+<span id="cb36-112"><a href="#cb36-112" aria-hidden="true" tabindex="-1"></a>multicollinearity. Explain why multicollinearity would be a concern in this case and how</span>
+<span id="cb36-113"><a href="#cb36-113" aria-hidden="true" tabindex="-1"></a>you avoided it. Do you find support for the hypothesis that the people hired by the new</span>
+<span id="cb36-114"><a href="#cb36-114" aria-hidden="true" tabindex="-1"></a>Dean are making higher than those that were not?</span>
+<span id="cb36-117"><a href="#cb36-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-118"><a href="#cb36-118" aria-hidden="true" tabindex="-1"></a>salary<span class="sc">$</span>newyear<span class="ot">&lt;-</span><span class="fu">ifelse</span>(salary<span class="sc">$</span>year <span class="sc">&lt;=</span> <span class="dv">20</span>,<span class="dv">10</span>,<span class="dv">0</span>)</span>
+<span id="cb36-119"><a href="#cb36-119" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(salary<span class="sc">$</span>newyear, salary<span class="sc">$</span>year)</span>
+<span id="cb36-120"><a href="#cb36-120" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>sex<span class="sc">+</span>newyear<span class="sc">+</span>ysdeg, <span class="at">data=</span>salary))</span>
+<span id="cb36-121"><a href="#cb36-121" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(salary<span class="sc">~</span>degree<span class="sc">+</span>sex<span class="sc">+</span>newyear<span class="sc">+</span>ysdeg<span class="sc">+</span>year, <span class="at">data=</span>salary))</span>
+<span id="cb36-122"><a href="#cb36-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-123"><a href="#cb36-123" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 3</span></span>
+<span id="cb36-124"><a href="#cb36-124" aria-hidden="true" tabindex="-1"></a>(Data file: house.selling.price in smss R package)</span>
+<span id="cb36-125"><a href="#cb36-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-126"><a href="#cb36-126" aria-hidden="true" tabindex="-1"></a>A. Using the house.selling.price data, run and report regression results modeling y = selling</span>
+<span id="cb36-127"><a href="#cb36-127" aria-hidden="true" tabindex="-1"></a>price (in dollars) in terms of size of home (in square feet) and whether the home is new (1 =</span>
+<span id="cb36-128"><a href="#cb36-128" aria-hidden="true" tabindex="-1"></a>yes; 0 = no). In particular, for each variable; discuss statistical significance and interpret the</span>
+<span id="cb36-129"><a href="#cb36-129" aria-hidden="true" tabindex="-1"></a>meaning of the coefficient.</span>
+<span id="cb36-132"><a href="#cb36-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-133"><a href="#cb36-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-134"><a href="#cb36-134" aria-hidden="true" tabindex="-1"></a>B. Report and interpret the prediction equation, and form separate equations relating selling</span>
+<span id="cb36-135"><a href="#cb36-135" aria-hidden="true" tabindex="-1"></a>price to size for new and for not new homes.</span>
+<span id="cb36-138"><a href="#cb36-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-139"><a href="#cb36-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-140"><a href="#cb36-140" aria-hidden="true" tabindex="-1"></a>C. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.</span>
+<span id="cb36-143"><a href="#cb36-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-144"><a href="#cb36-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-145"><a href="#cb36-145" aria-hidden="true" tabindex="-1"></a>D. Fit another model, this time with an interaction term allowing interaction between size and</span>
+<span id="cb36-146"><a href="#cb36-146" aria-hidden="true" tabindex="-1"></a>new, and report the regression results</span>
+<span id="cb36-149"><a href="#cb36-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-150"><a href="#cb36-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-151"><a href="#cb36-151" aria-hidden="true" tabindex="-1"></a>E. Report the lines relating the predicted selling price to the size for homes that are (i) new,</span>
+<span id="cb36-152"><a href="#cb36-152" aria-hidden="true" tabindex="-1"></a>(ii) not new.</span>
+<span id="cb36-155"><a href="#cb36-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-156"><a href="#cb36-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-157"><a href="#cb36-157" aria-hidden="true" tabindex="-1"></a>F. Find the predicted selling price for a home of 3000 square feet that is (i) new, (ii) not new.</span>
+<span id="cb36-160"><a href="#cb36-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-161"><a href="#cb36-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-162"><a href="#cb36-162" aria-hidden="true" tabindex="-1"></a>G. Find the predicted selling price for a home of 1500 square feet that is (i) new, (ii) not new.</span>
+<span id="cb36-163"><a href="#cb36-163" aria-hidden="true" tabindex="-1"></a>Comparing to (F), explain how the difference in predicted selling prices changes as the size</span>
+<span id="cb36-164"><a href="#cb36-164" aria-hidden="true" tabindex="-1"></a>of home increases.</span>
+<span id="cb36-167"><a href="#cb36-167" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-168"><a href="#cb36-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb36-169"><a href="#cb36-169" aria-hidden="true" tabindex="-1"></a>H. Do you think the model with interaction or the one without it represents the relationship of</span>
+<span id="cb36-170"><a href="#cb36-170" aria-hidden="true" tabindex="-1"></a>size and new to the outcome price? What makes you prefer one model over another?</span>
+<span id="cb36-173"><a href="#cb36-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb36-174"><a href="#cb36-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
