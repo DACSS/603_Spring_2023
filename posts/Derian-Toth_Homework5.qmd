@@ -1,0 +1,186 @@
+---
+title: "Homework 5"
+author: "Meredith Derian-Toth"
+description: "DACSS603_Homework 5"
+date: "05/13/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+  - confidence intervals 
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r loading packages}
+library("alr4")
+library("smss")
+library("ggplot2")
+library("tidyverse")
+library("vtable")
+        
+```
+
+## Question 1. 
+#### a\)  For backward elimination, which variable would be deleted first? Why?
+Based on the tables provided, the variable that would be eliminated first is "Beds". This is because "Beds" has the highest p value (p = 0.487), which is not significant, when compared to the other variables in the model. 
+  
+#### b\) For forward selection, which variable would be added first? Why?
+Based on the tables provided, the variable we would start with "Size", because it has the highest correlation to price in the correlation matrix. I am using the correlation matrix table instead of the regression output because with forward selection you start with no explanatory variable. 
+   
+#### c\) Why do you think that BEDS has such a large P-value in the multiple regression model, even though it has a substantial correlation with PRICE?
+A high P value along with a high correlation coefficient could indicate the issue of multicolinearity. Beds could be multicolinear with another variable in the dataset (ex: baths or size), which is making the correlation coefficient so high, however when you see the results of the model you see that beds may not actually be as significant as the other two variables.  
+ 
+#### d\)  Using software with these four predictors, find the model that would be selected using each criterion:
+
+1. R2
+2. Adjusted R2
+3. PRESS
+4. AIC
+5. BIC
+
+```{r 1d}
+data(house.selling.price.2)
+#head(house.selling.price.2)
+
+Reg1<-lm(P ~ S + Be + Ba + New, data = house.selling.price.2)
+summary(Reg1)
+```
+
+```{r 1d Reg2}
+
+Reg2<-lm(P ~ S + Ba + New, data = house.selling.price.2)
+summary(Reg2)
+```
+```{r Reg Comparison}
+#fitted(Reg1)
+n5.1<- 93
+RSS5.1<-deviance(Reg1)
+
+Reg1AIC<-n5.1*log(RSS5.1/n5.1) + 2*4
+print(Reg1AIC)
+#522.7
+Reg1BIC<-(n5.1*log(RSS5.1/n5.1)) + (log(n5.1)*4)
+print(Reg1BIC)
+#532.8304
+
+prReg1 <- resid(Reg1)/(1 - lm.influence(Reg1)$hat)
+sum(prReg1^2)
+#28390.22
+
+n5.2<-93
+RSS5.2<-deviance(Reg2)
+
+Reg2AIC<-n5.2*log(RSS5.2/n5.2) + 2*3
+print(Reg2AIC)
+#521.214
+Reg2BIC<-(n5.2*log(RSS5.2/n5.2)) + (log(n5.2)*3)
+print(Reg2BIC)
+#528.8118
+
+prReg2 <- resid(Reg2)/(1 - lm.influence(Reg2)$hat)
+sum(prReg2^2)
+#27860.05
+
+Model<- c('Model1', 'Model2')
+R_Squared<-c(0.8689, 0.8681)
+Adjusted_R_Squared<-c(0.8629, 0.8637)
+PRESS<-c(28390.22, 27860.05)
+AIC<-c(522.7, 521.21)
+BIC<-c(532.83, 528.82)
+
+Model_Comparison<-data.frame(Model, R_Squared, Adjusted_R_Squared, PRESS, AIC, BIC)
+kable(Model_Comparison)
+
+```
+
+#### e\)  Explain which model you prefer and why.
+According to the table output I prefer Model 1. Model 1 has a higher R-Squared, Adjusted R-Squared, PRESS, AIC, and BIC. This means, across the board, Model 1 is stronger than Model 2. 
+   
+## Question 2. 
+  
+```{r 2a}
+data(trees)
+#head(trees)
+
+Reg5.2<-lm(Volume ~ Girth + Height, data = trees)
+summary(Reg5.2)
+```
+  
+```{r 2b}
+par(mfrow = c(2,3))
+plot(Reg5.2, which = 1:6)
+
+```
+According to the diagnostic plots above:  
+**Residuals vs Fitted**.   
+The line in this diagnostic test is not straight, this shows the analysis violating the assumption of linearity. This also indicates a violation in the assumption of a constant variance. 
+  
+**QQ-Plot**.   
+The results of the QQ Plot indicate the passing of the normality assumption. This is shown with the points falling along the line. 
+  
+**Scale-Location**.   
+The scale-location plot is another indicator that the analysis has violated the assumption of the constant variance. The curved line resulting from this diagnostic test indicates that the model has not passed this assumption. 
+  
+**Cook's Distance**.   
+The results of this show that cook's distance remains under 1, this indicates passing the assumption of influential observation. 
+  
+**Residuals vs Leverage**.  
+The results of this diagnostic show no points within the same area as the dashed lines. This is a further indicator that the analysis passed the assumption of influential observation. We can assume that there is not one observation that is particularly more influential than another. 
+  
+**Cook's Distance vs Leverage**.  
+The results of this diagnostic plot show that the model is within a healthy area of under 1 for cooks distance (y axis) however, is has not remained below o.167 for leverage (x axis). 
+  
+## Question 3    
+
+```{r 3a1}
+data(florida)
+#head(florida)
+
+Reg5.3<-lm(Buchanan ~ Bush, data = florida)
+summary(Reg5.3)
+
+par(mfrow = c(2,3))
+plot(Reg5.2, which = 1:6)
+
+```
+
+```{r 3a2}
+
+par(mfrow = c(2,3))
+plot(Reg5.3, which = 1:6)
+
+```
+
+
+#### a\) 
+
+Both Cook's Distance and Residuals vs Leverage show the results of the assumption of influential observations. According to the diagnostic plots above:  
+**Cook's Distance**.  
+  The results of this show that cook's distance remains well over 1 (a value of 2) for Dade and Palm Beach. This does indicate that Palm Beach County is an outlier that could be influencing the model. 
+  
+**Residuals vs Leverage**.  
+  The results of this diagnostic show that both Palm Beach and Dade are outside of the dashed lines. This is a further indicator that the analysis has not passed the assumption of influential observation. We can assume that Palm Beach is an influential observation.
+ 
+```{r 3b1}
+Reg5.3b<-lm(log(Buchanan) ~ log(Bush), data = florida)
+summary(Reg5.3b)
+
+```
+
+```{r 3b2}
+par(mfrow = c(2,3))
+plot(Reg5.3b, which = 1:6)
+
+```
+
+#### b\)
+
+After taking the log of both Buchanan and Bush the model now passes the assumption of influential observation. We can see that Cooks Distance is below 1 for Palm Beach and Palm Beach is now within the healthy area of observeration is the Residuals vs Leverage Plot. 
+
