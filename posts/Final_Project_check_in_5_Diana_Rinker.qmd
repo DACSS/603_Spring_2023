@@ -79,6 +79,7 @@ library(grid)
 library(gridExtra)
 library(stargazer)
 library(jtools)
+library(interactions)
 ```
 
 ### Data source and description.
@@ -151,8 +152,8 @@ select (merged, `Exit rate`, e.rate)
 # merged$`Exit rate` <- as.numeric(sub("%", "", merged$`Exit rate`)) / 100
 
 ggplot(data=merged, mapping=aes(x=e.rate))+
-    geom_histogram(binwidth = 0.02, fill = "grey50", alpha = 0.9)+
-    geom_histogram(binwidth = 0.01, fill = "sandybrown", alpha = 0.7)
+    geom_histogram(binwidth = 0.01, fill = "sandybrown", alpha = 0.7)+
+  labs(title="Exit rate histogram")
 
 ```
 
@@ -182,7 +183,8 @@ account.
 ```{r, echo=T}
 # merged$year_month 
 ggplot(data=merged, mapping=aes(x=n.comments))+
-  geom_histogram(fill = "seagreen4")
+  geom_histogram(fill = "seagreen4")+
+  labs(title="Number of comments histogram")
 ```
 
 And change in the distribution over time:
@@ -685,44 +687,37 @@ value and good results in diagnostic plots.
 Te final model of my analysis is:
 
 ```{r, echo=T}
-model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +log(Uniques)*weekday , data = merged)
+model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  + weekday , data = merged)
+
+model.12 <- lm(e.rate ~ log(Uniques)*log(google) , data = merged)
 summary(model.11)
 ```
-## 3.4. Visualizing interaction wbetween variables for the exit rate model: 
+### 3.4. Visualizing interaction: 
+
+Moderating impact of popularity referrals on relationship between referral sourceand engagement: 
 
 ```{r, echo=T}
-library(jtools)
-library(interactions)
-model.12 <- lm(e.rate ~ log(Uniques)+ log(google)*log(direct) +other.web +social +log(bdc)   , data = merged)
-# summ(model.12)
-stargazer( model.9,model.10,model.11, model.12, type = 'text')
-
-model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)   , data = merged)
-# summary(x.model <- lm(google~ direct+other.web+social+bdc+ll, data=merged))
 interact_plot(model.11, pred =Uniques , modx =  google, plot.points = TRUE )
+interact_plot(model.11, pred = google, modx =  Uniques, plot.points = TRUE )
 ```
+This graph shows that low levels of popularity (Uniques) there is no connection between google referrals and exit rate. At higher levels of popularity exit rate is significantly higher overall, but seem to dlightly decrease with increase of google refrrals.  
 
 
-### Moderating impact of google referrals on relationship between popularity and engagement: 
-
-```{r, echo=T}
-# interact_plot(model.11, pred = google, modx = Uniques)
-
-interact_plot(model.11, pred =Uniques , modx =  google, plot.points = TRUE )
-```
-At lower levels of Google referrals, increase of popularity (uniques) decreases engagement more rapidly, than at higher levels of google referrals.  I.e. at some level of Google referrals (~15-30K) poupularity impacts engagement not as strongly. 
-
-
+, increase of popularity (uniques) decreases engagement more rapidly, than at higher levels of google referrals.  I.e. at some level of Google referrals (~15-30K) poupularity impacts engagement not as strongly. 
 
 ### Moderating impact of direct referrals on relationship between popularity and engagement: 
 ```{r, echo=T}
-
+plot (Uniques ~ direct, data = merged)
 interact_plot(model.11, pred = Uniques, modx = direct, plot.points = TRUE )
-# sum(is.na(merged$direct))
-```
-Similarly, at lower levels 
+interact_plot(model.11, pred =direct , modx = Uniques , plot.points = TRUE )
 
-This graph demonstrates that with the lower values of direct referrals, exit rates are higher for the same amout of unique users. 
+
+```
+Similarly, this graph shows that  higher direct associated with higher popularity. While exit rate is generally going down with increase of direct referrals,  higher levels of popularity generally associated with higher direct and significantly giher exit rate (i.e. popularity decreases engagement despite direct referrals increasing engagement) 
+
+lower levels  of direct referrals correspond with higher exit rate and 
+
+This graph demonstrates that with the lower values of direct referrals, exit rates are higher for the same amount of unique users. 
 
 
 
@@ -780,8 +775,6 @@ plot(model.4, which = 1:6)
 
 ```
 
-### 4.3. QUESTION - do i need to improve mod fit here ?
-
 # 4. Conlusion
 
 We have build two models for different engagement metrics: engagement of
@@ -790,23 +783,37 @@ models, different factors contribute to engagement of these two groups
 of readers:
 
 ```{r, echo=T}
-stargazer( model.7, model.4, type = 'text')
+
+stargazer( model.11, model.4, type = 'text')
 ```
 
-We can see, that different referral sourses contribute to users
+
+We can see, that different referral sources contribute to users
 engagement. While all readers'engagement (measured with exit rate) is
 influenced by interaction of referrals from Google and Direct and
 popularity, internal bdc referrals and somewhat referrals from other web
-sources, loyal readers' engagement is highly impacted by the mood pf the
-post, internal page referrals, social referrals. Thhey also show some
+sources, loyal readers' engagement is highly impacted by the mood of the
+post, internal page referrals, social referrals. They also show some
 direct referrals' impact, but very small in compare with its influence
 on all users' engagement.
 
-We also see significant contibution of day of the week on readers
+We also see significant contribution of day of the week on readers
 engagement. Specifically, Monday's engagement of all readers is
-significantly higher than any other day. For loyal readers, Wednesday
+significantly lower than any other day. For loyal readers, Wednesday
 showing thee lowest engagement.
 
 It also important to point out, that popularity of the post (Uniques)
 only plays a role for all user's engagement. Loyal readers appear not
-being impacted by popularity.
+being impacted by popularity. It is moderated by Google and direct referrals, where the posts with higher amounts of referrals show overall better engagement. 
+
+To conclude,  we found significant connection between the referral source and readers engagement. Most metrics related to the post discussion appeared non-relvent, with the exception of post mood impacting loyal readers engagement. 
+
+### Limitations: 
+The role of Google referrals needs to be explored further, to identify how posts with high level of Google referrals contibute to this model. Also, finding out a cause of some pots having high Google referral rate would be beneficial for the blog development. 
+
+
+
+
+
+
+
