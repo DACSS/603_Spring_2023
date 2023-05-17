@@ -1,0 +1,258 @@
+---
+title: "Homework 4"
+author: "Jerin Jacob"
+desription: "Homework 4- 603 Spring 2023"
+date: "05/11/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - challenge4
+  - Jerin Jacob
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(readxl)
+library(dplyr)
+library(magrittr)
+library(alr4)
+library(smss)
+library(ggplot2)
+library(stargazer)
+knitr::opts_chunk$set(echo = TRUE)
+```
+Question 1:
+A) 
+Finding the predicted house price. We are writing a function to find y_hat using the parameters x1 and x2.
+```{r}
+y_hat <- function(x1,x2) {
+  -10536 + 53.8*x1 + 2.84*x2
+}
+
+predicted_price <- y_hat(1240, 18000)
+
+cat('The predicted selling price is $', predicted_price, sep = '')
+
+```
+
+
+```{r}
+Actual_price <- 145000
+cat('The residual is', Actual_price - predicted_price)
+```
+
+The residual is positive which means the model under predicted the selling price considerably high difference.
+
+B)
+For a fixed lot size, the selling price predicted will increase by $53.8 for every unit increase of home size because it is the coefficient of the size of home variable when lot size is also in the model.
+
+C)
+For one square foot increase, the house price increase $53.8, keeping lot size constant. For one unit increase in lot size, house price increase $2.84. So to make an equal change in home price that of increase in home size, the lot size should be increased 53.8/2.84 times.
+
+Question 2:
+
+Loading the data
+```{r}
+data("salary", package = "alr4")
+head(salary)
+
+```
+To test the hypothesis that the mean salary for men and women is the same without regard to any other variable, we can run a simple linear regression model with sex as the only explanatory variable. This is equivalent to doing a two-sample t-test for salary for Male and Female groups
+```{r}
+summary(lm(salary ~ sex, data = salary))
+```
+The p-value is less than .1. Therefore we can reject the null hypothesis, which means that the test is significant at 10% significance level and the means are not same. The coefficient of sexFemale is -3340 which means that for all other variables kept constant, there will be a decrease of $3340 in female salary compared to that of male salary.
+
+
+B)
+
+Running a multiple linear regression with salary as the outcome variable and all other variables as predictors with confidence interval 95%. 
+
+```{r}
+lm(salary ~ ., data = salary) |>
+  confint()
+```
+
+95% confidence interval for the sexFemale variable is (-697, 3031). This suggests a confidence interval between $697 less or $3031 more salary for female faculty relative to male faculty, controlling for other variables.
+
+C)
+
+```{r}
+summary(lm(salary ~ ., data = salary))
+
+```
+Degree: This variable is not statistically significant as the p-value is .180 which is over any conventially accepted significance level.It is a dummy variable. The coefficient suggests that the PhDs make $1388.61 more than those with Master's controlling for everything else.
+
+Rank: The model takes rank as a categorical variable, ignoring its order. Usually, for ordered categorical variables like rank, it is either treated as just a regular categorical variable or as a numeric variable. When the variable has a lot of levels or the distances between each level are reasonanly equal, it is commonly considered as numeric. But in this case, since there are only 3 levels, it can be accepted as a regular categorical variable.
+
+For rank, the base/reference level is Assistant Professors. rankAssoc suggests that Associate Professors make $5292 more than the base level and rankProf suggests Professors make $11118.76 more than base level. Variables are statistically significant.
+
+To test the statistical significance of the rank variable as a whole, rather than the individual dummy variables, we can do a partial F-test to compare the model with all the variables to the one without any rank dummies. The easiest way to do this is;
+
+```{r}
+fit1 <- lm(salary ~ ., data = salary)
+fit2 <- lm(salary ~ -rank, data = salary)
+
+anova(fit1, fit2)
+
+```
+
+The very low p-value suggests that the rank variable is significant as a whole.
+
+Sex: The p-value suggests that this variable is not significant at conventional levels. The coefficient suggests that female faculty make $1166 more after controlling all other variables, but interpreting coefficient when the effect is insignificant is not meaningful.
+
+Year: Is statistically significant and the coefficient suggests that for every year increased, there is an associated increase of $476 in salary.
+
+ysdeg: The variable is insignificant. The coefficient suggests that every additional year that passes since degree is associated with $124 less salary.
+
+D)
+
+```{r}
+salary$rank <- relevel(salary$rank, ref = 'Prof')
+summary(lm(salary ~ ., data = salary))
+
+```
+
+Now, the reference level for rank is Professors and therefore the coeffecients for other levels of rank has been changed accordingly. Assistant Professors make $11118.78 less than that of Professors controlling for other variables. Associate professors make $5826 less than Professors, controlling for all other variables.
+
+E)
+
+```{r}
+summary(lm(salary ~ .-rank, data = salary))
+
+```
+After removing the rank variable, the regression analysis coefficients chanhged significantly. Now, the coefficient of degreePhD is negative(-3299) which suggests that a faculty with a PhD degree will be paid $3299 less than non-PhD faculty, controlling for other variables. The sign for sex and ysdeg also flipped but are statistically significant.
+
+
+F)
+We need to create a dummy variable 'newDean_hire' for <=15 years after highest degree. Since we are creating the new variable from an existing variable, there is a high chance of multicollinearity. Testing the correlation between the new variable and original variable is a good idea!
+```{r}
+
+salary$newDean_hire <- ifelse(salary$ysdeg <=15, 1,0)
+cor.test(salary$newDean_hire, salary$ysdeg)
+```
+The two variables are highly correlated, negatively. So, when we run the regression, we can exclude ysdeg and only include newDean_hire instead, along with other control variables.
+
+```{r}
+summary(lm(salary ~ .-ysdeg, data = salary))
+
+```
+The newDean_hire variable's coefficient is 2163 and it is statistically significant at a significance level of .05%. It suggests that the dean was giving generous offers to those people who have 15 years or less after their highest degree. 
+
+Just checking how the regression will perform if we included both the variable!
+
+```{r}
+summary(lm(salary ~ ., data = salary))
+
+```
+
+Now, both the variables are not significant because of the multicollinearity.
+
+Question 3:
+Loading the data
+```{r}
+data("house.selling.price", package = "smss")
+head(house.selling.price)
+
+```
+
+A)
+```{r}
+y_hat <- lm(Price ~ Size + New, data = house.selling.price)
+
+summary(y_hat)
+```
+Both Size and New are statistically significant variables. When one square foot of size increase there will be $116 increase in the house price, controlling for other variable. The new houses will have $57736 more in price than that of old house, controling for other variable.
+
+B)
+The prediction equation is: E[Price] = -40230.867 + 116.132 * Size + 57736.283 * New
+
+For New variable, the values are binary which means it takes 1 as value when the house is new and 0 when it is an old house.
+
+The prediction equation for new houses is : E[Price] = -40230.867 + 116.132 * size + 57736.283 * 1. ie, E[Price] = 17505.42 + 116.132 * size
+
+The prediction equation for old houses is : E[Price] = -40230.867 + 116.132 * size + 57736.283 * 0 = -40230.867 + 116.132 * size
+
+C)
+```{r}
+# One way of finding the predicted selling price
+size <- 3000
+new <- 1
+not_new <- 0
+
+house_price_new <- -40230.867 + 116.132 * size + 57736.283 * new
+house_price_not_new <- -40230.867 + 116.132 * size + 57736.283 * not_new
+
+# Print the results
+cat("Price for new houses with 3000 sqft size is: [", house_price_new, "]\n")
+cat("Price for houses with 3000 sqft size that are not new is: [", house_price_not_new, "]\n")
+
+# Easy way
+
+predict_data <- data.frame(Size = c(3000, 3000), New = c(1, 0))
+  predict(y_hat, predict_data)
+
+```
+
+D)
+
+```{r}
+y_hat_interaction <- lm(Price ~ Size + New + Size*New , data = house.selling.price)
+
+summary(y_hat_interaction)
+```
+
+After adding the interaction between size and new, the coefficient of New reversed the sign but is not statistically significant now. The interaction term is statistically significant at a significance level of 1%.
+
+E)
+
+The prediction equation is: E[Price] = -22227.808 + 104.438 * Size - 78527.502 * New + 61.916 * Size*New
+
+For new house, E[Price] = -22227.808 + 104.438 * Size - 78527.502 * 1 + 61.916 * Size*1
+                        = -100755.3 + 166.354 * Size
+
+For old house, E[Price] = -22227.808 + 104.438 * Size - 78527.502 * 0 + 61.916 * Size*0 
+                        = -22227.808 + 104.438 * Size
+                        
+
+F)
+
+```{r}
+predict_data_interaction <- data.frame(Size = c(3000, 3000), New = c(1, 0))
+prediction_with_interaction <- predict(y_hat_interaction, predict_data_interaction)
+cat("Price for houses with 3000 sqft size that are new and not new are: [", prediction_with_interaction, "] consecutively \n")
+```
+New home is $107,220 pricier than old houses of 3000 sqft.
+
+G)
+```{r}
+predict_data_interaction2 <- data.frame(Size = c(1500, 1500), New = c(1, 0))
+prediction_with_interaction2 <- predict(y_hat_interaction, predict_data_interaction2)
+cat("Price for houses with 1500 sqft size that are new and not new are: [", prediction_with_interaction2, "] consecutively \n")
+```
+New home with 1500 sqft has a predicted price of $148776. Old home with the same size has a predicted price of $134429.
+New home is $14,347 pricier than old houses of 1500 sqft.
+
+Comparing the differences of prices between new and old houses in F and G, we can conclude that bigger houses have much bigger difference in price between new and old ones.
+
+H)
+```{r}
+summary(y_hat)
+summary(y_hat_interaction)
+
+```
+The preferred model is with the intereaction term because the interaction term is significant and the Adjusted R-squared is higher in the model with interaction term. The higher Adjusted R-squared means that despite penalizing for the additional term, we have a better fit model.
+
+
+
+
+
+
+
