@@ -1,0 +1,90 @@
+---
+title: "Homework 3"
+author: "Sai Padma  pothula"
+desription: ""
+date: "05/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Homework 3
+  - sai Pothula
+---
+
+```{r}
+library(alr4)
+library(smss)
+library(ggplot2)
+library(stargazer)
+```
+```{r}
+data(UN11)
+```
+```{r}
+str(UN11)
+
+```
+
+A: Predictor: gross national product per person (ppgdp) Response: fertility
+
+```{r}
+# Assuming your data frame is named 'df'
+ggplot(data = UN11, aes(x = ppgdp, y = fertility)) +
+  geom_point()
+
+```
+```{r}
+# Assuming your data frame is named 'df'
+ggplot(data = UN11, aes(x = log(ppgdp), y = log(fertility))) +
+  geom_point()
+
+```
+2 a: The conversion factor from dollars to British pounds sterling is given as 1 pound equals about 1.33 dollars.the slope will also become divided by 1.33.
+2 b: When converting the units of the explanatory variable from dollars to British pounds sterling in a regression analysis, the correlation between variables does not change. The correlation measures the strength and direction of the linear relationship between two variables and is not affected by the choice of units or scale used to measure the variables.
+
+3:
+```{r}
+data(water)
+pairs(water)
+
+```
+4:
+
+```{r}
+data(Rateprof)
+ratings <- Rateprof[, c("quality", "helpfulness", "clarity", "easiness", "raterInterest")]
+pairs(ratings)
+```
+Quality vs. Other Ratings: Look for relationships between the quality rating and the other ratings (helpfulness, clarity, easiness, and raterInterest). A positive relationship would indicate that higher ratings in one variable tend to be associated with higher ratings in the other variable.
+Helpfulness vs. Clarity: Examine the relationship between the helpfulness and clarity ratings. If there is a positive relationship, it suggests that instructors who are rated as more helpful also tend to be rated as more clear in their teaching.
+Easiness vs. Other Ratings: Consider the relationship between the easiness rating and the other ratings. A positive relationship would indicate that courses perceived as easier tend to receive higher ratings in terms of quality, helpfulness, clarity, and rater interest.
+RaterInterest vs. Other Ratings: Look for any relationships between the raterInterest rating and the other ratings. A positive relationship would indicate that instructors who teach subjects that students are more interested in tend to receive higher ratings in terms of quality, helpfulness, clarity, and easiness.
+
+5(a):
+```{r}
+data(student.survey)
+ggplot(data = student.survey , aes(x=re, y=pi)) + geom_point() +
+  labs(title="Religion and Political Ideology",
+        x ="Frequency attending religious services", y = "Political ideology")
+
+```
+```{r}
+ggplot(data = student.survey, aes(x=tv, y=hi)) + geom_point() +
+  labs(title="Scatter Plot Hours watching TV and High School GPA",
+        x ="Average hours watching TV", y = "High School GPA")
+```
+5(b):
+```{r}
+model1 <- lm(as.numeric(pi) ~ as.numeric(re), data = student.survey)
+summary(model1)
+```
+```{r}
+model2 <- lm(hi ~ tv, data = student.survey)
+summary(model2)
+
+```
+The analysis suggests a negative relationship between the average TV hours per week and the GPA score. For every additional hour of TV watched per week, the GPA score is expected to decrease by approximately 3 points. However, the relationship is weak or low, and eliminating outliers may not significantly change the results. Furthermore, the low R-squared value indicates that TV hours explain only a small portion of the GPA score.
+
