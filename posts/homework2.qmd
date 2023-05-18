@@ -1,0 +1,153 @@
+---
+title: "Homework 2"
+author: "Sai Padma  pothula"
+desription: ""
+date: "05/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Homework 2
+  - sai Pothula
+---
+
+1:
+```{r}
+n1 <- 539
+xbar1 <- 19
+s1 <- 10
+
+SE1 <- s1/sqrt(n1)
+error = qt(0.95, df = n1 - 1)*SE1
+LB1 = xbar1 - error
+UB1 = xbar1 + error
+cat("The 90% confidence interval for the mean wait time for angiography is (", LB1, ",", UB1, ")\n")
+```
+
+```{r}
+n2 <- 847
+xbar2 <- 18
+s2 <- 9
+SE2 <- s2/sqrt(n2)
+error = qt(0.95, df = n2 - 1)*SE2
+LB2 = xbar2 - error
+UB2 = xbar2 + error
+cat("The 90% confidence interval for the mean wait time for angiography is (", LB2, ",", UB2, ")\n")
+```
+
+```{r}
+print(UB1-LB1)
+
+```
+
+```{r}
+print(UB2-LB2)
+```
+
+2:
+```{r}
+n <- 1031
+x <- 567
+p <- x/n
+p
+```
+3:
+```{r}
+z <- qnorm(0.95)
+
+#Confidence interval for p
+CI <- p + c(-1, 1) * z * sqrt((p*(1-p))/1031)
+CI
+```
+
+```{r}
+
+sd <- (200 - 30)/4
+ME <- 5
+n <- ((qnorm(0.95) * sd / ME) ^ 2)
+n
+
+```
+
+4A:
+```{r}
+sample_mean <- 410
+h_mean <- 500
+sample_std <- 90
+n <- 9
+t_score <- (sample_mean - h_mean) / (sample_std / sqrt(n))
+p <- 2 * pt(-abs(t_score), df = n - 1)
+p
+```
+
+B:
+```{r}
+p <-  pt((t_score), df = n - 1)
+p
+```
+
+C:
+```{r}
+p <-  pt((t_score), df = n - 1, lower.tail=FALSE)
+p
+```
+
+5:
+```{r}
+n_jones <- 1000
+y_bar_jones <- 519.5
+se_jones <- 10.0
+
+t_score_jones <- (y_bar_jones - 500) / se_jones
+t_score_jones
+
+```
+
+```{r}
+n_smith <- 1000
+y_bar_smith <- 519.7
+se_smith <- 10.0
+
+t_score_smith <- (y_bar_smith - 500) / se_smith
+t_score_smith
+```
+```{r}
+p_value <- 2 * pt(abs(t_score_smith), df = n_smith - 1, lower.tail = FALSE)
+p_value
+```
+```{r}
+p_value_j <- 2 * pt(abs(t_score_jones), df = n_jones - 1, lower.tail = FALSE)
+p_value_j
+
+```
+
+6:
+```{r}
+grade_levels <- c("6th grade", "7th grade", "8th grade")
+healthy_snack <- c(31, 43, 51)
+unhealthy_snack <- c(69, 57, 49)
+observed <- rbind(healthy_snack, unhealthy_snack)
+result <- chisq.test(observed)
+result
+```
+
+7:
+```{r}
+area1 <- c(6.2, 9.3, 6.8, 6.1, 6.7, 7.5)
+area2 <- c(7.5, 8.2, 8.5, 8.2, 7.0, 9.3)
+area3 <- c(5.8, 6.4, 5.6, 7.1, 3.0, 3.5)
+
+perpupil <- data.frame(area1, area2, area3)
+
+summary(perpupil)
+```
+```{r}
+perpupil2 <- stack(perpupil[,1:3])
+
+model <- aov(values ~ ind, data = perpupil2)
+
+summary(model)
+```
