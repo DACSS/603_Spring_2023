@@ -80,6 +80,7 @@ library(gridExtra)
 library(stargazer)
 library(jtools)
 library(interactions)
+library(lubridate)
 ```
 
 ### Data source and description.
@@ -130,7 +131,7 @@ merged <- merged %>%
   filter (!is.na(merged$pct.positive))
 ```
 
-To begin, I will review available variables and evaluate to idntify a
+To begin, I will review available variables and evaluate to identify a
 metric for each construct in my study.
 
 # 1.DV: engagement.
@@ -283,27 +284,7 @@ ggplot(merged, mapping=aes(x=post.date))+
 This graph is showing of "Search + amp referral visits" have high
 variability. Other referral sources range is much smaller.
 
-```{r, echo=T}
-colnames(comments.data)
-# Calculating date of the post and weekday  from comments data 
 
-library(lubridate)
-post.date <-comments.data %>%
-    group_by(post_id)%>%
-    arrange(written_at)%>%
-    summarize(post.dt = first(written_at))
-
-post.date  <-post.date %>%
-  mutate (weekday = wday(post.dt, label = TRUE),
-          n.coms =n())%>%
-  filter (n.coms>100)%>%
-  select(post_id,post.dt,  weekday )
-
- # Adding weekdays to both data sets: comments level and post level:
-comments.data <- merge(comments.data, post.date , by = "post_id", all = TRUE)
-merged <- merge( merged, post.date , by = "post_id", all = TRUE)
-
-```
 
 ```{r, echo=T}
 ggplot(merged, mapping=aes(x=direct , y=e.rate))+
@@ -311,13 +292,22 @@ ggplot(merged, mapping=aes(x=direct , y=e.rate))+
 
 ```
 ### 2.3. Post weekdays
+Calculating weekdays variable: 
+```{r, echo=T}
+# colnames(comments.data)
+# merged <- merge( merged, post.date , by = "post_id", all = TRUE)
 
+merged <-merged %>%
+  mutate (weekday = wday(post.date, label = TRUE))
+table(merged$weekday)
+
+```
 The posts are being published Monday through Friday (with rare
 exceptions). No posts are published on the weekend. Below is a plot for
 exit rate and number of comments' distributions per week day
 
 ```{r, echo=T}
- ggplot (merged,  mapping=aes(x=weekday, y=e.rate) )+
+ggplot (merged,  mapping=aes(x=weekday, y=e.rate) )+
   geom_boxplot()+
   geom_point()+
   labs(title="Exit rate per weekday")
@@ -393,7 +383,7 @@ from all likes (both "thumbs up" and "thumbs down").
   labs(title="Mood of the post (pct.positive) distribution")
 ```
 
-Plotting mood pf the post against engagement metyrics:
+Plotting mood pf the post against engagement metrics:
 
 ```{r, echo=T}
  ggplot (merged,  mapping=aes(x=pct.positive, y=e.rate ))+
@@ -527,7 +517,7 @@ plot(model.7, which = 1:6)
 ```
 We still observe curvi-linear distribution of residuals.
 
-Now I will explore an ineraction with popularity (Uniques)
+Now I will explore an interaction with popularity (variable "Uniques")
 
 ```{r, echo=T}
 # last model
@@ -537,7 +527,7 @@ model.7 <- lm(e.rate ~ log(Uniques)+log(google) +log(direct) +other.web +log(bdc
 model.8 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
 stargazer( model.7,model.8, type = 'text')
 ```
-Adding interaction between popularity and google referrals significcntly
+Adding interaction between popularity and google referrals significantly
 improved the model: interaction term has negative correlation with
 dependent variable, it also made "social" referrals significant, and
 improved models R\^2 and adjusted R\^2.
@@ -614,43 +604,44 @@ plot(model.9, which = 6)
 
 ```
 
-New, the variable "other.web" became unsignificant, but model fit
+New, the variable "other.web" became insignificant, but model fit
 improved.
 
 ### 3.3. Improved model.
 
-I will check whether other referral sources have an interaction with
+I will check whether "direct" referral sources have an interaction with
 popularity:
 
 ```{r, echo=T}
-
+#last model: 
 model.9 <- lm(e.rate ~ log(Uniques)*log(google) +log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
-# adding interactions to all IVs
-model.10 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +log(Uniques)*other.web +log(Uniques)*social +log(Uniques)*log(bdc)  +log(Uniques)*weekday , data = merged)
-# removing interations from thos that are not significant 
-model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +log(Uniques)*weekday , data = merged)
+# adding interaction to direct.
+model.10 <- lm(e.rate ~ log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  +weekday , data = merged)
+stargazer( model.9, model.10, type = 'text' )
 
-stargazer( model.9,model.10,model.11, type = 'text')
+```
+
+Diagnostics: 
+```{r, echo=T}
 
 par(mfrow = c(1,3))
 plot(model.9, which = 1)
 plot(model.10, which = 1)
-plot(model.11, which = 1)
+```
+We can see model 9 ( with interaction between google and  Uniques) shows better residuals vs fitted plot. 
 
+```{r, echo=T}
 par(mfrow = c(1,3))
 plot(model.9, which = 2)
 plot(model.10, which = 2)
-plot(model.11, which = 2)
 
 par(mfrow = c(1,3))
 plot(model.9, which = 3)
 plot(model.10, which = 3)
-plot(model.11, which = 3)
 
 par(mfrow = c(1,3))
 plot(model.9, which = 4)
 plot(model.10, which = 4)
-plot(model.11, which = 4)
 
 par(mfrow = c(1,3))
 plot(model.9, which = 5)
@@ -660,11 +651,10 @@ plot(model.11, which = 5)
 par(mfrow = c(1,3))
 plot(model.9, which = 6)
 plot(model.10, which = 6)
-plot(model.11, which = 6)
+
 ```
 
-All models have similar R\^2 and adjusted R\^2. However, the last model
-(model.11) best accounts for all source variables.
+Both models have similar R\^2 and adjusted R\^2. 
 
 Calculation of AIC and BIC:
 
@@ -672,54 +662,31 @@ Calculation of AIC and BIC:
 
 AIC(model.9) 
 AIC(model.10) 
-AIC(model.11) 
-
 BIC(model.9) 
 BIC(model.10) 
-BIC(model.11) 
+
 ```
 
-AIC and BIC are very close to each other in all three models.
+AIC and BIC are very close. 
 
-To summarize, the model \# 11 demonstrated the best fit with high R\^2
-value and good results in diagnostic plots.
+To summarize,  models \# 9 and 10 demonstrated a good  fit with high R\^2
+value and good results in diagnostic plots. Each of them is visualizing interaction between  popularity and referral variable. 
 
-Te final model of my analysis is:
-
-```{r, echo=T}
-model.11 <- lm(e.rate ~ log(Uniques)*log(google) +log(Uniques)* log(direct) +other.web +social +log(bdc)  + weekday , data = merged)
-
-model.12 <- lm(e.rate ~ log(Uniques)*log(google) , data = merged)
-summary(model.11)
-```
 ### 3.4. Visualizing interaction: 
 
-Moderating impact of popularity referrals on relationship between referral sourceand engagement: 
+Moderating impact of referral source on relationship between popularity and engagement: 
 
 ```{r, echo=T}
-interact_plot(model.11, pred =Uniques , modx =  google, plot.points = TRUE )
-interact_plot(model.11, pred = google, modx =  Uniques, plot.points = TRUE )
+interact_plot(model.9, pred =Uniques , modx =  google, plot.points = TRUE, data=merged )
+
 ```
-This graph shows that low levels of popularity (Uniques) there is no connection between google referrals and exit rate. At higher levels of popularity exit rate is significantly higher overall, but seem to dlightly decrease with increase of google refrrals.  
-
-
-, increase of popularity (uniques) decreases engagement more rapidly, than at higher levels of google referrals.  I.e. at some level of Google referrals (~15-30K) poupularity impacts engagement not as strongly. 
+This graph shows that for higher levels of Google impact of popularity  on exit rate will be lower (i.e. better engagement for the same level of popularity) .
 
 ### Moderating impact of direct referrals on relationship between popularity and engagement: 
 ```{r, echo=T}
-plot (Uniques ~ direct, data = merged)
-interact_plot(model.11, pred = Uniques, modx = direct, plot.points = TRUE )
-interact_plot(model.11, pred =direct , modx = Uniques , plot.points = TRUE )
-
-
+interact_plot(model.9, pred = Uniques, modx = direct, plot.points = TRUE )
 ```
-Similarly, this graph shows that  higher direct associated with higher popularity. While exit rate is generally going down with increase of direct referrals,  higher levels of popularity generally associated with higher direct and significantly giher exit rate (i.e. popularity decreases engagement despite direct referrals increasing engagement) 
-
-lower levels  of direct referrals correspond with higher exit rate and 
-
-This graph demonstrates that with the lower values of direct referrals, exit rates are higher for the same amount of unique users. 
-
-
+ Popularity generally decreases engagement. However, with higher levels of direct , impact of popularity on  exit rate will be lower. 
 
 
 # 4. Model for N.comments - loyal readers engagement:
@@ -772,19 +739,27 @@ significance of variables. It also improved R\^2 and adjusted R\^2.
 ```{r, echo=T}
 par(mfrow = c(2,3))
 plot(model.4, which = 1:6)
-
 ```
+ In the first and third plot we can see values being concentrated unevenly, which suggests hetersroscedasticity of the variables. 
+
+
 
 # 4. Conlusion
 
-We have build two models for different engagement metrics: engagement of
-all readers and engagement of loyal readers. As we can see from the
+We have build tree models for different engagement metrics: engagement of
+all readers (model 9 and 10) and engagement of loyal readers (model 4) . As we can see from the
 models, different factors contribute to engagement of these two groups
 of readers:
 
 ```{r, echo=T}
+stargazer(model.9, model.10, model.4, type = 'text')
 
-stargazer( model.11, model.4, type = 'text')
+
+
+ sink("output.txt")
+stargazer(model.9, model.10, model.4, type = 'text')
+  dev.off()
+ sink(type = "output")
 ```
 
 
@@ -804,9 +779,9 @@ showing thee lowest engagement.
 
 It also important to point out, that popularity of the post (Uniques)
 only plays a role for all user's engagement. Loyal readers appear not
-being impacted by popularity. It is moderated by Google and direct referrals, where the posts with higher amounts of referrals show overall better engagement. 
+being impacted by popularity. Impact of popularity (Uniques) is moderated by Google and Direct referrals, where the posts with higher amounts of referrals show overall better engagement. 
 
-To conclude,  we found significant connection between the referral source and readers engagement. Most metrics related to the post discussion appeared non-relvent, with the exception of post mood impacting loyal readers engagement. 
+To conclude,  we found significant connection between the referral source and readers engagement. Most metrics related to the post discussion appeared non-relvent, with the exception of post mood positively impacting loyal readers engagement. 
 
 ### Limitations: 
 The role of Google referrals needs to be explored further, to identify how posts with high level of Google referrals contibute to this model. Also, finding out a cause of some pots having high Google referral rate would be beneficial for the blog development. 
