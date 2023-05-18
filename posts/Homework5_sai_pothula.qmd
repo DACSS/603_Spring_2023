@@ -1,0 +1,146 @@
+---
+title: "Homework5"
+author: "Sai Padma  pothula"
+desription: ""
+date: "05/02/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Homework 5
+  - sai Pothula
+---
+
+```{r}
+
+ibrary(smss)
+library(alr4)
+library(magrittr)
+
+```
+
+```{r}
+data(house.selling.price.2, package="smss")
+data1 <- house.selling.price.2
+head(house.selling.price.2,10)
+names(data1) <- c('Price', 'Size', 'Beds', 'Baths', 'New')
+```
+1A:
+```{r}
+house_price_2<-house.selling.price.2
+
+# Calculate the correlation matrix
+correlation_matrix <- cor(house_price_2)
+
+print(correlation_matrix, border = TRUE, lwd = 2)
+
+```
+
+```{r}
+fit <- lm(P ~ ., data = house_price_2)
+backward <- step(fit, direction = "backward")
+summary(backward)
+```
+The variable to be deleted first in backward elimination would be "Beds" since it has the highest p-value of 0.487.
+
+1B:
+```{r}
+forward_dir <- step(fit, direction = "forward")
+summary(forward_dir)
+```
+In forward selection, the variable with the lowest p-value is added first, indicating a stronger evidence of its influence on the response variable. 
+
+Considering the full model, we observe that the variable "S" has the lowest p-value (< 2e-16), demonstrating its high significance in predicting the house price. Therefore, if we were to employ forward selection based on p-values, the variable "S" would be added first to the model. Subsequently, "Ba" would be added, followed by "New," and finally "Be." It is worth noting that none of the other variables exhibit p-values lower than "S," justifying their addition order.
+
+C:
+When additional variables are included in the regression model, the predictive power of "Beds" in determining the "Price" diminishes. This could be attributed to the fact that "Baths" and "Size" have a strong correlation with "Price," indicating that they might already account for some of the influence that "Beds" has on the outcome. Furthermore, a high correlation between "Size" and "Beds" suggests the presence of multicollinearity, where these variables provide redundant information to the model.
+
+D:
+```{r}
+summary(lm(P ~ S, data = house_price_2))
+```
+
+```{r}
+summary(lm(P ~ S+New, data = house_price_2))
+```
+
+```{r}
+summary(lm(P ~ ., data = house_price_2))
+```
+
+```{r}
+summary(lm(P ~ . -Be, data = house_price_2))
+```
+
+```{r}
+full_model <- lm(P ~ ., data = house.selling.price.2)
+model_noBeds <- lm(P ~ .-Be, data = house.selling.price.2)
+model_noBeds_noBaths <- lm(P ~ S + New, data = house.selling.price.2)
+model_size_only <- lm(P ~ S, data = house.selling.price.2)
+```
+
+```{r}
+rsquared <- function(fit) summary(fit)$r.squared
+adj_rsquared <- function(fit) summary(fit)$adj.r.squared
+PRESS <- function(fit) {
+  pr <- residuals(fit)/(1-lm.influence(fit)$hat)
+  sum(pr^2)
+}
+```
+
+```{r}
+models <- list(full_model, model_noBeds, model_noBeds_noBaths, model_size_only)
+data.frame(models = c('full_model', 'model_noBeds', 'model_noBeds&Baths', 'model_only_size'),
+           rSquared = sapply(models, rsquared),
+           adj_rSquared = sapply(models, adj_rsquared),
+           PRESS = sapply(models, PRESS),
+           AIC = sapply(models, AIC),
+           BIC = sapply(models, BIC)) |>
+  print()
+```
+It is important to note that when evaluating the models based on R-squared and Adjusted R-squared, higher values indicate better model fit. However, in the case of PRESS, AIC, and BIC, lower values indicate better performance. Considering these criteria, the model that does not include the variable "Beds" is considered better. This conclusion is supported by the higher adjusted R-squared value and lower values of PRESS, AIC, and BIC for the model without "Beds".
+
+E:
+Select model with no bed variable.
+
+2A:
+```{r}
+head(trees)
+```
+
+```{r}
+tree_model <- lm(Volume ~ Girth + Height, data = trees)
+summary(tree_model)
+```
+B:
+
+```{r}
+par(mfrow = c(2,3))
+plot(tree_model, which = 1:6)
+```
+The violation that stands out the most from the first plot is the violation of the linearity assumption. In the plot of fitted values vs. residuals, the expected pattern is a relatively straight line along the horizontal axis. However, in this case, the red line follows a U-shaped pattern. This violation can be attributed to the relationship between the volume and the square of the diameter. The current model uses only the diameter (Girth) as a predictor, failing to capture the quadratic nature of the relationship. To address this issue, we can explore the inclusion of a quadratic term in the model.
+
+3A:
+```{r}
+model <- lm(Buchanan ~ Bush, data = florida)
+
+par(mfrow = c(2, 2))
+plot(model)
+```
+3B:
+```{r}
+
+florida$log_Bush <- log(florida$Bush)
+florida$log_Buchanan <- log(florida$Buchanan)
+
+# Perform simple linear regression with log-transformed variables
+model <- lm(log_Buchanan ~ log_Bush, data = florida)
+
+# Generate regression diagnostic plots
+par(mfrow = c(2, 2))
+plot(model)
+
+```
