@@ -1,8 +1,8 @@
 ---
-title: "Maternal Mortality and Women's Political Inclusion"
+title: "Maternal Mortality and Women's Political Inclusion: Exploring the impact and pathways of gender equality on maternal health"
 author: "Justine Shakespeare"
 desription: "Final project for DACSS 603"
-date: "05/15/2023"
+date: "05/18/2023"
 format:
   html:
     toc: true
@@ -10,7 +10,7 @@ format:
     code-copy: true
     code-tools: true
 categories:
-  - finalpart2
+  - finalproject
   - Justine Shakespeare
   - maternal mortality
   - women's political inclusion
@@ -34,7 +34,7 @@ library(kableExtra)
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
-## Research Question
+## Introduction and Research Questions
 
 Despite advancements in health and technology, maternal mortality remains a significant public health challenge around the world. According to the World Health Organization, approximately 287,000 women died from complications related to pregnancy or childbirth in 2020.[^1] Recently it was reported that global declines in maternal mortality have stalled,[^2] even increased in the United States,[^3] and data from 2020 has shown the pandemic brought a sharp uptick in maternal deaths.[^4] The World Health Organization has stated that the majority of maternal deaths are preventable.[^5]
 
@@ -48,7 +48,7 @@ Despite advancements in health and technology, maternal mortality remains a sign
 
 [^5]: Maternal mortality, World Health Organization (2023) https://www.who.int/news-room/fact-sheets/detail/maternal-mortality
 
-Past research has investigated factors associated with higher rates of maternal mortality, both at the level of the individual and country. Many studies have found that factors associated with maternal healthcare, such as the presence of a skilled attendant at birth and antenatal visits, are strongly associated with maternal mortality.[^6] [^7] Other studies considering social determinants of health have found that factors such as adult literacy, education, income levels, and access to water and sanitation are all associated with maternal mortality.[^8] [^9] The majority of maternal deaths occur in low-income countries.[^10]
+Past research has investigated factors associated with higher rates of maternal mortality, both at the level of the individual and country. Many studies have found that factors associated with maternal healthcare, such as the presence of a skilled attendant at birth and antenatal visits, are strongly associated with maternal mortality.[^6] [^7] Other studies considering social determinants of health have found that factors such as adult literacy, education, national income levels, and access to water and sanitation are all associated with maternal mortality.[^8] [^9] The majority of maternal deaths occur in low-income countries.[^10]
 
 [^6]: Betrán, A.P., Wojdyla, D., Posner, S.F. et al. National estimates for maternal mortality: an analysis based on the WHO systematic review of maternal mortality and morbidity. BMC Public Health 5, 131 (2005). https://doi.org/10.1186/1471-2458-5-131 https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-5-131
 
@@ -60,7 +60,7 @@ Past research has investigated factors associated with higher rates of maternal 
 
 [^10]: Maternal mortality, World Health Organization (2023) <https://www.who.int/news-room/fact-sheets/detail/maternal-mortality>
 
-This research intends to explore the relationship between women's political inclusion and maternal mortality, while controlling for confounding variables related to the development of a nation's economy and health sector. In addition, this research will examine the mechanism through which women's political inclusion might impact maternal mortality by considering the percentage of skilled attendants at birth as a mediator variable.
+This research intends to explore the relationship between women's political inclusion and maternal mortality, while controlling for confounding variables related to the development of a nation's economy, health sector, and political system. In addition, this research will examine the mechanism through which women's political inclusion might impact maternal mortality by considering the percentage of skilled attendants at birth as a mediator variable.
 
 Past research has found a link between higher levels of gender equality and women's political inclusion and reduced maternal mortality, although analysis has primarily focused on individual countries or a subset of countries (typically lower-income).[^11] [^12] This research will investigate whether these trends hold true when looking at over 150 countries from all levels of economic development.
 
@@ -68,19 +68,24 @@ Past research has found a link between higher levels of gender equality and wome
 
 [^12]: MATERNAL MORTALITY AND WOMEN'S POLITICAL POWER, Sonia R. Bhalotra, Damian Clarke, Joseph F. Gomes, Atheendar, Venkataramani. NATIONAL BUREAU OF ECONOMIC RESEARCH, (June 2022) https://www.nber.org/system/files/working_papers/w30103/w30103.pdf
 
-In short, this analysis seeks to answer the question: Does women's political inclusion and empowerment have an effect on maternal mortality?
+In short, this analysis seeks to answer the following two research questions:
+
+1.  Does gender exclusion have an effect on maternal mortality?
+2.  Is the effect of women's political inclusion on maternal mortality mediated by the presence of skilled attendants at birth?
 
 ## Hypotheses
 
 **Hypothesis 1:** Where gender exclusion is low and political inclusion of women is high, health outcomes are better and maternal mortality is low. This will hold true even when controlling for variables which are known to have an effect on both women's political inclusion and maternal mortality.
 
-**Hypothesis 2:** The political inclusion and empowerment of women has a positive effect on maternal healthcare infrastructure and specifically the increase of skilled attendants present at birth, which in turn has the effect of reducing maternal mortality. In other words, the relationship between gender exclusion and maternal mortality is mediated by the presence of skilled attendants at birth.
+**Hypothesis 2:** The political inclusion and empowerment of women has a positive effect on national maternal health infrastructure and specifically the increase of skilled attendants present at birth, which in turn has the effect of reducing maternal mortality. In other words, the relationship between gender exclusion and maternal mortality is mediated by the presence of skilled attendants at birth.
 
 In investigating these two hypotheses, this analysis will explore the link between the political inclusion of women and reduced maternal mortality and try to provide insight into the mechanism through which this occurs.
 
 ## Introduction to the Data
 
 This research will utilize several datasets in order to capture all of the relevant variables.
+
+#### Dependent variable
 
 The dependent variable, **Maternal Mortality Ratio**, is drawn from the *Maternal and newborn health* table from *UNICEF*. This data is from 2017.[^13]
 
@@ -95,6 +100,8 @@ According to the **World Health Organization**, the **maternal mortality ratio (
 :::
 
 [^14]: Indicator Metadata Registry List, https://www.who.int/data/gho/indicator-metadata-registry/imr-details/26
+
+#### Explanatory variable
 
 The **explanatory variable** featured in this analysis will be drawn from the *Varieties of Democracy V-Dem* dataset.[^15] From there, the following variable will be used:
 
@@ -112,36 +119,40 @@ This variable is on an interval scale, from low to high (0-1). The codebook note
 
 [^18]: Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Michael Bernhard, Agnes Cornell, M. Steven Fish, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Sandra Grahn, Allen Hicken, Katrin Kinzelbach, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Oskar Rydén, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Eitan Tzelgov, Luca Uberti, Yi-ting Wang, Tore Wig, and Daniel Ziblatt. 2023. "V-Dem Codebook v13" Varieties of Democracy (V-Dem) Project.
 
-In addition to the dependent and explanatory variables, a **mediator variable** will also be considered in this analysis. As noted above, research has shown that the presence of skilled attendants at birth has a negative effect on maternal mortality.[^19] The second hypothesis of this research is that more political inclusion of women will have the effect of increasing the percentage of births with a skilled attendant, which will in turn reduce maternal mortality. This research will include a variable from the same *Maternal and newborn health* table from *UNICEF* that the maternal mortality data was drawn from.[^20] This mediator variable is the percentage of births that occur with a skilled attendant in each country.
+#### Mediator variable
+
+In addition to the dependent and explanatory variables, a **mediator variable** will also be considered in this analysis. As noted above, research has shown that the presence of skilled attendants at birth has a negative effect on maternal mortality.[^19] The second hypothesis of this research is that more political inclusion of women will improve national maternal healthcare and have the effect of increasing the percentage of births with a skilled attendant, which will in turn reduce maternal mortality. The mediator variable is the percentage of births that occur with a skilled attendant in each country, and it will be drawn from the same *Maternal and newborn health* table from *UNICEF* that the maternal mortality data is from.[^20]
 
 [^19]: MATERNAL MORTALITY AND WOMEN'S POLITICAL POWER, Sonia R. Bhalotra, Damian Clarke, Joseph F. Gomes, Atheendar, Venkataramani. NATIONAL BUREAU OF ECONOMIC RESEARCH, (June 2022) https://www.nber.org/system/files/working_papers/w30103/w30103.pdf
 
 [^20]: The State of the World's Children 2021: Statistical tables, UNICEF (2021) https://data.unicef.org/resources/dataset/the-state-of-the-worlds-children-2021-statistical-tables/
 
+#### Confounding variables
+
 Three **confounding variables** that seek to account for the economic and political development of a country will be considered in order to control for their effect on both maternal mortality and women's political exclusion.
 
 **GDP per capita** will be used as a way to control for a nation's economic development. This variable is drawn from the *International Monetary Fund (IMF)'s* data.[^21] GDP per capita from 2017 will be used in order to be consistent with the rest of the data.
 
-[^21]: International Monetary Fund. GDP per capita, current prices. https://www.imf.org/external/datamapper/NGDPDPC\@WEO/OEMDC/ADVEC/WEOWORLD
+[^21]: International Monetary Fund. GDP per capita, current prices. (2023) https://www.imf.org/external/datamapper/NGDPDPC\@WEO/OEMDC/ADVEC/WEOWORLD
 
 In addition to GDP, this analysis will also include a confounding variable on the **government expenditure on health as a percentage of GDP**. This will be drawn from the *Economic Indicators* table from *UNICEF*. This data is from 2017*.*[^22]
 
 [^22]: The State of the World's Children 2021: Statistical tables, UNICEF (2021) https://data.unicef.org/resources/dataset/the-state-of-the-worlds-children-2021-statistical-tables/
 
-Finally, a variable capturing the level of **democracy** in a country will be used as a confounding variable in this analysis. This variable was drawn from the V-Dems data.[^23] According to the codebook, this variable was "computed by subtracting the autocracy score from the democracy score. The resulting unified POLITY scale ranges from +10 (strongly democratic) to -10 (strongly autocratic)."[^24] This variable will see to control for social and political elements that may effect both gender exclusion and maternal mortality.
+Finally, a variable capturing the level of **democracy** in a country will be used as a confounding variable in this analysis. This variable was drawn from the V-Dems data.[^23] According to the codebook, this variable was "computed by subtracting the autocracy score from the democracy score. The resulting unified POLITY scale ranges from +10 (strongly democratic) to -10 (strongly autocratic)."[^24] This variable will seek to control for social and political elements that may effect both gender exclusion and maternal mortality.
 
 [^23]: Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, David Altman, Michael Bernhard, Agnes Cornell, M. Steven Fish, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Ana Good God, Sandra Grahn, Allen Hicken, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Natalia Natsika, Anja Neundorf, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Oskar Rydén, Johannes von Römer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundström, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2023. "V-Dem \[Country-Year/Country-Date\] Dataset v13" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds23.
 
 [^24]: Polity 5 (Marshall and Jaggers 2020).
 
-The resulting data used for analysis will be a cross-sectional, cross-national sample of data from 155 countries (some observations were removed because of missing values) on all of the variables noted here: maternal mortality, skilled birth attendants, gender exclusion, GDP, percentage of GDP spent on health, and democracy.
+The resulting data used for analysis will be a cross-sectional, cross-national sample of data from 155 countries (some observations were removed because of missing values) on all of the variables noted here: maternal mortality, skilled birth attendants, gender exclusion, GDP, percentage of GDP spent on health, and democracy. All variables are for the year 2017.
 
 ## Loading and Cleaning the Data
 
 Data for this analysis will be drawn from multiple datasets. First, data from the Maternal and Newborn Health table from UNICEF for the explanatory variable and the confounding variable on skilled birth attendants will be loaded and cleaned. A second dataset from UNICEF will be loaded and joined with this one because it includes a world regions variable that will allow us to group and visualize the data. This variable will not be used in regression analysis.
 
 ```{r}
-# Load the dataset, skip the first five rows, rename all of the variables we want and delete the ones we don't
+# Load the dataset
 MaternalNewbornHealth <- read_excel("UNICEF_mat_newborn.xlsx", skip = 6, 
                                     col_names= c("Countries_and_areas", rep("delete", 8), 
                                                  "ALOneVisit", "delete", "ALFourVisits", 
@@ -150,6 +161,7 @@ MaternalNewbornHealth <- read_excel("UNICEF_mat_newborn.xlsx", skip = 6,
                                                  "Maternal_Mortality_Ratio_2017", "delete", 
                                                  "delete")) %>% 
   select(!contains("delete"))
+# skip the first five rows, rename all of the variables we want and delete the ones we don't
 
 # remove the last 57 rows, which include summaries and endnotes, not data
 MNH <- slice(MaternalNewbornHealth, 1:(nrow(MaternalNewbornHealth) - 57)) 
@@ -158,9 +170,9 @@ MNH <- slice(MaternalNewbornHealth, 1:(nrow(MaternalNewbornHealth) - 57))
 MNH <- MNH %>% filter(!str_detect(Maternal_Mortality_Ratio_2017, "-"))
 MNH <- MNH %>% filter(!str_detect(SkilledBirthAtt, "-"))
 
+# Turning everything numeric
 MNH$`SkilledBirthAtt` <- as.numeric(MNH$`SkilledBirthAtt`)
 MNH$`Maternal_Mortality_Ratio_2017` <- as.numeric(MNH$`Maternal_Mortality_Ratio_2017`)
-# Turning everything numeric
 
 # In order to disaggregate and reorder data by region and by developmental area, we'll join this data with another UNICEF dataset with those variables (region and sub-region).
 Regions <- read_excel("Completion_rate_8.xlsx", sheet = 2, skip = 2, 
@@ -202,8 +214,6 @@ MNH_final <- MNH_wRegion %>%
 
 # select variables in the order we want for the final data frame, leave out abbreviated names
 MNH_final <- select(MNH_final, Countries_and_areas, WorldRegion, SubRegion, Maternal_Mortality_Ratio_2017, SkilledBirthAtt)
-
-glimpse(MNH_final)
 ```
 
 Next the Varieties of Democracy data will be added. It is from this data that the explanatory variable related to the political inclusion of women and the confounding variable related to democracy will be drawn.
@@ -219,8 +229,7 @@ V_DEM_trim <- V_DEM %>%
 # rename the country_name variable so we can join it with the UNICEF data later. 
 V_DEM_trim <- rename(V_DEM_trim, "Countries_and_areas" = country_name)
 
-# Change some of the country names where the V-Dem dataset differs from the 
-# UNICEF data. 
+# Change some of the country names where the V-Dem dataset differs from the UNICEF data. 
 V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "Moldova"] <- "Republic of Moldova"
 V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "Laos"] <- "Lao People's Democratic Republic"
 V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "The Gambia"] <- "Gambia"
@@ -238,9 +247,6 @@ V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "Bolivia"] <- "
 V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "United States of America"] <- "United States"
 V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "Russia"] <- "Russian Federation"
 V_DEM_trim$Countries_and_areas[V_DEM_trim$Countries_and_areas == "Burma/Myanmar"] <- "Myanmar"
-
-# take a quick look at our V-Dem data
-glimpse(V_DEM_trim)
 ```
 
 The confounding variable GDP per capita will be pulled from a dataset from the International Monetary Fund.
@@ -280,9 +286,6 @@ imf_GDP_2017$Countries_and_areas[imf_GDP_2017$Countries_and_areas == "Tanzania"]
 imf_GDP_2017$Countries_and_areas[imf_GDP_2017$Countries_and_areas == "Türkiye, Republic of"] <- "Turkey"
 imf_GDP_2017$Countries_and_areas[imf_GDP_2017$Countries_and_areas == "Venezuela"] <- "Venezuela (Bolivarian Republic of)"
 imf_GDP_2017$Countries_and_areas[imf_GDP_2017$Countries_and_areas == "Vietnam"] <- "Viet Nam"
-
-# take a quick look at our IMF data
-head(imf_GDP_2017)
 ```
 
 The last confounding variable on health expenditure data will be drawn from the UNICEF Economic Indicators data.
@@ -296,16 +299,14 @@ UNICEF_Econ_Indicators <- read_excel("UNICEF_Econ-Indicators.xlsx", skip = 6,
   select(!contains("delete"))
 # skip the first five rows, rename all of the variables we want and delete the ones we don't want
 
-UNICEF_EI <- slice(UNICEF_Econ_Indicators, 1:(nrow(UNICEF_Econ_Indicators) - 37)) 
 # remove the last 37 rows, which include summaries and endnotes, not data
+UNICEF_EI <- slice(UNICEF_Econ_Indicators, 1:(nrow(UNICEF_Econ_Indicators) - 37)) 
 
-UNICEF_EI[UNICEF_EI == "-"] <- NA
 # replace " - " with NA in all columns
+UNICEF_EI[UNICEF_EI == "-"] <- NA
 
-UNICEF_EI$`Expend_Health_pct_GDP` <- as.numeric(UNICEF_EI$`Expend_Health_pct_GDP`)
 # Turning everything numeric
-
-glimpse(UNICEF_EI)
+UNICEF_EI$`Expend_Health_pct_GDP` <- as.numeric(UNICEF_EI$`Expend_Health_pct_GDP`)
 ```
 
 Finally, all four datasets will be joined together.
@@ -332,14 +333,16 @@ MMR_Analysis <-rename(MMR_Combined, "Country" = Countries_and_areas,
                       "Democracy" = e_p_polity, "GDP_2017" = `2017`)
 ```
 
-Two additional variables will be created for this analysis: First, the GDP per capita variable needs to be logged so that linear regression analysis can be performed, creating a new logged GDP per capita variable. Second, the GDP variable will be binned into quartiles to use for grouping when describing and visualizing the data. This second variable will not be used in analysis since the same information is captured in the `logGDP2017` variable.
+Two additional variables will be created for this analysis: First, the GDP per capita variable needs to be logged so that linear regression analysis can be performed, creating a new logged GDP per capita variable. Second, the GDP variable will be binned into quartiles to use for grouping when describing and visualizing the data. This second variable will not be used in analysis since the same information on national GDP is captured in the `logGDP2017` variable.
 
 ```{r}
+# show GDP quartiles to use for the quartiles variable
 MMR_Analysis %>% 
   summarize("25th quantile" = quantile(x = GDP_2017, probs = .25),
             "Median" = median(GDP_2017, na.rm = TRUE),
             "75th quantile" = quantile(x = GDP_2017, probs = .75))
 
+# create a GDP quartiles variable for exploratory analysis
 MMR_Analysis <- MMR_Analysis %>%
   mutate("GDP_Quartiles" = case_when(
     GDP_2017 <= 1578 ~ "1st Quartile", 
@@ -347,32 +350,17 @@ MMR_Analysis <- MMR_Analysis %>%
     GDP_2017 >= 4402.01 & GDP_2017 <= 13749 ~ "3rd Quartile",
     GDP_2017 >= 13749.01 ~ "4th Quartile")) %>% 
   mutate("logGDP2017" = log(GDP_2017))
-
-# I couldn't find any official definition of income group that used GDP levels, 
-# all of the definitions I found from the World Bank and other official sources 
-# referenced the GNI. I tried using the GNI but it wasn't as powerful in the model 
-# and most importantly, it was missing some data that seemed vital. It didn't have 
-# the South Sudan, which is an important country in this discussion of MMR because 
-# it is the place in the world with the highest MMR. So instead I went with the 
-# quartiles for grouping. Note that the quartiles are not *that* far off from the 
-# income group levels defined by the World Bank and noted below.
-# MMR_Analysis <- MMR_Analysis %>%
-#  mutate("IncomeGroup" = case_when(
-#    GDP_2017 <= 1025 ~ "low_income", 
-#    GDP_2017 >= 1026 & GDP_2017 <= 3995 ~ "low_mid_income",
-#    GDP_2017 >= 3996 & GDP_2017 <= 12375 ~ "upper_mid_income",
-#    GDP_2017 >= 12376 ~ "high_income"))
-
-glimpse(MMR_Analysis)
 ```
 
 ## Descriptive Statistics and Visualizations
+
+Let's take a look at the final dataset.
 
 ```{r}
 glimpse(MMR_Analysis)
 ```
 
-This data now contains information on 155 countries around the world, including the region and subregion they belong to, their ranking on democracy and gender exclusion indices, their national maternal mortality ratio, percentage of skill birth attendants present at birth, GDP, and percentage of GDP spent on health. In addition there are two variables created for this analysis that provide the quartile in which a country's GDP falls, and the logged GDP. This data should provide us with the key variables and confounding variables to examine and analyze the relationship between the explanatory variable (`GenderExclusion`) and the dependent variable (`Maternal_Mortality_Ratio_2017`).
+This data now contains information on 155 countries around the world, including the region and subregion they belong to, their ranking on democracy and gender exclusion indices, their national maternal mortality ratio, percentage of skill birth attendants present at birth, GDP, and percentage of GDP spent on health. In addition there are two variables created for this analysis that provide the quartile in which a country's GDP falls, and the logged GDP. This data should provide us with the key variables and confounding variables to examine and analyze the relationship between the explanatory variable (`GenderExclusion`) and the dependent variable (`Maternal_Mortality_Ratio_2017`), as well as the possible role of a mediator variable (`SkilledBirthAtt`).
 
 ### Dependent variable
 
@@ -416,7 +404,7 @@ world_data <- full_join(world, MapMMR, by = "region")
 # Plot the map
 ggplot(world_data, aes(x = long, y = lat, group = group, fill = Maternal_Mortality_Ratio_2017)) +
   geom_polygon() +
-  scale_fill_gradient(low = "#E2D0CA", high = "#D84C34") +
+  scale_fill_gradient(low = "#EFE5E2", high = "#881c1c") +
   labs(title = "Maternal Mortality Ratio Around the World",
        subtitle = "Darker shades of red indicate a higher maternal mortality ratio",
        caption = "Data from UNICEF: https://data.unicef.org (2017)", 
@@ -505,7 +493,7 @@ kable(MMR_low) %>%
 
 ### Explanatory variable
 
-The explanatory variable for this analysis is `GenderExclusion`, which is an index of gender exclusion around the world. The following map shows the levels of this variable for each country in the data. Darker shades indicate a higher level of gender exclusion, lighter shades indicate more gender inclusion and equality.
+The explanatory variable for this analysis is `GenderExclusion`, which is an index of political gender exclusion around the world. The following map shows the levels of this variable for each country in the data. Darker shades indicate a higher level of gender exclusion, lighter shades indicate more gender inclusion and equality.
 
 ```{r}
 # Plot the map 
@@ -519,7 +507,7 @@ ggplot(world_data, aes(x = long, y = lat, group = group, fill = GenderExclusion)
   theme_bw()
 ```
 
-The distribution of the explanatory variable `GenderExclusion` is somewhat right skewed, shows that fewer countries have high levels of gender exclusion. Given this skew, it might be necessary to explore logged versions of this variable.
+The distribution of the explanatory variable `GenderExclusion` is somewhat right skewed and shows that fewer countries have high levels of gender exclusion. Given this skew, it might be necessary to explore logged versions of this variable.
 
 ```{r}
 MMR_Analysis %>%
@@ -565,7 +553,7 @@ ggplot(world_data, aes(x = long, y = lat, group = group, fill = SkilledBirthAtt)
   geom_polygon() +
   scale_fill_gradient(low = "#1282A2", high = "#C7EAE4") +
   labs(title = "Percentage of Skilled Birth Attendants Around the World",
-       subtitle = "Darker shades indicate higher percentage of skilled birth attendants",
+       subtitle = "Light shades indicate a lower percentage of skilled birth attendants",
        caption = "Data from V-Dems: https://v-dem.net/ (2017)", 
        fill = "Pct of Skilled Birth Attendants") +
   theme_bw()
@@ -579,17 +567,17 @@ dfSummary(MMR_Analysis[, c("GenderExclusion", "Expend_Health_pct_GDP", "GDP_2017
 
 ### Correlations between variables
 
-Relationships between variables can be explored through visuals. The following correlogram shows select variables, their distribution, and how they correlate with one another.
+Relationships between variables can be explored through visuals. The following correlogram shows a scatterplot of the variables we'll use in this analysis, their distribution, and how they correlate with one another.
 
 ```{r}
 # first we'll select the variables that are numeric
 MMR_num <- select(MMR_Analysis, SkilledBirthAtt, Maternal_Mortality_Ratio_2017, GenderExclusion, Democracy, Expend_Health_pct_GDP, logGDP2017)
 
-# Check correlations (as scatterplots), distribution and print corrleation coefficient 
+# Plot the correlogram 
 ggpairs(MMR_num, title="Correlogram of key variables")
 ```
 
-All of these variables have some kind of correlation. `Democracy` and `Maternal_Mortality_Ratio_2017` have the lowest correlation. The highest correlation on this graph is between `Maternal_Mortality_Ratio_2017` and `SkilledBirthAtt`, which is a negative relationship. The variable `logGDP2017` is also highly correlated with `Maternal_Mortality_Ratio_2017` as well as `Expend_Health_pct_GDP`. The explanatory variable `GenderExclusion` has the highest correlation with `Expend_Health_pct_GDP` and it is a negative correlation. The explanatory variable also shows a moderate negative correlation with `SkilledBirthAtt` and `logGDP2017`. `Democracy` looks to have the lowest correlations with other variables in this analysis.
+All of these variables show some correlation that ranges from weak to strong. `Democracy` and `Maternal_Mortality_Ratio_2017` have the weakest correlation. The strongest correlation on this graph is between `Maternal_Mortality_Ratio_2017` and `SkilledBirthAtt`, which is a negative relationship. The variable `logGDP2017` has a strong negative correlation with `Maternal_Mortality_Ratio_2017`, and a strong positive correlation with `Expend_Health_pct_GDP`. The variable that has the strongest correlation with the explanatory variable `GenderExclusion`, is `Expend_Health_pct_GDP` and it is a negative correlation. The explanatory variable also shows a strong negative correlation with `SkilledBirthAtt` and `logGDP2017`. `Democracy` looks to have the lowest correlations with other variables in this analysis.
 
 The following scatterplot shows the positive relationship between the key variables of this analysis, `Maternal_Mortality_Ratio_2017` and `GenderExclusion`. This graph also shows some heteroskedasticity, which means we will need to explore logging these variables.
 
@@ -606,7 +594,7 @@ MMR_Analysis %>%
   geom_smooth(method = "lm")
 ```
 
-The following two graphs explore the relationships important to the mediator analysis that will be central to hypothesis #2. These graphs look at the relationship between the explanatory variable (`GenderExclusion`) and the mediator variable (`SkilledBirthAtt`), and the relationship between the mediator variable (`SkilledBirthAtt`) and the dependent variable (`Maternal_Mortality_Ratio_2017`).
+The following two graphs explore the relationships important to the mediator analysis that will be central to hypothesis #2. These graphs look at the relationship between the explanatory variable (`GenderExclusion`) and the mediator variable (`SkilledBirthAtt`), and the relationship between the mediator variable (`SkilledBirthAtt`) and the dependent variable (`Maternal_Mortality_Ratio_2017`). Both graphs again show some heteroskedasticity, indicating we should explore logging these variables.
 
 ```{r}
 MMR_Analysis %>% 
@@ -630,11 +618,11 @@ MMR_Analysis %>%
 
 ## Analysis
 
-The visuals above suggest some significant relationships between variables. The section will explore the research questions with correlation tests and regression analysis.
+The visuals above suggest some significant relationships between variables. This section will explore the research questions with correlation tests and regression analysis.
 
 ### Hypothesis #1
 
-Hypothesis #1: Where women are politically included and empowered, health outcomes are better and maternal mortality is low. This will hold true even when controlling for variables which are known to have an effect on both women's political inclusion and maternal mortality.
+Hypothesis #1 states that where gender exclusion is low and political inclusion of women is high, health outcomes are better and maternal mortality is low. This will hold true even when controlling for variables which are known to have an effect on both women's political inclusion and maternal mortality.
 
 How does the explanatory variable (`GenderExclusion`) relate to the dependent variable (`Maternal_Mortality_Ratio_2017`)?
 
@@ -659,26 +647,30 @@ cor.test(MMR_Analysis$Maternal_Mortality_Ratio_2017, MMR_Analysis$logGenderExclu
 
 A comparison of these correlation tests shows that the highest correlation is with the logged versions of the variables, `logGenderExclusion` and `logMMR2017`. These variables should be compared in the linear regression analysis as well.
 
-A linear regression analysis also shows a significant relationship between explanatory variable (`GenderExclusion`) and the dependent variable (`Maternal_Mortality_Ratio_2017`) and the logged versions.
+A linear regression analysis also shows a significant relationship between the explanatory variable (`GenderExclusion`) and the dependent variable (`Maternal_Mortality_Ratio_2017`) and the logged versions.
 
 ```{r}
 # Model with only the explanatory variable and the dependent variable
 MMR_nolog <- (lm(formula = Maternal_Mortality_Ratio_2017 ~ GenderExclusion,
                               data = MMR_Analysis))
 
-MMRlog <- (lm(formula = logMMR2017 ~ GenderExclusion,
+GElog <- (lm(formula = Maternal_Mortality_Ratio_2017 ~ logGenderExclusion,
                               data = MMR_Analysis))
 
-GElog <- (lm(formula = Maternal_Mortality_Ratio_2017 ~ logGenderExclusion,
+MMRlog <- (lm(formula = logMMR2017 ~ GenderExclusion,
                               data = MMR_Analysis))
 
 AllLog <- (lm(formula = logMMR2017 ~ logGenderExclusion,
                               data = MMR_Analysis))
 
-stargazer(MMR_nolog, MMRlog, GElog, AllLog, type = 'text') 
+stargazer(MMR_nolog, GElog, MMRlog, AllLog, type = 'text') 
 ```
 
-In all of the models the explanatory variable is found to have a positive and highly significant relationship at the 0.01 (1%) level. But a comparison of these models shows us that the model with logged versions of both the explanatory and dependent variables is the strongest. The R\^2 and Adjusted R\^2 values are much higher for this model than the models with only one logged variable or no logged variables. For this reason, the rest of the models in this analysis will use the `logMMR2017` in place of the `Maternal_Mortality_Ratio_2017` variable and the `logGenderExclusion` in place of the `GenderExclusion` variable.
+In all of the models the explanatory variable is found to have a positive and highly significant relationship at the 0.01 (1%) level (actually at the 0.001 (.1%) level when you view the output using the summary function).[^25] But a comparison of these models shows us that the model with logged versions of both the explanatory and dependent variables is the strongest. The R\^2 and adjusted R\^2 values are much higher for this model than the models with only one logged variable or no logged variables. For this reason, the rest of the models in this analysis will use the `logMMR2017` in place of the `Maternal_Mortality_Ratio_2017` variable and the `logGenderExclusion` in place of the `GenderExclusion` variable.[^26]
+
+[^25]: For future models, where a coefficient shows a low p-value in the stargazer output, I will check the actual p-value with the summary() function and report accordingly.
+
+[^26]: Note that I performed a similar comparison of the logged and unlogged version of the `SkilledBirthAtt` variable and found that the unlogged version of the variable had a higher correlation with both `logGenderExclusion` and `logMMR2017` and the regression models with the unlogged version of the variable were also stronger. So the `SkilledBirthAtt` variable will remain unchanged.
 
 Next, the model will be explored with confounding variables added in.
 
@@ -692,12 +684,12 @@ summary(lm(formula = logMMR2017 ~ logGenderExclusion +
                               data = MMR_Analysis))
 ```
 
-After adding in the confounding variables, the explanatory variable `logGenderExclusion` is still statistically significant at the 0.01 (1%) level. The variable `Democracy` was found to be significant at the 0.05 (5%) level. While the `Expend_Health_pct_GDP` variable was not found to be significant, because it relates to GDP it is possible that it could be significant as an interaction term with `logGDP2017`.
+After adding in the confounding variables, the explanatory variable `logGenderExclusion` is still statistically significant at the 0.001 (.1%) level. The variable `Democracy` was found to be significant at the 0.05 (5%) level. `SkilledBirthAtt` and `logGDP2017` were both found to be statistically significant at the 0.001 (.1%) level. While the `Expend_Health_pct_GDP` variable was not found to be significant, because it relates to GDP it is possible that it could be significant as an interaction term with `logGDP2017`.
 
 The following model will explore adding `Expend_Health_pct_GDP` and `logGDP2017` as an interaction term and compare it to this previous model.
 
 ```{r}
-# Model with interaction term and without
+# Model with interaction term
 MMR_1 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
                                 Democracy + 
                                 SkilledBirthAtt +
@@ -705,6 +697,7 @@ MMR_1 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
                                 Expend_Health_pct_GDP,
                               data = MMR_Analysis))
 
+# model without interaction term
 MMR_2 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
                                 Democracy +
                                 SkilledBirthAtt +
@@ -723,17 +716,7 @@ MMR_3 <- (lm(formula = logMMR2017 ~ logGenderExclusion +
 stargazer(MMR_1, MMR_2, MMR_3, type = 'text')
 ```
 
-It does not appear that the interaction term improved the model (the R\^2 value is the same as the model without the interaction term, but the adjusted R\^2 is slightly lower as we were penalized for adding another variable). The interaction term was also not significant, indicating that we do not need to keep it. The model without the interaction term or the `Expend_Health_pct_GDP` variable has the lowest R\^2 value, although that may be because it has fewer variables than the other two models. The AIC and BIC values can be used to further compare these models.
-
-```{r}
-broom::glance(MMR_1)
-broom::glance(MMR_2)
-broom::glance(MMR_3)
-```
-
-Despite the lower R\^2 values, the model without the interaction term and without the `Expend_Health_pct_GDP` variable (MMR_3) has the lowest AIC and BIC numbers, with 391.8238 and 410.0844 respectively. The model without the interaction term (MMR_1) is slightly weaker as the AIC and BIC are slightly larger, with the AIC 392.101 and BIC 413.405. The model with the interaction term (MMR_2) is the weakest, as it has the largest AIC and BIC: 393.7846 and 418.132, respectively.
-
-Finally, let's compare the PRESS statistic of all three models.
+It does not appear that the interaction term improved the model (the R\^2 value is the same as the model without the interaction term, but the adjusted R\^2 is slightly lower as we were penalized for adding another variable). The interaction term was also not significant, indicating that we do not need to keep it. The model without the interaction term or the `Expend_Health_pct_GDP` variable has the lowest R\^2 value, although that may be because it has fewer variables than the other two models. Let's explore the PRESS statistic, and the AIC and BIC values to compare these models.
 
 ```{r}
 PRESS <- function(MMR_2) {
@@ -750,7 +733,11 @@ data.frame(models = c('MMR_1', 'MMR_2', 'MMR_3'),
   print()
 ```
 
-Since MMR_3 has the smallest PRESS statistic, AIC, and BIC, we will use that model for diagnostics. This model supports the hypothesis that women's political inclusion has an effect on maternal mortality. While the `logGenderExclusion` variable was found to have a more significant effect on `logMMR2017` without any confounders, once control variables were introduced, the model became stronger and a better fit and the effect of `logGenderExclusion` remained statistically significant.
+Since MMR_3 has the smallest PRESS statistic, AIC, and BIC, we will use that model for diagnostics.
+
+#### Results
+
+This model supports the hypothesis that women's political inclusion has an effect on maternal mortality. While the `logGenderExclusion` variable was found to have a more significant effect on `logMMR2017` without any confounders, once control variables were introduced, the model became stronger and a better fit and the effect of `logGenderExclusion` remained statistically significant.
 
 ```{r}
 summary(MMR_3)
@@ -758,7 +745,7 @@ summary(MMR_3)
 
 The final model can be written:
 
-**logMMR2017 = 12.60 + 0.3347logGenderExclusion + 0.0128Democracy - 0.0246SkilledBirthAttendant - 0.7031logGDP2017**
+**logMMR2017 = 12.5972 + 0.3347logGenderExclusion + 0.0128Democracy - 0.0246SkilledBirthAttendant - 0.7031logGDP2017**
 
 Which indicates that, controlling for democracy, the percentage of births with skilled attendants, and GDP, a one unit increase in logGenderExclusion increases logMMR2017 by 0.3347. A 1% increase in `GenderExclusion` leads to a 0.3336% increase in `Maternal_Mortality_2017`.
 
@@ -771,16 +758,16 @@ round((exp(0.3347*log(1.01)) - 1)*100, 4)
 
 ### Hypothesis #2
 
-Hypothesis #2 posits that the relationship between gender exclusion and maternal mortality is mediated by the presence of skilled attendants at birth. This hypothesis proposes that the empowerment and inclusion of women in a country has a positive effect on the presence of skilled attendants at birth, which in turn has the effect of reducing maternal mortality. As discussed in the introduction, previous research has identified the presence of a skilled attendant at birth as a factor that reduces the incidence of maternal mortality.[^25] [^26] This research question seeks to determine whether the presence of a skilled birth attendant acts as a mediator between the explanatory variable and the dependent variable in this analysis.
+Hypothesis #2 posits that the relationship between gender exclusion and maternal mortality is mediated by the presence of skilled attendants at birth. This hypothesis proposes that the empowerment and political inclusion of women in a country has a positive effect on the maternal health infrastructure and specifically on the presence of skilled attendants at birth, which in turn has the effect of reducing maternal mortality. As discussed in the introduction, previous research has identified the presence of a skilled attendant at birth as a factor that reduces the incidence of maternal mortality.[^27] [^28] This research question seeks to determine whether the presence of a skilled birth attendant acts as a mediator between the explanatory variable and the dependent variable in this analysis.
 
-[^25]: Betrán, A.P., Wojdyla, D., Posner, S.F. et al. National estimates for maternal mortality: an analysis based on the WHO systematic review of maternal mortality and morbidity. BMC Public Health 5, 131 (2005). https://doi.org/10.1186/1471-2458-5-131 https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-5-131
+[^27]: Betrán, A.P., Wojdyla, D., Posner, S.F. et al. National estimates for maternal mortality: an analysis based on the WHO systematic review of maternal mortality and morbidity. BMC Public Health 5, 131 (2005). https://doi.org/10.1186/1471-2458-5-131 https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-5-131
 
-[^26]: Girum T, Wasie A. Correlates of maternal mortality in developing countries: an ecological study in 82 countries. Matern Health Neonatol Perinatol. 2017 Nov 7;3:19. doi: 10.1186/s40748-017-0059-8. PMID: 29142757; PMCID: PMC5674830. <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5674830/>
+[^28]: Girum T, Wasie A. Correlates of maternal mortality in developing countries: an ecological study in 82 countries. Matern Health Neonatol Perinatol. 2017 Nov 7;3:19. doi: 10.1186/s40748-017-0059-8. PMID: 29142757; PMCID: PMC5674830. <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5674830/>
 
 The process of mediation analysis involves identifying a model that shows the *total effect* (the effect of the explanatory variable on the dependent variable without the presence of the mediator variable), and two models that show *indirect effect* (the effect between the explanatory variable and the mediator, and the mediator and the dependent variable while controlling for the explanatory variable). Following that, these models are processed through the `mediate()` function, which estimates the mediation relationship.
 
 ```{r}
-# Total effect model (effect of the explanatory variable on the dependent variable without the presence of the mediator variable). First without covariates, second includes confounding variables (but not the mediator).
+# Total effect model (effect of the explanatory variable on the dependent variable without the presence of the mediator variable). First without covariates, second including all confounding variables (but not the mediator).
 TotalEff_noCov <- (lm(formula = logMMR2017 ~ logGenderExclusion,
                                data = MMR_Analysis))
 
@@ -792,9 +779,9 @@ TotalEff_wCov <- (lm(formula = logMMR2017 ~ logGenderExclusion +
 stargazer(TotalEff_noCov, TotalEff_wCov, type = 'text')
 ```
 
-As noted in the section on hypothesis #1, the effect of the `logGenderExclusion` variable on `logMMR2017` is significant without covariates at the level of 0.001 (.1%). Once control variables (without the mediator variable) are added, the model is much stronger, as evidenced by the higher R-squared values, but the explanatory variable is less significant (it is now at the level of 0.05 (5%)).
+As noted in the section on hypothesis #1, the effect of the `logGenderExclusion` variable on `logMMR2017` is significant without covariates at the level of 0.001 (.1%). Once control variables (although without the mediator variable) are added, the model is much stronger, as evidenced by the higher R-squared values, and the explanatory variable is still significant at the level of 0.001 (.1%).
 
-The first *indirect effect* model will show the relationship between the explanatory variable and the mediator.
+The first *indirect effect* model will show the relationship between the explanatory variable (`GenderExclusion`) and the mediator (`SkilledBirthAtt`).
 
 ```{r}
 # indirect effect between the explanatory variable and the mediator, no covariates
@@ -810,9 +797,9 @@ IndEff1_wCov <- (lm(formula = SkilledBirthAtt ~ logGenderExclusion +
 stargazer(IndEff1_noCov, IndEff1_wCov, type = 'text')
 ```
 
-The first indirect effect model show that the `logGenderExclusion` variable is statistically significant without any covariates, but is no longer significant when the control variables are included.
+The first indirect effect model shows that the `logGenderExclusion` variable is statistically significant without any covariates, but is no longer significant when the control variables are included.
 
-The second indirect effect model will show the relationship between the mediator and the dependent variable while controlling for the explanatory variable.
+The second indirect effect model will show the relationship between the mediator (`SkilledBirthAtt`) and the dependent variable (`logMMR2017`) while controlling for the explanatory variable (`GenderExclusion`).
 
 ```{r}
 # effect between the explanatory variable and the mediator, no covariates
@@ -830,11 +817,11 @@ IndEff2_wCov <- (lm(formula = logMMR2017 ~ SkilledBirthAtt +
 stargazer(IndEff2_noCov, IndEff2_wCov, type = 'text')
 ```
 
-In both of these second indirect effect models the explanatory variable is still statistically significant with the mediator present in the model. The model with the `logGenderExclusion` variable and all of the covariates is stronger than the models without covariates when comparing the R\^2 values.
+In both of these second indirect effect models the explanatory variable is statistically significant with the mediator present at the level of 0.001 (.1%). The model with the `logGenderExclusion` variable and all of the covariates is stronger than the models without covariates when comparing the R\^2 and adjusted R\^2 values.
 
 #### Mediation analysis
 
-The `mediate()` function takes both indirect effect models to perform the mediation analysis and estimates whether there is a mediator effect by the `SkilledBirthAtt` variable between the `logGenderExclusion` and the `logMMR2017` variables.
+The `mediate()` function takes both indirect effect models and the explanatory variable as the "treatment" to perform the mediation analysis and estimate whether there is a mediator effect by the `SkilledBirthAtt` variable between the `logGenderExclusion` and the `logMMR2017` variables.
 
 ```{r}
 results <- mediation::mediate(IndEff1_wCov, IndEff2_wCov, treat='logGenderExclusion', mediator='SkilledBirthAtt', boot=T)
@@ -844,6 +831,8 @@ summary(results)
 plot(results)
 ```
 
+#### Results
+
 The **ACME** **(average causal mediation effects)** accounts for the indirect effect of the explanatory variable (`GenderExclusion`) on the dependent variable (`logMMR2017`) that goes through the mediator (`SkilledBirthAtt`). This was not found to be significant.
 
 **ADE** **(average direct effects)** shows the direct effect of the explanatory variable on the dependent variable. This was also calculated in the second indirect effect model above. In both cases the relationship between the explanatory variable and the dependent variable was found to be significant at the 0.001 (.1%) level.
@@ -852,7 +841,13 @@ The **Total** **Effect** reports the sum of the direct and indirect effects of t
 
 Finally, **Prop.** **Mediated** indicates the proportion of the effect of the explanatory variable on the dependent variable that goes through the mediator. The ACME has already shown that the explanatory variable's effect on the dependent variable does not go through the mediator, so this is also not significant.
 
-In sum, this model shows that while gender exclusion has a direct effect on maternal mortality, there is no statistically significant evidence that it was mediated via the presence of skilled birth attendants.
+In sum, this model shows that while gender exclusion has a direct effect on maternal mortality, there is no statistically significant evidence that this effect is mediated via the presence of skilled birth attendants.
+
+## Conclusion
+
+This analysis supports the first hypothesis, that where gender exclusion is low and political inclusion of women is high, maternal mortality is also lower. This held true even when controlling for democracy, GDP, and the presence of skilled birth attendants.
+
+This analysis did not, however, support the hypothesis that the effect of political inclusion of women on maternal mortality was mediated by the presence of skilled attendants at birth. In fact, this research found that women's political inclusion did not have a significant effect on the presence of skilled birth attendants. This suggests that the way in which women's political inclusion and empowerment impacts maternal mortality is through another mechanism that was not explored in this analysis.
 
 ## Model Diagnostics
 
@@ -894,8 +889,3 @@ This graph shows that this model violates the influential observation assumption
 plot(MMR_3, which = 4)
 ```
 
-## Conclusion
-
-This analysis supports the first hypothesis, that where gender exclusion is low and political inclusion of women is high, maternal mortality is also lower. This held true even when controlling for democracy, GDP, and the presence of skilled birth attendants.
-
-This analysis did not, however, support the hypothesis that the effect of political inclusion of women on maternal mortality was mediated by the presence of skilled attendants at birth. In fact, this research found that women's political inclusion did not have a significant effect on the presence of skilled birth attendants. This suggests that the way in which women's political inclusion and empowerment impacts maternal mortality is through another mechanism that was not explored in this analysis.
