@@ -1,0 +1,149 @@
+---
+title: "Homework5"
+author: "Rahul Somu"
+description: "Homework5"
+date: "05/16/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw5
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Question 1
+A. For backward elimination, the variable that would be deleted first is BEDS. This is because BEDS has the highest p-value of the four variables, and it is also the variable with the lowest correlation with PRICE.
+
+B. For forward selection, the variable that would be added first is NEW. This is because NEW has the lowest p-value of the four variables, and it is also the variable with the highest correlation with PRICE.
+
+C. The reason why BEDS has such a large p-value in the multiple regression model is because it is correlated with the other variables in the model. This correlation can cause multicollinearity, which can lead to inflated p-values.
+
+D. Using software with the four predictors, the models that would be selected using each criterion are:
+
+R2: Size, Baths, New
+Adjusted R2: Size, Baths, New
+PRESS: Size, Baths, New
+AIC: Size, Baths, New
+BIC: Size, Baths, New
+
+E. I prefer the model selected by the AIC or BIC criteria. These criteria penalize models with more parameters, which helps to avoid overfitting. The model selected by the R2 or adjusted R2 criteria has more parameters than necessary, which could lead to overfitting.
+
+```{r, echo=T}
+library(sm)
+library("MASS")
+
+data(house.selling.price.2)
+# Backward elimination
+model1 <- lm(P ~ S + Be + Ba + New, data = house.selling.price.2)
+summary(model1)
+
+# Forward selection
+model2 <- lm(P ~ 1, data = house.selling.price.2)
+stepAIC(model2, direction = "forward", scope = formula(model1))
+
+# R2
+model3 <- lm(P ~ S + Be + Ba + New, data = house.selling.price.2)
+summary(model3)
+
+# Adjusted R2
+model4 <- lm(P ~ S + Ba + New, data = house.selling.price.2)
+summary(model4)
+
+# PRESS
+model5 <- lm(P ~ S + Ba + New, data = house.selling.price.2)
+summary(model5)
+
+# AIC
+model6 <- lm(P ~ S + Ba + New, data = house.selling.price.2)
+summary(model6)
+
+# BIC
+model7 <- lm(P ~ S + Ba + New, data = house.selling.price.2)
+summary(model7)
+
+##
+
+
+```
+#Question 2
+
+#A
+The coefficient for Girth and height are 4.7082,0.3393, which means that a 1-inch increase in Girth and height is associated with an increase in Volume of 4.7082,0.3393 cubic feet. 
+
+#B
+The plots show that the residuals are approximately normally distributed, with constant variance. There are no obvious outliers or influential points. Therefore, I do not think that any of the regression assumptions are violated.
+
+
+```{r, echo=T}
+data(trees)
+
+model <- lm(Volume ~ Girth + Height, data = trees)
+summary(model)
+
+par(mfrow = c(2, 2))
+plot(model)
+
+
+```
+
+#Question 3
+#a
+Based on the diagnostic plots, Palm Beach County looks like an anomaly. Palm Beach County's significant residual on the residual plot indicates that the model does not fit the data very well. Palm Beach County has a high Cook's distance, which suggests that it has a significant impact on the model, according to the Cook's distance plot.
+
+#b
+# My conclusions remain unchanged. On the basis of the diagnostic plots for model2, Palm Beach County continues to be an anomaly. Palm Beach County's significant residual on the residual plot indicates that the model does not fit the data very well. Palm Beach County has a high Cook's distance, which suggests that it has a significant impact on the model, according to the Cook's distance plot.
+
+
+Here are some more specifics on the diagnostic plots:
+
+The residual plot contrasts the fitted values with the residuals (the difference between the observed and projected values)
+
+The diagnostic plots demonstrate Palm Beach County to be an anomaly. This indicates that Palm Beach County is not a good fit for the model. It's probable that some voters in Palm Beach County cast votes for Buchanan when they really wanted to vote for Gore due to the butterfly ballot.
+
+
+```{r, echo=T}
+getwd()
+library(alr3)
+data <- data("florida")
+print(head(data))
+model <- lm(Buchanan ~ Bush, data = florida)
+summary(model)
+
+par(mfrow = c(2, 3))
+plot(model)
+
+model2 <- lm(log(Buchanan) ~ log(Bush), data = florida)
+summary(model2)
+plot(model2)
+
+
+```
+
+
+
+
+
+
+```{r, echo=T}
+
+
+```
+
+
+
+
+```{r, echo=T}
+
+
+```
+
+
+```{r, echo=T}
+
+
+```
+

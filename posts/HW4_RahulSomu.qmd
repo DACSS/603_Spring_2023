@@ -1,0 +1,162 @@
+---
+title: "Homework4"
+author: "Rahul Somu"
+description: "Homework4"
+date: "05/16/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Question 1
+
+
+```{r, echo=T}
+calculate_prediction <- function(home_size, lot_size) {
+  intercept <- -10536
+  coefficient_home_size <- 53.8
+  coefficient_lot_size <- 2.84
+  predicted_price <- intercept + coefficient_home_size * home_size + coefficient_lot_size * lot_size
+  
+  actual_price <- 145000
+  residual <- actual_price - predicted_price
+  
+  result <- list(
+    predicted_price = predicted_price,
+    residual = residual
+  )
+  return(result)
+}
+
+result <- calculate_prediction(home_size = 1240, lot_size = 18000)
+
+predicted_price <- result$predicted_price
+residual <- result$residual
+
+predicted_price
+residual
+
+increase_price <- 53.8
+
+increase_lot_size <- 53.8*1 / 2.84
+
+increase_price
+increase_lot_size
+
+```
+#Question 2
+
+#A
+we can reject the null hypothesis that the mean salary for men and women is the same. There is a significant difference in salary between men and women, with male faculty earning more on average.
+
+#C
+Based on the coefficients, we can interpret that degreePhD,sexFemale,ysdeg are Not statistically significant and rankAssoc,rankProf,year are Statistically significant.
+
+#E
+The coefficient for sex show that females make $1286 less than males.
+
+
+
+```{r, echo=T}
+library(alr4)
+
+data(salary)
+
+summary(lm(salary ~ sex, data = salary))
+
+#B
+model <- lm(salary ~ ., data = salary)
+summary(model)
+
+summary(model)$coefficients
+
+#D
+salary$rank <- relevel(salary$rank, ref = "Prof")
+model <- lm(salary ~ ., data = salary)
+summary(model)$coefficients
+
+model <- lm(salary ~ . - rank, data = salary)
+summary(model)
+
+#F
+salary$new_dean <- ifelse(salary$ysdeg <= 15, 1, 0)
+cor.test(salary$new_dean, salary$ysdeg)
+summary(lm(salary ~ . -ysdeg, data = salary))
+
+```
+
+#Question 3
+
+
+```{r, echo=T}
+library(smss)
+
+data(house.selling.price)
+
+model1 <- lm(Price ~ Size + New, data = house.selling.price)
+
+summary(model1)
+
+summary(lm(Price ~ Size * New, data = house.selling.price))
+```
+
+
+#B
+selling_price_new = -40230.867 + 116.132 * Size + 57736.283
+selling_price_not_new = -40230.867 + 116.132 * Size
+
+
+
+#C
+
+selling_price_new =  -40230.867 + 116.132 * 3000 + 57736.283 
+
+selling_price_not_new = -40230.867 + 116.132 * 3000 = 25693.6
+
+
+
+```{r, echo=T}
+#D
+new_interaction_term <- lm(Price ~ Size + New + Size * New, data = house.selling.price)
+summary(new_interaction_term)
+
+```
+
+
+#E
+
+new_sp_pred = -22228 + 104*Size - 78528 + 62*Size = -100756 + 168*Size
+
+not_new_pred = -22228 + 104*Size
+
+
+```{r, echo=T}
+#F
+new_pred <- -100756 + 168*(3000)
+not_new_pred <- 22228 + 104*(3000)
+
+new_pred
+not_new_pred
+
+
+```
+
+
+```{r, echo=T}
+
+#G
+new_pred <- -100756 + 168*(1500)
+not_new_pred <- 22228 + 104*(1500)
+
+new_pred
+not_new_pred
+```
+
+H. I prefer the model with interaction as it provides a better fit to the data. The R-squared value for the model with interaction is 0.72, which is higher than the R-squared value for the model without interaction (0.67). This indicates that the model with interaction is able to explain more of the variation in the data.
