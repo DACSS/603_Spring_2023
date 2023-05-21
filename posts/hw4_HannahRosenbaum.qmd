@@ -1,0 +1,177 @@
+---
+title: "Homework - 4"
+author: "Hannah Rosenbaum"
+description: "Homework 4"
+date: "05/04/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw4
+  - desriptive statistics 
+  - probability
+---
+
+```{r}
+library(alr4)
+library(smss)
+```
+
+```{r}
+data(salary)
+data("house.selling.price")
+```
+
+# Question 1
+
+### a
+
+ŷ = −10536 + 53.8x1 + 2.84x2
+
+ŷ = -10536 + 53.8(1240) + 2.84(18000)
+
+ŷ = 107296
+
+residual = 145000 - 107296 = 37704
+
+### b
+
+ŷ = −10536 + 53.8x1 + 2.84x2
+
+ŷ = -10536 + 53.8(1240) + 2.84(18000)
+
+ŷ = 107296
+
+ŷ2 = −10536 + 53.8x1 + 2.84x2
+
+ŷ2 = -10536 + 53.8(1241) + 2.84(18000)
+
+ŷ2 = 107349.8
+
+A 1 point increase in square foot home size results in a \$53.8 home value increase.
+
+### c
+
+107349.8 = -10536 + 53.8(1240) + 2.84(x)
+
+2.84(x) = 51173.8
+
+x = 18018.94
+
+# Question 2
+
+### a
+
+```{r}
+boxplot(salary ~ sex, data=salary)
+```
+
+### b
+
+```{r}
+fit <- lm(salary ~ year + ysdeg + degree + rank + sex, data=salary)
+summary(fit)
+confint(fit)
+```
+
+### c
+
+year and ysdeg have the narrowest interval. rankAssoc has the widest interval.
+
+### d
+
+```{r}
+fit <- lm(salary ~ rank, data=salary)
+summary(fit)
+confint(fit)
+```
+
+### e
+
+```{r}
+fit2 <- lm(salary ~ year + ysdeg + degree + sex, data=salary)
+summary(fit2)
+confint(fit2)
+```
+
+Rsquared decreased by 0.2359, residuals decreased by 130
+
+### f
+
+```{r}
+new <- salary[salary$year <= 15,]
+pairs(salary)
+pairs(new)
+```
+
+```{r}
+summary(salary)
+summary(new)
+```
+
+```{r}
+fit3 <- lm(salary ~ year + ysdeg + degree + sex, data=new)
+summary(fit3)
+confint(fit3)
+```
+
+# Question 3
+
+### a
+
+```{r}
+fit <- lm(Price ~ New + Size, data=house.selling.price)
+summary(fit)
+```
+
+### b
+
+```{r}
+fit2 <- lm(Price ~ New + Size, data=house.selling.price[house.selling.price$New==0,])
+summary(fit2)
+
+fit3 <- lm(Price ~ New + Size, data=house.selling.price[house.selling.price$New==1,])
+summary(fit3)
+```
+
+### c
+
+```{r}
+predict(fit, data.frame(New=0, Size = 3000))
+predict(fit, data.frame(New=1, Size = 3000))
+```
+
+### d
+
+```{r}
+fit4 <- lm(Price ~ New + Size + New:Size, data=house.selling.price)
+summary(fit4)
+```
+
+### e
+
+```{r}
+plot(fit2)
+plot(fit3)
+```
+
+### f
+
+```{r}
+predict(fit4, data.frame(New=0, Size = 3000))
+predict(fit4, data.frame(New=1, Size = 3000))
+```
+
+### g
+
+```{r}
+predict(fit4, data.frame(New=0, Size = 1500))
+predict(fit4, data.frame(New=1, Size = 1500))
+```
+
+### h
+
+The model with interaction appears to estimate lower prices than the original regression.
