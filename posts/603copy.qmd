@@ -17,18 +17,16 @@ categories:
 
 # Research Question
 
-Can the reading and writing scores, along with gender, be used as predictors for students math exam scores?
+Can the reading and writing scores of students be used as predictors for their math exam scores?
 
 ## Hypothesis
 
 The math exam scores of students are positively associated with their reading and writing scores.
 
-The math exam scores of male students are higher than those of female students.
 
 ## Importing Libraries
 
 ```{r}
-suppressWarnings(suppressPackageStartupMessages({
 library(tidyverse) 
 library(ggplot2)
 library(dplyr)
@@ -38,7 +36,7 @@ library(funModeling)
 library(plotly)
 library(MASS)
 library(corrplot)
-}))
+
 ```
 
 ## Reading and Analysing Dataset
@@ -76,6 +74,7 @@ str(data)
 anyNA(data)
 ```
 ```{r}
+
 freq(data$gender)
 ```
 
@@ -119,8 +118,6 @@ I have compared the gender with their race type and its interesting to see that 
 
 So, keeping all the analysed information in mind i want to conduct the correlation analysis for the variables Math, Reading and Writing scores and see if there is any correlation between the variables.
 
-
-
 ```{r}
 profiling_num(data)
 
@@ -137,15 +134,12 @@ Based on our hypothesis that the math exam scores of students are positively ass
 ## Math Scores based on Reading and Writing Scores
 
 ```{r}
-
 # scatter plot
 ggplot(data, aes(x = reading_score, y = writing_score, color = math_score)) +
   geom_point() +
   labs(x = "Reading Score", y = "Writing Score", 
        title = "Math Scores based on Reading and Writing Scores") +
   theme_minimal()
-
-
 ```
 
 
@@ -170,7 +164,6 @@ ggplot(mean_scores, aes(x = gender, y = mean_math_score)) +
 
 ```
 The chart reveals that the mean math score for males is approximately 68.73, indicating a relatively higher average performance in math compared to females . On the other hand,females have a mean math score of around 63.63, suggesting a slightly lower average performance in math compared to males . These findings highlight a gender-based difference in math scores, with males demonstrating a higher average math score compared to females.
-
 
 ## Math Scores based on Race
 ```{r}
@@ -229,6 +222,8 @@ ggplot(data, aes(x = lunch, y = math_score)) +
   geom_text(data = mean_scores, aes(x = lunch, y = mean_math_score,
                                    label = paste0("Mean: ", round(mean_math_score, 2))),
             vjust = -0.5, color = "black")
+
+
 ```
 It is interesting to see the math score of students based on their lunch type. Students how are taking standard meal are performing better at math as compared to people taking free or reduced lunch option. 
 
@@ -256,11 +251,9 @@ ttest_math
 
 ### One-way ANOVA Test
 ```{r}
-
 # One-way ANOVA for all three subjects
 anova_scores <- aov(math_score + reading_score + writing_score ~ gender, data = data)
 summary(anova_scores)
-
 ```
 
 Based on the analysis conducted, we performed a Welch Two Sample t-test to examine the differences in math scores between male and female students. The results indicate that there is a statistically significant disparity in the mean math scores between the two groups (t = -5.398, df = 997.98, p-value = 8.421e-08). It was found that the mean math score for females (63.63) is significantly lower compared to males (68.73) with a 95% confidence interval ranging from -6.947209 to -3.242813.
@@ -283,10 +276,9 @@ model1 <- lm(math_score ~ reading_score + writing_score, data = train_data)
 predictions1 <- predict(model1, newdata = test_data)
 rmse1 <- sqrt(mean((test_data$math_score - predictions1)^2))
 r_squared1 <- summary(model1)$r.squared
-rmse1
 r_squared1
 
-model2 <- lm(math_score ~ writing_score * reading_score + gender , data = train_data)
+model2 <- lm(math_score ~ writing_score * reading_score + gender, data = train_data)
 predictions2 <- predict(model2, newdata = test_data)
 rmse2 <- sqrt(mean((test_data$math_score - predictions2)^2))
 r_squared2 <- summary(model2)$r.squared
@@ -315,16 +307,12 @@ Model 3, which includes all available predictors, yields a higher R-squared valu
 
 Overall, the results support our hypothesis that there is a positive association between math scores and reading/writing scores. Model 3, which includes all predictors, provides the best fit and explains the most variance in math scores. This suggests that including additional factors beyond just reading and writing scores can improve the accuracy of predicting math scores.
 
-As the AIC and BIC scores are less compared to Model1 & Model2, Im choosing Model3 to perform Residual Diagnostics 
-
-# Regression Diagnostics
-
 ```{r}
 plot(model3)
 
 ```
 
-
+# Regression Diagnostics
 
 ```{r}
 library(stargazer)
@@ -336,24 +324,31 @@ stargazer(model1, model2, model3, type = "text")
 
 The linear regression models provide insights into the relationship between math scores and relevant variables based on our hypothesis. Here are the key findings:
 
-The math exam scores of students are positively associated with their reading and writing scores. This is evident from the significant coefficients of reading_score (0.539, p < 0.01) and writing_score (0.304, p < 0.01) in Model 1. Higher scores in reading and writing are associated with higher math scores.
+Model 1:
 
-The math exam scores of male students are higher than those of female students. This is supported by the significant coefficient of gendermale (13.197, p < 0.01) in Model 2. Male students, on average, have math scores that are approximately 13 points higher than female students, after controlling for other variables in the model.
+Gender: Being male is associated with an average increase of 13.392 points in math score compared to females.
+Lunch: Students having a standard lunch score, on average, 3.029 points higher in math compared to students with a free/reduced lunch.
+Test Preparation: Students who completed a test preparation course score, on average, 3.775 points higher in math compared to students who did not complete the course.
+Reading Score: A one-point increase in reading score is associated with a 0.539-point increase in math score.
 
-These findings provide empirical evidence supporting our hypothesis that math exam scores are positively associated with reading and writing scores and that there is a gender difference in math performance, with males outperforming females.
+Model 2:
+
+The interaction term between writing score and reading score does not have a statistically significant impact on math scores.
+
+Model 3:
+
+Writing Score: A one-point increase in writing score is associated with a 0.750-point increase in math score.
+Overall, the regression models suggest that gender, lunch type, test preparation, reading score, and writing score have statistically significant associations with math scores. However, the impact of race/ethnicity and parental education levels on math scores is not statistically significant based on the given models.
 
 # Conclusion
 
 In conclusion, our research focused on examining the factors influencing math scores among students. We analyzed a dataset containing information on various variables such as gender, race/ethnicity, parental education, lunch type, test preparation, and scores in reading and writing.
 
-Our findings revealed several important insights. Firstly, gender played a significant role, with male students showing higher math scores compared to females. 
+Our findings revealed several important insights. Firstly, gender played a significant role, with male students showing higher math scores compared to females. Additionally, the type of lunch and completion of a test preparation course were also found to have a positive impact on math scores. Students who had a standard lunch and completed a test preparation course tended to perform better in math.
 
-The scores in reading and writing were strongly correlated with math scores. Higher scores in reading and writing were associated with higher math scores. However, the impact of race/ethnicity and parental education on math scores was found to be statistically insignificant.
+Furthermore, the scores in reading and writing were strongly correlated with math scores. Higher scores in reading and writing were associated with higher math scores. However, the impact of race/ethnicity and parental education on math scores was found to be statistically insignificant.
 
-Additionally, the type of lunch and completion of a test preparation course were also found to have a positive impact on math scores. Students who had a standard lunch and completed a test preparation course tended to perform better in math.
-
-
-Overall, our research suggests that reading and writing, gender, and lunch type are important factors influencing math scores among students. 
+Overall, our research suggests that gender, lunch type, test preparation, and literacy skills (reading and writing) are important factors influencing math scores among students. 
 
 It is important to note that this research was based on a specific dataset and may not capture all possible factors influencing math scores. Further research and exploration are recommended to gain a comprehensive understanding of the complex dynamics affecting students' math performance.
 
