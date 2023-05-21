@@ -1,0 +1,106 @@
+---
+title: "Homework - 3"
+author: "Hannah Rosenbaum"
+description: "Homework 3"
+date: "05/04/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw3
+  - desriptive statistics 
+  - probability
+---
+
+# Question 1
+
+```{r}
+library(alr4)
+library(smss)
+```
+
+```{r}
+data(UN11)
+```
+
+### a
+
+```{r}
+head(UN11)
+summary(UN11)
+pairs(UN11)
+```
+
+Predictor: ppgdp, Response: fertility
+
+## b
+
+```{r}
+plot(UN11$ppgdp, UN11$fertility)
+```
+
+No, a linear model will not fit this curve.
+
+### c
+
+```{r}
+plot(log(UN11$ppgdp), log(UN11$fertility))
+```
+
+Yes, a simple linear regression will fit this dataset much better.
+
+# Question 2
+
+### a
+
+The slope will not change, but the y-intercept will increase.
+
+### b
+
+The residuals will change.
+
+# Question 3
+
+```{r}
+data(water)
+```
+
+```{r}
+summary(water)
+pairs(water)
+```
+
+Pairs of higher correlation: APMAM & APSAB, APSAB & APSLAKE, OPBPC & OPRC, OPBPC & OPSLAKE, OPBPC & BSAAM, OPRC & OPSLAKE, OPRC & BSAAM, OPSLAKE & BSAAM
+
+# Question 4
+
+```{r}
+data(Rateprof)
+```
+
+```{r}
+pairs(Rateprof[, c('quality', 'helpfulness', 'clarity', 'easiness', 'raterInterest')])
+```
+
+Quality, Helpfulness, and Clarity have a strong correlation. Easiness compared to the prior three has a weak relation. raterInterest has little correlation to the other four.
+
+# Question 5
+
+```{r}
+data("student.survey")
+summary(student.survey)
+```
+
+```{r}
+fita <- lm(hi ~ tv, data=student.survey)
+#fitb <- lm(pi ~ re, data=student.survey)
+```
+
+```{r}
+summary(fita)
+AIC(fita)
+BIC(fita)
+```
