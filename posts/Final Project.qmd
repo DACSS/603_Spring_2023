@@ -277,7 +277,9 @@ set.seed(123)
 train_idx <- sample(nrow(data), nrow(data) * 0.7)
 train_data <- data[train_idx, ]
 test_data <- data[-train_idx, ]
-
+```
+### Model 1
+```{r}
 
 model1 <- lm(math_score ~ reading_score + writing_score, data = train_data)
 predictions1 <- predict(model1, newdata = test_data)
@@ -285,21 +287,31 @@ rmse1 <- sqrt(mean((test_data$math_score - predictions1)^2))
 r_squared1 <- summary(model1)$r.squared
 rmse1
 r_squared1
+```
+This model includes reading score and writing score as predictors for math score. The root mean squared error (RMSE) for predicting math scores on the test data is approximately 8.75. The R-squared value, which represents the proportion of variance in math scores explained by the model, is approximately 0.663. This suggests that reading score and writing score collectively account for about 66.3% of the variation in math scores.
+
+### Model 2
+```{r}
 
 model2 <- lm(math_score ~ writing_score * reading_score + gender , data = train_data)
 predictions2 <- predict(model2, newdata = test_data)
 rmse2 <- sqrt(mean((test_data$math_score - predictions2)^2))
 r_squared2 <- summary(model2)$r.squared
-
+rmse2
 r_squared2
+```
+This model extends Model 1 by including an interaction term between writing score and reading score, as well as the gender variable. The RMSE for this model is approximately 6.15, indicating a slight improvement in prediction accuracy compared to Model 1. The R-squared value increases to approximately 0.837, suggesting that the addition of the interaction term and gender variable accounts for a higher proportion of the variation in math scores.
+### Model 3
+```{r}
 
 model3 <- lm(math_score ~  ., data = train_data)
 predictions3 <- predict(model3, newdata = test_data)
 rmse3 <- sqrt(mean((test_data$math_score - predictions3)^2))
 r_squared3 <- summary(model3)$r.squared
-
+rmse3
 r_squared3
 ```
+This model includes all available variables as predictors for math score. The RMSE decreases further to approximately 5.70, indicating improved prediction accuracy compared to both Model 1 and Model 2. The R-squared value increases to approximately 0.877, indicating that this model explains approximately 87.7% of the variance in math scores when considering all available predictors.
 
 ### Model Comparison using AIC and BIC
 
@@ -309,11 +321,13 @@ AIC(model1,model2, model3)
 BIC(model1,model2, model3)
 ```
 
-Models 1 and 2 both include the predictors reading_score and writing_score. They have similar R-squared values (around 0.663) and RMSE values (8.753639), indicating that they explain approximately 66.3% of the variance in math scores and have similar predictive performance.
+When comparing the models using the Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC), lower values indicate better model fit. 
 
-Model 3, which includes all available predictors, yields a higher R-squared value of 0.8774988. This suggests that it explains a larger proportion (approximately 87.7%) of the variance in math scores compared to Models 1 and 2. Additionally, Model 3 has the lowest AIC and BIC values, indicating a better fit compared to the other models.
+Model 1: AIC = 5009.934, BIC = 5028.138
+Model 2: AIC = 4507.172, BIC = 4534.478
+Model 3: AIC = 4325.654, BIC = 4398.471
 
-Overall, the results support our hypothesis that there is a positive association between math scores and reading/writing scores. Model 3, which includes all predictors, provides the best fit and explains the most variance in math scores. This suggests that including additional factors beyond just reading and writing scores can improve the accuracy of predicting math scores.
+The AIC and BIC values for each model suggest that Model 3 has the best fit among the three models. However, adding gender to reading and writing score made the model better and fit. it is very near to the model3 which includes all the variables.
 
 As the AIC and BIC scores are less compared to Model1 & Model2, Im choosing Model3 to perform Residual Diagnostics 
 
@@ -324,7 +338,7 @@ plot(model3)
 
 ```
 
-
+As we can see the Residual Diagnosis plots above for Model3, in all the plots the red line fitted values are straight and linear accross all the plots indicating that the model is better fit.
 
 ```{r}
 library(stargazer)
@@ -334,13 +348,13 @@ stargazer(model1, model2, model3, type = "text")
 ```
 
 
-The linear regression models provide insights into the relationship between math scores and relevant variables based on our hypothesis. Here are the key findings:
+In Model 1, we found that an increase in the reading score is linked to a higher math score. The coefficient for the reading score was statistically significant (p < 0.01) and had a positive value of 0.539. This suggests that students who perform better in reading tend to have higher math scores. Similarly, the coefficient for the writing score was also statistically significant (p < 0.01) with a positive value of 0.304. This implies that students who excel in writing also tend to have higher math scores.
 
-The math exam scores of students are positively associated with their reading and writing scores. This is evident from the significant coefficients of reading_score (0.539, p < 0.01) and writing_score (0.304, p < 0.01) in Model 1. Higher scores in reading and writing are associated with higher math scores.
+When we examined Model 2, which includes additional variables, we observed that the coefficients for reading_score and writing_score remained statistically significant and positive. This finding reaffirms the results from Model 1, indicating a consistent relationship between reading, writing, and math scores. It suggests that students who perform well in both reading and writing are likely to have higher math scores.
 
-The math exam scores of male students are higher than those of female students. This is supported by the significant coefficient of gendermale (13.197, p < 0.01) in Model 2. Male students, on average, have math scores that are approximately 13 points higher than female students, after controlling for other variables in the model.
+In Model 3, where we considered all available variables, we found that the coefficients for reading_score and writing_score continued to be statistically significant and positive. This further supports our hypothesis that math scores are positively associated with both reading and writing scores. It suggests that students who demonstrate strong abilities in reading and writing are more likely to achieve higher math scores.
 
-These findings provide empirical evidence supporting our hypothesis that math exam scores are positively associated with reading and writing scores and that there is a gender difference in math performance, with males outperforming females.
+These findings provide evidence supporting our hypothesis that math exam scores are positively associated with reading and writing scores and that there is a gender difference in math performance, with males outperforming females.
 
 # Conclusion
 
@@ -348,10 +362,9 @@ In conclusion, our research focused on examining the factors influencing math sc
 
 Our findings revealed several important insights. Firstly, gender played a significant role, with male students showing higher math scores compared to females. 
 
-The scores in reading and writing were strongly correlated with math scores. Higher scores in reading and writing were associated with higher math scores. However, the impact of race/ethnicity and parental education on math scores was found to be statistically insignificant.
+The scores in reading and writing were strongly correlated with math scores. Higher scores in reading and writing were associated with higher math scores.
 
 Additionally, the type of lunch and completion of a test preparation course were also found to have a positive impact on math scores. Students who had a standard lunch and completed a test preparation course tended to perform better in math.
-
 
 Overall, our research suggests that reading and writing, gender, and lunch type are important factors influencing math scores among students. 
 
