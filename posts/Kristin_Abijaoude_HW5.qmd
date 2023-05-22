@@ -1,0 +1,148 @@
+---
+title: "Kristin Abijaoude_HW5"
+editor: visual
+date: "05/09/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Hw5
+  - kristin abijaoude
+---
+
+```{r}
+# load packages
+packages <- c("readr", "readxl", "summarytools", "tidyverse", "dplyr", "smss", "alr4", "stargazer", "broom", "qpcR")
+lapply(packages, require, character.only = TRUE)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+
+```{r}
+data(house.selling.price.2)
+house.selling.price.2
+```
+```{r}
+lm(P ~ ., data = house.selling.price.2) |> summary()
+```
+
+## A
+
+Variable `Be` would be eliminated first using the backwards elimination because it has the largest p-value.
+
+## B
+
+Variable `S` would be added first using the forward selection because it has the smallest p-value.
+
+## C
+
+`Beds` has a high p-value despite a substantial correlation with `price` because of multicollinearity between `New` and `Size` as they have way smaller p-values and are statistically significant.
+
+## D
+
+```{r}
+lm1 <- lm(P ~ ., data = house.selling.price.2)
+lm2 <- lm(P ~ S, Be, Ba, data = house.selling.price.2)
+lm3 <- lm(P ~ S, Be, data = house.selling.price.2)
+lm4 <- lm(P ~ S, data = house.selling.price.2)
+
+stargazer(lm1, lm2, lm3, lm4, type = "text")
+```
+
+The R^2 and Adjusted R^2 can be found with this chart above.
+
+```{r}
+# create press model
+PRESS <- function(model) {
+    i <- residuals(model)/(1 - lm.influence(model)$hat)
+    sum(i^2)
+}
+```
+
+```{r}
+#lm1 PRESS
+PRESS(lm1)
+#lm1 AIC
+AIC(lm1)
+#lm1 BIC
+BIC(lm1)
+```
+
+```{r}
+#lm2 PRESS
+PRESS(lm2)
+#lm2 AIC
+AIC(lm2)
+#lm2 BIC
+BIC(lm2)
+```
+
+```{r}
+#lm3 PRESS
+PRESS(lm3)
+#lm3 AIC
+AIC(lm3)
+#lm3 BIC
+BIC(lm3)
+```
+
+```{r}
+#lm4 PRESS
+PRESS(lm4)
+#lm4 AIC
+AIC(lm4)
+#lm4 BIC
+BIC(lm4)
+```
+
+## E
+
+Based on the criterion `PRESS`, `R^2`, `Adjusted R^2`, `AIC`, and `BIC`, we will go with Model 3 `lm3` since it has the highest R^2 and the lowest PRESS, AIC, and BIC values.
+
+# Question 2
+
+```{r}
+data(trees)
+head(trees)
+```
+## A
+
+```{r}
+tree_reg <- lm(Volume ~ Girth + Height, data = trees)
+summary(tree_reg)
+```
+
+## B
+
+There is a violation of nonlinearity since the regression line is not straight or linear.
+
+```{r}
+plot(tree_reg)
+```
+# Question 3
+
+## A
+
+```{r}
+data(florida)
+head(florida)
+```
+
+```{r}
+gore <- lm(Buchanan ~ Gore, data=florida)
+plot(gore)
+```
+From the graph, Palm Beach is an outlier because Buchanan received the most votes from that county.
+
+## B
+
+```{r}
+gore_log <- lm(log(Buchanan) ~ log(Gore), data=florida)
+plot(gore_log)
+```
+Even when accounting for the log() function, nothing fundamentally changes when it comes to outliers.
