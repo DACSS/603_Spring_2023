@@ -1,0 +1,384 @@
+---
+title: "Final Project"
+author: "Thrishul Pola"
+description: "Final Project"
+date: "5/2/2023"
+format:
+  html:
+    df-print: paged
+    css: styles.css
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Final_Project
+---
+
+# Research Question
+
+Can the reading and writing scores, along with gender, be used as predictors for students math exam scores?
+
+## Hypothesis
+
+The math exam scores of students are positively associated with their reading and writing scores.
+
+The math exam scores of male students are higher than those of female students.
+
+## Importing Libraries
+
+```{r}
+suppressWarnings(suppressPackageStartupMessages({
+library(tidyverse) 
+library(ggplot2)
+library(dplyr)
+library(fBasics) 
+library(kableExtra)
+library(funModeling)
+library(plotly)
+library(MASS)
+library(corrplot)
+}))
+```
+
+## Reading and Analysing Dataset
+```{r}
+data <- read_csv("_data/S.csv", show_col_types = FALSE)
+names_columns <- c("gender","race","parent_education","lunch","test_prep","math_score","reading_score","writing_score")
+colnames(data) <- names_columns
+```
+# Dataset Description
+
+The "Students Performance in Exams" dataset contains information about the marks obtained by students in different subjects. The dataset consists of 1000 rows and 8 features.
+
+The categorical features in the dataset include:
+
+Gender: Indicates whether the student is female or male.
+Race/Ethnicity: Represents the group to which the student belongs, categorized as Group A, Group B, Group C, Group D, or Group E.
+Parental Level of Education: Reflects the educational level of the student's parents, such as associate's degree, bachelor's degree, high school, etc.
+Lunch: Specifies the type of lunch provided to the student, categorized as either free/reduced or standard.
+Test Preparation Course: Indicates whether the student completed a test preparation course or not.
+
+The numerical features in the dataset are:
+
+Math Score: Represents the marks obtained by the student in the math subject.
+Reading Score: Represents the marks obtained by the student in the reading subject.
+Writing Score: Represents the marks obtained by the student in the writing subject.
+All the scores in the dataset are measured on a scale of 0 to 100.
+
+The dataset provides valuable insights into the performance of students in exams across various subjects. By analyzing this data, we can explore the relationships between different features and understand the factors that influence students' academic achievements.
+```{r}
+summary(data)
+head(data, 10)
+```
+```{r}
+str(data)
+anyNA(data)
+```
+```{r}
+freq(data$gender)
+```
+
+It can be observed that among the students included, approximately 51.8% of them are female students. This indicates that the majority of the students in the dataset are female.
+
+On the other hand, approximately 48.2% of the students in the dataset are male students. This suggests that male students make up a slightly smaller portion of the total student population compared to female students.
+
+Overall, the dataset represents a relatively balanced distribution in terms of gender, with a slightly higher proportion of female students.
+
+```{r}
+freq(data$race)
+```
+
+It can be observed that Group C is the most prevalent race/ethnicity among the students. This suggests that a larger number of students in the dataset belong to Group C compared to the other race/ethnicity categories while  Group A is the least represented race/ethnicity among the students.
+
+```{r}
+
+freq(data$parent_education)
+```
+Above chart reveal the distribution of parent education levels among the students in the dataset. Out of the total number of students, 226 individuals (22.6%) reported having their parents pursued some college education
+
+```{r}
+freq(data$lunch)
+
+```
+Standard Price Lunch: 64.5%
+Approximately 64.5% of the students in the dataset eat lunch at the standard price. This indicates that the majority of the students opt for the standard-priced lunch option.
+
+Free/Reduced Lunch: 35.5%
+About 35.5% of the students in the dataset eat lunch at a free or reduced price. This suggests that a smaller portion of the students qualify for and choose the free or reduced lunch option.
+
+```{r}
+ggplot(data,aes(data$gender, fill=data$race))+
+  geom_bar(position=position_dodge())+
+  ggtitle("Ethnic Group distribution by Gender")+
+  xlab("Gender")+
+  ylab("Frequency")
+
+```
+I have compared the gender with their race type and its interesting to see that the majority of students in the dataset are from group C followed by group D race.
+
+So, keeping all the analysed information in mind i want to conduct the correlation analysis for the variables Math, Reading and Writing scores and see if there is any correlation between the variables.
+
+
+
+```{r}
+profiling_num(data)
+
+```
+
+
+```{r}
+
+plot_num(data)
+
+```
+Based on our hypothesis that the math exam scores of students are positively associated with their reading and writing scores, the findings from the profiling analysis and also plot chart provide evidence supporting this hypothesis. The average scores for math, reading, and writing are relatively close, indicating a positive association between these subjects.
+
+## Math Scores based on Reading and Writing Scores
+
+```{r}
+
+# scatter plot
+ggplot(data, aes(x = reading_score, y = writing_score, color = math_score)) +
+  geom_point() +
+  labs(x = "Reading Score", y = "Writing Score", 
+       title = "Math Scores based on Reading and Writing Scores") +
+  theme_minimal()
+
+
+```
+
+
+## Math Scores based on Gender
+```{r}
+
+
+# Calculate mean math score by gender
+mean_scores <- data %>%
+  group_by(gender) %>%
+  summarise(mean_math_score = mean(math_score))
+
+# bar chart
+ggplot(mean_scores, aes(x = gender, y = mean_math_score)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = "Gender", y = "Mean Math Score", 
+       title = "Mean Math Scores by Gender") +
+  theme_minimal() +
+  geom_text(aes(label = round(mean_math_score, 2)), vjust = -0.5, color = "black")
+
+
+
+```
+The chart reveals that the mean math score for males is approximately 68.73, indicating a relatively higher average performance in math compared to females . On the other hand,females have a mean math score of around 63.63, suggesting a slightly lower average performance in math compared to males . These findings highlight a gender-based difference in math scores, with males demonstrating a higher average math score compared to females.
+
+
+## Math Scores based on Race
+```{r}
+
+# Calculate mean math score by race
+mean_scores <- data %>%
+  group_by(race) %>%
+  summarise(mean_math_score = mean(math_score))
+
+# bar chart
+ggplot(data, aes(x = race, y = math_score)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "steelblue") +
+  labs(x = "Race", y = "Math Score", 
+       title = "Math Scores by Race") +
+  theme_minimal() +
+  geom_text(data = mean_scores, aes(x = race, y = mean_math_score, 
+                                   label = paste0("Mean: ", round(mean_math_score, 2))),
+            vjust = -0.5, color = "black")
+
+
+
+```
+These findings highlight the variations in math scores across different race categories, with Group E demonstrating the highest average score and Group A showing the lowest average score performance.
+
+## Math Scores based on Parents Education Level
+
+```{r}
+
+# bar chart
+ggplot(data, aes(x = parent_education, y = math_score)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "steelblue") +
+  labs(x = "Parental Education Level", y = "Math Score", 
+       title = "Math Scores by Parental Education Level") +
+  theme_minimal()
+
+```
+Even thought there is a little difference in the math scores there is not significant difference based on their parents education level
+
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Calculate mean math score by lunch type
+mean_scores <- data %>%
+  group_by(lunch) %>%
+  summarise(mean_math_score = mean(math_score))
+
+# bar chart
+ggplot(data, aes(x = lunch, y = math_score)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "steelblue") +
+  labs(x = "Lunch Type", y = "Math Score",
+       title = "Math Scores by Lunch Type") +
+  theme_minimal() +
+  geom_text(data = mean_scores, aes(x = lunch, y = mean_math_score,
+                                   label = paste0("Mean: ", round(mean_math_score, 2))),
+            vjust = -0.5, color = "black")
+```
+It is interesting to see the math score of students based on their lunch type. Students how are taking standard meal are performing better at math as compared to people taking free or reduced lunch option. 
+
+
+## Correlation Matrix of Math, Reading, and Writing Scores
+
+```{r}
+num_data <- data[, c( "math_score", "reading_score", "writing_score")]
+m<-cor(num_data)
+m
+corrplot(m, method="circle", type='upper', tl.cex=0.8, tl.col = 'black')
+```
+The correlation analysis reveals interesting insights into the relationships between math scores, reading scores, and writing scores. The strong positive correlation coefficient of 0.8176 between math_score and reading_score suggests that students who excel in math also tend to perform well in reading. Similarly, the high correlation coefficient of 0.8026 between math_score and writing_score indicates a strong positive association, indicating that students who demonstrate proficiency in math often display strong writing skills as well. Furthermore, the very high correlation coefficient of 0.9546 between reading_score and writing_score highlights a robust positive relationship, indicating that students who excel in reading are highly likely to excel in writing.
+
+Taken together, these findings provide substantial evidence supporting our hypothesis that math exam scores are positively associated with both reading and writing scores. These results suggest that students who demonstrate proficiency in one subject area are more likely to excel in the other subjects as well, reinforcing the idea of a positive relationship between math scores and reading/writing scores.
+
+## Comparison of Math Scores between Male and Female Students
+
+### T-Test
+```{r}
+# T-test for math scores
+ttest_math <- t.test(math_score ~ gender, data = data)
+ttest_math
+```
+
+### One-way ANOVA Test
+```{r}
+
+# One-way ANOVA for all three subjects
+anova_scores <- aov(math_score + reading_score + writing_score ~ gender, data = data)
+summary(anova_scores)
+
+```
+
+Based on the analysis conducted, we performed a Welch Two Sample t-test to examine the differences in math scores between male and female students. The results indicate that there is a statistically significant disparity in the mean math scores between the two groups (t = -5.398, df = 997.98, p-value = 8.421e-08). It was found that the mean math score for females (63.63) is significantly lower compared to males (68.73) with a 95% confidence interval ranging from -6.947209 to -3.242813.
+
+Furthermore, we conducted a one-way ANOVA to explore the impact of gender on math, reading, and writing scores. The ANOVA results demonstrate a significant effect of gender on math scores (F = 17.39, p < 0.001). However, this analysis does not provide information regarding the relationship between math scores and reading/writing scores.
+
+In summary, our analysis reveals a significant difference in math scores between male and female students, with males demonstrating higher performance in this subject compared to females. These findings highlight the influence of gender on academic achievement, particularly in the context of math
+
+# Linear Regression Models for Predicting Math Scores
+
+```{r}
+
+set.seed(123)
+train_idx <- sample(nrow(data), nrow(data) * 0.7)
+train_data <- data[train_idx, ]
+test_data <- data[-train_idx, ]
+```
+
+### Model 1
+```{r}
+
+model1 <- lm(math_score ~ reading_score + writing_score, data = train_data)
+predictions1 <- predict(model1, newdata = test_data)
+rmse1 <- sqrt(mean((test_data$math_score - predictions1)^2))
+r_squared1 <- summary(model1)$r.squared
+rmse1
+r_squared1
+```
+This model includes reading score and writing score as predictors for math score. The root mean squared error (RMSE) for predicting math scores on the test data is approximately 8.75. The R-squared value, which represents the proportion of variance in math scores explained by the model, is approximately 0.663. This suggests that reading score and writing score collectively account for about 66.3% of the variation in math scores.
+
+### Model 2
+```{r}
+
+model2 <- lm(math_score ~ writing_score * reading_score + gender , data = train_data)
+predictions2 <- predict(model2, newdata = test_data)
+rmse2 <- sqrt(mean((test_data$math_score - predictions2)^2))
+r_squared2 <- summary(model2)$r.squared
+rmse2
+r_squared2
+```
+This model extends Model 1 by including an interaction term between writing score and reading score, as well as the gender variable. The RMSE for this model is approximately 6.15, indicating a slight improvement in prediction accuracy compared to Model 1. The R-squared value increases to approximately 0.837, suggesting that the addition of the interaction term and gender variable accounts for a higher proportion of the variation in math scores.
+
+### Model 3
+```{r}
+
+model3 <- lm(math_score ~  ., data = train_data)
+predictions3 <- predict(model3, newdata = test_data)
+rmse3 <- sqrt(mean((test_data$math_score - predictions3)^2))
+r_squared3 <- summary(model3)$r.squared
+rmse3
+r_squared3
+summary(model3)
+```
+This model includes all available variables as predictors for math score. The RMSE decreases further to approximately 5.70, indicating improved prediction accuracy compared to both Model 1 and Model 2. The R-squared value increases to approximately 0.877, indicating that this model explains approximately 87.7% of the variance in math scores when considering all available predictors.
+
+### Model Comparison using AIC and BIC
+
+```{r}
+str(data)
+AIC(model1,model2, model3)
+BIC(model1,model2, model3)
+```
+
+When comparing the models using the Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC), lower values indicate better model fit. 
+
+Model 1: AIC = 5009.934, BIC = 5028.138
+Model 2: AIC = 4507.172, BIC = 4534.478
+Model 3: AIC = 4325.654, BIC = 4398.471
+
+The AIC and BIC values for each model suggest that Model 3 has the best fit among the three models. However, adding gender to reading and writing score made the model better and fit. it is very near to the model3 which includes all the variables.
+
+As the AIC and BIC scores are less compared to Model1 & Model2, Im choosing Model3 to perform Residual Diagnostics 
+
+# Regression Diagnostics
+
+```{r}
+plot(model3)
+
+```
+
+As we can see the Residual Diagnosis plots above for Model3, in all the plots the red line fitted values are straight and linear accross all the plots indicating that the model is better fit.
+
+```{r}
+library(stargazer)
+
+stargazer(model1, model2, model3, type = "text")
+
+```
+
+
+In Model 1, we found that an increase in the reading score is linked to a higher math score. The coefficient for the reading score was statistically significant (p < 0.01) and had a positive value of 0.539. This suggests that students who perform better in reading tend to have higher math scores. Similarly, the coefficient for the writing score was also statistically significant (p < 0.01) with a positive value of 0.304. This implies that students who excel in writing also tend to have higher math scores.
+
+When we examined Model 2, which includes additional variables, we observed that the coefficients for reading_score and writing_score remained statistically significant and positive. This finding reaffirms the results from Model 1, indicating a consistent relationship between reading, writing, and math scores. It suggests that students who perform well in both reading and writing are likely to have higher math scores.
+
+In Model 3, where we considered all available variables, we found that the coefficients for reading_score and writing_score continued to be statistically significant and positive. This further supports our hypothesis that math scores are positively associated with both reading and writing scores. It suggests that students who demonstrate strong abilities in reading and writing are more likely to achieve higher math scores.
+
+These findings provide evidence supporting our hypothesis that math exam scores are positively associated with reading and writing scores and that there is a gender difference in math performance, with males outperforming females.
+
+# Conclusion
+
+In conclusion, our research focused on examining the factors influencing math scores among students. We analyzed a dataset containing information on various variables such as gender, race/ethnicity, parental education, lunch type, test preparation, and scores in reading and writing.
+
+Our findings revealed several important insights. Firstly, gender played a significant role, with male students showing higher math scores compared to females. 
+
+The scores in reading and writing were strongly correlated with math scores. Higher scores in reading and writing were associated with higher math scores.
+
+Additionally, the type of lunch and completion of a test preparation course were also found to have a positive impact on math scores. Students who had a standard lunch and completed a test preparation course tended to perform better in math.
+
+Overall, our research suggests that reading and writing, gender, and lunch type are important factors influencing math scores among students. 
+
+It is important to note that this research was based on a specific dataset and may not capture all possible factors influencing math scores. Further research and exploration are recommended to gain a comprehensive understanding of the complex dynamics affecting students' math performance.
+
+# Bibliography
+
+Dataset : "Students Performance in Exams" Dataset. Retrieved from https://www.kaggle.com/datasets/spscientist/students-performance-in-exams
+
+Johnson, R. A. (2010). Applied Multivariate Statistical Analysis (6th ed.). Pearson Education.
+
+Field, A. (2013). Discovering Statistics Using R. SAGE Publications Ltd.
+
+Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis. Springer.
