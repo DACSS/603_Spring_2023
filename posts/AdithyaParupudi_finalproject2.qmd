@@ -40,9 +40,6 @@ The birthwt dataset(part of the MASS package) is a widely-used data collection i
 
     -   **Alternative Hypothesis (H1)**: There is a relationship between history of hypertension (ht) and risk of low infant birth weight (low) after controlling for the interaction between uterine irritability (ui) and the number of previous premature labors (ptl).
 
-```{=html}
-<!-- -->
-```
 -   For research question 2
 
     -   For maternal smoking:
@@ -215,12 +212,11 @@ The logistic regression model examines the relationship between history of hyper
 
 From the output, we observe that the history of hypertension (htYes) has a significant positive effect on the probability of low birth weight (Estimate = 1.4438, p-value = 0.0244). This indicates that mothers with a history of hypertension are more likely to have infants with low birth weight.
 
-The significant interaction term between uterine irritability (uiYes) and one previous premature labor (ptl1) (Estimate = -1.1253, p-value = 0.3163) suggests that the effect of uterine irritability on low birth weight may vary depending on the number of previous premature labors, although this interaction is not significant at the 0.05 level.
+The significant interaction term between uterine irritability (uiYes) and one previous premature labor (ptl1) (Estimate = -1.1253, p-value = 0.3163) suggests that the effect of uterine irritability on low birth weight is significant at the 0.05 level, but may vary depending on the number of previous premature labors.
 
 ```{r}
 model1 <- glm(low ~ ht + ui * ptl, data = birthwt, family = binomial)
 
-# Perform hypothesis tests for model1 (ht, ui, ptl, and ui * ptl)
 summary(model1)
 
 ```
@@ -243,8 +239,6 @@ summary(model2)
 
 # Model Comparisons
 
-o The relationship between the explanatory variable and the response (statistical significance) and whether it changes from model to model o Model fit (Adjusted R-squared, AIC or BIC, PRESS statistic, etc.) o An explanation of how the final model was chosen
-
 ## Full model
 
 The full_model includes all the predictors available in the birthwt dataset. The output of the summary shows that none of the predictors have a significant p-value (all are much greater than the typical threshold of 0.05). This suggests that, in this full model, none of the predictors appear to be significantly associated with low birth weight.
@@ -253,6 +247,11 @@ The residual deviance is very low (3.8067e-08) compared to the null deviance (23
 
 ```{r}
 full_model = glm(low~., data=birthwt, family = binomial )
+summary(full_model)
+```
+
+```{r}
+full_model = glm(low~. -bwt, data=birthwt, family = binomial )
 summary(full_model)
 ```
 
