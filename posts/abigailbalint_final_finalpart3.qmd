@@ -1,0 +1,323 @@
+---
+title: "Final Project (Final Submission)"
+author: "Abigail Balint"
+desription: "Final project part 3 (final part)"
+date: "05/20/23"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart2
+  - abigailbalint
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(viridis)
+library(car)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description of data 
+
+The dataset I am using comes from Kaggle https://www.kaggle.com/datasets/kaggle/kaggle-survey-2018 and is a survey titled "2018 Kaggle Machine Learning & Data Science Survey" conducted by Kaggle to capture the current state of machine learning and data science usage, mainly at the enterprise and academic level. The dataset contains survey responses from almost 24,000 respondents from varying backgrounds. The survey contains 50 questions, including 9 demographic questions and 41 questions around machine learning and data science. The questions range from platforms and products used, and tools and methodology, barriers to entry, and more. It also asks respondents about their employee experience working in these fields. I believe that the wide array of types of questions used make this dataset a good fit for research, as there are binary and categorical variables to explore but also some that ask for explicit numeric values like what percentage of their work falls to different tasks. Having several different types of questions provide opportunities for multiple types of models to be performed.
+
+This survey was also run in 2017, 2019, and 2020 on Kaggle as part of an annual competition where users could submit code and analysis using this public data. However, I decided to use the 2018 dataset as my focus because certain questions that I think would be really interesting to analyze were omitted in later years/the survey was shortened overall. This survey was hosted by Kaggle, open to anyone in the industry, for one week in October 2018.
+
+
+Reading in the dataset --
+
+```{r, echo=T}
+
+final <- read_csv("_data/final_project_data.csv")
+head(final,10)
+```
+```{r}
+finalrc <- final %>%
+  rename(Percent_Time_Insights = Q34_Part_6) %>%
+  rename(Years_Machine_Learning = Q25) %>%
+  rename(Years_Writing_Code = Q24) %>%
+  rename(Years_Machine_LearningRC = Q25RC) %>%
+  rename(Years_Writing_CodeRC = Q24RC) %>%
+  rename(Percent_Time_GatherData = Q34_Part_1) %>%
+  rename(Percent_Time_Coding = Q23) %>%
+  rename(Percent_Time_CodingRC = Q23RC) %>%
+  rename(AnalyzeDataRC = Q11_Part_1RC) %>%
+  rename(AnalyzeData = Q11_Part_1) %>%
+  rename(Years_In_Role = Q8RC)
+
+```
+
+## Research Question 
+
+Upon doing a cursory search around this data, I see some high level executive-summary style research published about this data set, but I wasn't able to find anything focused on more specific research questions. It was more demographic data of the state of ML and Data Science. I think there is the opportunity to speak more specifically about the state of machine learning and data science, and look deeper at what tools students and employees are using versus what their time is devoted to.
+
+Based on feedback from both parts of the final submissions, I kept my area of focus narrow. There is a huge amount of data within this dataset, but as this project is focused on performing regression modeling, I think the best fit for my main research question is as follows:
+
+How does an individual’s background, experience, and time in their field/role impact what their day to day looks like?
+
+I used questions from the survey like "During a typical data science project at work or school, approximately what proportion of your time is devoted to the following?" as this question supplies exact numbers that I could correlate against demos and more general usage of tools and platforms to see if there is any connection between the work one does and the tools they use.
+
+I am interested in this dataset because a lot of research in my career is in the machine learning space, so I am always interested in contextualizing the employee experience in these areas so that I can better understand the subject of some of my survey research. I also do more general employee engagement research in my career and I think this final is a great opportunity to try my hand at some correlations that would be similar to the ones I would like to eventually run at my job, but have never been able to because I don't have any prior stats knowledge.
+
+
+## Hypothesis
+
+The hypothesis I would like to test is:
+
+Those with more years of experience in machine learning/coding will spend a larger proportion of their time doing analyzing and decision making, as opposed to those newer to the job will spend more time cleaning data and doing actual coding.
+
+The below variables are the primary ones I used:
+
+Independent variable (original name followed by recoded name):
+Q24/Years_Writing_Code, How long have you been writing code to analyze data?
+
+Dependent variable:
+Q34_Part_6/Percent_Time_Insights,	During a typical data science project at work or school, approximately what proportion of your time is devoted to the following? (Answers must add up to 100%) - Finding insights in the data and communicating with stakeholders
+
+The below variables were used as confounding variables to the independent variable, or as alternative dependent variables to test that could give me opposite results to test essentially the second half of my hypothesis statement:
+
+* Confounding variable 1 - Q8/Years_In_Role, How many years of experience do you have in your current role?
+
+* Confounding variable 2 - Q25/Years_Machine_Learning	For how many years have you used machine learning methods (at work or in school)?
+
+* Other alternative dependent - Q11_1/AnalyzeData,Select any activities that make up an important part of your role at work: (Select all that apply) - Analyze and understand data to influence product or business decisions
+
+* Other alternative dependent - Q23/Percent_Time_Coding,	Approximately what percent of your time at work or school is spent actively coding?
+
+* Other alternative dependent -  Q34_Part_1/Percent_Time_GatherData During a typical data science project at work or school, approximately what proportion of your time is devoted to the following? - Gathering data
+
+
+## Descriptive Statistics
+
+I described my dataset at the top of this as well as discussed variables of interest in the Research Question section, but here is a little bit of exploratory code to give a general feel for what the data looks like:
+ 
+
+ 
+I can see the data contains mostly younger males, but because of the sample size can really work with lots of demographic combinations.
+
+```{r}
+ggplot(finalrc, aes(x = Q1)) +
+  geom_bar() +
+   labs(x="Gender")
+```
+
+
+```{r}
+ggplot(finalrc, aes(x = Q2)) +
+  geom_bar() +
+  labs(x="Age") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+
+There is also a range of coding experience in the dataset.
+```{r}
+ggplot(finalrc, aes(x = Years_Writing_Code)) +
+  geom_bar() +
+   labs(x="Years of coding experience") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+The data is split between students, tech industry employees, and other industry employees.
+```{r}
+ggplot(finalrc, aes(x = Q7)) +
+  geom_bar() +
+   labs(x="Industry") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+```
+Here, I made a scatterplot showing where the amount of training from work meets the amount of time spent finding insights instead of cleaning data, coding, etc. I expected this to be much higher for those who received most or all of their training from work, but that isn't the case.
+
+```{r}
+ggplot(finalrc, aes(x = Q35_Part_3, y=Percent_Time_Insights)) +
+  geom_point() +
+   labs(x="Percentage of machine learning training from work", y="Percentage of project time spent finding insights")
+```
+
+
+
+# Hypothesis Testing
+
+
+Hypothesis: Those with more years of experience in machine learning/coding will spend a larger proportion of their time doing analyzing and decision making, as opposed to those newer to the job will spend more time cleaning data and doing actual coding.
+
+Since the variables are in text format in the survey, I recoded the ones needed into a numerical format that gives a corresponding number in ascending order to match the level of experience the respondent reports (i.e, 1 = one year/lowest categorical, ascending from there). 
+
+```{r}
+forplot <- finalrc %>%
+  drop_na(Percent_Time_Insights, Years_Machine_Learning, Years_Writing_Code, Years_Machine_LearningRC, Years_Writing_CodeRC, Percent_Time_GatherData, Percent_Time_Coding, Percent_Time_CodingRC)
+forplot$time <- as.character(forplot$Years_Writing_Code)
+forplot$anpercent <- as.character(forplot$Percent_Time_Insights)
+table(forplot$time, forplot$anpercent)
+```
+
+
+For my first test, I run below an anova test with Percent of time finding insights as my dependent variable and Number of years writing code as my independent variable. As the p value is .008 rounded, the test shows that we can reject the null hypothesis that there is no relationship between these two variables, and we can assume a relationship between the percentage of time one spends analyzing data and how many years they have been writing code.
+
+Years_Writing_CodeRC = Amount of years they have been coding
+Percent_Time_Insights = Proportion of time spent analyzing data
+
+```{r}
+anovatest <- aov(Percent_Time_Insights ~ Years_Writing_CodeRC, data=forplot)
+summary(anovatest)
+```
+
+
+Now I am fitting a model using the same two variables:
+Years_Writing_CodeRC = Amount of years they have been coding
+Percent_Time_Insights = Proportion of time spent analyzing data
+
+The p value here is much less than .05 at .008, which makes it significant, however the coefficient does not necessarily strongly support this p value as it is only .14 which would be considered relatively small.
+```{r}
+
+fitmodel <- lm(Percent_Time_Insights ~ Years_Writing_CodeRC, data = forplot)
+summary(fitmodel)
+
+```
+
+Plotting this model:
+Years_Writing_CodeRC = Amount of years they have been coding
+Percent_Time_Insights = Proportion of time spent analyzing data
+
+```{r}
+plot(Percent_Time_Insights ~ Years_Writing_CodeRC, data = forplot, main = "Percentage of time analyzing data vs. time in field")
+```
+Here I am filtering out those who say that they have less than 20% percent of time spent on analysis or that they aren't involved in coding so that I can weed out the large number of zero percents.
+
+Years_Writing_CodeRC = Amount of years they have been coding
+Percent_Time_Insights = Proportion of time spent analyzing data
+```{r}
+forplot2 <- finalrc %>%
+  drop_na(Percent_Time_Insights, Years_Machine_Learning, Years_Writing_Code, Years_Machine_LearningRC, Years_Writing_CodeRC, Percent_Time_GatherData, AnalyzeData, Percent_Time_Coding, Percent_Time_CodingRC) %>%
+  filter(Percent_Time_Insights > 19, Years_Machine_LearningRC < 9, Years_Writing_CodeRC < 10, Percent_Time_GatherData > 19, Percent_Time_CodingRC > 2)
+anovatest2 <- aov(Percent_Time_Insights ~ Years_Writing_CodeRC, data=forplot2)
+summary(anovatest2)
+```
+This leaves me with a low sample size to work with, and causes it to be no longer significant and also a negative coefficient, so I'll try a confounding variable added next.
+
+Filtered chart:
+```{r}
+fitmodel2 <- lm(Years_Writing_CodeRC ~ Percent_Time_Insights , data = forplot2)
+summary(fitmodel2)
+plot(Percent_Time_Insights ~ Years_Writing_CodeRC, data = forplot2, main = "Percentage of time analyzing data vs. time in field")
+```
+Here I added Q25 which is amount of years spent using machine learning in their work, and same as previously:
+
+Years_Writing_CodeRC = Amount of years they have been coding
+Percent_Time_Insights = Proportion of time spent analyzing data
+Years_Machine_LearningRC = amount of years spent using machine learning in work
+
+```{r}
+anovatest3 <- aov(Percent_Time_Insights ~ Years_Writing_CodeRC + Years_Machine_LearningRC, data=forplot)
+summary(anovatest3)
+```
+I can see in this model, amount of years spent using machine learning in their work is the most significant variable. The p value and the coefficient are stronger than the years writing code variable, although still not particularly strong.
+```{r}
+fitmodel3 <- lm(Percent_Time_Insights ~ Years_Writing_CodeRC + Years_Machine_LearningRC , data = forplot)
+summary(fitmodel3)
+```
+
+Next I would like to try Q11 - "Select any activities that make up an important part of your role at work: Analyze and understand data to influence product or business decisions." This is a categorical variable of yes vs no that is similar to the one I fit above but a bit more general. I will use an anova test since my independent variable of time in coding is also categorical. 
+```{r}
+
+forplot$yearscoding <- as.character(forplot$Years_Writing_CodeRC)
+forplot$analyze <- as.character(forplot$AnalyzeDataRC)
+table(forplot$yearscoding, forplot$analyze)
+anova4 <- aov(analyze ~ yearscoding, data=forplot)
+summary(anova4)
+```
+Again, despite the strong p value, the model below does not give us a strong coefficient.
+```{r}
+fitmodel4 <- lm(AnalyzeDataRC ~ Years_Writing_CodeRC , data = forplot)
+summary(fitmodel4)
+```
+
+Since using Q11 gives similar results and is a less detailed variable, I think I will go back to analyzing "During a typical data science project at work or school, approximately what proportion of your time is devoted to the following?  - Finding insights in the data and communicating with stakeholders" and add "How many years of experience do you have in your current role?" as a confounding variable.
+
+Below I am adding in Years_In_Role as a confounding variable "How many years of experience do you have in your current role?" as amount of time in role could mean that they are relied less on for data collection and cleaning and more analyzing of data. Here my p-values for both variables are very small so I think the confounding variable had an impact. These are also the strongest coefficients I have had in any model. It makes sense that the time in role variable would be a negative coefficient because the less years would mean the more time they would spend doing an entry level task like data collection. 
+```{r}
+fitmodel5 <- lm(Percent_Time_Insights ~ Years_Writing_CodeRC + Years_In_Role, data = forplot)
+summary(fitmodel5)
+```
+Overall, I am seeing that there is a relationship between work done in respondent's roles and the amount of time that they have been coding or in their current role. I wish that there was more numerical data within this dataset that I could use to supplement these findings.
+
+Below I am plotting the two variables used in my final model.
+
+```{r}
+ggplot(forplot, aes(x = Years_In_Role, y = Percent_Time_Insights)) +
+  geom_point(color="black") +
+  geom_smooth(method = "lm", se = F, color = "black") +
+  theme( panel.background = element_rect(fill = "grey"),
+    axis.text = element_text(color = "black")) +
+  ggtitle("Years In Current Role vs. Percent of Time Spent on Insights") 
+```
+
+```{r}
+ggplot(forplot, aes(x = Years_Writing_CodeRC, y = Percent_Time_Insights)) +
+  geom_point(color="black") +
+  geom_smooth(method = "lm", se = F, color = "black") +
+  theme( panel.background = element_rect(fill = "grey"),
+    axis.text = element_text(color = "black"))+
+  ggtitle("Years Experience Writing Code vs. Percent of Time Spent on Insights") 
+```
+
+
+# Final Model Comparison/Evaluation and Diagnostics
+
+Below I am summarizing each model and also finding the AIC/BIC.
+```{r}
+summary(fitmodel2)
+AIC(fitmodel2)
+BIC(fitmodel2)
+summary(fitmodel3)
+AIC(fitmodel3)
+BIC(fitmodel3)
+summary(fitmodel4)
+AIC(fitmodel4)
+BIC(fitmodel4)
+summary(fitmodel5)
+AIC(fitmodel5)
+BIC(fitmodel5)
+
+
+```
+
+Here is how each element ranks in comparison across models:
+AIC/BIC: Model 2 has the lowest AIC/BIC
+Adjusted R squared: Model 4 has the highest adjusted r-squared, but it only has one predictor variable included
+P-Value: Model 4 has the lowest p-value, but again only takes into account one predictor variable
+Multiple R-square: Model 4 has the highest value, indicating the strongest relationship between the variables
+Residuals:Model 2 has the lowest median in the residuals indicating a better fit
+
+
+I think my second to last fitted model (4) is a fine model to use, but in this case I wanted to use a model that had multiple variables included. Since my final model (5) has the same predictor variable as model 4, plus one more variable added, that is the primary model I would explore.
+
+Distributions in the below charts for this model appear normal. The residuals are normally distributed and the Q-Q plot follows a relatively diagonal line. I also checked below for signs of multicollinearity because my final model has two independent variables. The VIF value of 1.2 is not perfect but not very high so I don't think it poses an issue in this model.
+
+```{r}
+vif(fitmodel5)
+```
+
+```{r}
+plot(fitted(fitmodel5), resid(fitmodel5))
+```
+
+```{r}
+plot(fitmodel5)
+```
+
+
+
+# Bibliography
+
+
+Kaggle, (2018). “2018 Kaggle Machine Learning & Data Science Survey”, Retrieved 21 March 2023 from https://www.kaggle.com/datasets/kaggle/kaggle-survey-2018.
+
+CC BY-SA 4.0 : https://creativecommons.org/licenses/by-sa/4.0/
+:::
