@@ -134,15 +134,15 @@ burn2 <- burn %>%
 
 
 burn2 <- burn2%>%
-  mutate(gender.n = case_when(
+  mutate(gender.f = case_when(
         gender == "Male" ~ 0,
          gender == "Female" ~ 1,
         )) %>%
-  mutate(business.n = case_when(
+  mutate(business.p = case_when(
          business == "Service" ~ 0,
          business == "Product" ~ 1,
          )) %>%
-  mutate(WFH.n = case_when(
+  mutate(WFH.y = case_when(
          WFH == "Yes" ~ 1,
          WFH == "No" ~ 0,
          ))
@@ -322,7 +322,7 @@ Also I'll use backward Stepwise regression to keep only the relevant variables.
 ```{r}
 
 # Fit a multiple regression model with predictor variables
-lm.model1 <- lm(burn.rate ~ fatigue + gender.n + business.n + hours + WFH.n, data = burn2)
+lm.model1 <- lm(burn.rate ~ fatigue + gender.f + business.p + hours + WFH.y, data = burn2)
 summary(lm.model1)
 
 # Step Model - Forward
@@ -334,9 +334,9 @@ Type of business is not relevant to the model to explain Burnout. so it is exclu
 
 And Fatigue, Gender, Working hours and WFH setting, all with a p-value < 0.001 explain 92% of the burnout rate.
 
-In particular small increases in Fatigue (0.07 points) is associated with increases in burnout rate. As well as Working hours, where increases of 0.02 hours is associated to increases in burnout rate units.
+In particular, any increase in units of Fatigue increases burnout rate by 0.07 points (or 7% as the burnout scale goes from 0 to 1). As well as Working hours, any additional hour allocated increases burnout rate by 0.02 points (or 2% increase).
 
-On the other side, being Male is significantly associated with higher burnout rates and not having the WFH option is also associated to higher burnout rates.
+On the other side, being Male is significantly associated with higher burnout rates (0.004 points) and working on-site is also associated to higher burnout rates (increases the burnout rate by 1%, or 0.01 points).
 
 Let's check assumptions.
 
@@ -352,7 +352,7 @@ However based on the scatter plot above about Burnout Rate and Fatigue, the rela
 
 
 ```{r}
-lm.model2 <- lm(burn.rate ~ business.n + hours + gender.n + I(fatigue^2) + fatigue +  WFH.n, data = burn2)
+lm.model2 <- lm(burn.rate ~ business.p + hours + gender.f + I(fatigue^2) + fatigue +  WFH.y, data = burn2)
 
 # Step Model - Forward
 step_model2 <- step(lm.model2, direction = "backward", criterion= "AIC")
@@ -366,6 +366,8 @@ plot(step_model2, which = 1:6)
 The model keeps the significant relationships we explained before and seems to fit better now. The new quadratic Fatigue is significant in the model, so I'll include it.
 
 Hours allocated, Gender, Fatigue and WFH or not seems to explain significantly the burnout in the employees included in the study. Being Hours allocated and fatigue the most relevant variables in the model to explain burnout (higher t value).
+
+Specifically, under this model burnout rate increases by 0.05 points (or 5%) per each unit increase in Fatigue and 0.02 (or 2%) per each hour allocated.
 
 But let's compare models.
 
