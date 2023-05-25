@@ -102,12 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta name="twitter:title" content="Final Project Check 2">
 <meta name="twitter:description" content="Final Project Check 2">
-<meta name="twitter:image" content="https://dacss.github.io/603_Spring_2023/posts/Final_Project_Check2_GHTan_files/figure-html/unnamed-chunk-3-1.png">
 <meta name="twitter:creator" content="@UMassDACSS">
 <meta name="twitter:site" content="@UMassDACSS">
-<meta name="twitter:image-height" content="960">
-<meta name="twitter:image-width" content="1344">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed">
@@ -166,8 +163,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#descriptive-statistics" id="toc-descriptive-statistics" class="nav-link" data-scroll-target="#descriptive-statistics">Descriptive Statistics</a></li>
   <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
   <ul class="collapse">
-  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation">model evaluation</a></li>
   <li><a href="#discussion-on-na" id="toc-discussion-on-na" class="nav-link" data-scroll-target="#discussion-on-na">Discussion on NA</a></li>
+  <li><a href="#model-evaluation" id="toc-model-evaluation" class="nav-link" data-scroll-target="#model-evaluation">model evaluation</a></li>
+  <li><a href="#interpret-the-model" id="toc-interpret-the-model" class="nav-link" data-scroll-target="#interpret-the-model">Interpret the Model</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -179,7 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Final Project Check 2</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
   <div class="quarto-categories">
-    <div class="quarto-category">fpc2</div>
+    <div class="quarto-category"></div>
     <div class="quarto-category">research question</div>
     <div class="quarto-category">desriptive statistics</div>
     <div class="quarto-category">model</div>
@@ -267,7 +265,31 @@ Please cite as:
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pisa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'_data/CY07_MSU_SCH_QQQ.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'
+
+The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'reshape2'
+
+The following object is masked from 'package:tidyr':
+
+    smiths</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pisa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'_data/CY07_MSU_SCH_QQQ.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>New names:
@@ -292,21 +314,54 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a data frame</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(pisa)</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># select related variable</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>pisa_selected <span class="ot">&lt;-</span> <span class="fu">select</span>(pisa,<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"SC001"</span>, <span class="st">"SC013"</span>, <span class="st">"SC016"</span>, <span class="st">"SC161"</span>,<span class="st">"SC155"</span>)))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>pisa2018_joint <span class="ot">&lt;-</span><span class="fu">cbind</span>(pisa[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>], pisa_selected)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># pisa_SC155</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Digitals<span class="ot">=</span><span class="fu">rowMeans</span>(pisa2018_joint[,<span class="fu">c</span>(<span class="st">"SC155Q01HA"</span>,<span class="st">"SC155Q02HA"</span>,                                                  <span class="st">"SC155Q03HA"</span>,<span class="st">"SC155Q04HA"</span>,<span class="st">"SC155Q05HA"</span>,<span class="st">"SC155Q06HA"</span>, <span class="st">"SC155Q07HA"</span>,<span class="st">"SC155Q08HA"</span>,<span class="st">"SC155Q09HA"</span>, <span class="st">"SC155Q10HA"</span>, <span class="st">"SC155Q11HA"</span>)])</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Career_Guidance<span class="ot">=</span><span class="fu">rowSums</span>(pisa2018_joint[, <span class="fu">c</span>(<span class="st">"SC161Q02SA"</span>,<span class="st">"SC161Q03SA"</span>,<span class="st">"SC161Q04SA"</span>,<span class="st">"SC161Q04SA"</span>)])</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>pisa_SC155 <span class="ot">&lt;-</span> pisa2018_joint <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(CNT, STRATUM, OECD, Career_Guidance,Digitals, SC001Q01TA, SC013Q01TA) <span class="sc">%&gt;%</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Urban=</span>SC001Q01TA, <span class="at">Public_or_Private=</span>SC013Q01TA) <span class="sc">%&gt;%</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(SC001Q01TA, SC013Q01TA)) <span class="sc">%&gt;%</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(CNT,STRATUM,OECD,Urban, Public_or_Private,Career_Guidance,Digitals))</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>pisa_SC155</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a data frame</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#view(pisa)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># select related variable</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>pisa_selected <span class="ot">&lt;-</span> <span class="fu">select</span>(pisa,<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"SC001"</span>, <span class="st">"SC013"</span>, <span class="st">"SC016"</span>, <span class="st">"SC161"</span>,<span class="st">"SC155"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in select(pisa, starts_with(c("SC001", "SC013", "SC016", "SC161", : unused argument (starts_with(c("SC001", "SC013", "SC016", "SC161", "SC155")))</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pisa2018_joint <span class="ot">&lt;-</span><span class="fu">cbind</span>(pisa[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>], pisa_selected)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in data.frame(..., check.names = FALSE): object 'pisa_selected' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pisa_SC155</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Digitals<span class="ot">=</span><span class="fu">rowMeans</span>(pisa2018_joint[,<span class="fu">c</span>(<span class="st">"SC155Q01HA"</span>,<span class="st">"SC155Q02HA"</span>,                                                  <span class="st">"SC155Q03HA"</span>,<span class="st">"SC155Q04HA"</span>,<span class="st">"SC155Q05HA"</span>,<span class="st">"SC155Q06HA"</span>, <span class="st">"SC155Q07HA"</span>,<span class="st">"SC155Q08HA"</span>,<span class="st">"SC155Q09HA"</span>, <span class="st">"SC155Q10HA"</span>, <span class="st">"SC155Q11HA"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.data.frame(x): object 'pisa2018_joint' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Career_Guidance<span class="ot">=</span><span class="fu">rowSums</span>(pisa2018_joint[, <span class="fu">c</span>(<span class="st">"SC161Q02SA"</span>,<span class="st">"SC161Q03SA"</span>,<span class="st">"SC161Q04SA"</span>,<span class="st">"SC161Q04SA"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.data.frame(x): object 'pisa2018_joint' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pisa_SC155 <span class="ot">&lt;-</span> pisa2018_joint <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(CNT, STRATUM, OECD, Career_Guidance,Digitals, SC001Q01TA, SC013Q01TA) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Urban=</span>SC001Q01TA, <span class="at">Public_or_Private=</span>SC013Q01TA) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(SC001Q01TA, SC013Q01TA)) <span class="sc">%&gt;%</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(CNT,STRATUM,OECD,Urban, Public_or_Private,Career_Guidance,Digitals))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in select(., c(CNT, STRATUM, OECD, Urban, Public_or_Private, Career_Guidance, : unused argument (c(CNT, STRATUM, OECD, Urban, Public_or_Private, Career_Guidance, Digitals))</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pisa_SC155</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, envir, enclos): object 'pisa_SC155' not found</code></pre>
+</div>
 </div>
 </section>
 <section id="descriptive-statistics" class="level1">
@@ -316,251 +371,226 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>     CNT              STRATUM               OECD            Urban      
- Length:21903       Length:21903       Min.   :0.0000   Min.   :1.000  
- Class :character   Class :character   1st Qu.:0.0000   1st Qu.:2.000  
- Mode  :character   Mode  :character   Median :1.0000   Median :3.000  
-                                       Mean   :0.5171   Mean   :3.007  
-                                       3rd Qu.:1.0000   3rd Qu.:4.000  
-                                       Max.   :1.0000   Max.   :5.000  
-                                                        NA's   :1363   
- Public_or_Private Career_Guidance    Digitals    
- Min.   :1.00      Min.   :0.000   Min.   :1.000  
- 1st Qu.:1.00      1st Qu.:1.000   1st Qu.:2.273  
- Median :1.00      Median :1.000   Median :2.636  
- Mean   :1.19      Mean   :1.518   Mean   :2.664  
- 3rd Qu.:1.00      3rd Qu.:2.000   3rd Qu.:3.000  
- Max.   :2.00      Max.   :4.000   Max.   :4.000  
- NA's   :2092      NA's   :1499    NA's   :1399   </code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in summary(pisa_SC155): object 'pisa_SC155' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pisa_SC155_boxplot<span class="ot">&lt;-</span>pisa_SC155 <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(STRATUM, Career_Guidance, Digitals) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">c</span>(Career_Guidance, Digitals), </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Group"</span>, <span class="at">values_to =</span> <span class="st">"Evaluation"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pisa_SC155_boxplot,<span class="fu">aes</span>(Evaluation, <span class="at">fill=</span>Group))<span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_boxplot</span>(<span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="co"># Error bars</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> <span class="fl">0.2</span>)<span class="sc">+</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Group)<span class="sc">+</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Pisa2018 Evaluation"</span>)<span class="sc">+</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pisa_SC155_boxplot<span class="ot">&lt;-</span>pisa_SC155 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(STRATUM, Career_Guidance, Digitals) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">c</span>(Career_Guidance, Digitals), </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Group"</span>, <span class="at">values_to =</span> <span class="st">"Evaluation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2898 rows containing non-finite values (`stat_boxplot()`).
-Removed 2898 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in select(., STRATUM, Career_Guidance, Digitals): unused arguments (STRATUM, Career_Guidance, Digitals)</code></pre>
 </div>
-<div class="cell-output-display">
-<p><img src="Final_Project_Check2_GHTan_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pisa_SC155_boxplot,<span class="fu">aes</span>(Evaluation, <span class="at">fill=</span>Group))<span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_boxplot</span>(<span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="co"># Error bars</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> <span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Group)<span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Pisa2018 Evaluation"</span>)<span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in ggplot(pisa_SC155_boxplot, aes(Evaluation, fill = Group)): object 'pisa_SC155_boxplot' not found</code></pre>
 </div>
 </div>
 </section>
 <section id="analysis" class="level1">
 <h1>Analysis</h1>
+<section id="discussion-on-na" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-on-na">Discussion on NA</h2>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># missing data</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>pisa_SC115_nonOECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>     CNT              STRATUM               OECD            Urban      
- Length:21903       Length:21903       Min.   :0.0000   Min.   :1.000  
- Class :character   Class :character   1st Qu.:0.0000   1st Qu.:2.000  
- Mode  :character   Mode  :character   Median :1.0000   Median :3.000  
-                                       Mean   :0.5171   Mean   :3.007  
-                                       3rd Qu.:1.0000   3rd Qu.:4.000  
-                                       Max.   :1.0000   Max.   :5.000  
-                                                        NA's   :1363   
- Public_or_Private Career_Guidance    Digitals    
- Min.   :1.00      Min.   :0.000   Min.   :1.000  
- 1st Qu.:1.00      1st Qu.:1.000   1st Qu.:2.273  
- Median :1.00      Median :1.000   Median :2.636  
- Mean   :1.19      Mean   :1.518   Mean   :2.664  
- 3rd Qu.:1.00      3rd Qu.:2.000   3rd Qu.:3.000  
- Max.   :2.00      Max.   :4.000   Max.   :4.000  
- NA's   :2092      NA's   :1499    NA's   :1399   </code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in filter(pisa_SC155, OECD == "0"): object 'pisa_SC155' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>pisa_SC115_OECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in filter(pisa_SC155, OECD == "1"): object 'pisa_SC155' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC155)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in test_if_dataframe(x): object 'pisa_SC155' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_nonOECD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in test_if_dataframe(x): object 'pisa_SC115_nonOECD' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_OECD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in test_if_dataframe(x): object 'pisa_SC115_OECD' not found</code></pre>
 </div>
 </div>
+<p>The graphics have disclose that compared with NON-OECD countries, OECD countries missed more data in terms of school type and career guidance. I believe that missing data are not caused by the poor technological condition in non-OECD countries. So missing data is random.</p>
+</section>
 <section id="model-evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="model-evaluation">model evaluation</h2>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals<span class="sc">+</span>Urban<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>pisa_SC155_NoNA <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(pisa_SC155)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Career_Guidance ~ Urban + Public_or_Private + Digitals + 
-    Urban * Digitals, data = pisa_SC155)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--2.0225 -0.5833 -0.3219  0.5482  2.8554 
-
-Coefficients:
-                  Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)       0.788183   0.082837   9.515  &lt; 2e-16 ***
-Urban             0.005856   0.024580   0.238   0.8117    
-Public_or_Private 0.134161   0.019114   7.019 2.31e-12 ***
-Digitals          0.161945   0.030173   5.367 8.09e-08 ***
-Urban:Digitals    0.015535   0.009013   1.724   0.0848 .  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.9751 on 18558 degrees of freedom
-  (3340 observations deleted due to missingness)
-Multiple R-squared:  0.02977,   Adjusted R-squared:  0.02956 
-F-statistic: 142.3 on 4 and 18558 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in drop_na(pisa_SC155): object 'pisa_SC155' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>model_2 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Public_or_Private<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(pisa_SC155_NoNA)</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals<span class="sc">+</span>Urban<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155_NoNA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Career_Guidance ~ Urban + Public_or_Private + Public_or_Private * 
-    Digitals, data = pisa_SC155)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1.9430 -0.5968 -0.3169  0.5416  2.8959 
-
-Coefficients:
-                            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)                 0.472735   0.110481   4.279 1.89e-05 ***
-Urban                       0.047179   0.005769   8.178 3.06e-16 ***
-Public_or_Private           0.297148   0.090982   3.266  0.00109 ** 
-Digitals                    0.276078   0.038819   7.112 1.19e-12 ***
-Public_or_Private:Digitals -0.056165   0.031141  -1.804  0.07131 .  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.9751 on 18558 degrees of freedom
-  (3340 observations deleted due to missingness)
-Multiple R-squared:  0.02978,   Adjusted R-squared:  0.02957 
-F-statistic: 142.4 on 4 and 18558 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.data.frame(data): object 'pisa_SC155_NoNA' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>model_3 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model_1)</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>model_2 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Public_or_Private<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155_NoNA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = Career_Guidance ~ Urban + Public_or_Private + Digitals, 
-    data = pisa_SC155)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1.9883 -0.5860 -0.3205  0.5462  2.8801 
-
-Coefficients:
-                  Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)       0.660470   0.037034  17.834  &lt; 2e-16 ***
-Urban             0.047037   0.005768   8.154 3.74e-16 ***
-Public_or_Private 0.136695   0.019058   7.173 7.64e-13 ***
-Digitals          0.209566   0.012125  17.284  &lt; 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.9751 on 18559 degrees of freedom
-  (3340 observations deleted due to missingness)
-Multiple R-squared:  0.02961,   Adjusted R-squared:  0.02946 
-F-statistic: 188.8 on 3 and 18559 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.data.frame(data): object 'pisa_SC155_NoNA' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(model_1,model_2, model_3,  <span class="at">type =</span> <span class="st">'text'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model_2)</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>model_3 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155_NoNA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-===========================================================================================================
-                                                         Dependent variable:                               
-                           --------------------------------------------------------------------------------
-                                                           Career_Guidance                                 
-                                      (1)                        (2)                        (3)            
------------------------------------------------------------------------------------------------------------
-Urban                                0.006                     0.047***                   0.047***         
-                                    (0.025)                    (0.006)                    (0.006)          
-                                                                                                           
-Public_or_Private                   0.134***                   0.297***                   0.137***         
-                                    (0.019)                    (0.091)                    (0.019)          
-                                                                                                           
-Digitals                            0.162***                   0.276***                   0.210***         
-                                    (0.030)                    (0.039)                    (0.012)          
-                                                                                                           
-Urban:Digitals                       0.016*                                                                
-                                    (0.009)                                                                
-                                                                                                           
-Public_or_Private:Digitals                                     -0.056*                                     
-                                                               (0.031)                                     
-                                                                                                           
-Constant                            0.788***                   0.473***                   0.660***         
-                                    (0.083)                    (0.110)                    (0.037)          
-                                                                                                           
------------------------------------------------------------------------------------------------------------
-Observations                         18,563                     18,563                     18,563          
-R2                                   0.030                      0.030                      0.030           
-Adjusted R2                          0.030                      0.030                      0.029           
-Residual Std. Error            0.975 (df = 18558)         0.975 (df = 18558)         0.975 (df = 18559)    
-F Statistic                142.347*** (df = 4; 18558) 142.420*** (df = 4; 18558) 188.786*** (df = 3; 18559)
-===========================================================================================================
-Note:                                                                           *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.data.frame(data): object 'pisa_SC155_NoNA' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model_3)</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(model_1, model_2, model_3,  <span class="at">type =</span> <span class="st">'text'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in .stargazer.wrap(..., type = type, title = title, style = style, : object 'model_1' not found</code></pre>
 </div>
 </div>
 <p>After the model comparison, model_3 presents statistical significance on all independent variables. The career gudience depends on urban situations, school styles and the access to digital devices.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit<span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># diagnostics</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_3, <span class="at">which=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<p><img src="Final_Project_Check2_GHTan_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div class="cell-output cell-output-error">
+<pre><code>Error in plot(model_3, which = 1:6): object 'model_3' not found</code></pre>
 </div>
 </div>
-<p>The model diagnostic demonstrates that model_3 is the fittest model without significant errors.</p>
-</section>
-<section id="discussion-on-na" class="level2">
-<h2 class="anchored" data-anchor-id="discussion-on-na">Discussion on NA</h2>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pisa_SC115_nonOECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"0"</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>pisa_SC115_OECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"1"</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC155)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># log-git model</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>pisa_SC155_NoNA<span class="sc">$</span>Career_Guidance_Ordinal <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(pisa_SC155_NoNA<span class="sc">$</span>Career_Guidance)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<p><img src="Final_Project_Check2_GHTan_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div class="cell-output cell-output-error">
+<pre><code>Error in is.factor(x): object 'pisa_SC155_NoNA' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_nonOECD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(pisa_SC155_NoNA<span class="sc">$</span>Career_Guidance_Ordinal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<p><img src="Final_Project_Check2_GHTan_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, envir, enclos): object 'pisa_SC155_NoNA' not found</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_OECD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pisa_SC155_NoNA<span class="sc">$</span>Career_Guidance_Ordinal)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<p><img src="Final_Project_Check2_GHTan_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
+<div class="cell-output cell-output-error">
+<pre><code>Error in table(pisa_SC155_NoNA$Career_Guidance_Ordinal): object 'pisa_SC155_NoNA' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit2<span class="ot">&lt;-</span><span class="fu">polr</span>(Career_Guidance_Ordinal<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155_NoNA, <span class="at">Hess=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, p): object 'pisa_SC155_NoNA' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in summary(fit2): object 'fit2' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">glance</span>(model_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in broom::glance(model_3): object 'model_3' not found</code></pre>
 </div>
 </div>
-<p>The graphics has suggested that OECD countries reported more NAs than non-OECD countries. This opens more space to further investigate why developed countries reported more NAs.</p>
+<p>But model_3 still shows the relative lower R squared. In addition, the diagnostics plots show certain patterns. Both remind me of further exploring a different model. So I plan to try log-git model and calculate the AICs for this two models. Final the log-git model (fit2) has a lower AIC.</p>
+</section>
+<section id="interpret-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="interpret-the-model">Interpret the Model</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ctable &lt;- coef(summary(fit2))</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="co">#p &lt;- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="co">#ctable &lt;- cbind(ctable, "p value" = p)</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="co">#ctable</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a><span class="co">#exp(coef(fit2))</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>newdat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Urban =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3712</span>),</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Public_or_Private =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> <span class="dv">9280</span> ),</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Digitals =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">4640</span>))</span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>newdat <span class="ot">&lt;-</span> <span class="fu">cbind</span>(newdat, <span class="fu">predict</span>(fit2, newdat, <span class="at">type =</span> <span class="st">"probs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in predict(fit2, newdat, type = "probs"): object 'fit2' not found</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>lnewdat <span class="ot">&lt;-</span> <span class="fu">melt</span>(newdat, <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">"Urban"</span>, <span class="st">"Public_or_Private"</span>, <span class="st">"Digitals"</span>),</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">variable.name =</span> <span class="st">"Level"</span>, <span class="at">value.name=</span><span class="st">"Probability"</span>)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lnewdat, <span class="fu">aes</span>(<span class="at">x =</span> Digitals, <span class="at">y =</span> Probability, <span class="at">colour =</span> Level))<span class="sc">+</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(Urban <span class="sc">~</span> Public_or_Private , <span class="at">labeller=</span><span class="st">"label_both"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `geom_line()`:
+! Problem while computing aesthetics.
+ℹ Error occurred in the 1st layer.
+Caused by error in `FUN()`:
+! object 'Probability' not found</code></pre>
+</div>
+</div>
 
 
 <!-- -->
@@ -970,132 +1000,132 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb30" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project Check 2"</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Guanhua Tan"</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final Project Check 2"</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "April 4 2023"</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - fpc2</span></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - research question</span></span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - desriptive statistics</span></span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">  - model</span></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>My final project will be a further investigation on digital devices in schools that I have submitted as the final project for DACSS 601. I still explore the data from the survey "Programme for International Student Assessment" in 2018. In this assignment, I will propose my hypothesis, and present the descriptive statistics with minor changes base on my last project.</span>
-<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
-<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(misty)</span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>pisa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'_data/CY07_MSU_SCH_QQQ.csv'</span>)</span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Questions</span></span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>My final project will probe into what factors contribute to the accessibility to and human resources' support for digital devices in schools. Additionally, I will explore if there is a correlations between career guidance and digital devices? I will conduct this research based on the data "Programme for International Student Assessment" (PISA) collected by the The Organization for Economic Co-operation and Development (OECD) in 2018.</span>
-<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hpyotheis</span></span>
-<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a>I propose that the size of urban population primarily contributes to the conditions of digital device. "OECD or Non-OECD" and "public or private schools" may be two cofounders, which is suppose to be incorporated into the regression analysis. Also, I hypothesize that the higher score a school report regarding career guidance, the higher score a school reports in terms of digital divices.</span>
-<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE, results='hide'}</span></span>
-<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co"># create a data frame</span></span>
-<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="co">#view(pisa)</span></span>
-<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="co"># select related variable</span></span>
-<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>pisa_selected <span class="ot">&lt;-</span> <span class="fu">select</span>(pisa,<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"SC001"</span>, <span class="st">"SC013"</span>, <span class="st">"SC016"</span>, <span class="st">"SC161"</span>,<span class="st">"SC155"</span>)))</span>
-<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>pisa2018_joint <span class="ot">&lt;-</span><span class="fu">cbind</span>(pisa[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>], pisa_selected)</span>
-<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="co"># pisa_SC155</span></span>
-<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Digitals<span class="ot">=</span><span class="fu">rowMeans</span>(pisa2018_joint[,<span class="fu">c</span>(<span class="st">"SC155Q01HA"</span>,<span class="st">"SC155Q02HA"</span>,                                                  <span class="st">"SC155Q03HA"</span>,<span class="st">"SC155Q04HA"</span>,<span class="st">"SC155Q05HA"</span>,<span class="st">"SC155Q06HA"</span>, <span class="st">"SC155Q07HA"</span>,<span class="st">"SC155Q08HA"</span>,<span class="st">"SC155Q09HA"</span>, <span class="st">"SC155Q10HA"</span>, <span class="st">"SC155Q11HA"</span>)])</span>
-<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Career_Guidance<span class="ot">=</span><span class="fu">rowSums</span>(pisa2018_joint[, <span class="fu">c</span>(<span class="st">"SC161Q02SA"</span>,<span class="st">"SC161Q03SA"</span>,<span class="st">"SC161Q04SA"</span>,<span class="st">"SC161Q04SA"</span>)])</span>
-<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>pisa_SC155 <span class="ot">&lt;-</span> pisa2018_joint <span class="sc">%&gt;%</span></span>
-<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(CNT, STRATUM, OECD, Career_Guidance,Digitals, SC001Q01TA, SC013Q01TA) <span class="sc">%&gt;%</span></span>
-<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Urban=</span>SC001Q01TA, <span class="at">Public_or_Private=</span>SC013Q01TA) <span class="sc">%&gt;%</span></span>
-<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(SC001Q01TA, SC013Q01TA)) <span class="sc">%&gt;%</span></span>
-<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(CNT,STRATUM,OECD,Urban, Public_or_Private,Career_Guidance,Digitals))</span>
-<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a>pisa_SC155</span>
-<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># Descriptive Statistics</span></span>
-<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a>This original OECD PISA 2018 School Questionnaire Dataset is one part of PISA 2018 dataset with a focus on schools. It covers 80 countries and regions all over the world. The dataset documents 21,903 schools' responses regarding 187 questions.After cleaning the data, the dataset includes 8 variables: CNT identifies countries. STRATUM identifies schools. OECD indicates if a school locates in a OECD country or not. Urban describes different conditions of urban communities where a school locates. Public_or_Private presents if a school is public or private. Career_Guidance demonstrates the score a school reports in terms of career guidance. Accessibility demonstrates the score a school reports in terms of accessibility to digital devices. Human_Resource_Support suggests the score a school reports in terms of human ressource support for digital devices.</span>
-<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a>After using the summary function and visualization, I have already show the descriptive statistics. A large number of NA stands out. I will figure out how to deal with them properly.</span>
-<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE}</span></span>
-<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span>
-<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a>pisa_SC155_boxplot<span class="ot">&lt;-</span>pisa_SC155 <span class="sc">%&gt;%</span></span>
-<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(STRATUM, Career_Guidance, Digitals) <span class="sc">%&gt;%</span> </span>
-<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">c</span>(Career_Guidance, Digitals), </span>
-<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Group"</span>, <span class="at">values_to =</span> <span class="st">"Evaluation"</span>)</span>
-<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pisa_SC155_boxplot,<span class="fu">aes</span>(Evaluation, <span class="at">fill=</span>Group))<span class="sc">+</span></span>
-<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_boxplot</span>(<span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="co"># Error bars</span></span>
-<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> <span class="fl">0.2</span>)<span class="sc">+</span></span>
-<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
-<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Group)<span class="sc">+</span></span>
-<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Pisa2018 Evaluation"</span>)<span class="sc">+</span></span>
-<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
-<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis</span></span>
-<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span>
-<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## model evaluation</span></span>
-<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals<span class="sc">+</span>Urban<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_1)</span>
-<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a>model_2 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Public_or_Private<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_2)</span>
-<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a>model_3 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_3)</span>
-<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(model_1,model_2, model_3,  <span class="at">type =</span> <span class="st">'text'</span>)</span>
-<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a>After the model comparison, model_3 presents statistical significance on all independent variables. The career gudience depends on urban situations, school styles and the access to digital devices.</span>
-<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-111"><a href="#cb30-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a>fit<span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
-<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
-<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-117"><a href="#cb30-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-118"><a href="#cb30-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a>The model diagnostic demonstrates that model_3 is the fittest model without significant errors.</span>
-<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion on NA</span></span>
-<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
-<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a>pisa_SC115_nonOECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"0"</span>)</span>
-<span id="cb30-128"><a href="#cb30-128" aria-hidden="true" tabindex="-1"></a>pisa_SC115_OECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"1"</span>)</span>
-<span id="cb30-129"><a href="#cb30-129" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC155)</span>
-<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_nonOECD)</span>
-<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_OECD)</span>
-<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-133"><a href="#cb30-133" aria-hidden="true" tabindex="-1"></a>The graphics has suggested that OECD countries reported more NAs than non-OECD countries. This opens more space to further investigate why developed countries reported more NAs.</span>
-<span id="cb30-134"><a href="#cb30-134" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb71" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project Check 2"</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Guanhua Tan"</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final Project Check 2"</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "April 4 2023"</span></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="co">  - fpc2</span></span>
+<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - research question</span></span>
+<span id="cb71-15"><a href="#cb71-15" aria-hidden="true" tabindex="-1"></a><span class="co">  - desriptive statistics</span></span>
+<span id="cb71-16"><a href="#cb71-16" aria-hidden="true" tabindex="-1"></a><span class="co">  - model</span></span>
+<span id="cb71-17"><a href="#cb71-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb71-18"><a href="#cb71-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-19"><a href="#cb71-19" aria-hidden="true" tabindex="-1"></a>My final project will be a further investigation on digital devices in schools that I have submitted as the final project for DACSS 601. I still explore the data from the survey "Programme for International Student Assessment" in 2018. In this assignment, I will propose my hypothesis, and present the descriptive statistics with minor changes base on my last project.</span>
+<span id="cb71-20"><a href="#cb71-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-21"><a href="#cb71-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb71-22"><a href="#cb71-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb71-23"><a href="#cb71-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb71-24"><a href="#cb71-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
+<span id="cb71-25"><a href="#cb71-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
+<span id="cb71-26"><a href="#cb71-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(misty)</span>
+<span id="cb71-27"><a href="#cb71-27" aria-hidden="true" tabindex="-1"></a>pisa <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'_data/CY07_MSU_SCH_QQQ.csv'</span>)</span>
+<span id="cb71-28"><a href="#cb71-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-29"><a href="#cb71-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-30"><a href="#cb71-30" aria-hidden="true" tabindex="-1"></a><span class="fu"># Research Questions</span></span>
+<span id="cb71-31"><a href="#cb71-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-32"><a href="#cb71-32" aria-hidden="true" tabindex="-1"></a>My final project will probe into what factors contribute to the accessibility to and human resources' support for digital devices in schools. Additionally, I will explore if there is a correlations between career guidance and digital devices? I will conduct this research based on the data "Programme for International Student Assessment" (PISA) collected by the The Organization for Economic Co-operation and Development (OECD) in 2018.</span>
+<span id="cb71-33"><a href="#cb71-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-34"><a href="#cb71-34" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hpyotheis</span></span>
+<span id="cb71-35"><a href="#cb71-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-36"><a href="#cb71-36" aria-hidden="true" tabindex="-1"></a>I propose that the size of urban population primarily contributes to the conditions of digital device. "OECD or Non-OECD" and "public or private schools" may be two cofounders, which is suppose to be incorporated into the regression analysis. Also, I hypothesize that the higher score a school report regarding career guidance, the higher score a school reports in terms of digital divices.</span>
+<span id="cb71-37"><a href="#cb71-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-38"><a href="#cb71-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE, results='hide'}</span></span>
+<span id="cb71-39"><a href="#cb71-39" aria-hidden="true" tabindex="-1"></a><span class="co"># create a data frame</span></span>
+<span id="cb71-40"><a href="#cb71-40" aria-hidden="true" tabindex="-1"></a><span class="co">#view(pisa)</span></span>
+<span id="cb71-41"><a href="#cb71-41" aria-hidden="true" tabindex="-1"></a><span class="co"># select related variable</span></span>
+<span id="cb71-42"><a href="#cb71-42" aria-hidden="true" tabindex="-1"></a>pisa_selected <span class="ot">&lt;-</span> <span class="fu">select</span>(pisa,<span class="fu">starts_with</span>(<span class="fu">c</span>(<span class="st">"SC001"</span>, <span class="st">"SC013"</span>, <span class="st">"SC016"</span>, <span class="st">"SC161"</span>,<span class="st">"SC155"</span>)))</span>
+<span id="cb71-43"><a href="#cb71-43" aria-hidden="true" tabindex="-1"></a>pisa2018_joint <span class="ot">&lt;-</span><span class="fu">cbind</span>(pisa[, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>], pisa_selected)</span>
+<span id="cb71-44"><a href="#cb71-44" aria-hidden="true" tabindex="-1"></a><span class="co"># pisa_SC155</span></span>
+<span id="cb71-45"><a href="#cb71-45" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Digitals<span class="ot">=</span><span class="fu">rowMeans</span>(pisa2018_joint[,<span class="fu">c</span>(<span class="st">"SC155Q01HA"</span>,<span class="st">"SC155Q02HA"</span>,                                                  <span class="st">"SC155Q03HA"</span>,<span class="st">"SC155Q04HA"</span>,<span class="st">"SC155Q05HA"</span>,<span class="st">"SC155Q06HA"</span>, <span class="st">"SC155Q07HA"</span>,<span class="st">"SC155Q08HA"</span>,<span class="st">"SC155Q09HA"</span>, <span class="st">"SC155Q10HA"</span>, <span class="st">"SC155Q11HA"</span>)])</span>
+<span id="cb71-46"><a href="#cb71-46" aria-hidden="true" tabindex="-1"></a>pisa2018_joint<span class="sc">$</span>Career_Guidance<span class="ot">=</span><span class="fu">rowSums</span>(pisa2018_joint[, <span class="fu">c</span>(<span class="st">"SC161Q02SA"</span>,<span class="st">"SC161Q03SA"</span>,<span class="st">"SC161Q04SA"</span>,<span class="st">"SC161Q04SA"</span>)])</span>
+<span id="cb71-47"><a href="#cb71-47" aria-hidden="true" tabindex="-1"></a>pisa_SC155 <span class="ot">&lt;-</span> pisa2018_joint <span class="sc">%&gt;%</span></span>
+<span id="cb71-48"><a href="#cb71-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(CNT, STRATUM, OECD, Career_Guidance,Digitals, SC001Q01TA, SC013Q01TA) <span class="sc">%&gt;%</span></span>
+<span id="cb71-49"><a href="#cb71-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Urban=</span>SC001Q01TA, <span class="at">Public_or_Private=</span>SC013Q01TA) <span class="sc">%&gt;%</span></span>
+<span id="cb71-50"><a href="#cb71-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(SC001Q01TA, SC013Q01TA)) <span class="sc">%&gt;%</span></span>
+<span id="cb71-51"><a href="#cb71-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(CNT,STRATUM,OECD,Urban, Public_or_Private,Career_Guidance,Digitals))</span>
+<span id="cb71-52"><a href="#cb71-52" aria-hidden="true" tabindex="-1"></a>pisa_SC155</span>
+<span id="cb71-53"><a href="#cb71-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-54"><a href="#cb71-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-55"><a href="#cb71-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-56"><a href="#cb71-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># Descriptive Statistics</span></span>
+<span id="cb71-57"><a href="#cb71-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-58"><a href="#cb71-58" aria-hidden="true" tabindex="-1"></a>This original OECD PISA 2018 School Questionnaire Dataset is one part of PISA 2018 dataset with a focus on schools. It covers 80 countries and regions all over the world. The dataset documents 21,903 schools' responses regarding 187 questions.After cleaning the data, the dataset includes 8 variables: CNT identifies countries. STRATUM identifies schools. OECD indicates if a school locates in a OECD country or not. Urban describes different conditions of urban communities where a school locates. Public_or_Private presents if a school is public or private. Career_Guidance demonstrates the score a school reports in terms of career guidance. Accessibility demonstrates the score a school reports in terms of accessibility to digital devices. Human_Resource_Support suggests the score a school reports in terms of human ressource support for digital devices.</span>
+<span id="cb71-59"><a href="#cb71-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-60"><a href="#cb71-60" aria-hidden="true" tabindex="-1"></a>After using the summary function and visualization, I have already show the descriptive statistics. A large number of NA stands out. I will figure out how to deal with them properly.</span>
+<span id="cb71-61"><a href="#cb71-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-62"><a href="#cb71-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=TRUE}</span></span>
+<span id="cb71-63"><a href="#cb71-63" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span>
+<span id="cb71-64"><a href="#cb71-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-65"><a href="#cb71-65" aria-hidden="true" tabindex="-1"></a>pisa_SC155_boxplot<span class="ot">&lt;-</span>pisa_SC155 <span class="sc">%&gt;%</span></span>
+<span id="cb71-66"><a href="#cb71-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(STRATUM, Career_Guidance, Digitals) <span class="sc">%&gt;%</span> </span>
+<span id="cb71-67"><a href="#cb71-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">c</span>(Career_Guidance, Digitals), </span>
+<span id="cb71-68"><a href="#cb71-68" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Group"</span>, <span class="at">values_to =</span> <span class="st">"Evaluation"</span>)</span>
+<span id="cb71-69"><a href="#cb71-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-70"><a href="#cb71-70" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pisa_SC155_boxplot,<span class="fu">aes</span>(Evaluation, <span class="at">fill=</span>Group))<span class="sc">+</span></span>
+<span id="cb71-71"><a href="#cb71-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_boxplot</span>(<span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="co"># Error bars</span></span>
+<span id="cb71-72"><a href="#cb71-72" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> <span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb71-73"><a href="#cb71-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
+<span id="cb71-74"><a href="#cb71-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Group)<span class="sc">+</span></span>
+<span id="cb71-75"><a href="#cb71-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Pisa2018 Evaluation"</span>)<span class="sc">+</span></span>
+<span id="cb71-76"><a href="#cb71-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
+<span id="cb71-77"><a href="#cb71-77" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb71-78"><a href="#cb71-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-79"><a href="#cb71-79" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis</span></span>
+<span id="cb71-80"><a href="#cb71-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-83"><a href="#cb71-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb71-84"><a href="#cb71-84" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pisa_SC155)</span>
+<span id="cb71-85"><a href="#cb71-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-86"><a href="#cb71-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-87"><a href="#cb71-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## model evaluation</span></span>
+<span id="cb71-90"><a href="#cb71-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb71-91"><a href="#cb71-91" aria-hidden="true" tabindex="-1"></a>model_1 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals<span class="sc">+</span>Urban<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
+<span id="cb71-92"><a href="#cb71-92" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_1)</span>
+<span id="cb71-93"><a href="#cb71-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-94"><a href="#cb71-94" aria-hidden="true" tabindex="-1"></a>model_2 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Public_or_Private<span class="sc">*</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
+<span id="cb71-95"><a href="#cb71-95" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_2)</span>
+<span id="cb71-96"><a href="#cb71-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-97"><a href="#cb71-97" aria-hidden="true" tabindex="-1"></a>model_3 <span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
+<span id="cb71-98"><a href="#cb71-98" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_3)</span>
+<span id="cb71-99"><a href="#cb71-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-100"><a href="#cb71-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-101"><a href="#cb71-101" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(model_1,model_2, model_3,  <span class="at">type =</span> <span class="st">'text'</span>)</span>
+<span id="cb71-102"><a href="#cb71-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-103"><a href="#cb71-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-104"><a href="#cb71-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-105"><a href="#cb71-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-106"><a href="#cb71-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-107"><a href="#cb71-107" aria-hidden="true" tabindex="-1"></a>After the model comparison, model_3 presents statistical significance on all independent variables. The career gudience depends on urban situations, school styles and the access to digital devices.</span>
+<span id="cb71-108"><a href="#cb71-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-111"><a href="#cb71-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb71-112"><a href="#cb71-112" aria-hidden="true" tabindex="-1"></a>fit<span class="ot">&lt;-</span><span class="fu">lm</span>(Career_Guidance<span class="sc">~</span>Urban<span class="sc">+</span>Public_or_Private<span class="sc">+</span>Digitals, <span class="at">data =</span> pisa_SC155)</span>
+<span id="cb71-113"><a href="#cb71-113" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb71-114"><a href="#cb71-114" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb71-115"><a href="#cb71-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-116"><a href="#cb71-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-117"><a href="#cb71-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-118"><a href="#cb71-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-119"><a href="#cb71-119" aria-hidden="true" tabindex="-1"></a>The model diagnostic demonstrates that model_3 is the fittest model without significant errors.</span>
+<span id="cb71-120"><a href="#cb71-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-121"><a href="#cb71-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-122"><a href="#cb71-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## Discussion on NA</span></span>
+<span id="cb71-125"><a href="#cb71-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb71-126"><a href="#cb71-126" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb71-127"><a href="#cb71-127" aria-hidden="true" tabindex="-1"></a>pisa_SC115_nonOECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"0"</span>)</span>
+<span id="cb71-128"><a href="#cb71-128" aria-hidden="true" tabindex="-1"></a>pisa_SC115_OECD <span class="ot">&lt;-</span> <span class="fu">filter</span>(pisa_SC155, OECD <span class="sc">==</span> <span class="st">"1"</span>)</span>
+<span id="cb71-129"><a href="#cb71-129" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC155)</span>
+<span id="cb71-130"><a href="#cb71-130" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_nonOECD)</span>
+<span id="cb71-131"><a href="#cb71-131" aria-hidden="true" tabindex="-1"></a><span class="fu">vis_miss</span>(pisa_SC115_OECD)</span>
+<span id="cb71-132"><a href="#cb71-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb71-133"><a href="#cb71-133" aria-hidden="true" tabindex="-1"></a>The graphics has suggested that OECD countries reported more NAs than non-OECD countries. This opens more space to further investigate why developed countries reported more NAs.</span>
+<span id="cb71-134"><a href="#cb71-134" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

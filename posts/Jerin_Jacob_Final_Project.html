@@ -425,14 +425,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, <span class="at">select =</span> <span class="sc">-</span>Close)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(df)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for NA's</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Rank     Release      Budget  Box Office       Gross      max_th 
+          0           0           0           0           0           0 
+    Opening perc_tot_gr     open_th        Open Distributor   int_gross 
+          0           0           0           0           0           0 
+world_gross        Unit      BXUnit       Count  Small_Dist   Open_date 
+          0           0           0           0           0           0 
+     season 
+          0 </code></pre>
+</div>
 </div>
 <p>Have an idea about the structure of the dataset.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>gropd_df [104 × 19] (S3: grouped_df/tbl_df/tbl/data.frame)
@@ -500,7 +512,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 104
@@ -533,7 +545,7 @@ $ season       &lt;chr&gt; "Spring", "Winter", "Fall", "Spring", "Summer", "Summ
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Rank          Release              Budget            Box Office       
@@ -577,17 +589,33 @@ $ season       &lt;chr&gt; "Spring", "Winter", "Fall", "Spring", "Summer", "Summ
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>Opening)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>Opening)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for "Box Office" variable with colors</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">main =</span> <span class="st">"Box Office Distribution"</span>, <span class="at">xlab =</span> <span class="st">"Box Office"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for "Opening" variable with colors</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>Opening, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">main =</span> <span class="st">"Opening Distribution"</span>, <span class="at">xlab =</span> <span class="st">"Opening"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="check-correlation-between-box-office-and-opening" class="level3">
@@ -595,7 +623,7 @@ $ season       &lt;chr&gt; "Spring", "Winter", "Fall", "Spring", "Summer", "Summ
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(df<span class="sc">$</span>Opening, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(df<span class="sc">$</span>Opening, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -612,7 +640,7 @@ sample estimates:
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening), <span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening), <span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -632,49 +660,30 @@ sample estimates:
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pairs_df <span class="ot">&lt;-</span> df[, <span class="fu">c</span>(<span class="st">"Budget"</span>, <span class="st">"Box Office"</span>, <span class="st">"Opening"</span>, <span class="st">"open_th"</span>, <span class="st">"max_th"</span>)]</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>pairs_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 104 × 5
-      Budget `Box Office`   Opening open_th max_th
-       &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
- 1 177000000   1493000000 126707459    4735   4751
- 2 460000000   2319000000 134100226    4202   4340
- 3 250000000    859100000 181339761    4396   4396
- 4 200000000    955800000 187420998    4534   4534
- 5 185000000   1004000000 145075625    4676   4697
- 6 100000000    940500000 107010140    4391   4427
- 7 200000000    770945583 134008624    4417   4417
- 8 250000000    760928081 144165107    4375   4375
- 9 110000000    405400000  72105176    4234   4258
-10 260000000    393000000  67004323    4402   4402
-# ℹ 94 more rows</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(pairs_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the desired variables</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pairs_df <span class="ot">&lt;-</span> df[, <span class="fu">c</span>(<span class="st">"Budget"</span>, <span class="st">"Box Office"</span>, <span class="st">"Opening"</span>, <span class="st">"open_th"</span>, <span class="st">"max_th"</span>)]</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a scatterplot matrix with colors</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(pairs_df, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="fu">length</span>(pairs_df)), <span class="at">pch =</span> <span class="dv">19</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cor(df)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>From the visualization, we can conclude that all the variables are correlated by open_th and max_th are moving exactly the same in the graph which means we should drop one of them to avoid the multicollinearity.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for the logarithm of "Box Office" variable with colors</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>), <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">main =</span> <span class="st">"Box Office Distribution (Log)"</span>, <span class="at">xlab =</span> <span class="st">"Log(Box Office)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for the logarithm of "Opening" variable with colors</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">main =</span> <span class="st">"Opening Distribution (Log)"</span>, <span class="at">xlab =</span> <span class="st">"Log(Opening)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
@@ -693,344 +702,177 @@ sample estimates:
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening), <span class="at">data =</span> df)</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model summary</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model1)</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ log(Opening), data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.5031 -1.0495 -0.5179  0.2968  8.8363 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   10.4248     1.6403   6.356 5.90e-09 ***
-log(Opening)   0.5181     0.1071   4.837 4.68e-06 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 2.463 on 102 degrees of freedom
-Multiple R-squared:  0.1866,    Adjusted R-squared:  0.1786 
-F-statistic:  23.4 on 1 and 102 DF,  p-value: 4.681e-06</code></pre>
 </div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-17-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-17-4.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Log trasnformation for all continous variables.</p>
+<p>Log transformation for all continous variables.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> <span class="fu">log</span>(open_th) <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> <span class="fu">log</span>(open_th) <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model2)</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ log(Opening) + log(Budget) + 
-    log(open_th) + Small_Dist + season, data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--7.8042 -0.6565  0.0295  0.6794  3.4428 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -1.96744    1.51812  -1.296  0.19809    
-log(Opening)  0.63119    0.13312   4.741 7.36e-06 ***
-log(Budget)   0.71024    0.05637  12.598  &lt; 2e-16 ***
-log(open_th) -0.33688    0.12115  -2.781  0.00653 ** 
-Small_Dist    0.79521    0.37723   2.108  0.03763 *  
-seasonSpring  0.80434    0.40511   1.985  0.04994 *  
-seasonSummer  0.04825    0.37890   0.127  0.89894    
-seasonWinter  0.08596    0.41005   0.210  0.83440    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.454 on 96 degrees of freedom
-Multiple R-squared:  0.733, Adjusted R-squared:  0.7136 
-F-statistic: 37.66 on 7 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-18-4.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 <p>The R-square has significantly improved for this model. Let us try more models.</p>
 <p>Log transformation for only Box Office, Opening and Budget.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model3)</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ log(Opening) + log(Budget) + 
-    open_th + Small_Dist + season, data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--8.0685 -0.5475  0.2075  0.6655  3.0050 
-
-Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -3.8452903  1.9146324  -2.008  0.04741 *  
-log(Opening)  0.7917073  0.1779766   4.448 2.33e-05 ***
-log(Budget)   0.6418791  0.0628810  10.208  &lt; 2e-16 ***
-open_th      -0.0006799  0.0002342  -2.903  0.00459 ** 
-Small_Dist    0.6493099  0.3721462   1.745  0.08422 .  
-seasonSpring  0.8799495  0.4041060   2.178  0.03189 *  
-seasonSummer  0.0045385  0.3772137   0.012  0.99043    
-seasonWinter  0.2707220  0.4142579   0.654  0.51499    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.45 on 96 degrees of freedom
-Multiple R-squared:  0.7348,    Adjusted R-squared:  0.7155 
-F-statistic:    38 on 7 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-19-4.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 <p>Log transformation for only Box Office, Opening and Budget. Removing season confounder.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist, <span class="at">data =</span> df)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist, <span class="at">data =</span> df)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model4)</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model4)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ log(Opening) + log(Budget) + 
-    open_th + Small_Dist, data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--8.3680 -0.6661  0.1612  0.6639  3.6768 
-
-Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -3.9070368  1.8994592  -2.057   0.0423 *  
-log(Opening)  0.7900377  0.1783030   4.431 2.43e-05 ***
-log(Budget)   0.6570662  0.0634366  10.358  &lt; 2e-16 ***
-open_th      -0.0006501  0.0002338  -2.780   0.0065 ** 
-Small_Dist    0.6342201  0.3761470   1.686   0.0949 .  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.471 on 99 degrees of freedom
-Multiple R-squared:  0.7185,    Adjusted R-squared:  0.7071 
-F-statistic: 63.17 on 4 and 99 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-20-4.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 <p>R square values are further below the previous model. Let us try the log transformed model with only the Budget and Small_Distributor as confounders.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th, <span class="at">data =</span> df)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th, <span class="at">data =</span> df)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model5)</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ log(Opening) + log(Budget) + 
-    open_th, data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--8.6310 -0.5408  0.1846  0.6106  3.5804 
-
-Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -3.3075637  1.8830028  -1.757   0.0821 .  
-log(Opening)  0.7496919  0.1783107   4.204 5.71e-05 ***
-log(Budget)   0.6654124  0.0638233  10.426  &lt; 2e-16 ***
-open_th      -0.0006509  0.0002360  -2.759   0.0069 ** 
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.484 on 100 degrees of freedom
-Multiple R-squared:  0.7104,    Adjusted R-squared:  0.7017 
-F-statistic: 81.78 on 3 and 100 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-21-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-21-4.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 <p>Now, we can run a log transformed model with only the Opening and Budget.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>model6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget), <span class="at">data =</span> df)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>model6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget), <span class="at">data =</span> df)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model6)</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model6)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ log(Opening) + log(Budget), 
-    data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--8.6137 -0.5880  0.0639  0.7038  3.8528 
-
-Coefficients:
-             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   0.60584    1.27815   0.474    0.637    
-log(Opening)  0.29357    0.06891   4.260 4.59e-05 ***
-log(Budget)   0.74629    0.05852  12.753  &lt; 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.532 on 101 degrees of freedom
-Multiple R-squared:  0.6884,    Adjusted R-squared:  0.6822 
-F-statistic: 111.6 on 2 and 101 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-22-4.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 <p>Let us run models after quadratic transformation</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>model_quad1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">poly</span>(Opening, <span class="dv">2</span>, <span class="at">raw=</span><span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_quad1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>model_quad1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">poly</span>(Opening, <span class="dv">2</span>, <span class="at">raw=</span><span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model_quad1)</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model_quad1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = log(`Box Office`) ~ poly(Opening, 2, raw = TRUE) + 
-    log(Budget) + open_th + Small_Dist + season, data = df)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--8.3245 -0.7981  0.1786  0.7227  3.4267 
-
-Coefficients:
-                                Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)                    4.037e+00  1.116e+00   3.616 0.000481 ***
-poly(Opening, 2, raw = TRUE)1  3.202e-08  1.865e-08   1.717 0.089184 .  
-poly(Opening, 2, raw = TRUE)2 -1.395e-16  1.062e-16  -1.314 0.192175    
-log(Budget)                    7.584e-01  5.956e-02  12.734  &lt; 2e-16 ***
-open_th                        5.997e-05  1.444e-04   0.415 0.678821    
-Small_Dist                     4.668e-01  3.979e-01   1.173 0.243623    
-seasonSpring                   7.997e-01  4.373e-01   1.829 0.070557 .  
-seasonSummer                  -1.038e-01  4.108e-01  -0.253 0.801060    
-seasonWinter                   7.185e-02  4.434e-01   0.162 0.871604    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 1.562 on 95 degrees of freedom
-Multiple R-squared:  0.6952,    Adjusted R-squared:  0.6695 
-F-statistic: 27.08 on 8 and 95 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_quad1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-23-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-23-4.png" class="img-fluid" width="672"></p>
-</div>
 </div>
 </section>
 <section id="selecting-a-model-and-interpretation-of-the-result" class="level2">
 <h2 class="anchored" data-anchor-id="selecting-a-model-and-interpretation-of-the-result">Selecting a model and Interpretation of the result</h2>
+<p>Now that we have multiple models, we can select the best model out of them using following criteria; a) R-squared b) Adjusted R-squared c) PRESS d) AIC (Akaike Information Criterion) e) BIC (Bayesian Information Criterion)</p>
+<p>In the model selection process, we can follow the rule of thumb as, for R-squared and Adjusted R-square, higher is better while for PRESS, AIC and BIC, lower is better.</p>
+<p>Create a functions to get R-squared, Adjusted R-squared &amp; PRESS</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>rsquared <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>adj_rsquared <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) <span class="fu">summary</span>(fit)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>PRESS <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) {</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  pr <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fit)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">lm.influence</span>(fit)<span class="sc">$</span>hat)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(pr<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>For AIC and BIC, the functions AIC() and BIC() can be used</p>
+<p>Now, applying the functions to model objects</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>(model1, model2, model3, model4, model5, model6, model_quad1)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">models =</span> <span class="fu">c</span>(<span class="st">'model1'</span>, <span class="st">'model2'</span>, <span class="st">'model3'</span>, <span class="st">'model4'</span>, <span class="st">'model5'</span>, <span class="st">'model6'</span>, <span class="st">'model_quad1'</span>),</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">rSquared =</span> <span class="fu">sapply</span>(models, rsquared),</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">adj_rSquared =</span> <span class="fu">sapply</span>(models, adj_rsquared),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">PRESS =</span> <span class="fu">sapply</span>(models, PRESS),</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">AIC =</span> <span class="fu">sapply</span>(models, AIC),</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">BIC =</span> <span class="fu">sapply</span>(models, BIC)) <span class="sc">|&gt;</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       models  rSquared adj_rSquared    PRESS      AIC      BIC
+1      model1 0.1865883    0.1786137 637.0491 486.5987 494.5319
+2      model2 0.7330391    0.7135732 257.5371 382.7287 406.5282
+3      model3 0.7348150    0.7154786 253.7251 382.0345 405.8341
+4      model4 0.7185101    0.7071368 253.9816 382.2401 398.1064
+5      model5 0.7104267    0.7017395 253.7536 383.1845 396.4065
+6      model6 0.6883896    0.6822191 269.4781 388.8124 399.3900
+7 model_quad1 0.6951725    0.6695029 289.9369 398.5236 424.9675</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Please cite as: </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> R package version 5.2.3. https://CRAN.R-project.org/package=stargazer </code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(model1, model2, model3, model4, model5, model6, model_quad1, <span class="at">type =</span> <span class="st">'text'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+==================================================================================================================================================================================================
+                                                                                                      Dependent variable:                                                                         
+                              --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                                       log(`Box Office`)                                                                          
+                                        (1)                    (2)                    (3)                    (4)                     (5)                     (6)                     (7)          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+log(Opening)                         0.518***                0.631***               0.792***               0.790***               0.750***                 0.294***                               
+                                      (0.107)                (0.133)                (0.178)                (0.178)                 (0.178)                 (0.069)                                
+                                                                                                                                                                                                  
+poly(Opening, 2, raw = TRUE)1                                                                                                                                                      0.00000*       
+                                                                                                                                                                                  (0.00000)       
+                                                                                                                                                                                                  
+poly(Opening, 2, raw = TRUE)2                                                                                                                                                       -0.000        
+                                                                                                                                                                                   (0.000)        
+                                                                                                                                                                                                  
+log(Budget)                                                  0.710***               0.642***               0.657***               0.665***                 0.746***                0.758***       
+                                                             (0.056)                (0.063)                (0.063)                 (0.064)                 (0.059)                 (0.060)        
+                                                                                                                                                                                                  
+log(open_th)                                                -0.337***                                                                                                                             
+                                                             (0.121)                                                                                                                              
+                                                                                                                                                                                                  
+open_th                                                                            -0.001***              -0.001***               -0.001***                                         0.0001        
+                                                                                    (0.0002)               (0.0002)               (0.0002)                                         (0.0001)       
+                                                                                                                                                                                                  
+Small_Dist                                                   0.795**                 0.649*                 0.634*                                                                  0.467         
+                                                             (0.377)                (0.372)                (0.376)                                                                 (0.398)        
+                                                                                                                                                                                                  
+seasonSpring                                                 0.804**                0.880**                                                                                         0.800*        
+                                                             (0.405)                (0.404)                                                                                        (0.437)        
+                                                                                                                                                                                                  
+seasonSummer                                                  0.048                  0.005                                                                                          -0.104        
+                                                             (0.379)                (0.377)                                                                                        (0.411)        
+                                                                                                                                                                                                  
+seasonWinter                                                  0.086                  0.271                                                                                          0.072         
+                                                             (0.410)                (0.414)                                                                                        (0.443)        
+                                                                                                                                                                                                  
+Constant                             10.425***                -1.967                -3.845**               -3.907**                -3.308*                  0.606                  4.037***       
+                                      (1.640)                (1.518)                (1.915)                (1.899)                 (1.883)                 (1.278)                 (1.116)        
+                                                                                                                                                                                                  
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Observations                            104                    104                    104                    104                     104                     104                     104          
+R2                                     0.187                  0.733                  0.735                  0.719                   0.710                   0.688                   0.695         
+Adjusted R2                            0.179                  0.714                  0.715                  0.707                   0.702                   0.682                   0.670         
+Residual Std. Error              2.463 (df = 102)        1.454 (df = 96)        1.450 (df = 96)        1.471 (df = 99)        1.484 (df = 100)         1.532 (df = 101)        1.562 (df = 95)    
+F Statistic                   23.398*** (df = 1; 102) 37.658*** (df = 7; 96) 38.002*** (df = 7; 96) 63.175*** (df = 4; 99) 81.779*** (df = 3; 100) 111.561*** (df = 2; 101) 27.081*** (df = 8; 95)
+==================================================================================================================================================================================================
+Note:                                                                                                                                                                  *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+</div>
+</div>
 <p>Out of all the models we ran, model3 looks as the best fit.</p>
 <p>The linear regression model predicts the logarithm of Box Office collections based on the logarithm of Opening weekend collections, logarithm of Budget, number of theaters the movie opened in, Small_Dist (a binary variable indicating whether the distributor is small or not), and the season in which the movie was released (Spring, Summer, or Winter).</p>
 <p>The coefficients of the independent variables show the direction and magnitude of their effect on the dependent variable. The p-value associated with each coefficient indicates whether the coefficient is statistically significant or not.</p>
@@ -1047,19 +889,59 @@ F-statistic: 27.08 on 8 and 95 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostic plots</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the color palette</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>, <span class="st">"purple"</span>, <span class="st">"pink"</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a blank plot with the desired layout</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through the diagnostic plots and assign colors</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(model3, <span class="at">which =</span> i, <span class="at">col =</span> colors[i])</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<p><img src="Jerin_Jacob_Final_Project_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>The Scale-Location plot suggests some level of heteroskedacity. So, it is better to check if there is a serious problem of heteroskedacity,we can run Breusch-Pagan test.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: zoo</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'zoo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  model3
+BP = 16.322, df = 7, p-value = 0.02233</code></pre>
+</div>
+</div>
+<p>The p-value for Breusch-Pagan test is 0.02233. This is possibly a heteroskedacity. We need to look more into this.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion:</h2>
-<p>The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after takeing into account the intercept(-3.845).</p>
-<p>The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies in this dataset had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection.</p>
+<p>The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after taking into account the intercept(-3.845). But the Breusch-Pagan test for heteroskedacity gives a low p-value which suggests that the model is showing heteroskedacity.</p>
+<p>The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies in this dataset had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection. Also, in the future study, the variable transformation to address the heteroskedacity should be done.</p>
 </section>
 <section id="references" class="level2">
 <h2 class="anchored" data-anchor-id="references">References:</h2>
@@ -1477,316 +1359,396 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <script src="https://giscus.app/client.js" data-repo="DACSS/603_Spring_2023" data-repo-id="R_kgDOI4oXIA" data-category="Announcements" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb61" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project 603"</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Jerin Jacob"</span></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final project qmd file for 603"</span></span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/10/2023"</span></span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="co">  </span></span>
-<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalproject</span></span>
-<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a>Now a days, movies are a well marketed entertainment product. Just like any other products in the market, movies are also having an allocated a marketing budget and promotional activities are done in scale. This often result in the opening weekend's gross ticketing volume to rise. But are the pre-release promotional activities helping the movie to collect more or is it just creating a hype initially? Or does the movie's gross collection is not at all dependant on pre release promotions? This dataset has 200 highest grossing movies of 2022. It has both the opening week's gross as well as the total gross collection of the movies, along with other variables. Assuming that opening week's collection is depending on the pre-release promotion, by looking on the relationship between opening week's gross and total gross, I am trying to see how the pre-release activities help the producers earn more in boxoffice.</span>
-<span id="cb61-18"><a href="#cb61-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-19"><a href="#cb61-19" aria-hidden="true" tabindex="-1"></a>**Research Question**: To what extent does the success of a movie depend on its opening week's collection?</span>
-<span id="cb61-20"><a href="#cb61-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-21"><a href="#cb61-21" aria-hidden="true" tabindex="-1"></a>**Hypothesis**: Opening week's collection is positively correlated with the Box Office total collection.</span>
-<span id="cb61-22"><a href="#cb61-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-23"><a href="#cb61-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-24"><a href="#cb61-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-25"><a href="#cb61-25" aria-hidden="true" tabindex="-1"></a>Loading all the packages required for the project. </span>
-<span id="cb61-26"><a href="#cb61-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
-<span id="cb61-27"><a href="#cb61-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb61-28"><a href="#cb61-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb61-29"><a href="#cb61-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb61-30"><a href="#cb61-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb61-31"><a href="#cb61-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb61-32"><a href="#cb61-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-33"><a href="#cb61-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reading the data</span></span>
-<span id="cb61-36"><a href="#cb61-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-37"><a href="#cb61-37" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"_data/project_data.xlsx"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb61-38"><a href="#cb61-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
-<span id="cb61-39"><a href="#cb61-39" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
-<span id="cb61-40"><a href="#cb61-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-41"><a href="#cb61-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-42"><a href="#cb61-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-43"><a href="#cb61-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-44"><a href="#cb61-44" aria-hidden="true" tabindex="-1"></a>There are 14 variables with 200 rows.</span>
-<span id="cb61-45"><a href="#cb61-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-46"><a href="#cb61-46" aria-hidden="true" tabindex="-1"></a><span class="fu">### **COLUMN DESCRIPTION**</span></span>
-<span id="cb61-47"><a href="#cb61-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-48"><a href="#cb61-48" aria-hidden="true" tabindex="-1"></a>'Rank': rank of the movie</span>
-<span id="cb61-49"><a href="#cb61-49" aria-hidden="true" tabindex="-1"></a>'Release': release date of the movie</span>
-<span id="cb61-50"><a href="#cb61-50" aria-hidden="true" tabindex="-1"></a>'Budget': The budget of the movie production</span>
-<span id="cb61-51"><a href="#cb61-51" aria-hidden="true" tabindex="-1"></a>'Box Office': The total Box Office collection</span>
-<span id="cb61-52"><a href="#cb61-52" aria-hidden="true" tabindex="-1"></a>'Gross': domestic gross of the movie</span>
-<span id="cb61-53"><a href="#cb61-53" aria-hidden="true" tabindex="-1"></a>'max_th': maximum number of theaters the movie was released in</span>
-<span id="cb61-54"><a href="#cb61-54" aria-hidden="true" tabindex="-1"></a>'Opening': gross on opening weekend</span>
-<span id="cb61-55"><a href="#cb61-55" aria-hidden="true" tabindex="-1"></a>'perc_tot_gr': domestic percentage of the total gross</span>
-<span id="cb61-56"><a href="#cb61-56" aria-hidden="true" tabindex="-1"></a>'open_th': number of theaters the movie opened in</span>
-<span id="cb61-57"><a href="#cb61-57" aria-hidden="true" tabindex="-1"></a>'Open': opening date</span>
-<span id="cb61-58"><a href="#cb61-58" aria-hidden="true" tabindex="-1"></a>'Close': closing date</span>
-<span id="cb61-59"><a href="#cb61-59" aria-hidden="true" tabindex="-1"></a>'Distributor': name of the distributor</span>
-<span id="cb61-60"><a href="#cb61-60" aria-hidden="true" tabindex="-1"></a>'int_gross': international gross</span>
-<span id="cb61-61"><a href="#cb61-61" aria-hidden="true" tabindex="-1"></a>'world_gross': worldwide gross</span>
-<span id="cb61-62"><a href="#cb61-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-63"><a href="#cb61-63" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Release': release date of the movie</span>
-<span id="cb61-64"><a href="#cb61-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-65"><a href="#cb61-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Distributor': name of the distributor</span>
-<span id="cb61-66"><a href="#cb61-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-67"><a href="#cb61-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Small_Dist': Whether a small distributor or not</span>
-<span id="cb61-68"><a href="#cb61-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-69"><a href="#cb61-69" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span></span>
-<span id="cb61-70"><a href="#cb61-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-71"><a href="#cb61-71" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Open_date': Date of release</span>
-<span id="cb61-72"><a href="#cb61-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-73"><a href="#cb61-73" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'season': The season in which the movie was released</span>
-<span id="cb61-74"><a href="#cb61-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-75"><a href="#cb61-75" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Opening': gross on opening weekend</span>
-<span id="cb61-76"><a href="#cb61-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-77"><a href="#cb61-77" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'open_th': number of theaters the movie opened in</span>
-<span id="cb61-78"><a href="#cb61-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-79"><a href="#cb61-79" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'max_th': maximum number of theaters the movie was released in</span>
-<span id="cb61-80"><a href="#cb61-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-81"><a href="#cb61-81" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb61-82"><a href="#cb61-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cleaning the Data</span></span>
-<span id="cb61-83"><a href="#cb61-83" aria-hidden="true" tabindex="-1"></a>For our purpose of analysis, we need to clean and transform the data a bit. </span>
-<span id="cb61-84"><a href="#cb61-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-85"><a href="#cb61-85" aria-hidden="true" tabindex="-1"></a>First, the Budget and Boxoffice columns are cleaned using stringr function so that the column values are numeric. We are getting rid of the character part in those values including '$' and the value unit. Also, there are certain values which are in Indian Rupees and South Korean won. So we need to convert thoses values to US dollars. The data for columns Budget and Box office were taken from Wikipedia. </span>
-<span id="cb61-88"><a href="#cb61-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-89"><a href="#cb61-89" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> </span>
-<span id="cb61-90"><a href="#cb61-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Budget =</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">$"</span>, <span class="st">""</span>, Budget)) <span class="sc">|&gt;</span></span>
-<span id="cb61-91"><a href="#cb61-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Budget =</span> <span class="fu">sub</span>(<span class="st">".*-"</span>, <span class="st">""</span>, Budget)) <span class="sc">|&gt;</span></span>
-<span id="cb61-92"><a href="#cb61-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">$"</span>, <span class="st">""</span>, <span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)) </span>
-<span id="cb61-93"><a href="#cb61-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-94"><a href="#cb61-94" aria-hidden="true" tabindex="-1"></a>df[<span class="fu">c</span>(<span class="st">'Budget'</span>, <span class="st">'Unit'</span>)] <span class="ot">&lt;-</span> <span class="fu">str_split_fixed</span>(df<span class="sc">$</span>Budget, <span class="st">' '</span>, <span class="dv">2</span>)</span>
-<span id="cb61-95"><a href="#cb61-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-96"><a href="#cb61-96" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Budget <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>Budget)</span>
-<span id="cb61-97"><a href="#cb61-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-98"><a href="#cb61-98" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Budget <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"million"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000</span>,</span>
-<span id="cb61-99"><a href="#cb61-99" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"billion"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000000</span>,</span>
-<span id="cb61-100"><a href="#cb61-100" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"Kmillion"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
-<span id="cb61-101"><a href="#cb61-101" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"Kbillion"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
-<span id="cb61-102"><a href="#cb61-102" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"crore"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">10000000</span><span class="sc">*</span><span class="dv">80</span>, df<span class="sc">$</span>Budget)))))</span>
-<span id="cb61-103"><a href="#cb61-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-104"><a href="#cb61-104" aria-hidden="true" tabindex="-1"></a>df[<span class="fu">c</span>(<span class="st">'Box Office'</span>, <span class="st">'BXUnit'</span>)] <span class="ot">&lt;-</span> <span class="fu">str_split_fixed</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>, <span class="st">' '</span>, <span class="dv">2</span>)</span>
-<span id="cb61-105"><a href="#cb61-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-106"><a href="#cb61-106" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
-<span id="cb61-107"><a href="#cb61-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-108"><a href="#cb61-108" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"million"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000</span>,</span>
-<span id="cb61-109"><a href="#cb61-109" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"billion"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000000</span>,</span>
-<span id="cb61-110"><a href="#cb61-110" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"Kmillion"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
-<span id="cb61-111"><a href="#cb61-111" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"Kbillion"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
-<span id="cb61-112"><a href="#cb61-112" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"crore"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">10000000</span><span class="sc">*</span><span class="dv">80</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)))))</span>
-<span id="cb61-113"><a href="#cb61-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-114"><a href="#cb61-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-115"><a href="#cb61-115" aria-hidden="true" tabindex="-1"></a>Since the original dataset from Kaggle had a column named world_gross, we can compare both variables and assume that the highest value in either of the column can be considerd as the final world_gross.  </span>
-<span id="cb61-116"><a href="#cb61-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-119"><a href="#cb61-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-120"><a href="#cb61-120" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">&lt;</span> df<span class="sc">$</span>world_gross, df<span class="sc">$</span>world_gross, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
-<span id="cb61-121"><a href="#cb61-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-122"><a href="#cb61-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-123"><a href="#cb61-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-124"><a href="#cb61-124" aria-hidden="true" tabindex="-1"></a>We can count the number of movies in the list for each distributor and any distributor who don't have more than 3 movies in their name can be considered as a smaller distributor and thus assuming that they won't have cash rich promotional campaigns that would lead to an audience pull to the theatre in the initial week.  </span>
-<span id="cb61-127"><a href="#cb61-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-128"><a href="#cb61-128" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Distributor) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Count=</span><span class="fu">n_distinct</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)) </span>
-<span id="cb61-129"><a href="#cb61-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-130"><a href="#cb61-130" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Small_Dist <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Count <span class="sc">&lt;=</span> <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb61-131"><a href="#cb61-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-132"><a href="#cb61-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-133"><a href="#cb61-133" aria-hidden="true" tabindex="-1"></a>We can convert the dbl to date format and set the reference date so that the dates are correct. After that, from the Open_date, we can categorize thsoe dates to the season so that it can be used as a confounder. Seasons might have some effect on the theatre footfall and thereby, box office collections.</span>
-<span id="cb61-136"><a href="#cb61-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-137"><a href="#cb61-137" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Open_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(df<span class="sc">$</span>Open, <span class="at">origin =</span> <span class="st">"1899-12-30"</span>)</span>
-<span id="cb61-138"><a href="#cb61-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-139"><a href="#cb61-139" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new column with the season for each date</span></span>
-<span id="cb61-140"><a href="#cb61-140" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb61-141"><a href="#cb61-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">season =</span> <span class="fu">case_when</span>(</span>
-<span id="cb61-142"><a href="#cb61-142" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(<span class="fu">month</span>(Open_date), <span class="dv">3</span>, <span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Spring"</span>,</span>
-<span id="cb61-143"><a href="#cb61-143" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(<span class="fu">month</span>(Open_date), <span class="dv">6</span>, <span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Summer"</span>,</span>
-<span id="cb61-144"><a href="#cb61-144" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(<span class="fu">month</span>(Open_date), <span class="dv">9</span>, <span class="dv">11</span>) <span class="sc">~</span> <span class="st">"Fall"</span>,</span>
-<span id="cb61-145"><a href="#cb61-145" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Winter"</span></span>
-<span id="cb61-146"><a href="#cb61-146" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb61-147"><a href="#cb61-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-148"><a href="#cb61-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-149"><a href="#cb61-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-152"><a href="#cb61-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-153"><a href="#cb61-153" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
-<span id="cb61-154"><a href="#cb61-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-155"><a href="#cb61-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-156"><a href="#cb61-156" aria-hidden="true" tabindex="-1"></a>Checking for NA values in each variable. There are 90 NA values in Budget variable, 38 in Box Office, 155 in Close date variable and 3 in int_gross. All othe variables seems to be good in terms of NA values.</span>
-<span id="cb61-159"><a href="#cb61-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-160"><a href="#cb61-160" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df))</span>
-<span id="cb61-161"><a href="#cb61-161" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>Small_Dist)</span>
-<span id="cb61-162"><a href="#cb61-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-163"><a href="#cb61-163" aria-hidden="true" tabindex="-1"></a>Since 155 values of Close are NAs, it is better not to include that variable in the analysis. Most of the NA values are for the movies by small distributors, which need to be noted.</span>
-<span id="cb61-166"><a href="#cb61-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-167"><a href="#cb61-167" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, <span class="at">select =</span> <span class="sc">-</span>Close)</span>
-<span id="cb61-168"><a href="#cb61-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-169"><a href="#cb61-169" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(df)</span>
-<span id="cb61-170"><a href="#cb61-170" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-171"><a href="#cb61-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-172"><a href="#cb61-172" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-173"><a href="#cb61-173" aria-hidden="true" tabindex="-1"></a>Have an idea about the structure of the dataset.</span>
-<span id="cb61-176"><a href="#cb61-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-177"><a href="#cb61-177" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span>
-<span id="cb61-178"><a href="#cb61-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-179"><a href="#cb61-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-180"><a href="#cb61-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-181"><a href="#cb61-181" aria-hidden="true" tabindex="-1"></a>Using the glimpse() function, let's have a look at how our data would look like!</span>
-<span id="cb61-182"><a href="#cb61-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-185"><a href="#cb61-185" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-186"><a href="#cb61-186" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df )</span>
-<span id="cb61-187"><a href="#cb61-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-188"><a href="#cb61-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-189"><a href="#cb61-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-190"><a href="#cb61-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-191"><a href="#cb61-191" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary of each variables</span></span>
-<span id="cb61-192"><a href="#cb61-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-193"><a href="#cb61-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-196"><a href="#cb61-196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-197"><a href="#cb61-197" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span>
-<span id="cb61-198"><a href="#cb61-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-199"><a href="#cb61-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-200"><a href="#cb61-200" aria-hidden="true" tabindex="-1"></a>Let's look on the distribution of data</span>
-<span id="cb61-201"><a href="#cb61-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-204"><a href="#cb61-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-205"><a href="#cb61-205" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
-<span id="cb61-206"><a href="#cb61-206" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>Opening)</span>
-<span id="cb61-207"><a href="#cb61-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-208"><a href="#cb61-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-209"><a href="#cb61-209" aria-hidden="true" tabindex="-1"></a><span class="fu">### Check correlation between Box Office and Opening</span></span>
-<span id="cb61-212"><a href="#cb61-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-213"><a href="#cb61-213" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(df<span class="sc">$</span>Opening, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
-<span id="cb61-214"><a href="#cb61-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-215"><a href="#cb61-215" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening), <span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>))</span>
-<span id="cb61-216"><a href="#cb61-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-217"><a href="#cb61-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-218"><a href="#cb61-218" aria-hidden="true" tabindex="-1"></a>The data appears to be skewed. Therefore we can try some data transformation. Log transformation would be the first option.</span>
-<span id="cb61-219"><a href="#cb61-219" aria-hidden="true" tabindex="-1"></a>Let's visualize the correlation of variables in the dataset.</span>
-<span id="cb61-222"><a href="#cb61-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-223"><a href="#cb61-223" aria-hidden="true" tabindex="-1"></a>pairs_df <span class="ot">&lt;-</span> df[, <span class="fu">c</span>(<span class="st">"Budget"</span>, <span class="st">"Box Office"</span>, <span class="st">"Opening"</span>, <span class="st">"open_th"</span>, <span class="st">"max_th"</span>)]</span>
-<span id="cb61-224"><a href="#cb61-224" aria-hidden="true" tabindex="-1"></a>pairs_df</span>
-<span id="cb61-225"><a href="#cb61-225" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(pairs_df)</span>
-<span id="cb61-226"><a href="#cb61-226" aria-hidden="true" tabindex="-1"></a><span class="co">#cor(df)</span></span>
-<span id="cb61-227"><a href="#cb61-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-228"><a href="#cb61-228" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-229"><a href="#cb61-229" aria-hidden="true" tabindex="-1"></a>From the visualization, we can conclude that all the variables are correlated by open_th and max_th are moving exactly the same in the graph which means we should drop one of them to avoid the multicollinearity.</span>
-<span id="cb61-230"><a href="#cb61-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-233"><a href="#cb61-233" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-234"><a href="#cb61-234" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>))</span>
-<span id="cb61-235"><a href="#cb61-235" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening))</span>
-<span id="cb61-236"><a href="#cb61-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-237"><a href="#cb61-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-238"><a href="#cb61-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-239"><a href="#cb61-239" aria-hidden="true" tabindex="-1"></a>The log transformation made the data look like a normal distribution.</span>
-<span id="cb61-240"><a href="#cb61-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-241"><a href="#cb61-241" aria-hidden="true" tabindex="-1"></a><span class="fu">## Running different models to get the best fit</span></span>
-<span id="cb61-242"><a href="#cb61-242" aria-hidden="true" tabindex="-1"></a>Log transformed model with only the predictor and the dependant variable</span>
-<span id="cb61-245"><a href="#cb61-245" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-246"><a href="#cb61-246" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the multiple regression model using the log-transformed data</span></span>
-<span id="cb61-247"><a href="#cb61-247" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening), <span class="at">data =</span> df)</span>
-<span id="cb61-248"><a href="#cb61-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-249"><a href="#cb61-249" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model summary</span></span>
-<span id="cb61-250"><a href="#cb61-250" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model1)</span>
-<span id="cb61-251"><a href="#cb61-251" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model1)</span>
-<span id="cb61-252"><a href="#cb61-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-253"><a href="#cb61-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-254"><a href="#cb61-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-255"><a href="#cb61-255" aria-hidden="true" tabindex="-1"></a>Log trasnformation for all continous variables.</span>
-<span id="cb61-258"><a href="#cb61-258" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-259"><a href="#cb61-259" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> <span class="fu">log</span>(open_th) <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
-<span id="cb61-260"><a href="#cb61-260" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span>
-<span id="cb61-261"><a href="#cb61-261" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model2)</span>
-<span id="cb61-262"><a href="#cb61-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-263"><a href="#cb61-263" aria-hidden="true" tabindex="-1"></a>The R-square has significantly improved for this model. Let us try more models.</span>
-<span id="cb61-264"><a href="#cb61-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-265"><a href="#cb61-265" aria-hidden="true" tabindex="-1"></a>Log transformation for only Box Office, Opening and Budget. </span>
-<span id="cb61-268"><a href="#cb61-268" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-269"><a href="#cb61-269" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
-<span id="cb61-270"><a href="#cb61-270" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model3)</span>
-<span id="cb61-271"><a href="#cb61-271" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model3)</span>
-<span id="cb61-272"><a href="#cb61-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-273"><a href="#cb61-273" aria-hidden="true" tabindex="-1"></a>Log transformation for only Box Office, Opening and Budget. Removing season confounder.</span>
-<span id="cb61-274"><a href="#cb61-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-277"><a href="#cb61-277" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-278"><a href="#cb61-278" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist, <span class="at">data =</span> df)</span>
-<span id="cb61-279"><a href="#cb61-279" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model4)</span>
-<span id="cb61-280"><a href="#cb61-280" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model4)</span>
-<span id="cb61-281"><a href="#cb61-281" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-282"><a href="#cb61-282" aria-hidden="true" tabindex="-1"></a>R square values are further below the previous model.</span>
-<span id="cb61-283"><a href="#cb61-283" aria-hidden="true" tabindex="-1"></a>Let us try the log transformed model with only the Budget and Small_Distributor as confounders.</span>
-<span id="cb61-286"><a href="#cb61-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-287"><a href="#cb61-287" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th, <span class="at">data =</span> df)</span>
-<span id="cb61-288"><a href="#cb61-288" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model5)</span>
-<span id="cb61-289"><a href="#cb61-289" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model5)</span>
-<span id="cb61-290"><a href="#cb61-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-291"><a href="#cb61-291" aria-hidden="true" tabindex="-1"></a>Now, we can run a log transformed model with only the Opening and Budget.</span>
-<span id="cb61-292"><a href="#cb61-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-295"><a href="#cb61-295" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-296"><a href="#cb61-296" aria-hidden="true" tabindex="-1"></a>model6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget), <span class="at">data =</span> df)</span>
-<span id="cb61-297"><a href="#cb61-297" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model6)</span>
-<span id="cb61-298"><a href="#cb61-298" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model6)</span>
-<span id="cb61-299"><a href="#cb61-299" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-300"><a href="#cb61-300" aria-hidden="true" tabindex="-1"></a>Let us run models after quadratic transformation</span>
-<span id="cb61-301"><a href="#cb61-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-304"><a href="#cb61-304" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-305"><a href="#cb61-305" aria-hidden="true" tabindex="-1"></a>model_quad1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">poly</span>(Opening, <span class="dv">2</span>, <span class="at">raw=</span><span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
-<span id="cb61-306"><a href="#cb61-306" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_quad1)</span>
-<span id="cb61-307"><a href="#cb61-307" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_quad1)</span>
-<span id="cb61-308"><a href="#cb61-308" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-309"><a href="#cb61-309" aria-hidden="true" tabindex="-1"></a><span class="fu">## Selecting a model and Interpretation of the result</span></span>
-<span id="cb61-310"><a href="#cb61-310" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-311"><a href="#cb61-311" aria-hidden="true" tabindex="-1"></a>Out of all the models we ran, model3 looks as the best fit.</span>
-<span id="cb61-312"><a href="#cb61-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-313"><a href="#cb61-313" aria-hidden="true" tabindex="-1"></a>The linear regression model predicts the logarithm of Box Office collections based on the logarithm of Opening weekend collections, logarithm of Budget, number of theaters the movie opened in, Small_Dist (a binary variable indicating whether the distributor is small or not), and the season in which the movie was released (Spring, Summer, or Winter). </span>
-<span id="cb61-314"><a href="#cb61-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-315"><a href="#cb61-315" aria-hidden="true" tabindex="-1"></a>The coefficients of the independent variables show the direction and magnitude of their effect on the dependent variable. The p-value associated with each coefficient indicates whether the coefficient is statistically significant or not.</span>
-<span id="cb61-316"><a href="#cb61-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-317"><a href="#cb61-317" aria-hidden="true" tabindex="-1"></a>The intercept coefficient is -3.845, which means that if all independent variables are zero, the model predicts that the logarithm of Box Office collections is -3.845. However, since all the independent variables are not zero in practice, this value is not meaningful.</span>
-<span id="cb61-318"><a href="#cb61-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-319"><a href="#cb61-319" aria-hidden="true" tabindex="-1"></a>The coefficient of the logarithm of Opening weekend collections is 0.792, which means that a one percent increase in Opening weekend collections is associated with a 0.792 percent increase in Box Office collections.</span>
-<span id="cb61-320"><a href="#cb61-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-321"><a href="#cb61-321" aria-hidden="true" tabindex="-1"></a>The coefficient of the logarithm of Budget is 0.642, which means that a one percent increase in Budget is associated with a 0.642 percent increase in Box Office collections.</span>
-<span id="cb61-322"><a href="#cb61-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-323"><a href="#cb61-323" aria-hidden="true" tabindex="-1"></a>The coefficient of the number of theaters the movie opened in (open_th) is negative (-0.00068), which means that as the number of theaters increases by one, the predicted logarithm of Box Office collections decreases by 0.00068. This is something to be studied further, as it goes against our logic and expectation.</span>
-<span id="cb61-324"><a href="#cb61-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-325"><a href="#cb61-325" aria-hidden="true" tabindex="-1"></a>The coefficient of Small_Dist is 0.649, which means that the Box Office collections of movies released by small distributors are 0.649 times higher than those of movies released by large distributors, holding other variables constant. This also need more detailed study.</span>
-<span id="cb61-326"><a href="#cb61-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-327"><a href="#cb61-327" aria-hidden="true" tabindex="-1"></a>The coefficients associated with season indicate the difference in Box Office collections between movies released in that season and movies released in Fall (omitted reference level). For example, the coefficient of season Spring is 0.88, which means that the predicted Box Office collections of movies released in Spring are 0.88 times higher than those of movies released in Fall.</span>
-<span id="cb61-328"><a href="#cb61-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-329"><a href="#cb61-329" aria-hidden="true" tabindex="-1"></a>The adjusted R-squared of the model is 0.7155, which means that 71.55% of the variation in the logarithm of Box Office collections can be explained by the independent variables in the model.</span>
-<span id="cb61-330"><a href="#cb61-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-331"><a href="#cb61-331" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualising the regression model.</span></span>
-<span id="cb61-332"><a href="#cb61-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-335"><a href="#cb61-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-336"><a href="#cb61-336" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnostic plots</span></span>
-<span id="cb61-337"><a href="#cb61-337" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb61-338"><a href="#cb61-338" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model3)</span>
-<span id="cb61-339"><a href="#cb61-339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-340"><a href="#cb61-340" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-341"><a href="#cb61-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-342"><a href="#cb61-342" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion:</span></span>
-<span id="cb61-343"><a href="#cb61-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-344"><a href="#cb61-344" aria-hidden="true" tabindex="-1"></a>The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after takeing into account the intercept(-3.845).</span>
-<span id="cb61-345"><a href="#cb61-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-346"><a href="#cb61-346" aria-hidden="true" tabindex="-1"></a>The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies in this dataset had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection. </span>
-<span id="cb61-347"><a href="#cb61-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-348"><a href="#cb61-348" aria-hidden="true" tabindex="-1"></a><span class="fu">## References:</span></span>
-<span id="cb61-349"><a href="#cb61-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-350"><a href="#cb61-350" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Nasir, Suphan &amp; Öcal, Figen. (2016). Film Marketing: The Impact of Publicity Activities on Demand Generation. 10.4018/978-1-5225-0143-5.ch019.</span>
-<span id="cb61-351"><a href="#cb61-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-352"><a href="#cb61-352" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>*Elizabeth Cooper-Martin (1991) ,"Consumers and Movies: Some Findings on Experiential Products", in NA - Advances in Consumer Research Volume 18, eds. Rebecca H. Holman and Michael R. Solomon, Provo, UT : Association for Consumer Research, Pages: 372-378.*</span>
-<span id="cb61-353"><a href="#cb61-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-354"><a href="#cb61-354" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Kaggle.com (Original dataset)</span>
-<span id="cb61-355"><a href="#cb61-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-356"><a href="#cb61-356" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Wikipedia.com (Movie pages to get budget and box office collections)</span>
+<div class="sourceCode" id="cb62" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Final Project 603"</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Jerin Jacob"</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Final project qmd file for 603"</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "03/10/2023"</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="co">    code-copy: true</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="co">  </span></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="co">  - finalproject</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a>Now a days, movies are a well marketed entertainment product. Just like any other products in the market, movies are also having an allocated a marketing budget and promotional activities are done in scale. This often result in the opening weekend's gross ticketing volume to rise. But are the pre-release promotional activities helping the movie to collect more or is it just creating a hype initially? Or does the movie's gross collection is not at all dependant on pre release promotions? This dataset has 200 highest grossing movies of 2022. It has both the opening week's gross as well as the total gross collection of the movies, along with other variables. Assuming that opening week's collection is depending on the pre-release promotion, by looking on the relationship between opening week's gross and total gross, I am trying to see how the pre-release activities help the producers earn more in boxoffice.</span>
+<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a>**Research Question**: To what extent does the success of a movie depend on its opening week's collection?</span>
+<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a>**Hypothesis**: Opening week's collection is positively correlated with the Box Office total collection.</span>
+<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a>Loading all the packages required for the project. </span>
+<span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, echo=T}</span></span>
+<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb62-30"><a href="#cb62-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb62-31"><a href="#cb62-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb62-32"><a href="#cb62-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-33"><a href="#cb62-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reading the data</span></span>
+<span id="cb62-36"><a href="#cb62-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-37"><a href="#cb62-37" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"_data/project_data.xlsx"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb62-38"><a href="#cb62-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb62-39"><a href="#cb62-39" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb62-40"><a href="#cb62-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-41"><a href="#cb62-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-42"><a href="#cb62-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-43"><a href="#cb62-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-44"><a href="#cb62-44" aria-hidden="true" tabindex="-1"></a>There are 14 variables with 200 rows.</span>
+<span id="cb62-45"><a href="#cb62-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-46"><a href="#cb62-46" aria-hidden="true" tabindex="-1"></a><span class="fu">### **COLUMN DESCRIPTION**</span></span>
+<span id="cb62-47"><a href="#cb62-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-48"><a href="#cb62-48" aria-hidden="true" tabindex="-1"></a>'Rank': rank of the movie</span>
+<span id="cb62-49"><a href="#cb62-49" aria-hidden="true" tabindex="-1"></a>'Release': release date of the movie</span>
+<span id="cb62-50"><a href="#cb62-50" aria-hidden="true" tabindex="-1"></a>'Budget': The budget of the movie production</span>
+<span id="cb62-51"><a href="#cb62-51" aria-hidden="true" tabindex="-1"></a>'Box Office': The total Box Office collection</span>
+<span id="cb62-52"><a href="#cb62-52" aria-hidden="true" tabindex="-1"></a>'Gross': domestic gross of the movie</span>
+<span id="cb62-53"><a href="#cb62-53" aria-hidden="true" tabindex="-1"></a>'max_th': maximum number of theaters the movie was released in</span>
+<span id="cb62-54"><a href="#cb62-54" aria-hidden="true" tabindex="-1"></a>'Opening': gross on opening weekend</span>
+<span id="cb62-55"><a href="#cb62-55" aria-hidden="true" tabindex="-1"></a>'perc_tot_gr': domestic percentage of the total gross</span>
+<span id="cb62-56"><a href="#cb62-56" aria-hidden="true" tabindex="-1"></a>'open_th': number of theaters the movie opened in</span>
+<span id="cb62-57"><a href="#cb62-57" aria-hidden="true" tabindex="-1"></a>'Open': opening date</span>
+<span id="cb62-58"><a href="#cb62-58" aria-hidden="true" tabindex="-1"></a>'Close': closing date</span>
+<span id="cb62-59"><a href="#cb62-59" aria-hidden="true" tabindex="-1"></a>'Distributor': name of the distributor</span>
+<span id="cb62-60"><a href="#cb62-60" aria-hidden="true" tabindex="-1"></a>'int_gross': international gross</span>
+<span id="cb62-61"><a href="#cb62-61" aria-hidden="true" tabindex="-1"></a>'world_gross': worldwide gross</span>
+<span id="cb62-62"><a href="#cb62-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-63"><a href="#cb62-63" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Release': release date of the movie</span>
+<span id="cb62-64"><a href="#cb62-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-65"><a href="#cb62-65" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Distributor': name of the distributor</span>
+<span id="cb62-66"><a href="#cb62-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-67"><a href="#cb62-67" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Small_Dist': Whether a small distributor or not</span>
+<span id="cb62-68"><a href="#cb62-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-69"><a href="#cb62-69" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span></span>
+<span id="cb62-70"><a href="#cb62-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-71"><a href="#cb62-71" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Open_date': Date of release</span>
+<span id="cb62-72"><a href="#cb62-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-73"><a href="#cb62-73" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'season': The season in which the movie was released</span>
+<span id="cb62-74"><a href="#cb62-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-75"><a href="#cb62-75" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'Opening': gross on opening weekend</span>
+<span id="cb62-76"><a href="#cb62-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-77"><a href="#cb62-77" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'open_th': number of theaters the movie opened in</span>
+<span id="cb62-78"><a href="#cb62-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-79"><a href="#cb62-79" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>'max_th': maximum number of theaters the movie was released in</span>
+<span id="cb62-80"><a href="#cb62-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-81"><a href="#cb62-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb62-82"><a href="#cb62-82" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cleaning the Data</span></span>
+<span id="cb62-83"><a href="#cb62-83" aria-hidden="true" tabindex="-1"></a>For our purpose of analysis, we need to clean and transform the data a bit. </span>
+<span id="cb62-84"><a href="#cb62-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-85"><a href="#cb62-85" aria-hidden="true" tabindex="-1"></a>First, the Budget and Boxoffice columns are cleaned using stringr function so that the column values are numeric. We are getting rid of the character part in those values including '$' and the value unit. Also, there are certain values which are in Indian Rupees and South Korean won. So we need to convert thoses values to US dollars. The data for columns Budget and Box office were taken from Wikipedia. </span>
+<span id="cb62-88"><a href="#cb62-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-89"><a href="#cb62-89" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> </span>
+<span id="cb62-90"><a href="#cb62-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Budget =</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">$"</span>, <span class="st">""</span>, Budget)) <span class="sc">|&gt;</span></span>
+<span id="cb62-91"><a href="#cb62-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Budget =</span> <span class="fu">sub</span>(<span class="st">".*-"</span>, <span class="st">""</span>, Budget)) <span class="sc">|&gt;</span></span>
+<span id="cb62-92"><a href="#cb62-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">$"</span>, <span class="st">""</span>, <span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)) </span>
+<span id="cb62-93"><a href="#cb62-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-94"><a href="#cb62-94" aria-hidden="true" tabindex="-1"></a>df[<span class="fu">c</span>(<span class="st">'Budget'</span>, <span class="st">'Unit'</span>)] <span class="ot">&lt;-</span> <span class="fu">str_split_fixed</span>(df<span class="sc">$</span>Budget, <span class="st">' '</span>, <span class="dv">2</span>)</span>
+<span id="cb62-95"><a href="#cb62-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-96"><a href="#cb62-96" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Budget <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span>Budget)</span>
+<span id="cb62-97"><a href="#cb62-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-98"><a href="#cb62-98" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Budget <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"million"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000</span>,</span>
+<span id="cb62-99"><a href="#cb62-99" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"billion"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000000</span>,</span>
+<span id="cb62-100"><a href="#cb62-100" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"Kmillion"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
+<span id="cb62-101"><a href="#cb62-101" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"Kbillion"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">1000000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
+<span id="cb62-102"><a href="#cb62-102" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">ifelse</span>(df<span class="sc">$</span>Unit <span class="sc">==</span> <span class="st">"crore"</span>, df<span class="sc">$</span>Budget <span class="sc">*</span> <span class="dv">10000000</span><span class="sc">*</span><span class="dv">80</span>, df<span class="sc">$</span>Budget)))))</span>
+<span id="cb62-103"><a href="#cb62-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-104"><a href="#cb62-104" aria-hidden="true" tabindex="-1"></a>df[<span class="fu">c</span>(<span class="st">'Box Office'</span>, <span class="st">'BXUnit'</span>)] <span class="ot">&lt;-</span> <span class="fu">str_split_fixed</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>, <span class="st">' '</span>, <span class="dv">2</span>)</span>
+<span id="cb62-105"><a href="#cb62-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-106"><a href="#cb62-106" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
+<span id="cb62-107"><a href="#cb62-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-108"><a href="#cb62-108" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"million"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000</span>,</span>
+<span id="cb62-109"><a href="#cb62-109" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"billion"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000000</span>,</span>
+<span id="cb62-110"><a href="#cb62-110" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"Kmillion"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
+<span id="cb62-111"><a href="#cb62-111" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"Kbillion"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">1000000000</span><span class="sc">*</span><span class="fl">0.00074</span>,</span>
+<span id="cb62-112"><a href="#cb62-112" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">ifelse</span>(df<span class="sc">$</span>BXUnit <span class="sc">==</span> <span class="st">"crore"</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">*</span> <span class="dv">10000000</span><span class="sc">*</span><span class="dv">80</span>, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)))))</span>
+<span id="cb62-113"><a href="#cb62-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-114"><a href="#cb62-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-115"><a href="#cb62-115" aria-hidden="true" tabindex="-1"></a>Since the original dataset from Kaggle had a column named world_gross, we can compare both variables and assume that the highest value in either of the column can be considerd as the final world_gross.  </span>
+<span id="cb62-116"><a href="#cb62-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-119"><a href="#cb62-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-120"><a href="#cb62-120" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span> <span class="sc">&lt;</span> df<span class="sc">$</span>world_gross, df<span class="sc">$</span>world_gross, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
+<span id="cb62-121"><a href="#cb62-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-122"><a href="#cb62-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-123"><a href="#cb62-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-124"><a href="#cb62-124" aria-hidden="true" tabindex="-1"></a>We can count the number of movies in the list for each distributor and any distributor who don't have more than 3 movies in their name can be considered as a smaller distributor and thus assuming that they won't have cash rich promotional campaigns that would lead to an audience pull to the theatre in the initial week.  </span>
+<span id="cb62-127"><a href="#cb62-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-128"><a href="#cb62-128" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Distributor) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Count=</span><span class="fu">n_distinct</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)) </span>
+<span id="cb62-129"><a href="#cb62-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-130"><a href="#cb62-130" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Small_Dist <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Count <span class="sc">&lt;=</span> <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb62-131"><a href="#cb62-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-132"><a href="#cb62-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-133"><a href="#cb62-133" aria-hidden="true" tabindex="-1"></a>We can convert the dbl to date format and set the reference date so that the dates are correct. After that, from the Open_date, we can categorize thsoe dates to the season so that it can be used as a confounder. Seasons might have some effect on the theatre footfall and thereby, box office collections.</span>
+<span id="cb62-136"><a href="#cb62-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-137"><a href="#cb62-137" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Open_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(df<span class="sc">$</span>Open, <span class="at">origin =</span> <span class="st">"1899-12-30"</span>)</span>
+<span id="cb62-138"><a href="#cb62-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-139"><a href="#cb62-139" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new column with the season for each date</span></span>
+<span id="cb62-140"><a href="#cb62-140" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb62-141"><a href="#cb62-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb62-142"><a href="#cb62-142" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(<span class="fu">month</span>(Open_date), <span class="dv">3</span>, <span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Spring"</span>,</span>
+<span id="cb62-143"><a href="#cb62-143" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(<span class="fu">month</span>(Open_date), <span class="dv">6</span>, <span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Summer"</span>,</span>
+<span id="cb62-144"><a href="#cb62-144" aria-hidden="true" tabindex="-1"></a>    <span class="fu">between</span>(<span class="fu">month</span>(Open_date), <span class="dv">9</span>, <span class="dv">11</span>) <span class="sc">~</span> <span class="st">"Fall"</span>,</span>
+<span id="cb62-145"><a href="#cb62-145" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Winter"</span></span>
+<span id="cb62-146"><a href="#cb62-146" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb62-147"><a href="#cb62-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-148"><a href="#cb62-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-149"><a href="#cb62-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-152"><a href="#cb62-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-153"><a href="#cb62-153" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb62-154"><a href="#cb62-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-155"><a href="#cb62-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-156"><a href="#cb62-156" aria-hidden="true" tabindex="-1"></a>Checking for NA values in each variable. There are 90 NA values in Budget variable, 38 in Box Office, 155 in Close date variable and 3 in int_gross. All othe variables seems to be good in terms of NA values.</span>
+<span id="cb62-159"><a href="#cb62-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-160"><a href="#cb62-160" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df))</span>
+<span id="cb62-161"><a href="#cb62-161" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>Small_Dist)</span>
+<span id="cb62-162"><a href="#cb62-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-163"><a href="#cb62-163" aria-hidden="true" tabindex="-1"></a>Since 155 values of Close are NAs, it is better not to include that variable in the analysis. Most of the NA values are for the movies by small distributors, which need to be noted.</span>
+<span id="cb62-166"><a href="#cb62-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-167"><a href="#cb62-167" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, <span class="at">select =</span> <span class="sc">-</span>Close)</span>
+<span id="cb62-168"><a href="#cb62-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-169"><a href="#cb62-169" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(df)</span>
+<span id="cb62-170"><a href="#cb62-170" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for NA's</span></span>
+<span id="cb62-171"><a href="#cb62-171" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df))</span>
+<span id="cb62-172"><a href="#cb62-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-173"><a href="#cb62-173" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-174"><a href="#cb62-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-175"><a href="#cb62-175" aria-hidden="true" tabindex="-1"></a>Have an idea about the structure of the dataset.</span>
+<span id="cb62-178"><a href="#cb62-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-179"><a href="#cb62-179" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span>
+<span id="cb62-180"><a href="#cb62-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-181"><a href="#cb62-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-182"><a href="#cb62-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-183"><a href="#cb62-183" aria-hidden="true" tabindex="-1"></a>Using the glimpse() function, let's have a look at how our data would look like!</span>
+<span id="cb62-184"><a href="#cb62-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-187"><a href="#cb62-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-188"><a href="#cb62-188" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df )</span>
+<span id="cb62-189"><a href="#cb62-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-190"><a href="#cb62-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-191"><a href="#cb62-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-192"><a href="#cb62-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-193"><a href="#cb62-193" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary of each variables</span></span>
+<span id="cb62-194"><a href="#cb62-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-195"><a href="#cb62-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-198"><a href="#cb62-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-199"><a href="#cb62-199" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span>
+<span id="cb62-200"><a href="#cb62-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-201"><a href="#cb62-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-202"><a href="#cb62-202" aria-hidden="true" tabindex="-1"></a>Let's look on the distribution of data</span>
+<span id="cb62-203"><a href="#cb62-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-206"><a href="#cb62-206" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-207"><a href="#cb62-207" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
+<span id="cb62-208"><a href="#cb62-208" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>Opening)</span>
+<span id="cb62-209"><a href="#cb62-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-210"><a href="#cb62-210" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for "Box Office" variable with colors</span></span>
+<span id="cb62-211"><a href="#cb62-211" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">main =</span> <span class="st">"Box Office Distribution"</span>, <span class="at">xlab =</span> <span class="st">"Box Office"</span>)</span>
+<span id="cb62-212"><a href="#cb62-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-213"><a href="#cb62-213" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for "Opening" variable with colors</span></span>
+<span id="cb62-214"><a href="#cb62-214" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>Opening, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">main =</span> <span class="st">"Opening Distribution"</span>, <span class="at">xlab =</span> <span class="st">"Opening"</span>)</span>
+<span id="cb62-215"><a href="#cb62-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-216"><a href="#cb62-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-217"><a href="#cb62-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-218"><a href="#cb62-218" aria-hidden="true" tabindex="-1"></a><span class="fu">### Check correlation between Box Office and Opening</span></span>
+<span id="cb62-221"><a href="#cb62-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-222"><a href="#cb62-222" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(df<span class="sc">$</span>Opening, df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>)</span>
+<span id="cb62-223"><a href="#cb62-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-224"><a href="#cb62-224" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening), <span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>))</span>
+<span id="cb62-225"><a href="#cb62-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-226"><a href="#cb62-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-227"><a href="#cb62-227" aria-hidden="true" tabindex="-1"></a>The data appears to be skewed. Therefore we can try some data transformation. Log transformation would be the first option.</span>
+<span id="cb62-228"><a href="#cb62-228" aria-hidden="true" tabindex="-1"></a>Let's visualize the correlation of variables in the dataset.</span>
+<span id="cb62-231"><a href="#cb62-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-232"><a href="#cb62-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset the desired variables</span></span>
+<span id="cb62-233"><a href="#cb62-233" aria-hidden="true" tabindex="-1"></a>pairs_df <span class="ot">&lt;-</span> df[, <span class="fu">c</span>(<span class="st">"Budget"</span>, <span class="st">"Box Office"</span>, <span class="st">"Opening"</span>, <span class="st">"open_th"</span>, <span class="st">"max_th"</span>)]</span>
+<span id="cb62-234"><a href="#cb62-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-235"><a href="#cb62-235" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a scatterplot matrix with colors</span></span>
+<span id="cb62-236"><a href="#cb62-236" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(pairs_df, <span class="at">col =</span> <span class="fu">rainbow</span>(<span class="fu">length</span>(pairs_df)), <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb62-237"><a href="#cb62-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-238"><a href="#cb62-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-239"><a href="#cb62-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-240"><a href="#cb62-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-241"><a href="#cb62-241" aria-hidden="true" tabindex="-1"></a>From the visualization, we can conclude that all the variables are correlated by open_th and max_th are moving exactly the same in the graph which means we should drop one of them to avoid the multicollinearity.</span>
+<span id="cb62-242"><a href="#cb62-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-245"><a href="#cb62-245" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-246"><a href="#cb62-246" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for the logarithm of "Box Office" variable with colors</span></span>
+<span id="cb62-247"><a href="#cb62-247" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span><span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>), <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">main =</span> <span class="st">"Box Office Distribution (Log)"</span>, <span class="at">xlab =</span> <span class="st">"Log(Box Office)"</span>)</span>
+<span id="cb62-248"><a href="#cb62-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-249"><a href="#cb62-249" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot histogram for the logarithm of "Opening" variable with colors</span></span>
+<span id="cb62-250"><a href="#cb62-250" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(df<span class="sc">$</span>Opening), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">main =</span> <span class="st">"Opening Distribution (Log)"</span>, <span class="at">xlab =</span> <span class="st">"Log(Opening)"</span>)</span>
+<span id="cb62-251"><a href="#cb62-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-252"><a href="#cb62-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-253"><a href="#cb62-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-254"><a href="#cb62-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-255"><a href="#cb62-255" aria-hidden="true" tabindex="-1"></a>The log transformation made the data look like a normal distribution.</span>
+<span id="cb62-256"><a href="#cb62-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-257"><a href="#cb62-257" aria-hidden="true" tabindex="-1"></a><span class="fu">## Running different models to get the best fit</span></span>
+<span id="cb62-258"><a href="#cb62-258" aria-hidden="true" tabindex="-1"></a>Log transformed model with only the predictor and the dependant variable</span>
+<span id="cb62-261"><a href="#cb62-261" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-262"><a href="#cb62-262" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the multiple regression model using the log-transformed data</span></span>
+<span id="cb62-263"><a href="#cb62-263" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening), <span class="at">data =</span> df)</span>
+<span id="cb62-264"><a href="#cb62-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-265"><a href="#cb62-265" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model summary</span></span>
+<span id="cb62-266"><a href="#cb62-266" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model1)</span></span>
+<span id="cb62-267"><a href="#cb62-267" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model1)</span></span>
+<span id="cb62-268"><a href="#cb62-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-269"><a href="#cb62-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-270"><a href="#cb62-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-271"><a href="#cb62-271" aria-hidden="true" tabindex="-1"></a>Log transformation for all continous variables.</span>
+<span id="cb62-274"><a href="#cb62-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-275"><a href="#cb62-275" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> <span class="fu">log</span>(open_th) <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
+<span id="cb62-276"><a href="#cb62-276" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model2)</span></span>
+<span id="cb62-277"><a href="#cb62-277" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model2)</span></span>
+<span id="cb62-278"><a href="#cb62-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-279"><a href="#cb62-279" aria-hidden="true" tabindex="-1"></a>The R-square has significantly improved for this model. Let us try more models.</span>
+<span id="cb62-280"><a href="#cb62-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-281"><a href="#cb62-281" aria-hidden="true" tabindex="-1"></a>Log transformation for only Box Office, Opening and Budget. </span>
+<span id="cb62-284"><a href="#cb62-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-285"><a href="#cb62-285" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
+<span id="cb62-286"><a href="#cb62-286" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model3)</span></span>
+<span id="cb62-287"><a href="#cb62-287" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model3)</span></span>
+<span id="cb62-288"><a href="#cb62-288" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-289"><a href="#cb62-289" aria-hidden="true" tabindex="-1"></a>Log transformation for only Box Office, Opening and Budget. Removing season confounder.</span>
+<span id="cb62-290"><a href="#cb62-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-293"><a href="#cb62-293" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-294"><a href="#cb62-294" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist, <span class="at">data =</span> df)</span>
+<span id="cb62-295"><a href="#cb62-295" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model4)</span></span>
+<span id="cb62-296"><a href="#cb62-296" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model4)</span></span>
+<span id="cb62-297"><a href="#cb62-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-298"><a href="#cb62-298" aria-hidden="true" tabindex="-1"></a>R square values are further below the previous model.</span>
+<span id="cb62-299"><a href="#cb62-299" aria-hidden="true" tabindex="-1"></a>Let us try the log transformed model with only the Budget and Small_Distributor as confounders.</span>
+<span id="cb62-302"><a href="#cb62-302" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-303"><a href="#cb62-303" aria-hidden="true" tabindex="-1"></a>model5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th, <span class="at">data =</span> df)</span>
+<span id="cb62-304"><a href="#cb62-304" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model5)</span></span>
+<span id="cb62-305"><a href="#cb62-305" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model5)</span></span>
+<span id="cb62-306"><a href="#cb62-306" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-307"><a href="#cb62-307" aria-hidden="true" tabindex="-1"></a>Now, we can run a log transformed model with only the Opening and Budget.</span>
+<span id="cb62-308"><a href="#cb62-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-311"><a href="#cb62-311" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-312"><a href="#cb62-312" aria-hidden="true" tabindex="-1"></a>model6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">log</span>(Opening) <span class="sc">+</span> <span class="fu">log</span>(Budget), <span class="at">data =</span> df)</span>
+<span id="cb62-313"><a href="#cb62-313" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model6)</span></span>
+<span id="cb62-314"><a href="#cb62-314" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model6)</span></span>
+<span id="cb62-315"><a href="#cb62-315" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-316"><a href="#cb62-316" aria-hidden="true" tabindex="-1"></a>Let us run models after quadratic transformation</span>
+<span id="cb62-317"><a href="#cb62-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-320"><a href="#cb62-320" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-321"><a href="#cb62-321" aria-hidden="true" tabindex="-1"></a>model_quad1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(<span class="st">`</span><span class="at">Box Office</span><span class="st">`</span>) <span class="sc">~</span> <span class="fu">poly</span>(Opening, <span class="dv">2</span>, <span class="at">raw=</span><span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">log</span>(Budget) <span class="sc">+</span> open_th <span class="sc">+</span> Small_Dist <span class="sc">+</span> season, <span class="at">data =</span> df)</span>
+<span id="cb62-322"><a href="#cb62-322" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(model_quad1)</span></span>
+<span id="cb62-323"><a href="#cb62-323" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(model_quad1)</span></span>
+<span id="cb62-324"><a href="#cb62-324" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-325"><a href="#cb62-325" aria-hidden="true" tabindex="-1"></a><span class="fu">## Selecting a model and Interpretation of the result</span></span>
+<span id="cb62-326"><a href="#cb62-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-327"><a href="#cb62-327" aria-hidden="true" tabindex="-1"></a>Now that we have multiple models, we can select the best model out of them using following criteria;</span>
+<span id="cb62-328"><a href="#cb62-328" aria-hidden="true" tabindex="-1"></a>a) R-squared</span>
+<span id="cb62-329"><a href="#cb62-329" aria-hidden="true" tabindex="-1"></a>b) Adjusted R-squared</span>
+<span id="cb62-330"><a href="#cb62-330" aria-hidden="true" tabindex="-1"></a>c) PRESS</span>
+<span id="cb62-331"><a href="#cb62-331" aria-hidden="true" tabindex="-1"></a>d) AIC (Akaike Information Criterion)</span>
+<span id="cb62-332"><a href="#cb62-332" aria-hidden="true" tabindex="-1"></a>e) BIC (Bayesian Information Criterion)</span>
+<span id="cb62-333"><a href="#cb62-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-334"><a href="#cb62-334" aria-hidden="true" tabindex="-1"></a>In the model selection process, we can follow the rule of thumb as, for R-squared and Adjusted R-square, higher is better while for PRESS, AIC and BIC, lower is better.</span>
+<span id="cb62-335"><a href="#cb62-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-336"><a href="#cb62-336" aria-hidden="true" tabindex="-1"></a>Create a functions to get R-squared, Adjusted R-squared &amp; PRESS </span>
+<span id="cb62-339"><a href="#cb62-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-340"><a href="#cb62-340" aria-hidden="true" tabindex="-1"></a>rsquared <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) <span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb62-341"><a href="#cb62-341" aria-hidden="true" tabindex="-1"></a>adj_rsquared <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) <span class="fu">summary</span>(fit)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb62-342"><a href="#cb62-342" aria-hidden="true" tabindex="-1"></a>PRESS <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) {</span>
+<span id="cb62-343"><a href="#cb62-343" aria-hidden="true" tabindex="-1"></a>  pr <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fit)<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">lm.influence</span>(fit)<span class="sc">$</span>hat)</span>
+<span id="cb62-344"><a href="#cb62-344" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(pr<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb62-345"><a href="#cb62-345" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb62-346"><a href="#cb62-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-347"><a href="#cb62-347" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-348"><a href="#cb62-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-349"><a href="#cb62-349" aria-hidden="true" tabindex="-1"></a>For AIC and BIC, the functions AIC() and BIC() can be used</span>
+<span id="cb62-350"><a href="#cb62-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-351"><a href="#cb62-351" aria-hidden="true" tabindex="-1"></a>Now, applying the functions to model objects</span>
+<span id="cb62-352"><a href="#cb62-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-355"><a href="#cb62-355" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-356"><a href="#cb62-356" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>(model1, model2, model3, model4, model5, model6, model_quad1)</span>
+<span id="cb62-357"><a href="#cb62-357" aria-hidden="true" tabindex="-1"></a>model_comparison <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">models =</span> <span class="fu">c</span>(<span class="st">'model1'</span>, <span class="st">'model2'</span>, <span class="st">'model3'</span>, <span class="st">'model4'</span>, <span class="st">'model5'</span>, <span class="st">'model6'</span>, <span class="st">'model_quad1'</span>),</span>
+<span id="cb62-358"><a href="#cb62-358" aria-hidden="true" tabindex="-1"></a>           <span class="at">rSquared =</span> <span class="fu">sapply</span>(models, rsquared),</span>
+<span id="cb62-359"><a href="#cb62-359" aria-hidden="true" tabindex="-1"></a>           <span class="at">adj_rSquared =</span> <span class="fu">sapply</span>(models, adj_rsquared),</span>
+<span id="cb62-360"><a href="#cb62-360" aria-hidden="true" tabindex="-1"></a>           <span class="at">PRESS =</span> <span class="fu">sapply</span>(models, PRESS),</span>
+<span id="cb62-361"><a href="#cb62-361" aria-hidden="true" tabindex="-1"></a>           <span class="at">AIC =</span> <span class="fu">sapply</span>(models, AIC),</span>
+<span id="cb62-362"><a href="#cb62-362" aria-hidden="true" tabindex="-1"></a>           <span class="at">BIC =</span> <span class="fu">sapply</span>(models, BIC)) <span class="sc">|&gt;</span></span>
+<span id="cb62-363"><a href="#cb62-363" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span>
+<span id="cb62-364"><a href="#cb62-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-365"><a href="#cb62-365" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-366"><a href="#cb62-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-369"><a href="#cb62-369" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-370"><a href="#cb62-370" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stargazer)</span>
+<span id="cb62-371"><a href="#cb62-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-372"><a href="#cb62-372" aria-hidden="true" tabindex="-1"></a><span class="fu">stargazer</span>(model1, model2, model3, model4, model5, model6, model_quad1, <span class="at">type =</span> <span class="st">'text'</span>)</span>
+<span id="cb62-373"><a href="#cb62-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-374"><a href="#cb62-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-375"><a href="#cb62-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-376"><a href="#cb62-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-377"><a href="#cb62-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-378"><a href="#cb62-378" aria-hidden="true" tabindex="-1"></a>Out of all the models we ran, model3 looks as the best fit.</span>
+<span id="cb62-379"><a href="#cb62-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-380"><a href="#cb62-380" aria-hidden="true" tabindex="-1"></a>The linear regression model predicts the logarithm of Box Office collections based on the logarithm of Opening weekend collections, logarithm of Budget, number of theaters the movie opened in, Small_Dist (a binary variable indicating whether the distributor is small or not), and the season in which the movie was released (Spring, Summer, or Winter). </span>
+<span id="cb62-381"><a href="#cb62-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-382"><a href="#cb62-382" aria-hidden="true" tabindex="-1"></a>The coefficients of the independent variables show the direction and magnitude of their effect on the dependent variable. The p-value associated with each coefficient indicates whether the coefficient is statistically significant or not.</span>
+<span id="cb62-383"><a href="#cb62-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-384"><a href="#cb62-384" aria-hidden="true" tabindex="-1"></a>The intercept coefficient is -3.845, which means that if all independent variables are zero, the model predicts that the logarithm of Box Office collections is -3.845. However, since all the independent variables are not zero in practice, this value is not meaningful.</span>
+<span id="cb62-385"><a href="#cb62-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-386"><a href="#cb62-386" aria-hidden="true" tabindex="-1"></a>The coefficient of the logarithm of Opening weekend collections is 0.792, which means that a one percent increase in Opening weekend collections is associated with a 0.792 percent increase in Box Office collections.</span>
+<span id="cb62-387"><a href="#cb62-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-388"><a href="#cb62-388" aria-hidden="true" tabindex="-1"></a>The coefficient of the logarithm of Budget is 0.642, which means that a one percent increase in Budget is associated with a 0.642 percent increase in Box Office collections.</span>
+<span id="cb62-389"><a href="#cb62-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-390"><a href="#cb62-390" aria-hidden="true" tabindex="-1"></a>The coefficient of the number of theaters the movie opened in (open_th) is negative (-0.00068), which means that as the number of theaters increases by one, the predicted logarithm of Box Office collections decreases by 0.00068. This is something to be studied further, as it goes against our logic and expectation.</span>
+<span id="cb62-391"><a href="#cb62-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-392"><a href="#cb62-392" aria-hidden="true" tabindex="-1"></a>The coefficient of Small_Dist is 0.649, which means that the Box Office collections of movies released by small distributors are 0.649 times higher than those of movies released by large distributors, holding other variables constant. This also need more detailed study.</span>
+<span id="cb62-393"><a href="#cb62-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-394"><a href="#cb62-394" aria-hidden="true" tabindex="-1"></a>The coefficients associated with season indicate the difference in Box Office collections between movies released in that season and movies released in Fall (omitted reference level). For example, the coefficient of season Spring is 0.88, which means that the predicted Box Office collections of movies released in Spring are 0.88 times higher than those of movies released in Fall.</span>
+<span id="cb62-395"><a href="#cb62-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-396"><a href="#cb62-396" aria-hidden="true" tabindex="-1"></a>The adjusted R-squared of the model is 0.7155, which means that 71.55% of the variation in the logarithm of Box Office collections can be explained by the independent variables in the model.</span>
+<span id="cb62-397"><a href="#cb62-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-398"><a href="#cb62-398" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualising the regression model.</span></span>
+<span id="cb62-399"><a href="#cb62-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-402"><a href="#cb62-402" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-403"><a href="#cb62-403" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb62-404"><a href="#cb62-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-405"><a href="#cb62-405" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the color palette</span></span>
+<span id="cb62-406"><a href="#cb62-406" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>, <span class="st">"purple"</span>, <span class="st">"pink"</span>)</span>
+<span id="cb62-407"><a href="#cb62-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-408"><a href="#cb62-408" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a blank plot with the desired layout</span></span>
+<span id="cb62-409"><a href="#cb62-409" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb62-410"><a href="#cb62-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-411"><a href="#cb62-411" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through the diagnostic plots and assign colors</span></span>
+<span id="cb62-412"><a href="#cb62-412" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) {</span>
+<span id="cb62-413"><a href="#cb62-413" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(model3, <span class="at">which =</span> i, <span class="at">col =</span> colors[i])</span>
+<span id="cb62-414"><a href="#cb62-414" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb62-415"><a href="#cb62-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-416"><a href="#cb62-416" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-417"><a href="#cb62-417" aria-hidden="true" tabindex="-1"></a>The Scale-Location plot suggests some level of heteroskedacity. So, it is better to check if there is a serious problem of heteroskedacity,we can run Breusch-Pagan test.</span>
+<span id="cb62-420"><a href="#cb62-420" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb62-421"><a href="#cb62-421" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb62-422"><a href="#cb62-422" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(model3)</span>
+<span id="cb62-423"><a href="#cb62-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-424"><a href="#cb62-424" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb62-425"><a href="#cb62-425" aria-hidden="true" tabindex="-1"></a>The p-value for Breusch-Pagan test is 0.02233. This is possibly a heteroskedacity. We need to look more into this.</span>
+<span id="cb62-426"><a href="#cb62-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-427"><a href="#cb62-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-428"><a href="#cb62-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-429"><a href="#cb62-429" aria-hidden="true" tabindex="-1"></a><span class="fu">## Conclusion:</span></span>
+<span id="cb62-430"><a href="#cb62-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-431"><a href="#cb62-431" aria-hidden="true" tabindex="-1"></a>The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after taking into account the intercept(-3.845). But the Breusch-Pagan test for heteroskedacity gives a low p-value which suggests that the model is showing heteroskedacity. </span>
+<span id="cb62-432"><a href="#cb62-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-433"><a href="#cb62-433" aria-hidden="true" tabindex="-1"></a>The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies in this dataset had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection. Also, in the future study, the variable transformation to address the heteroskedacity should be done. </span>
+<span id="cb62-434"><a href="#cb62-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-435"><a href="#cb62-435" aria-hidden="true" tabindex="-1"></a><span class="fu">## References:</span></span>
+<span id="cb62-436"><a href="#cb62-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-437"><a href="#cb62-437" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Nasir, Suphan &amp; Öcal, Figen. (2016). Film Marketing: The Impact of Publicity Activities on Demand Generation. 10.4018/978-1-5225-0143-5.ch019.</span>
+<span id="cb62-438"><a href="#cb62-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-439"><a href="#cb62-439" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>*Elizabeth Cooper-Martin (1991) ,"Consumers and Movies: Some Findings on Experiential Products", in NA - Advances in Consumer Research Volume 18, eds. Rebecca H. Holman and Michael R. Solomon, Provo, UT : Association for Consumer Research, Pages: 372-378.*</span>
+<span id="cb62-440"><a href="#cb62-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-441"><a href="#cb62-441" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Kaggle.com (Original dataset)</span>
+<span id="cb62-442"><a href="#cb62-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-443"><a href="#cb62-443" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Wikipedia.com (Movie pages to get budget and box office collections)</span>
+<span id="cb62-444"><a href="#cb62-444" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
