@@ -1,0 +1,512 @@
+---
+title: "Final Project"
+author: "Alexa Potter"
+description: "DACSS 603"
+date: "05/23/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - finalpart
+  - nyctreecensus
+---
+
+
+# Research Question  
+
+
+Greenery is widely recognized as a vital element to any public space. Plants and natural elements of all kinds can add immense benefits to urban areas, not only to the environment but to the humans who inhabit the space as well. Studies have shown that urban greening, specifically the planting of trees, can "combat challenges such as pollution, urban heat, and flooding, as well as to improve social cohesion, human health, and well-being."^[Cavender, N., & Donnelly, G. (2019). Intersecting Urban Forestry and botanical gardens to address big challenges for healthier trees, people, and cities. *PLANTS, PEOPLE, PLANET, 1*(4), 315–322. https://doi.org/10.1002/ppp3.38] The understanding and implementation of this information can lead cities, developers, and anyone with a stake in their community to consciously consider what elements they can incorporate into their own public spaces. The work does not end here though, greenery in public spaces requires maintenance and year-round management to make these efforts last long enough to see the benefits.
+
+
+New York City, with a population of about 8.4 billion people and 300 square miles, is one of the largest urban spaces in the United States.^[U.S. Census Bureau . (n.d.). *U.S. Census Bureau quickfacts: New York City, New York*. Retrieved March 20, 2023, from https://www.census.gov/quickfacts/newyorkcitynewyork] In 1995, the New York City Department of Parks and Recreation conducted a city wide census of all the trees. They again conducted this survey in 2005 and 2015 to tackle their goal of enhancing and restoring urban forests.^[Merriman, D. (2017) *Volunteers count every street tree in New York City*. US Forest Service. Retrieved March 20, 2023, from https://www.fs.usda.gov/features/volunteers-count-every-street-tree-new-york-city-0] The information this survey collected has been used to create an interactive map of tree species around New York City. The Parks department then uses this data to calculate the related impacts and needs associated with the trees and tree maintenance.^[Cochran, C., & Greer, B. (2016, June 29). *Treescount! 2015: NYC's Third Street-Tree Census*. New York State Urban Forestry Council. Retrieved March 20, 2023, from https://nysufc.org/treescount/2016/04/26/]
+
+While there is a large amount of data related to the tree census published, there is a gap in information on the relation between tree data to specific boroughs.  Critically analyzing this tree data on a neighborhood level can lead to further community involvement within and stemming from boroughs themselves.^[Ma, Q., Lin, J., Ju, Y. et al. Individual structure mapping over six million trees for New York City USA. *Sci Data 10*, 102 (2023). https://doi.org/10.1038/s41597-023-02000-w]. Firsthand involvement can be used to develop connections between community members and foster ownership among members with the environment they inhabit.  
+
+This informs my research question: 
+
+#### What are the significant differences in tree characteristics across New York City neighborhoods? 
+
+
+# Hypothesis  
+
+New York City itself is a diverse landscape with features both conducive and preventive to tree growth and sustainability. Neighborhoods across the city can see significant changes in income, traffic, infrastructure, natural resources such water or sunlight, and attitudes towards the environment.^[Neckerman, K., Lovasi, G., Davies, S. et al. Disparities in Urban Neighborhood Conditions: Evidence from GIS Measures and Field Observation in New York City. *Public Health Pol 30* (Suppl 1), S264–S285 (2009). https://doi.org/10.1057/jphp.2008.47] Tree size can relay information to researchers on the development and sustainability of their goal to promote urban greening.^[Colleen E. Reid, Laura D. Kubzansky, Jiayue Li, Jessie L. Shmool, Jane E. Clougherty. It's not easy assessing greenness: A comparison of NDVI datasets and neighborhood types and their associations with self-rated health in New York City. *Health & Place 54*, 92-101 (2018).https://doi.org/10.1016/j.healthplace.2018.09.005.] This information can then be used to inform and direct spending and efforts. While there exists a study by Jian Lin, Qiang Wang, and Xiaojiang Li regarding tree characteristics related to socioeconomic and spatial inequalities, my research aims to focus in tree characteristics to specific named neighborhoods.^[Jian Lin, Qiang Wang, Xiaojiang Li. Socioeconomic and spatial inequalities of street tree abundance, species diversity, and size structure in New York City. Landscape and Urban Planning, Volume 206. 2021. 103992. https://doi.org/10.1016/j.landurbplan.2020.103992.] Rather than using socioeconomic elements, my research question is focused on smaller geographic areas where individuals can identify themselves as members on a personal level with their borough.
+
+With these factors, I can test the hypothesis:  
+
+
+H1: There is a significant difference in tree diameter based on which New York City borough the tree is located. 
+
+H2: There is a significant difference in tree health based on which New York City borough the tree is located.  
+
+# Descriptive Statistics  
+
+```{r, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(formattable)
+library(dbplyr)
+library(summarytools)
+library(stargazer)
+library(MASS)
+```
+
+```{r}
+library(readxl)
+treecensus <- read_excel("C:/Users/aep05/Documents/UMASS_GRAD_SCHOOL/DACSS 603/603_Spring_2023/posts/finalproject/2015_Street_Tree_Census.xls")
+print(treecensus)
+```
+This data set is obtained from the 2015 tree census through NYC Open Data provided by the New York City Department of Parks and Recreation.^[https://data.cityofnewyork.us/Environment/2015-Street-Tree-Census-Tree-Data/uvpi-gqnh]
+
+The information was collected by predominantly volunteers in addition to the New York City Department of Parks and Recreation staff.  
+
+
+There are 45 variables and 16,383 observations. 
+
+```{r}
+summary(treecensus)
+```
+
+
+Full list of variables:
+
+```{r}
+colnames(treecensus)
+```
+```{r}
+dfSummary(treecensus)
+```
+
+
+At a glance, the columns I am interested in are:
+
+tree_id	- Unique identification number for each tree point.  
+tree_dbh	- Diameter of the tree, measured at approximately 54" / 137cm above the ground. Data was collected for both living and dead trees; for stumps, use stump_diam  
+curb_loc - Location of tree bed in relationship to the curb; trees are either along the curb (OnCurb) or offset from the curb (OffsetFromCurb)   
+status	- Indicates whether the tree is alive, standing dead, or a stump.  
+health	- Indicates the user's perception of tree health.  
+spc_latin	- Scientific name for species, e.g. "Acer rubrum"  
+spc_common	- Common name for species, e.g. "red maple"  
+steward - Indicates the number of unique signs of stewardship observed for this tree. Not recorded for stumps or dead trees.  
+guards - Indicates whether a guard is present, and if the user felt it was a helpful or harmful guard. Not recorded for dead trees and stumps.  
+sidewalk - 	Indicates whether one of the sidewalk flags immediately adjacent to the tree was damaged, cracked, or lifted. Not recorded for dead trees and stumps.  
+root_stone - Indicates the presence of a root problem caused by paving stones in tree bed  
+root_grate - Indicates the presence of a root problem caused by metal grates in tree bed  
+root_other - Indicates the presence of other root problems   
+trunk_wire - Indicates the presence of a trunk problem caused by wires or rope wrapped around the trunk  
+trnk_light - Indicates the presence of a trunk problem caused by lighting installed on the tree 
+trnk_other - Indicates the presence of other trunk problems  
+brch_light - Indicates the presence of a branch problem caused by lights (usually string lights) or wires in the branches  
+brch_shoe - Indicates the presence of a branch problem caused by sneakers in the branches  
+brch_other - Indicates the presence of other branch problems  
+postcode	- Five-digit zipcode in which tree is located  
+borocode	- Code for borough in which tree point is located: 1 (Manhattan), 2 (Bronx), 3 (Brooklyn), 4 (Queens), 5 (Staten Island)  
+borough	- Name of borough in which tree point is located  
+nta	- This is the NTA Code corresponding to the neighborhood tabulation area from the 2010 US Census that the tree point falls into.  
+nta_name	- This is the NTA name corresponding to the neighborhood tabulation area from the 2010 US Census that the tree point falls into.  
+boro_ct	- This is the boro_ct identifyer for the census tract that the tree point falls into.  
+
+
+
+```{r}
+group_by(treecensus, status, health)%>%
+ summarize()
+```
+Because I am only interested in trees with the status "Alive", I'll also need to clean the data set to exclude trees labeled as "Dead" or "Stump". 
+
+
+```{r}
+treecensus_clean <- treecensus[treecensus$status != "Dead" & treecensus$status != "Stump",]
+group_by(treecensus_clean, status, health)%>%
+ summarize()
+```
+
+The independent variable of interest is the categorization of geographic divisions within New York City into 5 boroughs. This variable is:  
+borough  
+
+The dependent variables of interest are different tree characteristics observed during the census. These variables are:  
+tree_dbh  
+health    
+
+Additional variables of interest for potential interactions are:  
+curb_loc  
+steward  
+root_stone  
+root_grate  
+root_other  
+trunk_wire  
+trnk_light  
+brch_light  
+trnk_other  
+brch_shoe  
+brch_other  
+
+
+```{r} 
+#recoding character variables
+
+treecensus_clean <- treecensus_clean %>% 
+  mutate(curb_loc = recode(curb_loc,
+                            "OnCurb" = 1,
+                            "OffsetFromCurb" = 0)) %>%
+  mutate(health = recode(health,
+                            "Poor" = 1,
+                            "Fair" = 2,
+                            "Good" = 3)) %>%
+  mutate(steward = recode(steward,
+                            "None" = 0,
+                            "1or2" = 1,
+                            "3or4" = 3,
+                            "4orMore" = 4)) %>%
+  mutate(sidewalk = recode(sidewalk,
+                            "NoDamage" = 0,
+                            "Damage" = 1)) %>%
+  mutate(root_stone = recode(root_stone,
+                            "No" = 0,
+                            "Yes" = 1)) %>%
+  mutate(root_grate = recode(root_grate,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(root_other = recode(root_other,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(trunk_wire = recode(trunk_wire,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(trnk_light = recode(trnk_light,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(trnk_other = recode(trnk_other,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(brch_light = recode(brch_light,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(brch_shoe = recode(brch_shoe,
+                            "No" = 0,
+                            "Yes" = 1))%>%
+  mutate(brch_other = recode(brch_other,
+                            "No" = 0,
+                            "Yes" = 1))
+```
+
+```{r}
+treecensus %>% count(borough)%>%
+  ggplot(aes(x = "", y = n, fill = borough)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y", start = 0) +
+  scale_fill_manual(values = c("Blue", "yellow1", "Green", "slateblue4", "chartreuse4")) +
+  labs(x = "", y = "", title = "Tree Count by Borough",
+       fill = "Boroughs") + 
+  theme(plot.title = element_text(hjust = 0.5), 
+        legend.title = element_text(hjust = 0.5, face="bold", size = 10))  
+  
+```
+
+
+# Analysis
+
+Expand the description of the data with visualizations, e.g. scatter plots among key
+variables, box and whisker plots, histograms etc.
+
+The following histograms show the frequency of key variables.  
+
+```{r}
+table(treecensus$health)%>%
+  barplot(xlab = "Health", ylab = "Frequency")
+
+table(treecensus$tree_dbh)%>%
+  barplot(xlab = "Tree Diameter", ylab = "Frequency")
+
+table(treecensus$steward)%>%
+  barplot(xlab = "Steward", ylab = "Frequency")
+
+table(treecensus$borough)%>%
+  barplot(xlab = "Borough", ylab = "Frequency")
+
+table(treecensus$curb_loc)%>%
+  barplot(xlab = "Curb Location", ylab = "Frequency")
+
+
+
+```
+
+
+
+The first graph below displays the counts of observed problems trees may possess, then segmented by borocode. After the initial project proposal I have included these variables as another characteristic to test differences among the New York City neighborhoods. Each variable on the x-axis corresponds to a problem or characteristic a tree might have, codes for these are listed in the variable description section. It's immediately apparent that the answer "No" to these problems represents the majority of answers. It's also apparent that boroughs Brooklyn & Queens have both the largest tree counts, and largest count of problem "root_stone".
+
+The second graph below displays the distribution of tree diameter across those problems, then segmented by borough. Interestingly, the distribution shows similar values across all boroughs.
+
+
+```{r}
+treecensus %>% 
+  pivot_longer(
+    cols=starts_with(c('root', 'trunk', 'trnk', 'brch')),
+    names_to = "Problem",
+    values_to = "Response")%>%
+  ggplot(aes(x=Problem))+
+  geom_bar(aes(fill=Response))+
+  facet_grid(borough~.)
+
+
+treecensus %>% 
+  pivot_longer(
+    cols=starts_with(c('root', 'trunk', 'trnk', 'brch')),
+    names_to = "Problem",
+    values_to = "Response")%>%
+  ggplot(aes(x=Problem, y=tree_dbh))+
+  geom_boxplot(aes(fill=Response))+
+  ylim(0,50)+
+  facet_grid(borough~.)
+
+
+```
+
+
+```{r}
+treecensus_clean$health <- as.factor(treecensus_clean$health)
+```
+
+
+The graphs below demonstrate how tree diameter is observed across "borocodes" (borough codes). It's then segmented based on the variable health. The graph shows that generally the median diameter falls within 5-15 inches among the boroughs but there is a different range for each borough. It also demonstrates the same general trend for health across borough that ranks health the lowest as poor, then fair, then good. There are 4 outliers on this map from boroughs Brooklyn, Bronx, & Staten Island. These values are 425, 169, 122, 72. 
+
+```{r}
+ggplot(treecensus_clean, aes(x = factor(borough), y = tree_dbh)) +
+    geom_boxplot()+
+    ylab("Diameter")+ 
+    xlab("Borough") + 
+    ylim(0,50)
+
+
+ggplot(treecensus_clean, aes(x = (borough), y = tree_dbh)) +
+    geom_boxplot(aes(color = health))+
+    scale_color_discrete(name = "Health", labels = c("Poor", "Fair", "Good"))+
+    ylab("Diameter")+ 
+    xlab("Borough") + 
+    ylim(0,50)
+
+
+treecensus %>%
+  arrange(desc(tree_dbh))%>%
+  slice(1:4)
+```
+
+The graph below displays tree diameter based on borocode, then segmented by levels of steward. 0 = no signs, 1 = 1 to 2 signs, 3 = 3 to 4 signs, 4 = 4 or more. The distribution pattern of steward level 1 and 3 are similar across boroughs, where 0 and 4 appear to be different. The median across tree diameter does not appear to be consistent.  
+
+
+```{r}
+ggplot(treecensus_clean, aes(x = borough, y = tree_dbh)) +
+    geom_boxplot()+
+    ylab("Diameter")+ 
+    xlab("Borocode")+
+    ylim(0,75)+
+  facet_grid(. ~steward)
+    
+```
+
+
+
+
+This graph below demonstrates another visualization of the variables tree diameter, health, and borocode. It demonstrated the same trend among the three health groups that boroughs follow a similar trend of median with the highest borough Brooklyn then Manhattan. The lowest median across health falls in borough Queens. 
+
+```{r}
+ggplot(treecensus_clean, aes(x= health, y = tree_dbh, fill = borough))+
+  geom_boxplot()
+```
+
+This graph demonstrates tree diameter based on borocode segmented by signs of stewardship. While the medians lay at relatively similar values, the distributions of diameter do differ noticeably. 
+
+```{r}
+ggplot(treecensus_clean, aes(x = borough, y = tree_dbh)) +
+    geom_boxplot(aes(color = factor(steward)))+
+    ylab("Diameter")+ 
+    xlab("Borough") + 
+    ylim(0,50)
+```
+
+
+This graph below demonstrates tree diameter based on borocode segmented by curb location of the tree. While the graph shows generally the median measured at similar values, the range of diameter differs across borough. It does follow the same trend that a tree located off the curb has a larger or similar diameter in it's borough than a tree located on the curb.
+
+
+```{r}
+ggplot(treecensus_clean, aes(x = borough, y = tree_dbh)) +
+    geom_boxplot(aes(color = factor(curb_loc)))+
+    ylab("Diameter")+ 
+    xlab("Borough") + 
+    ylim(0,50)
+```
+
+
+
+## Hypothesis Testing  
+
+First I'll run an ANOVA test to review the population mean differences in key variables. 
+
+H0 = There is no significant difference in means  
+Ha = The means are different in at least one of the groups  
+
+
+The first ANOVA is testing the independent variable borocode with dependent variable tree diameter.  
+
+```{r}
+anova_treedbh <- aov(tree_dbh ~ borough, data = treecensus_clean)
+summary(anova_treedbh)
+
+ggplot(treecensus_clean, aes(x = borough, y = tree_dbh)) +
+    geom_boxplot(aes(color=borough))+
+    ylab("Diameter")+ 
+    xlab("Borough") + 
+    ylim(0,50)+
+  scale_x_discrete(guide = guide_axis(n.dodge=2))+
+  scale_color_discrete(name = "Borough")
+```
+This ANOVA between tree_dbh ~ borocode shows a very small p-value, indicating the null hypothesis can be rejected at 0.001.   
+
+
+
+Next I'll test the ANOVA with the dependent variable health and independent variable borocde.    
+
+```{r}
+treecensus_clean$health <- as.numeric(treecensus_clean$health)
+anova_treehealth <- aov(health ~ borough, data = treecensus_clean)
+summary(anova_treehealth)
+
+ggplot(treecensus_clean, aes(x = borough, y = health)) +
+    geom_boxplot(aes(color=borough))+
+    ylab("Health")+ 
+    xlab("Borough") + 
+  scale_color_discrete(name = "Borough")
+```
+This ANOVA between health ~ borocode shows a very small p-value, indicating the null hypothesis can be rejected at 0.001. From the graph, however, it seems there are two distinct patterns and not much variation.
+
+
+
+## Model Comparisons  
+
+Next we'll test different linear regression models for tree diameter. 
+
+```{r, results='hide'}
+slrtree <- lm(tree_dbh ~ borough, data = treecensus_clean)
+summary(slrtree)
+
+slrtree2 <- lm(tree_dbh ~ borough + steward, data = treecensus_clean)
+summary(slrtree2)
+
+slrtree3 <- lm(tree_dbh ~ borough + steward + curb_loc, data = treecensus_clean)
+summary(slrtree3)
+
+```
+
+
+
+```{r}
+stargazer(slrtree, slrtree2, slrtree3, type= 'text')
+```
+ 
+We'll first exam the models with DV as tree diameter.  
+
+In the first model, Adjusted R2 only represents 2.1% of the variation in response variable tree diameter can be explained by the predictor variable borocode. Adjusted R2 does increase with each model to model 3's 4.6%, however, this is still very low. Model 3 demonstrates that borough is statistically significant to tree diameter in all but the borough of Manhattan when also considering steward and curb location. 
+
+To pick the best model we'll also need to compare AIC, BIC, and PRESS.  
+
+
+AIC
+
+```{r}
+AIC(slrtree, k=2)  
+AIC(slrtree2, k=2)   
+AIC(slrtree3, k=2)  
+```
+The best model for AIC is model 3. 
+
+BIC   
+
+```{r}
+BIC(slrtree)
+BIC(slrtree2)
+BIC(slrtree3)
+```
+The best model for BIC is model 3. 
+
+PRESS  
+
+```{r}
+PRESS <- function(model) {
+    i <- residuals(model)/(1 - lm.influence(model)$hat)
+    sum(i^2)
+}
+
+PRESS(slrtree)
+PRESS(slrtree2)
+PRESS(slrtree3)
+
+```
+The best model for PRESS is model 3.  
+
+
+Overall, the best model for tree diameter is model 3 as it was the best fit. I will be running the diagnostics on that model in the next section.  
+
+
+Next we'll run the tree health data as an ordinal logistic regression.  
+
+```{r}
+treehealth_model <- polr(as.factor(health) ~ borough, data = treecensus_clean, Hess=TRUE)
+summary(treehealth_model)
+healthtable <- coef(summary(treehealth_model))
+p <- pnorm(abs(healthtable[, "t value"]), lower.tail = FALSE) * 2
+healthtable <- cbind(healthtable, "p value" = p)
+healthtable
+treehealth_model2 <- polr(as.factor(health) ~ borough + steward, data = treecensus_clean, Hess=TRUE)
+treehealth_model3 <- polr(as.factor(health) ~ borough + steward + curb_loc, data = treecensus_clean, Hess=TRUE)
+
+stargazer(treehealth_model,treehealth_model2,treehealth_model3, type= 'text')
+
+```
+
+From this data, we can conclude that health is only significant within the Borough of Queens and with the confounder of steward.  
+
+
+## Diagnostics
+
+#### Tree Diameter
+
+We'll first run diagnostics on the linear regression for lm(tree_dbh ~ borocode + steward + curb_loc, data = treecensus_clean)
+
+
+```{r}
+plot(slrtree3, which = 1)
+```
+In this Residual vs. Fitted values plot, it does seem like it violates the constant variance assumption but does appear linear. 
+
+
+```{r}
+plot(slrtree3, which = 2)
+```
+
+This next plot is a QQ-Plot. These points do generally seem to normally fall along the line. 
+
+```{r}
+plot(slrtree3, which = 3)
+```
+
+The scale location plot also seems to violate constant variance as there are more plots between 10-14 range. 
+
+```{r}
+plot(slrtree3, which = 4)
+```
+
+The Cook's Distance plot also shows a violation of the influential observation assumption. Several observations are greater than 4/15,442=0.00026  
+
+
+
+# Conclusion  
+
+From the regressions we can determine that H1: There is a significant difference in tree diameter based on which New York City borough the tree is located, was not supported by the data. Tree diameter is not statistically significant in the borough of Manhattan, though it is in the remaining 4 boroughs and confounders.    
+
+The ordinal regression of H2: There is a significant difference in tree health based on which New York City borough the tree is located, was also not supported by the data. Health is only statistically significant in the borough Of Queens and among the confounder of steward.  
+
+Some limitations of the data include the presence of several outliers in the data. Removing these outliers and remodeling could be future research to investigate. 
+
+This conclusion should only be taken in the context of this analysis. Further research can elaborate on the socio-economic, geographic and biological components of tree location that contribute to the diameter and health of trees in New York City. This assessment is not all-encompassing of the factors that influence tree characteristics.   
