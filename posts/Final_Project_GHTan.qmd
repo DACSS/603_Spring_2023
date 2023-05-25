@@ -1,0 +1,188 @@
+---
+title: "Final Project"
+author: "Guanhua Tan"
+description: "Final Project"
+date: "May 4 2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - fp
+  - research question
+  - desriptive statistics
+  - model
+---
+
+```{r, echo=T}
+library(tidyverse)
+library(ggplot2)
+library(dbplyr)
+library(stargazer)
+library(misty)
+library(reshape2)
+
+pisa <- read_csv('_data/CY07_MSU_SCH_QQQ.csv')
+```
+
+# Introduction
+
+## Research Questions
+
+The Organization for Economic Co-operation and Development (OECD), founded in 1960, has conducted a constant series of surveys "Programme for International Student Assessment" (PISA) that evaluates 15-year-olds' performance since 2000. The datasets obtained by these surveys have helped governments and education policymakers launch education reforms in an effort to "meet real-life challenges" (https://www.oecd.org/pisa/) in their countries. This paper explores the latest survey in 2018. Because the survey covers a wide range of issues regarding students' performance and schools' situations, my final project will narrow to investigate the relationship between career guidance and access to digital devices in schools.
+
+## Hpyotheis
+
+I propose that the scores of access to digital devices may be the major factor to career guidance. Also, I propose that school types and urban settings may be cofunders.
+
+A.  the scores of access to digital devices may be the major factor in career guidance
+B.  OECD, school types, and urban settings may be co-founders.
+
+```{r, echo=TRUE, results='hide'}
+# tidy data
+# create a data frame
+#view(pisa)
+# select related variable
+pisa_selected <- dplyr::select(pisa, starts_with(c("SC161","SC155", "SC001Q01TA", "SC013Q01TA")))
+pisa2018_joint <-cbind(pisa[, 1:12], pisa_selected)
+# pisa_SC155
+pisa2018_joint$Digitals=rowMeans(pisa2018_joint[,c("SC155Q01HA","SC155Q02HA",                                                  "SC155Q03HA","SC155Q04HA","SC155Q05HA","SC155Q06HA", "SC155Q07HA","SC155Q08HA","SC155Q09HA", "SC155Q10HA", "SC155Q11HA")])
+pisa2018_joint$Career_Guidance=rowSums(pisa2018_joint[, c("SC161Q02SA","SC161Q03SA","SC161Q04SA","SC161Q04SA")])
+pisa_SC155 <- pisa2018_joint %>%
+  dplyr::select(CNT, STRATUM, OECD, Career_Guidance,Digitals, SC001Q01TA, SC013Q01TA) %>%
+  mutate(Urban=SC001Q01TA, Public_or_Private=SC013Q01TA) %>%
+  dplyr::select(-c(SC001Q01TA, SC013Q01TA)) %>%
+  dplyr::select(c(CNT,STRATUM,OECD,Urban, Public_or_Private,Career_Guidance,Digitals))
+pisa_SC155
+
+```
+
+# Descriptive Statistics
+
+This original OECD PISA 2018 School Questionnaire Dataset is one part of PISA 2018 dataset with a focus on schools. It covers 80 countries and regions all over the world. The dataset documents 21,903 schools' responses regarding 187 questions. After cleaning the data, the dataset includes 7 variables: "CNT" identifies countries. "STRATUM" identifies schools. "OECD" indicates if a school locates in an OECD country or not. "Urban" describes different conditions of urban communities where a school locates. "Public_or_Private" presents if a school is public or private. "Career_Guidance" demonstrates scores the schools self-report in terms of career guidance. "Digitals" reflects schools' access to digital devices.
+
+```{r, echo=TRUE}
+# summarizing and visualizing data
+summary(pisa_SC155)
+
+pisa_SC155_boxplot<-pisa_SC155 %>%
+  select(STRATUM, Career_Guidance, Digitals) %>% 
+  pivot_longer(cols=c(Career_Guidance, Digitals), 
+               names_to = "Group", values_to = "Evaluation")
+
+ggplot(pisa_SC155_boxplot,aes(Evaluation, fill=Group))+
+  stat_boxplot(geom = "errorbar", # Error bars
+               width = 0.2)+
+  geom_boxplot()+
+  facet_wrap(~Group)+
+  labs(title="Pisa2018 Evaluation")+
+  coord_flip()
+  
+```
+
+After using the summary function and visualization, I have already show the descriptive statistics. A large number of NA stands out. Now I will figure out how to deal with them properly.
+
+# Analysis
+
+## Discussion on NA
+
+```{r}
+# missing data
+library(naniar)
+pisa_SC115_nonOECD <- filter(pisa_SC155, OECD == "0")
+pisa_SC115_OECD <- filter(pisa_SC155, OECD == "1")
+vis_miss(pisa_SC155)
+vis_miss(pisa_SC115_nonOECD)
+vis_miss(pisa_SC115_OECD)
+```
+
+The graphics have disclose that compared with NON-OECD countries, OECD countries missed more data in terms of school type and career guidance. I believe that missing data are not caused by the poor technological condition in non-OECD countries. So missing data is random and can be dropped.
+
+## Model Evaluation on Linear Regression and Logistic Regression
+
+```{r}
+
+pisa_SC155_NoNA <- drop_na(pisa_SC155)
+#summary(pisa_SC155_NoNA)
+
+model_1 <-lm(Career_Guidance~Urban+Public_or_Private+Digitals+Urban*Digitals, data = pisa_SC155_NoNA)
+#summary(model_1)
+
+model_2 <-lm(Career_Guidance~Urban+Public_or_Private+Public_or_Private*Digitals, data = pisa_SC155_NoNA)
+#summary(model_2)
+
+model_3 <-lm(Career_Guidance~Urban+Public_or_Private+Digitals, data = pisa_SC155_NoNA)
+#summary(model_3)
+
+model_4 <-lm(Career_Guidance~Urban+Public_or_Private+OECD+Digitals, data = pisa_SC155_NoNA)
+
+stargazer(model_1, model_2, model_3, model_4, type = 'text')
+
+```
+
+After the linear regression model comparison, model_4 presents statistical significance on all independent variables. The career guidance depends on urban situations, school styles and the access to digital devices.
+
+```{r}
+# diagnostics
+par(mfrow=c(2,3))
+plot(model_4, which= 1:6)
+```
+
+```{r}
+# logistic regression and AICs
+
+pisa_SC155_NoNA$Career_Guidance_Ordinal <- as.factor(pisa_SC155_NoNA$Career_Guidance)
+class(pisa_SC155_NoNA$Career_Guidance_Ordinal)
+table(pisa_SC155_NoNA$Career_Guidance_Ordinal)
+
+fit2 <- MASS::polr(Career_Guidance_Ordinal~Urban+Public_or_Private+OECD+Digitals, data = pisa_SC155_NoNA, Hess=T)
+summary(fit2)
+broom::glance(model_4)
+
+
+
+
+```
+
+But model_4 still shows the relative lower R squared. In addition, the diagnostics plots show certain patterns. Both remind me of further exploring a different model. So I move to try the logistic regression model and calculate the AICs for this two models. Finally, the logistic regression model (fit2) has a lower AIC.
+
+## Interpret the Model
+
+```{r}
+# Interpret and Visualize the fit2
+library(MASS)
+
+newdat <- data.frame(
+  Urban = rep(1:5, 3712),
+  Public_or_Private = rep(1:2, each = 9280 ),
+  OECD = rep(0:1, eache = 9280),
+  Digitals = rep(1:4, 4640))
+
+newdat <- cbind(newdat, predict(fit2, newdat, type = "probs"))
+lnewdat <- melt(newdat, id.vars = c("Urban", "Public_or_Private", "OECD",  "Digitals"),
+                variable.name = "Level", value.name="Probability")
+
+ggplot(lnewdat, aes(x = Digitals, y = Probability, colour = Level))+
+  geom_line() + 
+  facet_grid(Urban ~ Public_or_Private~OECD , labeller="label_both")
+```
+
+The graphics have reflected the complexities of the relationship between "Career_Guidance" and "Digitial." The relationship has slightly distinct patterns in non-OECD and OECD countries. In non-OECD countries, with the lower levels (0 and 1) of "Career Guidance", the possibility remain almost unchanged as "Digitals" increases. However, in OECD countries, with the lowers of "Career Guidance", the possibility will drop when "Digitals" goes up. With the higher levels (2 and 3), the possibility will increase when "Digitals" increases in both groups of countries. But when "Career Guidance" reaches to 4, the possibility approaches to zero because the sample is too tiny.
+
+# Conclusion
+
+My project has reflected the complexities of the relationship between "Career_Guidance" and "Digitials." The relationship has slightly distinct patterns in non-OECD and OECD countries.
+
+# Reference
+
+OECD PISA 2018 School Questionnaire Dataset-https://www.kaggle.com/datasets/dilaraahan/pisa-2018-school-questionnaire?resource=download OECD PISA2018 Code Book-https://www.oecd.org/pisa/data/2018database/ PISA2018 "School Questionnaire"-https://www.oecd.org/pisa/data/2018database/CY7_201710_QST_MS_SCQ_NoNotes_final.pdf OECD PISA website-https://www.oecd.org/pisa
+
+R Language as programming language
+
+Wickham, H., & Grolemund, G. (2016). *R for data science: Visualize, model, transform, tidy, and import data*. OReilly Media.
+
+Danielle Navarro (2023), *Learning statistics with R: A tutorial for psychology students and other beginners (Version 0.6)* :https://learningstatisticswithr.com/lsr-0.6.pdf
+
+Christoph Hanck, Martin Arnold, Alexander Gerber, and Martin Schmelzer (2023). *Introduction to Econometrics with R*: https://www.econometrics-with-r.org/index.html
