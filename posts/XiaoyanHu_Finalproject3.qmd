@@ -72,9 +72,10 @@ abreviations <- c("Depression", "Anxiety", "BMI", "WC", "WHR", "WHtR", "TG", "FB
 cat("varible table\n")
 variable_table <- data.frame(variables, abreviations)
 variable_table
-
+colnames(data)<-c("T0depression","T0anxiety","T1depression","T1anxiety","Height","Weight","WC","HC","SBP","DBP","FBG","TC","TG","HDL-C","LDL-C","BMI","WHR","WtHR","FL", "NS", "TFE", "TME", "FEL", "MEL", "FS", "SL", "SB","Vigorous","Moderate")
 ```
 ### parameter explaination
+BMI (body mass index) in this study is used as indicator of obisity. NIH divided BMI value into three levels as table below.
 ```{r}
 
 
@@ -91,24 +92,97 @@ print(bmi_table)
 ## hypothesis test
 
 ### 1. Higher obesity rate increase the risk of depression
+H0=no relationship between obesity rate and the risk of depression
+Ha=higher obesity rate increases the risk of depression
 
-In order to 
+In order to prove this hypothesis, linear model was used to calculate relationship between depression rate and BMI.
+
 ```{r}
-colnames(data)<-c("T0depression","T0anxiety","T1depression","T1anxiety","Height","Weight","WC","HC","SBP","DBP","FBG","TC","TG","HDL-C","LDL-C","BMI","WHR","WtHR","FL", "NS", "TFE", "TME", "FEL", "MEL", "FS", "SL", "SB","Vigorous","Moderate")
+#linear regression of depresison and BMI
+lm0<-lm(T1depression ~ BMI, data = data)
+summary(lm0)
+```
+The BMI coefficient (-0.09528) represents the estimated change in the depression score for a one-unit increase in BMI. For each unit increase in BMI, the depression score decreases by 0.09528. With p-value of 0.222, the coefficient is not significant. Therefore, there is no strong evidence of a linear relationship between BMI and depression. the residuals range from -19.2371 to 21.9845. The residual standard error is relatively high also indicates the model is not fit to the data. F-staistic gives an overall sinificance of the model and with a high p-value, this model is also not statically significant as a whole. The multiple R-squared value (0.001139) represents the proportion of variance in the depression score explained by the model and only 0.1139% of the variability in depression can be attributed to the linear relationship with BMI.
+The adjusted R-squared value (0.0003749) adjusts the multiple R-squared value for the number of predictors in the model. It penalizes the inclusion of unnecessary predictors. A lower adjusted  R-squared suggests that the model does not provide a good fit to the data. 
 
+In summary, based on the provided output, there is no strong evidence to support a linear relationship between BMI and depression. The coefficient for BMI is not statistically significant, and the model's overall fit is weak (low R-squared values and non-significant F-statistic). 
+```{r}
+#diagnostic
+plot(lm0)
+```
+Linear regression diagnostic plot was used to assess the assumptions and evaluate the performance. The straight line
+
+In a "residuals vs. fitted" plot, a horizontal red line is typically used to represent the mean or expected value of the residuals. This line helps to assess the assumption of linearity and provides a reference for evaluating the distribution of residuals around this line.
+
+Ideally, the residuals should be evenly distributed above and below the horizontal red line, indicating that they have a mean of zero and are randomly scattered around this line. This suggests that the linear regression model is unbiased and captures the relationship between the predictor variables and the response variable adequately.
+
+If the residuals show a clear pattern or systematic deviation from the horizontal red line, it indicates a violation of the linearity assumption. This could suggest that the relationship between the predictor variable(s) and the response variable is not adequately captured by the linear model. In such cases, you might need to consider alternative modeling approaches or explore potential transformations of the variables to improve the linearity assumption.
+
+In summary, the horizontal red line in a "residuals vs. fitted" plot represents the mean or expected value of the residuals. Its main purpose is to assess the linearity assumption of the linear regression model and evaluate the distribution of residuals around this line.
+
+
+normal qq plot
+
+A straight pattern on a normal quantile-quantile (QQ) plot suggests that the residuals of a linear regression model follow a normal distribution. The QQ plot is a graphical tool used to assess whether the residuals conform to the assumption of normality.
+
+In a normal QQ plot, the observed quantiles of the residuals are plotted against the expected quantiles of a normal distribution. If the residuals are normally distributed, the points on the QQ plot should roughly follow a straight line. Deviations from the straight line indicate departures from normality.
+
+A straight pattern on the QQ plot suggests that the residuals are normally distributed, which is desirable for linear regression analysis. It indicates that the assumptions of normality are met, allowing for reliable statistical inference and accurate interpretation of the model results.
+
+However, if the QQ plot exhibits curvature, skewness, or any other non-linear patterns, it suggests that the residuals deviate from normality. This can have implications for the validity of statistical tests, confidence intervals, and model predictions. In such cases, it may be necessary to consider alternative modeling approaches or transformations of variables to address the departure from normality.
+
+In summary, a straight pattern on a normal QQ plot indicates that the residuals of a linear regression model follow a normal distribution, supporting the assumption of normality.
+
+
+In a scale-location plot (also known as spread-location or spread-versus-level plot), a straight red line typically indicates homoscedasticity, which means that the residuals have a constant variance across different levels of the predictor variable(s).
+
+The scale-location plot is a diagnostic plot used to assess the assumption of homoscedasticity in a linear regression model. It plots the absolute values of the standardized residuals (or their square root) against the predicted values or other measures of the predictor variable(s). The plot helps to detect any systematic patterns in the spread (variance) of the residuals.
+
+If the points in the scale-location plot are randomly scattered around a horizontal red line, it suggests that the residuals have a constant variance across the range of the predictor variable(s). This is desirable and indicates that the assumption of homoscedasticity is met.
+
+However, if the points show a distinct pattern, such as a funnel shape, a widening or narrowing of the spread, or any other non-random trend, it suggests heteroscedasticity. Heteroscedasticity means that the variance of the residuals is not constant across the predictor variable(s) and violates the assumption of homoscedasticity. In such cases, the reliability of the regression model's predictions and the validity of statistical inference may be compromised.
+
+Addressing heteroscedasticity may involve transforming variables, using weighted regression techniques, or considering alternative modeling approaches to account for the varying variance of the residuals.
+
+In summary, a straight red line in a scale-location plot suggests that the residuals have a constant variance (homoscedasticity), supporting the assumption of homoscedasticity in a linear regression model.
+
+
+By examining these diagnostic plots, you can assess the assumptions of linearity, normality, constant variance, and identify potential outliers or influential observations. Deviations from the expected patterns in these plots may indicate issues with the model's assumptions, and further investigation or model refinement may be necessary.
+
+
+
+```{r}
+#visualization
 ggplot(data, aes(x = BMI, y = T1depression)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+  geom_point(color = "indianred") +
+  geom_smooth(method = "lm", se = FALSE, color = "darkred")
+plott1depression<-data$T1depression[1:length(predict(lm0))]
+plot_data <- data.frame(Predicted_value = predict(lm0),  
+                       Observed_value = plott1depression)
+ggplot(plot_data, aes(x = Predicted_value, y = Observed_value)) +
+                  geom_point() +
+                 geom_abline(intercept = 0, slope = 1, color = "green")
+```
+Other varibles were introduced alone with BMI. The result shows that time spend with father in elementary school and skipping breakfast have significant influence in children's depression rate. Specifically, the less time spend with father in elementary school, the more possible to obtain a increase depressin rate. Also skipping more breakfast also have a heavy increase in depression rate. 
+The diagostic result shows 
+```{r}
+#linear regression model 2
 lm1<-lm(T1depression ~ BMI+NS+TFE+TME+FEL+MEL+FL+SL+SB, data = data)
 summary(lm1)
+#diagnostic
 plot(lm1)
 ```
+To verify if the model is correct, some of varibles with large p value are deleted for backward eklimination. "Time spend with mother in elementary school", "Father's educaion level", "sleeping time" are deleted comparing to the model before. In this case, "Time spend with father in elementary school" and "skipping breakfast" still above the significant level. By comparing the adjusted R square of two models(0.03124 and 0.03321). There was no not two big difference in these two models. 
 ```{r}
+#linear regression model 3
 lm2<-lm(T1depression ~ BMI+NS+TFE+FEL+SB, data = data)
 summary(lm2)
+#diagnostic 
 par(mfrow = c(2,3))
 plot(lm2)
+#compare predicted value with observe value
 lm3<-lm(T1depression ~ TFE, data = data)
+
 plot_data <- data.frame(Predicted_value = predict(lm3),  
                        Observed_value = data$T1depression[1:length(predict(lm3))])
 ggplot(plot_data, aes(x = Predicted_value, y = Observed_value)) +
@@ -119,24 +193,115 @@ ggplot(data, aes(x = T1depression, y = SB)) +
   geom_smooth(method = "lm", se = FALSE)
 
 ```
+In summary, based on the provided output, there is no strong evidence to support a linear relationship between BMI and depression. The coefficient for BMI is not statistically significant, and the model's overall fit is weak (low R-squared values and non-significant F-statistic). Therefore, we fail to reject the null hypothesis.  
+
 
 ### 2. higher family income increase the rate of obesity
-```{r}
-unique(data$FS)
-ggplot(data, aes(x = SL, y = BMI)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE)
+H0=no relationship between family income and rate of obesity 
+Ha=higher family income increase the rate of obesity
 
-summary(lm(BMI~FS+SL+SB, data = data))
+Based on this data, we may also explore what factors may affect the obsity rate. Here we made a hypothsis as higher family income increase the rate of obesity. Due to most of the varibles are ordinal varibles, oridinal logistic regression is applied in this slot to verify the hypothesis. 
+```{r}
+#convert BMI to ordinal varible
 data$BMI_category <- cut(data$BMI, 
                        breaks = c(-Inf, 18.5, 24.9, Inf),
                        labels = c("Underweight", "Normal weight", "Overweight"))
 data$BMI_rank <- as.factor(unclass(data$BMI_category))
-LR1<-polr(BMI_rank~SL+SB+FS, data = data, Hess = TRUE, method = "logistic")
 
+# Visualizing data
+# Filter out rows with NA values in BMI_rank or FS
+filtered_data <- data[complete.cases(data$BMI_rank, data$FS), ]
+
+# Create the plot with filtered data
+ggplot(filtered_data, aes(x = BMI_category, y = FS)) +
+  geom_boxplot(size = 0.75, color = "indianred") +
+  geom_jitter(alpha = 0.5, color = "red") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))+
+  ylab("Financial Situation")
+
+# #Fit BMI rank and family finanacial situation into ordinal logit model
+model <- polr(BMI_rank ~ FS, data = data, Hess=TRUE)
+summary(model)
+#p value
+ctable <- coef(summary(model))
+p <- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2
+ctable <- cbind(ctable, "p value" = p)
+ctable
+```
+```{r}
+# Getting odds-ratio
+exp(coef(model))
+
+```
+ The coefficient for the variable financial situation is -0.1883. This indicates that a one-unit increase in FS is associated with a decrease in the log-odds of moving to a higher BMI rank by 0.1883. The negative sign suggests that higher values of FS are associated with a lower likelihood of being in a higher BMI rank.
+Intercepts:
+1|2: The intercept for the transition from rank 1 to rank 2 is -0.7067. This intercept represents the baseline log-odds of being in rank 2 when FS is zero (or at its reference level).
+2|3: The intercept for the transition from rank 2 to rank 3 is 2.6195. This intercept represents the baseline log-odds of being in rank 3 when FS is zero (or at its reference level).
+Residual Deviance: The residual deviance is a measure of how well the model fits the data. In this case, the residual deviance is 2173.226.
+AIC: The Akaike Information Criterion (AIC) is a measure of the model's quality and complexity. A lower AIC value indicates a better-fitting model. In this case, the AIC is 2179.226.
+Note: The message "(36 observations deleted due to missingness)" indicates that 36 observations were removed from the analysis due to missing values.
+
+It's important to consider the statistical significance of the coefficients (t values) and the overall model fit when interpreting the results. Additionally, the interpretation of the coefficients may depend on the specific context and the scale and nature of the variables involved in the model.
+
+
+
+
+
+```{r}
+#introduce more variables to compare
+
+LR1<-polr(BMI_rank~SL+SB+FS, data = data, Hess = TRUE, method = "logistic")
 SUM1<-summary(LR1)
+SUM1
+#p value
+ctable2 <- coef(summary(LR1))
+p <- pnorm(abs(ctable2[, "t value"]), lower.tail = FALSE) * 2
+ctable2 <- cbind(ctable2, "p value" = p)
+ctable2
+```
+Interpreting the coefficients:
+
+For every one-unit increase in SL, the log-odds of moving up one category in BMI_rank decrease by 0.5179.
+For every one-unit increase in SB, the log-odds of moving up one category in BMI_rank increase by 0.2064.
+For every one-unit increase in FS, the log-odds of moving up one category in BMI_rank decrease by 0.1336.
+The intercepts represent the thresholds between the different categories of the dependent variable. The intercept for 1|2 represents the threshold between categories 1 and 2, and the intercept for 2|3 represents the threshold between categories 2 and 3.
+According to P values, all coeffients were significant. Comparing the AIC value to previous model, the later model is slightly better. 
+```{r}
 coef(SUM1)
 exp(coef(SUM1))
+
+### Predict probability
+# Create a data frame with possible IV values
+newdat <- data.frame(
+  FS = rep(1:5, each = 272),
+  SL = rep(1:4, each = 340),
+  SB = rep(1:4, each = 340),
+  BMI = rep(seq(from = 12.8, to = 39, length.out = 340), 4))
+  
+
+# Get the predicted probability 
+newdat <- cbind(newdat, predict(LR1, newdat, type = "probs"))
+
+#show first few rows
+head(newdat)
+
+# Keeping the category with the highest probability
+lnewdat <- melt(newdat, id.vars = c("FS", "SL", "SB","BMI"),
+                variable.name = "Level", value.name="Probability")
+# view first few rows
+head(lnewdat)
+
+# Visualizing probability
+ggplot(lnewdat, aes(x = BMI, y = Probability, colour = Level)) +
+  geom_line() + facet_grid(FS ~ SL, labeller="label_both")
+#plot
+ggplot(data, aes(x = SL, y = BMI)) +
+  geom_point(color = "red4") +
+  geom_smooth(method = "lm", se = FALSE,color="indianred")
+
+summary(lm(BMI~FS+SL+SB, data = data))
+
+
 
 ```
  
