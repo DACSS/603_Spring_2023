@@ -152,6 +152,8 @@ Since 155 values of Close are NAs, it is better not to include that variable in 
 df <- subset(df, select = -Close)
 
 df <- na.omit(df)
+# Checking for NA's
+colSums(is.na(df))
 
 ```
 
@@ -182,6 +184,13 @@ Let's look on the distribution of data
 hist(df$`Box Office`)
 hist(df$Opening)
 
+# Plot histogram for "Box Office" variable with colors
+hist(df$`Box Office`, col = "blue", main = "Box Office Distribution", xlab = "Box Office")
+
+# Plot histogram for "Opening" variable with colors
+hist(df$Opening, col = "red", main = "Opening Distribution", xlab = "Opening")
+
+
 ```
 ### Check correlation between Box Office and Opening
 ```{r}
@@ -194,17 +203,26 @@ The data appears to be skewed. Therefore we can try some data transformation. Lo
 Let's visualize the correlation of variables in the dataset.
 ```{r}
 
+
+# Subset the desired variables
 pairs_df <- df[, c("Budget", "Box Office", "Opening", "open_th", "max_th")]
-pairs_df
-pairs(pairs_df)
-#cor(df)
+
+# Create a scatterplot matrix with colors
+pairs(pairs_df, col = rainbow(length(pairs_df)), pch = 19)
+
+
 
 ```
 From the visualization, we can conclude that all the variables are correlated by open_th and max_th are moving exactly the same in the graph which means we should drop one of them to avoid the multicollinearity.
 
 ```{r}
-hist(log(df$`Box Office`))
-hist(log(df$Opening))
+
+# Plot histogram for the logarithm of "Box Office" variable with colors
+hist(log(df$`Box Office`), col = "blue", main = "Box Office Distribution (Log)", xlab = "Log(Box Office)")
+
+# Plot histogram for the logarithm of "Opening" variable with colors
+hist(log(df$Opening), col = "red", main = "Opening Distribution (Log)", xlab = "Log(Opening)")
+
 
 ```
 
@@ -218,54 +236,99 @@ Log transformed model with only the predictor and the dependant variable
 model1 <- lm(log(`Box Office`) ~ log(Opening), data = df)
 
 # Print the model summary
-summary(model1)
-plot(model1)
+#summary(model1)
+#plot(model1)
 ```
 
 
-Log trasnformation for all continous variables.
+Log transformation for all continous variables.
 ```{r}
 model2 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + log(open_th) + Small_Dist + season, data = df)
-summary(model2)
-plot(model2)
+#summary(model2)
+#plot(model2)
 ```
 The R-square has significantly improved for this model. Let us try more models.
 
 Log transformation for only Box Office, Opening and Budget. 
 ```{r}
 model3 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + open_th + Small_Dist + season, data = df)
-summary(model3)
-plot(model3)
+#summary(model3)
+#plot(model3)
 ```
 Log transformation for only Box Office, Opening and Budget. Removing season confounder.
 
 ```{r}
 model4 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + open_th + Small_Dist, data = df)
-summary(model4)
-plot(model4)
+#summary(model4)
+#plot(model4)
 ```
 R square values are further below the previous model.
 Let us try the log transformed model with only the Budget and Small_Distributor as confounders.
 ```{r}
 model5 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget) + open_th, data = df)
-summary(model5)
-plot(model5)
+#summary(model5)
+#plot(model5)
 ```
 Now, we can run a log transformed model with only the Opening and Budget.
 
 ```{r}
 model6 <- lm(log(`Box Office`) ~ log(Opening) + log(Budget), data = df)
-summary(model6)
-plot(model6)
+#summary(model6)
+#plot(model6)
 ```
 Let us run models after quadratic transformation
 
 ```{r}
 model_quad1 <- lm(log(`Box Office`) ~ poly(Opening, 2, raw=TRUE) + log(Budget) + open_th + Small_Dist + season, data = df)
-summary(model_quad1)
-plot(model_quad1)
+#summary(model_quad1)
+#plot(model_quad1)
 ```
 ## Selecting a model and Interpretation of the result
+
+Now that we have multiple models, we can select the best model out of them using following criteria;
+a) R-squared
+b) Adjusted R-squared
+c) PRESS
+d) AIC (Akaike Information Criterion)
+e) BIC (Bayesian Information Criterion)
+
+In the model selection process, we can follow the rule of thumb as, for R-squared and Adjusted R-square, higher is better while for PRESS, AIC and BIC, lower is better.
+
+Create a functions to get R-squared, Adjusted R-squared & PRESS 
+```{r}
+rsquared <- function(fit) summary(fit)$r.squared
+adj_rsquared <- function(fit) summary(fit)$adj.r.squared
+PRESS <- function(fit) {
+  pr <- residuals(fit)/(1-lm.influence(fit)$hat)
+  sum(pr^2)
+}
+
+```
+
+For AIC and BIC, the functions AIC() and BIC() can be used
+
+Now, applying the functions to model objects
+
+```{r}
+models <- list(model1, model2, model3, model4, model5, model6, model_quad1)
+model_comparison <- data.frame(models = c('model1', 'model2', 'model3', 'model4', 'model5', 'model6', 'model_quad1'),
+           rSquared = sapply(models, rsquared),
+           adj_rSquared = sapply(models, adj_rsquared),
+           PRESS = sapply(models, PRESS),
+           AIC = sapply(models, AIC),
+           BIC = sapply(models, BIC)) |>
+  print()
+
+```
+
+```{r}
+library(stargazer)
+
+stargazer(model1, model2, model3, model4, model5, model6, model_quad1, type = 'text')
+
+
+
+```
 
 Out of all the models we ran, model3 looks as the best fit.
 
@@ -291,17 +354,35 @@ The adjusted R-squared of the model is 0.7155, which means that 71.55% of the va
 
 ```{r}
 
-# Diagnostic plots
-par(mfrow=c(2,2))
-plot(model3)
+library(ggplot2)
+
+# Set the color palette
+colors <- c("red", "blue", "green", "orange", "purple", "pink")
+
+# Create a blank plot with the desired layout
+par(mfrow=c(2,3))
+
+# Loop through the diagnostic plots and assign colors
+for (i in 1:6) {
+  plot(model3, which = i, col = colors[i])
+}
+
 ```
+The Scale-Location plot suggests some level of heteroskedacity. So, it is better to check if there is a serious problem of heteroskedacity,we can run Breusch-Pagan test.
+```{r}
+library(lmtest)
+bptest(model3)
+
+```
+The p-value for Breusch-Pagan test is 0.02233. This is possibly a heteroskedacity. We need to look more into this.
+
 
 
 ## Conclusion:
 
-The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after takeing into account the intercept(-3.845).
+The model that we build shows that the Box Office collection of a movie is affected positively by the Opening week collection. 1 percentage of increase in Opening week collection results in 0.792 percent increase in Box office collection after taking into account the intercept(-3.845). But the Breusch-Pagan test for heteroskedacity gives a low p-value which suggests that the model is showing heteroskedacity. 
 
-The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies in this dataset had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection. 
+The dataset has only 200 rows out of which 96 rows were dropped as they have NA values. Also, many movies in this dataset had Box office collections much lesser than their budget. But that does not necessarily mean that those movies made a loss. In the age of online streaming platforms, many movies are making money not from Box Office only. But our study was focused only on the revenue from theatre collection. Also, in the future study, the variable transformation to address the heteroskedacity should be done. 
 
 ## References:
 
@@ -312,3 +393,5 @@ The dataset has only 200 rows out of which 96 rows were dropped as they have NA 
 3. Kaggle.com (Original dataset)
 
 4. Wikipedia.com (Movie pages to get budget and box office collections)
+
+
