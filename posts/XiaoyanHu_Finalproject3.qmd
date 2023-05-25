@@ -227,7 +227,6 @@ ctable
 ```{r}
 # Getting odds-ratio
 exp(coef(model))
-
 ```
 The findings of the study indicate that financial situation (FS) is significantly associated with BMI ranks. The coefficient of -0.1883 suggests that higher financial situation is linked to a decreased likelihood of being in a higher BMI rank. Specifically, individuals with higher financial situation are less likely to fall into the normal weight category compared to the underweight category (1|2) with a coefficient of -0.7067. Conversely, they are more likely to be in the overweight category compared to the normal weight category (2|3) with a coefficient of 2.6195. These relationships were found to be statistically significant, indicating that the observed associations are unlikely to occur by chance. Furthermore, the inclusion of additional variables in the model improved its predictive ability, as indicated by the slightly lower AIC value. These findings highlight the importance of considering financial situation as a factor influencing BMI ranks and provide insights into the complex relationship between socioeconomic factors and weight status.
 The null hypothsis is therefore rejected
@@ -261,14 +260,10 @@ newdat <- data.frame(
 
 newdat <- cbind(newdat, predict(LR1, newdat, type = "probs"))
 
-#show first few rows
-head(newdat)
-
 # Keeping the category with the highest probability
 lnewdat <- melt(newdat, id.vars = c("FS", "SL", "SB","BMI"),
                 variable.name = "Level", value.name="Probability")
-# view first few rows
-head(lnewdat)
+
 
 # Visualizing probability
 ggplot(lnewdat, aes(x = BMI, y = Probability, colour = Level)) +
@@ -278,7 +273,7 @@ ggplot(data, aes(x = SL, y = BMI)) +
   geom_point(color = "red4") +
   geom_smooth(method = "lm", se = FALSE,color="indianred")
 
-summary(lm(BMI~FS+SL+SB, data = data))
+
 
 
 
@@ -300,9 +295,7 @@ ggplot(data=subset(data,!is.na(NS)), aes(x = factor(NS), y = T1depression)) +
   xlab("Number of sibling")
 var1<-as.numeric(data$T1depression)
 var2<-as.numeric(data$NS)
-cor.test(var1,var2, method = c("spearman"))
-cor.test(var1,var2, method = c("pearson"))
-t.test(var1,var2)
+
 ```
 
 
