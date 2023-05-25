@@ -1,0 +1,205 @@
+---
+title: "Final_checkIn 3"
+author: "Sai Padma  pothula"
+desription: ""
+date: "05/21/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - Final checkIn 3
+  - sai Pothula
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+library(stats)
+library(ggplot2)
+```
+
+
+```{R}
+health <- read_csv("~/Desktop/603_Spring_2023/posts/_data/student_mental.csv")
+```
+
+```{r}
+names(health) <- c('Timestamp', 'Gender', 'Age', 'Course', 'Year', 'CGPA', 'Married', 'Depression', 'Anxiety', 'Panic_Attack', 'Treatment')
+indx <- apply(health, 2, function(x) any(is.na(x)))
+indx
+```
+```{r}
+which(is.na(health$Age))
+```
+```{r}
+health[44,'Age'] <- median(health$Age, na.rm =T)
+```
+
+```{r}
+unique(health$Year)
+```
+
+```{r}
+health[,c(5)] <- lapply(health[,c(5)], function(x)
+recode(x,"year 1" = 1,"year 2" = 2, "year 3" = 3 , "year 4" = 4, "Year 1" = 1, "Year 2" = 2, "Year 3" = 3))
+
+```
+
+
+
+```{r}
+unique(health$CGPA)
+
+```
+
+
+```{r}
+library(stringr)
+
+# Example data
+CGPA <- c("3.00 - 3.49","3.50 - 4.00", "2.50 - 2.99" ,"2.00 - 2.49" ,"0 - 1.99"   )
+
+# Function to convert CGPA range to numeric
+convertCGPA <- function(cgpa) {
+  lower <- as.numeric(str_extract(cgpa, "\\d+\\.\\d+"))
+  return(lower)
+}
+
+# Apply the conversion function to CGPA column
+converted_CGPA <- sapply(CGPA, convertCGPA)
+
+# Output
+print(converted_CGPA)
+```
+
+```{r}
+health[,c(6)] <- lapply(health[,c(6)], function(x)
+recode(x,"3.00 - 3.49" = 3.00,"3.50 - 4.00" = 3.50, "2.50 - 2.99" = 2.50 , "2.00 - 2.49" = 2.00, "0 - 1.99" = 1.99  ))
+```
+
+```{r}
+train_data <- select(health,Age=Age, Gender=Gender,CGPA= CGPA, Course=Course,Married=Married, Depression=Depression, Anxiety=Anxiety, Panic_Attack = Panic_Attack,Treatment=Treatment)
+```   
+
+Create Logistic Regression Model
+
+Logistic regression is a statistical modeling technique used to predict the probability of an event occurring. It is commonly used when the dependent variable is binary or categorical. The model estimates the relationship between the independent variables and the log-odds of the event, using the logistic function. The logistic function maps the linear combination of predictors to a value between 0 and 1, representing the probability of the event.
+
+# Logistic Regression Assumptions
+
+The first assumption is that there is a linear relationship between continuous independent variables and the logit of the outcome variable.
+
+Independence of errors requires that there be no dependence between samples in the model, i.e. using the same individuals at different times.
+
+Multicollinearity refers to a relationship (correlation) between the independent variables and must be excluded from logistic regression models
+
+
+# Multiple logistic regression
+
+The multiple logistic regression is used to predict the probability of class membership based on multiple predictor variables, as follow:
+
+# Model 1
+
+
+A logistic regression is said to provide a better fit to the data if it demonstrates an improvement over a model with fewer predictors. This is performed using the likelihood ratio test, which compares the likelihood of the data under the full model against the likelihood of the data under a model with fewer predictors. Removing predictor variables from a model will almost always make the model fit less well (i.e. a model will have a lower log likelihood), but it is necessary to test whether the observed difference in model fit is statistically significant.
+
+```{r}
+train_data$CGPA <- ifelse(train_data$CGPA >= 3.00, 1, 0)
+
+```
+
+```{r}
+view(train_data)
+```
+
+
+```{r}
+
+# Fit logistic regression models
+
+# Research Question 1: Why is there a significant correlation between mental health status and CGPA among university students?
+model1 <- glm(CGPA ~ Anxiety, data = train_data, family = binomial)
+
+
+# Print the model summaries
+summary(model1)
+
+```
+Based on the output, the model suggests that there is no statistically significant association between Anxiety (as a predictor) and CGPA. The p-value for the AnxietyYes coefficient (p = 0.129) is greater than the conventional significance level (e.g., 0.05), indicating that the relationship between Anxiety and CGPA is not statistically significant in this model.
+
+```{r}
+
+model1 <- glm(CGPA ~ Depression, data = train_data, family = binomial)
+
+
+# Print the model summaries
+summary(model1)
+
+```
+Based on the output, the model suggests that there is no statistically significant association between Depression (as a predictor) and CGPA. The p-value for the DepressionYes coefficient (p = 0.745) is greater than the conventional significance level (e.g., 0.05), indicating that the relationship between Depression and CGPA is not statistically significant in this model.
+```{r}
+model1 <- glm(CGPA ~ Panic_Attack, data = train_data, family = binomial)
+summary(model1)
+
+```
+Based on the output you shared, the model suggests that there is no statistically significant association between Panic_Attack (as a predictor) and CGPA. The p-value for the Panic_AttackYes coefficient (p = 0.228) is greater than the conventional significance level (e.g., 0.05), indicating that the relationship between Panic_Attack and CGPA is not statistically significant in this model.
+
+After performing logistic regression, based on these results, it can be concluded that the research question of whether there is a significant correlation between mental health status and CGPA among university students is not supported. This implies that anxiety,Panic attack,Depression levels alone may not have a direct impact on students' academic performance, as measured by CGPA, in the context of this study.
+
+Model 2:
+
+```{r}
+# Research Question 2: How does the use of mental health resources, such as counseling or therapy, have a positive impact on academic performance?
+
+model2 <- glm(CGPA ~ Treatment, data = train_data, family = binomial)
+summary(model2)
+
+
+```
+
+After performing the logistic regression, Based on results the relationship between the use of mental health resources (Treatment) and CGPA, the coefficient for Treatment (TreatmentYes) is not statistically significant at conventional levels (p = 0.0721). This suggests that there is no strong evidence to support the hypothesis that the use of mental health resources, such as counseling or therapy, has a positive impact on academic performance, as measured by CGPA.
+
+It is important to note that the p-value is relatively close to the conventional significance level of 0.05. This indicates a marginal level of significance, suggesting that there might be a weak relationship between the use of mental health resources and CGPA, but the evidence is not strong enough to conclude a significant positive impact on academic performance.
+
+
+```{r}
+health[,c(2,7:11)] <- lapply(health[,c(2,7:11)], function(x)
+recode(x,"Yes" = 1,"No" = 0, "Female" = 1 , "Male" = 0))
+```
+
+
+
+```{r}
+correlation <- cor(health$Panic_Attack, health$Anxiety)
+print(correlation)
+```
+The correlation coefficient of 0.08447828 suggests a weak positive correlation between 'Panic_Attack' and 'Anxiety' in the data.So i will not include panic attacks
+
+Model 3:
+
+```{r}
+# Research Question 3: How does demographic factors, such as gender or ethnicity, influence the relationship between mental health and academic performance?
+model3 <- glm(CGPA ~ Gender + Anxiety +Age + Course + Married + Depression data = train_data, family = binomial)
+summary(model3)
+
+```
+
+Hypothesis testing
+```{r}
+
+anova_test <- anova(model3, test = "Chi")
+print(anova_test)
+```
+
+
+
+Based on the logistic regression results, the relationship between demographic factors (Gender, Age, Course, Married) and mental health variables (Anxiety, Depression, Panic_Attack) with CGPA, it seems that several coefficients are not statistically significant at conventional levels. This means that there is no strong evidence to support the hypothesis that these demographic factors significantly influence the relationship between mental health and academic performance, as measured by CGPA.
+
+Specifically, the coefficients for Gender Male (p = 0.564), Age (p = 0.968), Course (multiple categories with p-values close to 1.000), and MarriedYes (p = 0.949) are not statistically significant. Similarly, the coefficients for Anxiety Yes (p = 0.181), Depression Yes (p = 0.860), and Panic Attack Yes (p = 0.170) are not statistically significant.
+
+These results suggest that based on the variables included in the model, there is no strong evidence to support the influence of gender, age, course, or marital status on the relationship between mental health variables and academic performance.
+
+
