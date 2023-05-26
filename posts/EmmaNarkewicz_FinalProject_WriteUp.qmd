@@ -1,0 +1,1071 @@
+---
+title: "Final Project Paper Write Up"
+author: "Emma Narkewicz"
+description: "Emma Narkewicz Project Write Up"
+date: "05/25/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - emma_narkewicz
+  - final
+  - poster
+  - Burnout
+  - Medical_students
+---
+
+```{r}
+#| label: setup
+#| warning: false
+
+library(tidyverse)
+library(sjPlot)
+library(sjmisc)
+library(stargazer)
+library(broom)
+library(knitr)
+library(kableExtra)
+library(GGally)
+library(wesanderson)
+library(viridis)
+library(lmtest)
+library(zoo)
+
+
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Research Question
+
+For my final project I will expand on research on the mental health, empathy, and burnout of medical school students using a data set of 886 medical students in Switzerland. The COVID-19 pandemic heightened the mental health challenges of health care workers around the world (Teisman et al., 2021). Numerous studies show that health care workers are prone to compassion fatigue due to working long hours in stressful work environments with continuous exposure to trauma (Jennings, 2009; Rodriguez & Carlotta, 2017; Peters, 2018; Yayha et al., 2021; Carrard et al., 2022; Shin et al., 2022).
+
+The Association of American Medical Colleges (AAMC) found that 30% of surveyed medical students and residents met the criteria for depression and 10% reported having suicidal thoughts (Pasturel, 2020). Previous studies conducted on samples of health care workers in Switzerland, Iraq, and South Korea examined the impact of gender on burnout, finding that female medical students had higher rates of empathy and burnout than male coworkers (Carrard et al., 2022; Yahya et al., 2021; Shin et al., 2022). A 2009 multi-site study of medical students in the U.S. found statistically significant differences in depression by gender but not by ethnicity (Goebert et al., 2009). In contrast, the same study found statistically significant differences in suicidal ideation by ethnicity, but not by gender, with Black students reporting the highest rates of suicidal ideation & Caucasian students reporting the lowest rates of suicidal ideation (Goebert et al., 2009).
+
+*Research Question: Why are some medical students more likely to experience burnout than others?*
+
+## Hypothesis Testing
+
+I want to explore further how ethnic identity might serve as a protective or risk factor for the burnout of medical students, specifically for international medical students. A 2022 study of medical school students in Croatia found that international medical students experience higher rates of burnout mediated by social and familial loneliness (Gradiski et al., 2022). For my final project I will test whether or not a student's first language being a native language of Switzerland -- where the sample was taken -- impacts their burnout. The commonly spoken languages in Switzerland are the national languages of French, German, & Italian & widespread spoken English (Kużelewska, 2016).
+
+*Hypothesis: Medical students whose native language is a commonly spoken in the country where they are studying will experience lower rates of burnout than medical students with other native languages.*
+
+The reasoning behind my hypothesis is if a medical student's native language is one of the national language of Switzerland, they will have benefit from potential protective factors of social, cultural, and familial connections. In contrast, I expect medical students whose native language is not German, French, Italian, or English to be at higher risk for burnout mediated through increased stress from coping with different culture, language, and physical separation from their family.
+
+## Descriptive Statistics
+
+The data set I will be analyzing contains demographic information on 886 medical students in Switzerland. Students answered demographic information about their age, gender, their year in school and well as the results of self-reported empathy, depression, anxiety, and burnout. The data set was downloaded from Kaggle at https://www.kaggle.com/datasets/thedevastator/medical-student-mental-health?select=Codebook+Carrard+et+al.+2022+MedTeach.csv but originally sourced for a 2022 ,publication in the Medical Teacher Journal by Carrard et al.
+
+Important variables I want to explore in my data set as potential risk and protective factors:
+
+-   Native Language
+-   Age
+-   Gender
+-   Having a romantic partner
+-   Seeing a psychotherapist
+-   Hours spent studying
+-   Having a job
+-   Jefferson Scale Empathy (JSPE) total empathy score
+-   Questionnaire of Cognitive and Affective Empathy (QCAE) Cognitive empathy score
+-   Questionnaire of Cognitive and Affective Empathy QCAE Affective empathy score
+-   Center for Epidemiologic Studies Depression Scale (CES-D) total score
+-   State & Trait Anxiety (STAI) score
+-   Maslach Burnout Inventory (MBI) Emotional Exhaustion
+-   Maslach Burnout Inventory (MBI) Cynicism
+-   Maslach Burnout Inventory (MBI) Academic Efficacy
+
+Each of the various empathy, mental health, and burnout scales are scored differently, so care needs to be taken in interpreting these findings. For example, a higher score on the emotional exhaustion and cynicism scales of the MBI indicate higher burn out, while a higher score on the MBI personal achievement indicates lower levels of burnout (Maslach et al., 1996).
+
+```{r}
+#Readin Final data set
+
+FinalDataSet <- read_csv("_data/med_student_burnout.csv")
+FinalDataSet
+```
+
+Prior to examining the descriptive statistics from the med school data set I recoded qualitative variables stored as numeric values, using the Carrard et al., 2022 code book, replacing 0, 1 with clear demographic information about age, gender, having a partner etc. The explanatory variable NatLang which collapses down into if medical students native language is German, French, or Italian (NatSpeaker) or not (NotNatSpeaker).
+
+From the Carrard et al., 2022 code book:
+
+-   Gender
+
+    -   Male = 1
+    -   Female = 2
+    -   Non-binary = 3
+
+-   Partner
+
+    -   Single = 0
+    -   Partnered = 1
+
+-   Job
+
+    -   No = 0
+    -   Yes = 1
+
+-   Therapist in Past 12 months
+
+    -   No = 0
+    -   Yes = 1
+
+-   Health Satisfaction
+
+    -   very dissatisfied = 1
+    -   dissatisfied = 2
+    -   neutral = 3
+    -   satisfied = 4
+    -   very satisfied = 5
+
+```{r}
+
+head(FinalDataSet)
+#Recoding categorical variables based on code book
+FinalRecoded <- FinalDataSet %>%
+ mutate(NatLang = case_when(
+    glang == 1 | glang == 15 | glang == 20 | glang == 90 ~ 1,
+    glang > 1 & glang < 15 | glang > 15 & glang < 20 |glang > 20 & glang <90 | glang > 90 ~ 0)
+  ) 
+  
+table(select(FinalRecoded, NatLang))
+```
+
+```{r}
+#Descriptive statistics for quantitative variables
+summary(FinalRecoded)
+```
+
+Note that id is not a true numeric variable and therefor the descriptive statistics for it should be disregarded.
+
+Medical students in the sample studied for an average of 25 hours a week, with a maximum of 70 hours.
+
+Scores on the Jefferson Scale of Physician Empathy (JSPE) range from 20-140 with a higher score indicating higher empathy. The mean JSPE score in the sample was was 106.2 and the median JSPE score was 107.0 indicating relatively high empathy. There was a broad range from as low to 67-125, with the IQR indicating most medical students scored in the low 100s range.
+
+There were are scores for all 3 components of MBI burnout: emotional exhaustion, cynicism, and personal achievement.
+
+-   On the mbi-ex, medical school students' scores ranged from 5-30, with a median score of 17 and a mean score of 16.88. According to the MBI score guide, half of medical students in the sample exhibit low-level burnout (scoring 17 or less), and the other half exhibiting moderate burnout in terms of emotional exhaustion.
+
+-   On the mbi-cyn, medical students' scores ranged from 4-24, with a median of 9 and mean of 10.08. According to the scoring guide, the majority of the sample exhibit moderate burnout (6-11) with some exhibiting high level burnout (12+) in the dimension of cynicism.
+
+-   On the mbi-ea, medical students scores ranged from 10-36, with a median score of 24 and a mean score of 24.01. A score of 33 or less indicates high level of burnout and a score between 24-39 indicates moderate level burnout, with medical students falling in the high and moderate burnout range for personal achievement.
+
+```{r}
+## Creating character variables to generate props
+
+FinalProp <- FinalRecoded %>%
+mutate(nat = case_when (
+  NatLang == 0 ~ "Non Native",
+  NatLang == 1 ~  "Native")
+        )%>%
+mutate(gender = case_when(
+         sex == 1  ~ "Male",
+         sex == 2 ~ "Female", 
+         sex == 3 ~ "Non-Binary")
+        ) %>%
+  relocate(`gender`, .before = `age`)%>%
+  select(!contains("sex")) %>%
+mutate(partner = case_when(
+         part == 1 ~ "partnered",
+         part == 0  ~ "single")
+      )%>%
+  relocate(`partner`, .before = `age`)%>%
+  select(!"part") %>%
+mutate(paid_job = case_when(
+         job == 0  ~ "no_job",
+         job == 1 ~ "yes_job")
+        ) %>%
+  relocate(`paid_job`, .before = `age`)%>%
+  select(!"job") %>%
+mutate(health_sat = case_when(
+         health == 1  ~ "very_dis",
+         health == 2 ~ "dis",
+         health == 3 ~ "neutral",
+         health == 4 ~ "sat",
+         health  == 5 ~ "very sat")
+) %>%
+  relocate(`health_sat`, .before = `age`)%>%
+  select(!"health") %>%
+mutate(MHcare = case_when(
+         psyt == 0  ~ "no_ther",
+         psyt == 1 ~ "yes_ther")
+        ) %>%
+relocate(`MHcare`, .before = `age`)%>%
+  select(!"psyt") 
+
+FinalProp
+
+#Frequency of categorical & ordinal variables
+ prop.table(table(select(FinalProp, nat)))
+ prop.table(table(select(FinalProp, gender)))
+ prop.table(table(select(FinalProp, partner)))
+ prop.table(table(select(FinalProp, paid_job)))
+ prop.table(table(select(FinalProp, health_sat)))
+ prop.table(table(select(FinalProp, MHcare)))
+
+ 
+ table(select(FinalProp, nat))
+ 
+```
+
+From the proportion tables above it can be seen that majority (90%) of the sample speaks one of the native languages of Switzerland, while only 10% are non native speakers. The sample is also mostly female (68%), with less than 1% identifying as non-binary. Over half (56%) of the medical students reported having partners, but only about a third of medical students had a paid job (34.9%). The most common (45%) report from medical students was that they were satisfied with their health and less than one quarter (22.5%) of medical student reported seeing a therapist in the last 12 months.
+
+Looking at the gender prop.table, less than 1% of medical students were non-binary. Looking at counts that is only 5 students out of nearly 1000. From an equity standpoint it is great to include diverse gender identities, but for the purposes of analysis & linear regression, there are non non-binary students to meaningfully include in an analysis of gender. Therefor I removed the 5 students who identified as non-binary before conducting analysis. Additionally I recoded the gender dummy variables from 1 & 2 to 0 & 1 for male and female respectively.
+
+```{r}
+#Counts genders
+ (table(select(FinalProp, gender)))
+
+#remove non-binary dummy gender & recode 
+
+FinalRecoded2 <- FinalRecoded %>%
+  filter(!str_detect(sex, "3")) %>%
+  mutate(gender = case_when(
+         sex == 1  ~ 0,
+         sex == 2 ~  1)
+        ) 
+  
+#remove non-binary categorical
+FinalProp2 <- FinalProp %>%
+  filter(!str_detect(gender, "Non-Binary")) 
+
+FinalRecoded2
+```
+
+Using proportions & tables, I generated Table 1 below for my poster to provide further demographic information broken down by Native Language & Non-Native Language Status. Table 1 shows that the majority of the medical students in the sample speak a native language of Switzerland (89.5%) & are female (68%). 58% of native language speaking medical students have partners, compared to only 56% on non-native language speaking medical students. Job rates among native & non-native medical students were the same, with 35% of med students in each group having a job on top of med school
+
+```{r}
+
+#Counts by Native Language Status
+
+drow_table <- data.frame("Demographics" = c("Male", "Female", "Single", "Partnered", "Unemployed", "Employed"), "Native Language" = c("252", "537", "332","457", "514", "275"), "Non-Native Language"= c("23", "69", "50","42", "60", "32"))
+                         
+table_row <- knitr::kable(drow_table, caption = "Table 1: Demographic Counts by Native Language Status") %>%
+kable_styling(bootstrap_options = "striped", full_width = FALSE) %>%
+  row_spec(0, color = 'white', background = 'blue') %>%
+   row_spec(2, color = 'black', background = 'lightblue') %>%
+   row_spec(4, color = 'black', background = 'lightblue') %>%
+   row_spec(6, color = 'black', background = 'lightblue') 
+
+table_row 
+
+```
+
+I then created Table 2 below containing mean MBI_ex, MBI_cy, MBI_ea, anxiety (STAI_T), depression (CES-D) scores, as well as mean hours studying weekly. Table 2 shows that non-native language speakers have higher mean mbi_ex, mbi_cy, STAI_T, & CES-D scores than native language speakers. This indicates higher mean burnout in 2/3 sub-scales & higher mean anxiety & depression for non-native language speakers. Native & non-native language speakers met clinical criteria for depression (\>16) & anxiety (\>30-40). Non-native language speakers studied more on average than native language speakers, 28.47 hrs/wk vs 25.01 hrs/wk.
+
+```{r}
+#Calculating Means for Table
+Mean <- FinalRecoded2 %>%
+  group_by(`NatLang`) %>%
+  select(`NatLang`, `mbi_ex`, `mbi_cy`, `mbi_ea`, stai_t, cesd, stud_h) %>%
+  summarise_all(mean, na.rm = TRUE)
+
+Mean
+
+drow_means <- data.frame("Measures" = c("Mean MBI Emotional Exhaustion Score", "Mean MBI Cynicism Score", "Mean MBI Academic Efficacy Score", "Mean Anxiety Score (STAI_T)", "Mean Depression Score (CES-D", "Mean Hours Studied"), "Native Language" = c("16.79", "10.00", "24.22", "43.57", "17.70", "25.01"), "Non-Native Language"= c("17.66", "10.66", "24.32", "45.93", "21.21", "28.47"))
+                         
+table_means <- knitr::kable(drow_means, caption = "Table 2: Means by Native Language Status") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE) %>%
+   row_spec(0, color = 'white', background = 'blue') %>%
+   row_spec(2, color = 'black', background = 'lightblue') %>%
+   row_spec(4, color = 'black', background = 'lightblue') %>%
+   row_spec(6, color = 'black', background = 'lightblue') 
+
+  
+table_means
+```
+
+## Analysis
+
+I created several box plots comparing the MBI burnout scores of medical students speaking native language vs. students speaking non-native language. Additionally, I compared the anxiety & depression scored of medical students native and non-native language speaking students.
+
+```{r}
+#Emotional Exhaustion Burnout Score
+ggplot(data = FinalProp2, aes(x= nat, y = mbi_ex, fill = nat)) + geom_boxplot() + labs(title = "Figure 1: Box Plot MBI Emotional Exhaustion Score by Native Language", x = "Native Language Spoken", y = "mbi_ex Score") + theme(legend.position="bottom") + scale_fill_brewer(palette="Accent")
+
+```
+
+Native language speaking and non-native language speaking medical students seemed to have nearly identical median scores for Emotional Exhaustion (mbi_ex). The IQR however for non-native language speaking students does appear to start & end higher (higher Q1 & Q3 MBI-ex scores) than native students, suggesting the potential for higher emotional exhaustion burnout for non-native language speaking students.
+
+```{r}
+#Cynicism Score
+ggplot(data = FinalProp, aes(x = nat, y = mbi_cy, fill = nat)) + geom_boxplot() +
+  labs(title = "Figure 2: Box Plot MBI Cynicism Score by Native Language", x = "Native Language Spoken", y = "mbi_cy") + theme(legend.position="bottom") + scale_fill_brewer(palette="Accent")
+
+```
+
+Non-native speaking medical students appeared to score slightly higher on average than non-native speaking medical students on Cynicism as measured by the mbi-cy, with a higher median score. The IQR of mbi-cy scores for non-native language speaking medical students is higher for non-native students with a higher Q1 & Q3. There appears to be one high outlier for native language speakers cynicism scores.
+
+```{r}
+#Academic Efficacy Score
+ggplot(data = FinalProp2, aes(x= nat, y = mbi_ea, fill = nat)) + geom_boxplot() +
+  labs(title = "Figure 3: Box Plot MBI Academic Efficacy Score by Native Language", x = "Native Language Spoken", y = "mbi_ea") + theme(legend.position="bottom") + scale_fill_brewer(palette="Accent")
+
+```
+
+Lastly, native language speaking and non-native language speaking medical students seemed to have nearly identical median scores for Academic Efficacy burnout (mbi_ea), with one low-outlier of scores for native language speaking medical students. However non-native medical school students have a lower MBI_ea Q1 & Q3 which corresponds with higher burnout on this sub-scale.
+
+```{r}
+#Depression Score
+ggplot(data = FinalProp2, aes(x= nat, y = cesd, fill = nat)) + geom_boxplot() +
+  labs(title = "Box Plot - CESD Depression Score by Native Language", x = "Native Language Spoken", y = "CESD Score") + theme(legend.position="bottom") + scale_fill_brewer(palette="Accent")
+```
+
+Non-native national language speakers have a higher median on CESD score than native national language speakers, suggesting higher depression among native students. The Q1 & Q3 of the non-native language speaking medical students CESD is higher than scores for native language speaking students. There are several high outliers for native and non-native language speaking students.
+
+```{r}
+#Anxiety Score
+ggplot(data = FinalProp2, aes(x= nat, y = stai_t, fill = nat)) + geom_boxplot() +
+  labs(title = "Box Plot - STAI_T Anxiety Score by Native Language", x = "Native Language Spoken", y = "stai_t Score") + theme(legend.position="bottom")  + scale_fill_brewer(palette="Accent")
+
+```
+
+Non-native national languages speaking medical students have a higher median, Q1, & Q3 stai_t anxiety score than native language speaking medical students.Higher depression and anxiety scores may mediate the impact of speaking a native language on burnout. Anxiety and depression, as measured by STAI_T and CESD scores, will be treated as interaction terms in linear regression model, with graphic models used to evaluate this.
+
+### Gender
+
+Previous studies on the impact of gender and burnout found that being female predicted higher burnout. In the linear regression model, I will want to control for the impact of gender on burnout scores by including it as an explanatory variable.
+
+On the plots below, I facet wrapped the box & whiskers plot of emotional burnout comparison by native language to visualize difference in the 3 MBI burnout scales when controlled by gender.
+
+```{r}
+#Emotional Exhaustion Burnout Score
+
+
+ggplot(data = FinalProp2, aes(x= nat, y = mbi_ex, fill = nat)) + geom_boxplot() +
+  labs(title = "Figure 6: Box Plot Emotional Exhaustion Burnout by Gender & Native Language", x = "Native Language Spoken", y = "MBI_ex Score") + facet_wrap(vars(`gender`)) + theme(legend.position="bottom")  + scale_fill_brewer(palette="Accent")
+```
+
+```{r}
+#Emotional Cynicism Burnout Score
+ggplot(data = FinalProp2, aes(x= nat, y = mbi_cy, fill = nat)) + geom_boxplot() +
+  labs(title = "Box Plot Cynicism Burnout by Gender & Native Language", x = "Native Language Spoken", y = "MBI_cy Score") + facet_wrap(vars(`gender`)) + theme(legend.position="bottom")  + scale_fill_brewer(palette="Accent")
+```
+
+```{r}
+#Academic Efficacy Burnout Score
+ggplot(data = FinalProp2, aes(x= nat, y = mbi_ex, fill = nat)) + geom_boxplot() +
+  labs(title = "Box Plot Academic Efficacy Burnout by Gender & Native Language", x = "Native Language Spoken", y = "MBI_ea Score") + facet_wrap(vars(`gender`)) + theme(legend.position="bottom")  + scale_fill_brewer(palette="Accent")
+```
+
+Even when controlling for gender there still seems to be a difference between the MBI scores of native and non-native language speaking MBI burnout scores. Non-native students have a higher emotional exhaustion (MBI-ex) & cynicism (MBI-cy) burnout scores for both genders. Looking at the academic efficacy score, for non-native male med students it appears to be higher than native male med students, suggesting lower academic efficacy burnout counter to my hypothesis.
+
+### Applying feedback from Final Check in 1
+
+In response to feedback on Check In 1, I kept categorical data coded as dummy variables 0,1 format for the linear regression. I did keep a "prop"data set record to use to calculate proportions & frequencies of categorical variables.
+
+In deciding how to best work with the 3 MBI burnout variables, I reviewed literature on burnout and how prior researchers chose to work with the variables. A 2016 systematic review by Doulougeri et al. of 50 articles on burnout in medical staff as measured by the MBI found that the majority of studies analyzed burn out as sub scales of emotional exhaustion, cynicism (also known as depersonalization), & academic efficacy (also known as professional accomplishment), as opposed to trying to create one total scale.
+
+This approach also aligns with the finding that burnout is often conceptualized as a multidimensional construct. Maslach designed the MBI to distinguish between the three sub-scales. Studies on burnout almost universally considered the MBI emotional exhaustion (EE) sub-scale in determining burnout, sometimes alone, sometimes with cynicism, and sometimes with both cynicism & academic efficacy. According to the literature, burn out is complex and multidimensional concepts, and impacts both an individual's well being and their ability to perform their job as a medical professional.Burnout is conceptualized in 3 dimensions: emotional exhaustion (physical & cognitive fatigue); cynicism (de-personalization, indifference); academic efficacy (ability to do school/their job).
+
+Based on all of these factors, I will run three separate models with each of the 3 MBI sub-scales as dependent variables.
+
+## Hypothesis Testing
+
+Each MBI burnout sub-scale score will be a response variable for each of the 3 models. These scales are numeric and continuous.
+
+-   emotional exhaustion
+-   cynicism
+-   academic efficacy
+
+As mentioned earlier, a higher score on emotional exhaustion & cynicism are considered indicative of burnout, whereas lower scores of academic efficacy are indicative of burnout.
+
+The explanatory variable I am testing in my hypothesis is whether or not a student speaks a native language of the country they are attending medical school in, coded as a binary dummy variable (0 = non-native, 1 = native)
+
+As previous studies have found a relationship between gender and burnout, I will need to have gender as a control variable in the model. I will also examine if I will need to also control for the influence of having a partner, having a job, or seeing a therapist in past 12 months (all also binary dummy variables) on medical student burnout, by adding them to the regression model and seeing their impact.
+
+### T test
+
+To test my hypothesis that *Medical students whose native language is a national language of the country where they are studying will experience lower rates of burnout than medical students with other native languages*, I will run a Welch's Independent T-Test on the data to see if there is a statistically significant difference between the burnout of native and non-native medical students. Specifically, I will run a one-sided test, to see if the mean burnout of non-native students is higher than of native students.
+
+The null hypothesis is that there is no difference in the mean burnout of native medical students than non-native medical students
+
+The alternative hypothesis is that the mean burnout of native students is less than that non-native medical students. For the emotional exhaustion & cynicism burnout scores, higher score corresponds to higher burnout, for the academic efficacy, a lower score corresponds with higher burnout.
+
+### Emotional Exhaustion
+
+H0: μ = μ0
+
+HA: μ \< μ0
+
+The first T-Test compared the emotional exhaustion scores of native and non-native language speaking medical students.
+
+```{r}
+head(FinalRecoded2)
+FinalRecoded2
+
+#Ttest
+Native <- subset(FinalRecoded2, FinalRecoded2$NatLang == 1)
+NonNative <- subset(FinalRecoded2, FinalRecoded2$NatLang == 0)
+
+
+##One side t-test, MBI ex 
+ttest_ex <- t.test(Native$mbi_ex, NonNative$mbi_ex, var.equal = TRUE, alternative = "less")
+ttest_ex
+```
+
+With a p-value of 0.02684 the difference between the mean is statistically significant at the 0.05 level. Therefor I reject the null hypothesis that there is no difference between the native and non-native students MBI_ex scores.
+
+### Cynicism
+
+H0: μ = μ0
+
+HA: μ \< μ0
+
+```{r}
+#Cynicism
+ttest_cy <- t.test(Native$mbi_cy, NonNative$mbi_cy, var.equal = TRUE, alternative = "less")
+ttest_cy
+```
+
+Next the cynicism MBI burnout scores for native and non-native scores were compared in a T-Test. With a p-value of 0.125, the difference between the means is not statistically significant at the 0.1 or the 0.05 levels. I fail to reject the null hypothesis that there is no difference between the native and non-native medical students MBI_cy scores.
+
+### Academic Efficacy
+
+H0: μ = μ0
+
+HA: μ \> μ0
+
+Lastly, I performed a T-Test on the final MBI sub-score, the academic efficacy between native and non-native language speaking medical students. As a lower MBI_ea score corresponds with higher burnout on this sub-scale the alternative hypothesis of the one-sided T-test is that
+
+```{r}
+#T-test Academic Efficacy 
+ttest_ea <- t.test(Native$mbi_ea, NonNative$mbi_ea, var.equal = TRUE, alternative = "greater")
+ttest_ea
+```
+
+With a p-value of 0.4172 the mean MBI_ea score of native medical students is not statistically significant at any level, therefor I fail to reject the null hypothesis that there is no difference between the mean academic efficacy of native & non-native language speakers.
+
+### Interpretation of Hypothesis Testing & Further Tests
+
+Out of the 3 MBI burnout sub-scales, only the one-sided difference in burnout as measured on the MBI emotional exhaustion scale is statistically significant at the 0.05 level. Non-native language speking medical students had higher mean emotional exhaustion burnout scores than native language speaking benefits, indicating higher burnout in this domain.
+
+There were no statistically significantly difference in the means of native & non-native language speaking students on the MBI cynicism & academic efficacy subscales.
+
+I then ran Welch's T-tests on anxiety (stai_t) and depression (CESD) scores to see if there was a statistically significant difference between native and non-native speaking medical school students. Once again I ran a one-sided t-test, with the assumption that the mean anxiety and depression of non-native language speaking medical students will be higher than that of native language speaking medical students.
+
+H0: μ = μ0
+
+HA: μ \< μ0
+
+```{r}
+# T-test Anxiety
+ttest_stai_t <- t.test(Native$stai_t, NonNative$stai_t, var.equal = TRUE, alternative = "less")
+ttest_stai_t
+```
+
+With a p-value of 0.0002955 there is strong statistical significance to reject the null hypothesis that there is no difference in the mean anxiety of native and non-native language speaking medical students. This suggests that med students who speak the non-native language experience higher anxiety levels than native-language speakers.
+
+```{r}
+# T-test Depression
+ttest_cesd <- t.test(Native$cesd, NonNative$cesd, var.equal = TRUE, alternative = "less")
+ttest_cesd
+```
+
+With a p-value of 9.4955e-05 there is strong statistical significance to reject the null hypothesis that there is no difference in the mean depression of native and non-native language speaking medical students. This suggests that med students who speak the non-native language experience higher depression levels than native-language speakers.
+
+In answering my reearch question of" *Why are some medical students more likely to experience burnout than others?* it seems that native language status, anxiety, depression all interact on one-another to help explain burnout. This will be explored further in the linear regression models.
+
+## Linear Regressions
+
+### Emotional Exhaustion Burnout Model (MBI_ex)
+
+First, I created a linear regression model with only native language status as the explanatory variable and mbi_ex emotional exhaustion burnout score as the outcome variable. NatLang is statistically significant at the 0.1 level with a p-value of 0.0537. The negative co-efficient of -1.2599 suggests that native language speakers (1) are predicted to have lower MBI-ex scores.However the Adjusted R-squared value of 0.003096 suggests that variance in native language speaking status alone does not explain variance in emotional exhaustion MBI scores. The AIC of this first model is 5421 & the BIC is 5435, with the lower the AIC & BIC score the better the fit of the model
+
+```{r}
+#Linear regression model with only NatLang as explanatory variable
+
+model_ex_1 <- lm(mbi_ex ~ NatLang, data = FinalRecoded2)
+summary(model_ex_1)
+
+
+## AIC 
+glance(model_ex_1)$AIC
+glance(model_ex_1)$BIC
+```
+
+The second linear regression model includes gender as an explanatory variable along with native-language status for the outcome of emotional exhaustion MBI scores. Native-language status is statistically significant at the 0.1 level with a p-value of 0.0896 & a coefficient of -1.096. This means that speaking a native language predicts a lower MBI-ex score. Gender is statistically significant at the 0.001 level with a p-value of 1.91 x e\^-06 & a coefficient of 1.8050, suggesting that being female is predicted to increase burnout. The adjusted R-squared value is higher than the first model but still low at 0.02743. The AIC value of 5400 & BIC value of 5419 is lower than the first model, suggesting better fit.
+
+```{r}
+#Linear Regression model with NatLang & gender
+model_ex_2 <- lm(mbi_ex ~ NatLang + gender , data = FinalRecoded2)
+summary(model_ex_2)
+
+
+#AIC
+glance(model_ex_2)$AIC
+#BIC
+glance(model_ex_2)$BIC
+```
+
+In the third linear regression model was a 3-way interaction of depression (CESD), anxiety (stai_t), & native language as an explanatory variable for MBI emotional exhaustion scores in addition to gender. Adding the 3 way interaction term to the model greatly increased the predictive power of the model, raising the adjusted R-squared value to 0.3883. In this model, only Depression (cesd) is statistically significant at the 0.05 level, with a p-value of 0.0202 & a coefficient of 0.394. The positive coefficient suggests that increased depression scoreds predict increased burnout. The AIC of 4997 & the BIC of 5045 are the lowest of any model so far, suggesting the best fit.
+
+```{r}
+#Linear Regression model with NatLang * Anxiety * Depression & gender explanatory variables
+model_ex_3 <- lm(mbi_ex ~ gender + NatLang*cesd*stai_t , data = FinalRecoded2)
+summary(model_ex_3)
+
+#AIC
+glance(model_ex_3)$AIC
+#BIC
+glance(model_ex_3)$BIC
+```
+
+To determine the best model, I added the control variables of hours studied, having a partner, job status, consulting a psychotherapist in past 12 months, & health satisfaction to see the impact on the adjusted R squared value of the 3-way interaction term.
+
+```{r}
+##Control variables
+
+head(FinalRecoded2)
+
+##hours studied strengthens model
+summary(lm(mbi_ex ~ gender + stud_h + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##partner strengthened model
+summary(lm(mbi_ex ~ gender + stud_h + part + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##having job worsened model
+summary(lm(mbi_ex ~ gender + stud_h + part + job + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+## seen psychiatrist worsened model
+summary(lm(mbi_ex ~ gender + stud_h + part + psyt + NatLang*cesd*stai_t , data = FinalRecoded2))
+ 
+## health sat strengthened model
+summary(lm(mbi_ex ~ gender + stud_h + part + health + NatLang*cesd*stai_t , data = FinalRecoded2))
+```
+
+Variables that improved model fit were:
+
+-   Hours studied (stud_h)
+-   Having a partner (part)
+-   Health satisfaction (health)
+
+These 3 explanatory variables will be added to the final model to improve fit. Considering that gender is related to burnout as well as anxiety & depression in earlier exploration of the data, I wanted to explore the a 4-way interaction between anxiety, burnout, gender, & native language status as explanatory for emotional exhaustion burnout.
+
+```{r}
+#Linear regression model of 4 way-interaction of gender * NatLang * CES-D, * STAI-T
+model_ex_4 <- lm(mbi_ex ~ stud_h + health + part +  gender*NatLang*cesd*stai_t, data = FinalRecoded2)
+summary(model_ex_4)
+
+#AIC
+glance(model_ex_4)$AIC
+#BIC
+glance(model_ex_4)$BIC 
+```
+
+The best-fitting linear regression model for MBI_ex as determined by adjusted R-squared includes gender, hours studied, health satisfaction, having a partner, and 4-way interaction between gender, native language, depression, and anxiety as explanatory variables. This has an Adjusted R-Squared value of 0.4028, suggesting much of the the variance in MBI emotional exhaustion scores of medical school students is explained by variance in the explanatory variables. The AIC value of 4986 is the lowest of any of the linear regression models, however the BIC of 5081 is higher than in the previous model.
+
+-   Explanatory variables significant at the 0.01 level are:
+
+    -   Hours Studied (stud-h)
+    -   Health Satisfaction (health)
+
+-   Explanatory variables significant at the 0.05 level are:
+
+    -   Having a Partner (part)
+    -   Gender (gender)
+    -   Native Language (NatLang)
+    -   2-way Interaction gender \* NatLang
+    -   2-way Interaction gender \* stai_t
+    -   2-way Interaction NatLang \* stai_t
+    -   3-way Interaction gender \* NatLang \* stai_t
+
+-   Explanatory variables significant at the 0.1 level are:
+
+    -   Anxiety (stai_t)
+
+Generally, a 4-way interaction would not be selected for a model, but in this linear regression model my explanatory variable of interest, Native Language (NatLang) is statistically significant at the 0.05 level, as is its 2-way interaction with gender, its 2-way interaction with anxiety (stai_t), & its 3-way interaction with gender & anxiety. I tried generating a 3-way interaction model of gender\* NatLang\*stai_t but this interaction was only significant in the 4-way interaction model. National Language is only statistically significant when depression (CES-D) is included in the interaction, though depression itself is not statistically signficant or in any statistically significant interactions.
+
+Examining the coefficients of the statistically significant explanatory variables in the 4-way interaction model:
+
+-   Native Language has a co-efficient of **-13.75** in the model, suggesting that when a medical student speaks the native language (1), their emotional exhaustion MBI score in predicted to decrease by 13.75.
+-   Hours Studied has a co-efficient of **0.0274** in the model, suggesting that with every extra hour studied each week, a medical student's emotional exhaustion MBI score is predicted to increase by 0.0274.
+-   Health has a co-efficient of **-0.4212** in the model, suggesting that with higher health satisfaction, the lower the predicted emotional exhaustion MBI score.
+-   Partner has co-efficient of **0.6709**, suggesting that having a partner (1) is predicted to increase a medical student's emotional exhaustion MBI score by 00.6709.
+-   Gender has a co-efficient of **-18.06** , suggesting that being a female (1) is predicted to decrease the emotional exhaustion MBI score by 18.06.
+-   Anxiety has a co-efficient of **-0.3261**, suggesting that with each unit of increased anxiety score, there is a predicted decrease in emotional exhaustion MBI score of 0.3261.
+-   The 2-way interaction between gender & native language has a co-efficient of **19.23**, suggesting that being a female (1) who speaks a native language (1) is predicted to increase the emotional exhaustion MBI score by 19.23
+-   The 2-way interaction between gender & anxiety (stai_t) has a co-efficient of **0.5669**, suggesting that for a female (1) medical student, with each unit increase in stai_t anxiety score there is predicted to be a 0.5669 unit increase in emotional exhaustion MBI score.
+-   The 2-way interaction between native language & anxiety (stai_t) has a co-efficient of **0.4757** , suggesting that for a native language speaking medical student (1), with each unit increase in stai_t anxiety score there is a 0.4757 unit increase of emotional exhaustion MBI score.
+-   The 3-way interaction between gender, native language, & anxiety (stai_t) has a co-efficient of **-0.5879** suggesting that for female (1) medical student speaking a native language (1), with each unit increase of anxiety score it is predicted that there will be a 0.5879 unit decrease in emotional exhaustion MBI score.
+
+The predicted impact of the these interactions on the emotional exhaustion score aren't what one would have expected based on previous studies on the role of gender on burnout. Starting with the single explanatory terms,the coefficients for native language, hours studied, & health make sense in directionality. Speaking a native language & being satisfied with your health are predicted to decreases mbi_ex score, while studying more hours is expected to increase mbi_ex schools. Being female & having a higher STAI_T anxiety being predicted to decrease mbi-ex score & having a partner being predicted to increase mbi_ex score are counter to what one would expect.
+
+The statistically significant 2 & 3-way interactions are somewhat confusing, which is one of the reasons 4-way interactions are not commonly used.In the 2-way interaction of gender & native language, being female & speaking a native language is predicted to increase mbi_ex score, which is the opposite predicted impact of either explanatory variables on it own. An increase anxiety score for a female in the 2-way interaction between gender & anxiety (STAI-T) is predicted to increase mbi_ex score, once again the opposite predicted impact of either explanatory variable on its own. The increase in anxiety score for a native language speaker is also predicted to increase the mbi_ex score according to the 2-way interaction of native language & anxiety. Lastly, in the 3 way interaction between native language, gender, & anxiety, for a female medical student that speaks a native language, an increase in anxiety score is predicted to decrease mbi_ex score. As mentioned, not all of these coefficients make sense. It makes sense that anxiety, gender, & native language all interact with one another & impact emotional exhaustion burnout. Further research is required to understand these interactions, & if there are unexpected protective factors found from having multiple factors that on their own might increase emotional exhaustion burnout. For example, for the 3-way interaction between native language, gender, & anxiety, potentially being a female medical student who speaks a native language may bring social support that mitigates anxiety increasing mbi_ex burnout.
+
+```{r}
+##Emotional Exhaustion Stargazer model
+
+stargazer(model_ex_1, model_ex_2, model_ex_3, model_ex_4, align = TRUE, column.sep.width = "-1pt",  no.space = TRUE, type = "text", title="Table 3: Comparison MBI Emotional Exhaustion Regression Results", column.labels=c("Model 1","Model 2", "Model 3", "Model 4"))
+
+```
+
+### Cynicism Burnout Model (MBI_cy)
+
+For the cynicism burnout sub scale, I once again started by running a linear regression model with only Native Language as the explanatory variable and mbi_cy score as the outcome variable. NatLang was not a statistically significant explanatory variable with a p-value of 0.249. The Adjusted R-Squared of the model was very low at 0.0003772, suggesting that variance NatLang alone does not explain the variance in mbi_cy scores for medical students. The AIC of 5184 & BIC of 5198 serves as a baseline for comparison for goodness of fit with future models.
+
+```{r}
+#MBI-cy only nat lang as explanatory variables
+model_cy_1 <- lm(mbi_cy ~ NatLang, data = FinalRecoded2)
+summary(model_cy_1)
+
+#AIC
+glance(model_cy_1)$AIC
+#BIC 
+glance(model_cy_1)$BIC
+
+```
+
+As with the previous emotional exhaustion sub-scale, next I added gender as a the second explanatory variable, as the impact of gender on burnout has been studied. Not only were neither NatLang or gender statistically significant (p-values of 0.256 and 0.783 respectively), but the linear regression model with gender & NatLang as explanatory variables had a worse Adjusted R-Squared than the first model with a negative R-squared of -0.0006754. The AIC of 5185 & BIC of 5204 are higher than in the first model, confirming the worse fit of this model.
+
+```{r}
+#MBI-cy  nat lang & gender as explanatory variables
+model_cy_2  <- lm(mbi_cy ~ NatLang + gender, data = FinalRecoded2)
+summary(model_cy_2)
+
+#AIC
+glance(model_cy_2)$AIC
+#BIC
+glance(model_cy_2)$BIC
+
+```
+
+For the third linear regression model I added the 3 way interaction of NatLang x Anxiety (stai-t score) x Depression (cesd) as an explanatory variable to gender in model 2. In this model, only gender is statistically significant at the 0.01 level with a p-value of 0.00115 & a coefficient of -1.0259, suggesting being a female is predicted to decreases MBI-cy scores. The Adjusted R-Squared 0f 0.1769, AIC of 5019 & 5067 suggest this is the best fitting model.
+
+```{r}
+#Model 3 MBI_cy 3 way interaction NatLang x cesd x stai_t + gender
+model_cy_3 = lm(mbi_cy ~ gender + NatLang*cesd*stai_t , data = FinalRecoded2)
+summary(model_cy_3)
+
+#AIC
+glance(model_cy_3)$AIC
+#BIC
+glance(model_cy_3)$BIC
+```
+
+To determine the best model, I added the control variables of hours studied, having a partner, job status, consulting a psychotherapist in past 12 months, & health satisfaction to see the impact on the adjusted R squared value.
+
+```{r}
+##Control variables
+
+
+##hours studied strengthens model
+summary(lm(mbi_cy ~ gender + stud_h + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##partner - lowered adjusted r-squared
+summary(lm(mbi_cy ~ gender + stud_h + part + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##having job - lowered adjusted r-squared
+summary(lm(mbi_cy ~ gender + stud_h + job + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+## seen psychiatrist - did not improve R-squared
+summary(lm(mbi_cy ~ gender + stud_h + psyt + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+## health sat - improved model
+summary(lm(mbi_cy ~ gender + stud_h + health + NatLang*cesd*stai_t , data = FinalRecoded2))
+```
+
+```{r}
+#Model 4
+
+MBI_cy_bestfit <- lm(mbi_cy ~ gender + stud_h + health +  NatLang*cesd*stai_t, data = FinalRecoded2)
+summary(MBI_cy_bestfit)
+
+#AIC
+glance(MBI_cy_bestfit)$AIC
+#BIC
+glance(MBI_cy_bestfit)$BIC
+```
+
+-   Variables that increased the adjusted r-squared of the model were:
+
+    -   Hours studied (stud_h)
+    -   Health satisfaction (health)
+
+A 4-way interaction model for MBI-cy did not improve the prediction of MBI-cy like it did in the MBI-ex.The best-fitting linear regression model for MBI_cy as determined by adjusted R-squared values & AIC & BIC includes gender, hours studied, health satisfaction, and the 3-way interaction between native language, depression, and anxiety as explanatory variables. This has an Adjusted R-Squared value of 0.2048, suggesting some of the the variance in MBI cynicism scores of medical school students is explained by variance in the explanatory variables. The AIC of 4991 & BIC of 5048 also confirms this is the best-fitting model.
+
+-   Explanatory variables significant at the 0.001 level are:
+
+    -   Gender
+    -   Hours studying (stud_h)
+
+In this model, gender has a coefficient of -1.105546, suggesting being female is predicted to decrease MBI-cy score. Hours studying has a coefficient of -0.048975, suggesting that studying more hours predicts lower MBI-cy score. These coefficients are both counter to what would be expected.
+
+```{r}
+
+##Cynicism Stargazer model
+
+stargazer(model_cy_1, model_cy_2, model_cy_3, MBI_cy_bestfit, align = TRUE, column.sep.width = "-1pt",  no.space = TRUE, type = "text", title="Table 4: Comparison MBI Cynicism Regression Results", column.labels=c("Model 1","Model 2", "Model 3", "Model 4"))
+
+```
+
+### Academic Efficacy Burnout MBI-ea
+
+As with the prior 2 MBI sub-scales, I first created a linear regression model with NatLang as the only explanatory variable and academic efficacy burnout MBI_ea as the outcome. NatLang is not a statistically significant explanatory variable in the model with a p-value of 0.764. The Adjusted R-squared of -0.001035 shows the model is a very bad for predicting the outcome variable MBI_ea score. The AIC of this model is 5197 & BIC of this model is 5212.
+
+```{r}
+#Academic Efficacy NatLang Alone
+model_ea_1 <- lm(mbi_ea ~ NatLang, data = FinalRecoded2)
+summary(model_ea_1)  
+
+#AIC
+glance(model_ea_1)$AIC
+#BIC
+glance(model_ea_1)$BIC
+
+```
+
+For the second model, I added the second explanatory variable of gender, based on previous findings of its impact on burnout. In this model, neither NatLang (p-value = 0.801) or gender (p-value = 0.363) are statistically significant. The fit of the model is still very poor, as indicated by the Adjusted R-squared of -0.001231. Still, very little of the variance in academic efficacy burnout is explained by the variance in gender and native language status. The AIC & BIC are slightly higher at 5198 at 5218, suggesting a poor fit of this model compared to the previous model.
+
+```{r}
+#Linear regression model NatLang & gender
+model_ea_2 <- lm(mbi_ea ~ NatLang + gender, data = FinalRecoded2)
+summary(model_ea_2)
+
+#AIC
+glance(model_ea_2)$AIC
+#BIC
+glance(model_ea_2)$BIC
+```
+
+For the third linear regression model, I added the 3-way interaction of NatLang x Depression (cesd) x Anxiety (stai_t) as an explanatory variable in addition to gender, with the outcome variable of mbi_ea score. In this model, gender is statistically significant at the 0.001 level with a p-value of 0.00167 & a coefficient of 1.13175. The positive coefficient suggests being female medical student predicts increased academic efficacy scores, which translate to lower burnout. This is counter to the expectation that women experience worse burnout than men. The Adjusted R-Squared of this model is 0.261, suggesting a much better fit than prior models. The AIC of 4937 & BIC of 4985 are the lowest of the models so far, also suggesting the best fit.
+
+```{r}
+##Model with gender & 3 way interaction NatLang x Depression x Anxiety
+model_ea_3 <- lm(mbi_ea ~ gender +  NatLang*cesd*stai_t, data = FinalRecoded2)
+summary(model_ea_3)
+
+#AIC
+glance(model_ea_3)$AIC
+#BIC
+glance(model_ea_3)$BIC
+
+
+```
+
+To determine the best model, I added the control variables of hours studied, having a partner, job status, consulting a psychotherapist in past 12 months, & health satisfaction to see the impact on the adjusted R squared value. I also tried the 4 way interaction model between gender x natlang x CES-D x STAI-T to predict MBI academic efficacy, but this did not improve the fit of the model or make natlang statistically significant.
+
+```{r}
+##Control variables
+
+##hours studied strengthens model 
+summary(lm(mbi_ea ~ gender + stud_h + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##partner - weakens model 
+summary(lm(mbi_ea ~ gender + stud_h + part + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##having job -weakens model
+summary(lm(mbi_ea ~ gender + stud_h + job + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+## seen psychiatrist - weakens model
+summary(lm(mbi_ea ~ gender + stud_h + psyt + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+## health sat - improved model
+summary(lm(mbi_ea ~ gender + stud_h + health + NatLang*cesd*stai_t , data = FinalRecoded2))
+
+##4way interaction 
+summary(lm(mbi_ea ~ gender*NatLang*cesd*stai_t, data = FinalRecoded2))
+
+```
+
+-   Variables that increased the adjusted r-squared of the model were:
+
+    -   Hours studied (stud_h)
+    -   Health satisfaction (health)
+
+The best-fitting linear regression model for MBI_cy as determined by adjusted R-squared values includes gender, hours studied, health satisfaction, and the 3-way interaction between native language, depression, and anxiety as explanatory variables. This has an Adjusted R-Squared value of 0.298, suggesting some of the the variance in MBI academic efficacy scores of medical school students is explained by variance in the explanatory variables. The AIC of 4893 & BIC of 4951 are the lowest of any of the linear regression models, supporting the fit of this model.
+
+-   Explanatory variables significant at the 0.1 level are:
+
+    -   Health satisfaction (health)
+
+-   Explanatory variables significant at the 0.05 level are:
+
+    -   Anxiety (stai_t)
+
+-   Explanatory variables significant at the 0.001 level are:
+
+-   Gender
+
+-   Hours studied (stud_h)
+
+The coefficient of health satisfaction is 0.2346, suggesting the more satisfied with health, the higher predicted MBI-ea score (lower burnout). The coefficient for anxiety is -0.180668, suggesting higher anxiety scores predict lower MBI_ea scores (higher burnout). Gender has a coefficient of 1.233, suggesting that being female predicts increased MBI_ea scores (lower burnout). Lastly, stud_h has a coefficient of 0.057054, suggesting the more hours studied the higher the predicted MBI-ea scores (lower burnout). The last 2 coefficients are not what are expected. In none of the models for predicting MBI_ea is NatLang statistically significant explanatory variable.
+
+```{r}
+#Best fit model academic efficacy burnout 
+
+MBI_ea_bestfit <- lm(mbi_ea ~ gender + stud_h + health +  NatLang*cesd*stai_t, data = FinalRecoded2)
+summary(MBI_ea_bestfit)
+.
+#AIC
+glance(MBI_ea_bestfit)$AIC
+#BIC
+glance(MBI_ea_bestfit)$BIC
+
+```
+
+All models for MBI_ea can be compared in the stargazer table below
+
+```{r}
+##Academic Efficacy Stargazer model
+
+stargazer(model_ea_1, model_ea_2, model_ea_3, MBI_ea_bestfit, align = TRUE, column.sep.width = "-1pt",  no.space = TRUE, type = "text", title="Table 4: Comparison MBI Academic Efficacy Regression Results", column.labels=c("Model 1","Model 2", "Model 3", "Model 4"))
+
+```
+
+## Diagnostic Models
+
+### MBI Emotional Exhaustion
+
+```{r}
+#Diagnostic Models Emotional Exhaustion
+
+ fit_ex <- lm(mbi_ex ~ sex + stud_h + health + job + gender*NatLang*cesd*stai_t, data = FinalRecoded2)
+
+##MBI_ex Residuals vs. Fitted
+
+
+plot(fit_ex, which = 1:6)
+
+```
+
+The first diagnostic model of residuals vs. fitted value shows a relatively horizontal line that bounces randomly around the zero line, suggesting linearity and constant variance for the MBI_ex linear regression model.
+
+```{r}
+##MBI_Ex Normal Q-Q
+plot(fit_ex, which = 2) 
+```
+
+Most of the points of the MBI_ex linear regression Q-Q plot fall along the line, supporting the assumption of normality.
+
+```{r}
+##MBI_Ex Scale Location
+plot(fit_ex, which = 3) 
+```
+
+The Scale-Location plot of the MBI-ex linear regression model is nearly perfectly horizontal without increasing or decreasing, supporting the assumption of constant variance.
+
+```{r}
+##MBI_Ex Cook's Distance
+plot(fit_ex, which = 4) 
+```
+
+The Cook's distance plot of the MBI_ex linear regression model measures the presence of influential outliers. There appears to be 3 outliers which are influence the model, as shown by at Obs. number at 1, 526, and 756. None of them have a Cook's distance of 1, with the most being 0.20. However with a sample size of n = 881, 4/n = 0.00454 which means taking a closer look at the leverage of outliers in the next 2 diagnostic plots.
+
+```{r}
+##MBI_Ex Residuals vs. leverage 
+plot(fit_ex, which = 5) 
+```
+
+Not points in the Residuals vs. Leverage plot of the MBI_ex fall outside of the dotted lines, including the 3 observations from the prior Cook's distance plot, suggesting that these observations are not influential in the model.
+
+```{r}
+##MBI_Ex Cook's Distance vs Leverage
+plot(fit_ex, which = 6) 
+```
+
+The final diagnostic plot of Cook's Distance vs. Leverage for the MBI-ex plot shows that while there are some residuals, they don't have strong leverage. Observation 1 & 526 both have a leverage of over 0.5, but this is paired with a low Cook's distance making them not influential.
+
+Overall the diagnostic models supports the goodness of fit of the emotional exhaustion MBI model and the assumptions of linearity, constant variance, and normality, but there are some outliers though they do not appear to influence the model strongly.
+
+### MBI Cynicism
+
+```{r}
+##Diagnostic model
+fit_cy <- lm(mbi_cy ~ gender + stud_h + health +  NatLang*cesd*stai_t, data = FinalRecoded2)
+
+##MBI_ex Residuals vs. Fitted
+plot(fit_cy, which = 1) 
+
+```
+
+The diagnostic plot of residuals vs. fitted values for the MBI_cy linear regression model is mostly horizontal around the 0 line, though there is some slight funneling in the bottom left half of the plot. This suggests linearity but slight violation of constant variance assumption.
+
+```{r}
+##MBI_cy Q-Q plot
+plot(fit_cy, which = 2) 
+```
+
+The Q-Q plot for the MBI_cy linear regression supports the assumption of normality, as the points all fall along the line.
+
+```{r}
+##MBI_cy Scale Location
+plot(fit_cy, which = 3) 
+```
+
+The Scale-Location plot of the MBI_cy linear regression shows some increasing trend, suggesting the model may violate the assumption of constant variance.
+
+To test further if the model violates the assumption of constant variance, I will run a Breusch-Pagan Test on the model.
+
+-   The Null Hypothesis (H0) for this test is that residuals are homoscedastic (i.e. evenly spread)
+
+-   The Alternative Hypothesis (HA) hypothesis is that heteroscedasticity is present (residuals are not evenly distributed)
+
+```{r}
+#Breusch-Pagan Test
+library(zoo)
+library(lmtest)
+bptest(fit_cy)
+```
+
+With a p-value of 3.722e-06, we confidently reject the null hypothesis that residuals are homoscedastic at the 0.05 significance level. This confirms that that this model violates the assumption of linearity.
+
+```{r}
+##MBI_cy Cook's distance
+plot(fit_cy, which = 4) 
+```
+
+The Cook's distance plot for the MBI-cy linear regression shows 1 influential outlier at observation number 29. This observation does not have a Cook's distance of 1, but is greater than 4/n, which with n=881 is 0.00454, which means taking a closer look at the potential of an influential outlier.
+
+```{r}
+##MBI_cy Residuals vs Leverage
+plot(fit_cy, which = 5) 
+```
+
+The Residuals vs Leverage plot for MBI-cy linear regression model falls within the dashed red line, suggesting that residuals lack leverage to strongly influence the model.
+
+```{r}
+##MBI_cy Cook's dist. vs Leverage
+plot(fit_cy, which = 6) 
+```
+
+Lastly, the diagnostic plot of Cook's dist. vs. Leverage for the MBI_cy linear regression model suggests that any outliers in the model do not have strong leverage on the model.
+
+Overall the diagnostic models mostly support the fit of the cynicism MBI model and the assumptions of linearity and normality, as well as the lack of influential outliers. The diagnostic of scale location plot & Breusch-Pagan test suggesting violation of the assumption of constant variance.
+
+### MBI Acamemic Efficacy
+
+```{r}
+fit_ea <- lm(mbi_ea ~ gender + stud_h + health +  NatLang*cesd*stai_t, data = FinalRecoded2)
+
+#MBI_ea Residuals vs. Fitted
+plot(fit_ea, which = 1)
+```
+
+The first diagnostic plot of residuals vs. fitted values for the MBI_ea linear regression has a horizontal trend line without any funneling, supporting the assumptions of linearity and constant variance.
+
+```{r}
+#MBI_ea Q-Q plot
+plot(fit_ea, which = 2)
+```
+
+The diagnostic Q-Q plot for the MBI-ea linear regression model supports the assumption of normality, as most of the points fall along the line.
+
+```{r}
+#MBI_ea scale-location
+plot(fit_ea, which = 3)
+```
+
+The scale-location diagnostic plot for the MBI_ea linear regression model is approximately horizontal, supporting the assumption of constant variance.
+
+```{r}
+#MBI_ea
+plot(fit_ea, which = 4)
+```
+
+The Cook's distance diagnostic plot for the MBI_ea linear regression model suggests the lack of influential observations (outliers). None of the observations have a Cook's distance near 1, with the highest being less than 0.030, suggesting the outliers don't strongly impact the model.
+
+```{r}
+#MBI_ea residuals vs. leverage
+plot(fit_ea, which = 5)
+```
+
+The residuals vs. leverage plot for the mbi_ea linear regression model further supports the lack of influential observations (outliers), as does the Cook's Distances vs. Leverage plot below
+
+```{r}
+#MBI_ea Cooks Distance vs. Leverage
+plot(fit_ea, which = 6)
+```
+
+Overall these diagnostic plots support the goodness of fit of the academic efficacy MBI linear regression model, supporting the assumptions of linearity, constant variance, and normality as well as suggesting the lack of influential outliers.
+
+### Discussion
+
+The relationship between variables was further explored though visualizations. Figure 4 below is a correlation table between hours studied (stud_h), CES-D scores. STAI-T scores & the 3 MBI sub-scales. Most correlations are positive & shown in red, with the exception of mostly blue negative correlations between variables & MBI-ea (where lower scores = higher burnout). The strongest correlation is between depression & anxiety (0.7). Depression & anxiety are moderately correlated with the 3 MBI sub-scores. Hours studied has a low correlation with the other variables. Interestingly, while the 3 MBI sub-scores are supposed to be scored separately, they are moderately correlated.
+
+```{r}
+#Correlation Table
+FinalRecoded2
+
+FinalCorr <- FinalRecoded2[, c(8,16,17,18, 19, 20)]
+
+ggcorr(FinalCorr, method = c("everything", "pearson"), label = TRUE)  + ggplot2::labs(title = "Figure 4: Correlation Table between Continuous Variables")
+
+```
+
+```{r}
+#Visualization TwoContinous,1 categorical
+
+FinalRecoded2$NatLang <- as.factor(FinalRecoded2$NatLang)
+
+twi_mbi_ee <- lm(mbi_ex ~ NatLang*cesd*stai_t, data = FinalRecoded2)
+summary(twi_mbi_ee)
+
+#model prediction
+pred <- expand.grid(cesd=c(min(FinalRecoded2$cesd),0,max(FinalRecoded2$cesd)),stai_t=c(min(FinalRecoded2$stai_t),0,max(FinalRecoded2$stai_t)), NatLang = factor(0:1))
+pred$mbi_ex <- predict(twi_mbi_ee,pred)
+
+
+
+#new facet labels
+supp.labs <- c("Non-Native Language", "Native Language")
+names(supp.labs) <- c(0, 1)
+
+
+ggplot(FinalRecoded2,aes(x=cesd,y=mbi_ex,color=stai_t))  +geom_point()+facet_grid(~NatLang, labeller = labeller(NatLang = supp.labs)) +
+geom_line(data=pred,aes(group=stai_t)) + labs(title = "Figure 5: Plot Emotional Burnout by Gender & Native Language", x = "CES-D Depression Score", y = "MBI_ex Score") + theme(legend.position="bottom") 
+
+```
+
+Figure 5 shows the 3-way interaction of gender, depression scores, & NatLang on MBI-ex scores. The graph shows that depression & anxiety scores are positively correlated, as are depression & MBI_ex scores. The slope of the 2 darker lines of MBI-ex score vs. CES-D are slightly steeper for Non-Native med students than Native students the plot, suggesting that when Non-Native & Native med students have the same CES-D score, the Native med student is predicted to have higher emotional exhaustion burnout.
+
+Returning to my research question:
+
+*Why are some medical students more likely to experience burnout than others?*
+
+There is statistical supports my hypothesis that medical students whose native language was a commonly spoken language where they are in medical school will have lower burnout than medical students speaking the non-native language on the MBI emotional exhaustion sub-scale, but not the MBI cynicism or MBI academic efficacy sub-scores. With p-score of 0.0283 in the Welch's One-Sided T-test, I reject the hypothesis that there is no difference in the mean MBI-ex scores between native & not-native language speaking students. The difference in means between native & native language speakers on the MBI-cy & MBI-ea are not statistically significant.
+
+Through further T-tests discovered that there was statistically significant difference in anxiety & depression levels for native and non-native language speaking medical students in the direction I expected. Through running various linear regression models, I found that the importance 3-way interaction between NatLang x Anxiety x Depression was a strong explanatory variable for burnout on all three sub scales based on the Adjusted-R Squared values. Gender, hours studied, and health satisfaction also explain why some medical students are more likely to experience burnout than others on all three sub scales. For emotional exhaustion burnout, having a partner also impacted burnout.
+
+Based on Adjusted R-squared values, AIC values, and diagnostic plots, the linear regression models are a good fit to explain variance in the outcome variables of burnout on each of the 3 MBI sub-scales. In the MBI-cy sub-scale, there was a violation to the assumption of constant variance in the Scale Location plot & Breusch-Pagan Test. In the linear regression models, Native Language was found to be a statistically significant predictor of emotional exhaustion burnout, but not cynicism or academic efficacy burn-out. A systematic review of burnout found that emotional exhaustion burnout, characterized by emotional & physical fatigue, is most frequently used to measure the concept burnout (Doulougeri et al., 2016).
+
+This current sample had relatively few non-native language speaking medical students (71) & was in the country of Switzerland, meaning the findings can't be generalized. Future research should be done testing the impact of speaking a native language on burnout in a larger, global sample of medical students. It also might be that speaking a non-native language is proxy for immigration status, so that should be examined as well. There were also many interesting interactions with NatLang in the models, including with gender, anxiety, & depression. Future research should be done to understand the relationship between these variable in order to make more meaningful interventions. Additionally, it is important to investigate potential protective factors against burnout such as health satisfaction, as there were not many identified in this sample.
+
+Conducting this final project was challenging but interesting. Having 3 outcome variables was a lot of work to conduct tests for, & the 3 & 4-way interactions were not easy to interpret or visualize. Overall I am proud of this work & the statistical knowledge I have gained in this course.
+
+Medical students & health care workers around the world do life saving work, under stressful & long work conditions. It is critical that we better understand, identify, & treat the mental health needs & burnout of health care workers. It is neither fair nor feasible to expect health care workers to sacrifice their health & well-being in service of others.
+
+## Works Cited
+
+Carrard, V., Bourquin, C., Berney, S, Schlegel, K., Gaume, J., Bart, P-A., Preisig M., Mast, M. A., & Berney, A. (2022). The relationship between medical students' empathy, mental health, and burnout: A cross-sectional study, Medical Teacher, 44:12, 1392-1399, DOI: 10.1080/0142159X.2022.2098708
+
+Doulougeri, K., Georganta, K., & Montgomery, A. (2016). "Diagnosing" burnout among healthcare professionals: Can we find consensus?, Cogent Medicine, 3:1, DOI: 10.1080/2331205X.2016.1237605
+
+Gradiski, I. P., Borovecki, A., Ćurković, M., San-Martín, M., Delgado Bolton, R. C., & Vivanco, L. (2022). Burnout in International Medical Students: Characterization of Professionalism and Loneliness as Predictive Factors of Burnout. International journal of environmental research and public health, 19(3), 1385. https://doi.org/10.3390/ijerph19031385
+
+Goebert., D., Thompson., D., Takeshita., J., Beach, C., Bryson, P., Ephgrave, K., Kent. A., Kunkel., M., Schechter., J., Tate., J. (2009). Depressive Symptoms in Medical Students and Residents: A Multischool Study. Academic Medicine 84(2):p 236-241, DOI: 10.1097/ACM.0b013e31819391bb
+
+Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables. R package version 5.2.3. https://CRAN.R-project.org/package=stargazer
+
+Jennings, M.L. Medical Student Burnout: Interdisciplinary Exploration and Analysis. J Med Humanit 30, 253--269 (2009). https://doi.org/10.1007/s10912-009-9093-5
+
+Kużelewska,E. (2016).Language Policy in Switzerland. Studies in Logic, Grammar and Rhetoric,45(1) 125-140. https://doi.org/10.1515/slgr-2016-0020
+
+Maslach, C., Jackson, S.E., & Jackson, Leiter, M. P. (Eds.) (1996). Maslach Burnout Inventory manual (3rd ed.).
+
+Paturel, A. (2020). Healing the very youngest healers. American Association of Medical Colleges (AAMC). https://www.aamc.org/news-insights/healing-very-youngest-healers#:\~:text=In%20a%20recent%20study%20%2C%209.4,as%20their%20same%2Dage%20peers.
+
+Peters E. (2018). Compassion fatigue in nursing: A concept analysis. Nursing forum, 53(4), 466--480. https://doi.org/10.1111/nuf.12274
+
+Radloff, L.S. (1977). The CES-D Scale: a self-report depression scale for research in the general population. Applied Psychological Measurement, 1:385-401.
+
+Rodriguez, S. Y. S., Carlotta, M. S.. (2017). Predictors of Burnout Syndrome in psychologists. Estudos De Psicologia (campinas), 34(Estud. psicol. (Campinas), 2017 34(1)), 141--150. https://doi.org/10.1590/1982-02752017000100014
+
+Shin, H. S., Park, H., & Lee, Y. M. (2022). The relationship between medical students' empathy and burnout levels by gender and study years. Patient education and counseling, 105(2), 432--439. https://doi.org/10.1016/j.pec.2021.05.036
+
+Tiesman, H., Weissman, D., Stone., D., Quinlan, K., & Chosewood, L. (2021). Suicide Prevention for Healthcare Workers. CDC. https://blogs.cdc.gov/niosh-science-blog/2021/09/17/suicide-prevention-hcw/
+
+Williams, B., Beovich, B. Psychometric properties of the Jefferson Scale of Empathy: a COSMIN systematic review protocol. Syst Rev 8, 319 (2019). https://doi.org/10.1186/s13643-019-1240-0
+
+Yahya, M. S., Abutiheen, A. A., & Al- Haidary, A. F. (2021). Burnout among medical students of the University of Kerbala and its correlates. Middle East Current Psychiatry, Ain Shams University, 28(1), 78. https://doi.org/10.1186/s43045-021-00152-2
