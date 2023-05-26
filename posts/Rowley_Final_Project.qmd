@@ -1,0 +1,598 @@
+---
+title: "Final Project"
+author: "Caitlin Rowley"
+description: "This project provides a high-level overview of the data set I will be using for my final project. The data set, titled 'Income and Democracy,' was published by the American Economic Consortium in 2008."
+date: "05/25/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - final
+---
+
+### Background and Research Question:
+
+My research question will focus on the cross-country correlation between income and democracy. A 2008 study titled "Income and Democracy," published in the American Economic Review, argues that existing studies that establish a strong cross-country correlation between income and democracy do not control for factors that simultaneously affect both variables. Accordingly, this study, which focuses on changes in democracy over the past 500 years, controls for certain country-fixed effects---such as date of independence, constraints on the executive, and religious affiliation---thereby voiding any causal relationship between income per capita and various measures of democracy. This study is the source for my data set.
+
+The authors of "Income and Democracy" included a wide range of variables in their study; specifically, they tested the significance of constraint on the executive; year of independence; settler mortality; population density; Catholic population; Muslim population; Protestant population; shift in per capita income; and shift in democracy. As noted, the authors asserted that after controlling for all the aforementioned country-fixed effects, there is no evidence of a causal relationship between income and democracy over time. Interestingly, the study also indicated that education was determined to be statistically insignificant as an independent, country-fixed effect on the correlation between income and democracy, and it was thus excluded from the study.
+
+In contrast to "Income and Democracy," a 1999 study titled "Determinants of Democracy," authored by Robert J. Barro, indicates that additional improvements to the standard of living do, in fact, predict an increase in democracy. Barro suggests not only that education is an indicator of the correlation between income democracy, but that the pervasiveness of select religious affiliations is, as well. Specifically, Barro claimed that the negative effects from Muslim and non‐religious affiliations remain statistically significant in this association regardless of external control factors.
+
+This incongruity led me to wonder whether we would see a causal relationship between income and democracy if the economic variables used in the two studies were more aligned. Specifically, I would like to examine how this change would affect both studies' claims on the role of religious affiliation; in other words, will adding explanatory variables related to religious affiliation---specifically, non-religious affiliation---cause a shift in the lack of correlation between income and democracy? Additionally, given "Income and Democracy's" declaration on the statistical insignificance of education as a country-fixed effect, I am also interested in seeing whether adding an interaction term---specifically, government expenditure on education---will have an effect on this relationship.
+
+**Research question**: How will adding non-religious affiliation as an additional control variable and education as an interaction term impact the lack of causal relationship between income and democracy?
+
+### Hypothesis:
+
+After reviewing "Income and Democracy," it does not appear that non-religious affiliation was integrated into the report. Further, as the authors noted its lack of statistical significance related to its causal effect on the relationship between income democracy, neither is education. However, I am curious about how the inclusion of these two variables would affect Barro's conclusion relative to the correlation between religious affiliation and democracy. As such, by adding these variables, I will be revisiting a previously-tested hypothesis.
+
+I hypothesize that adding non-religious affiliation and education as additional control variables, and education\*shift in per capita income as an interaction term will lead to increased statistical significance between income and democracy.
+
+### Descriptive Statistics:
+
+Data for this study was collected from the Freedom House Political Rights Index, the Polity Composite Democracy Index, and data from other studies conducted by Barro and Kenneth A. Bollen.
+
+Variables I will be focusing on include:
+
+-   Country;
+-   Constraint on the executive;
+-   Year of independence;
+-   Settler mortality;
+-   Population density;
+-   Catholic population;
+-   Muslim population;
+-   Protestant population;
+-   Religiously-unaffiliated population;
+-   Education funding;
+-   Shift in per capita income; and
+-   Shift in democracy.
+
+```{r}
+# load libraries:
+
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+```{r}
+# read in data file:
+
+data_file <- read_excel("C:/Users/caitr/OneDrive/Documents/DACSS/DACSS 603/603_Spring_2023/posts/_data/Income-Democracy.xls", sheet = "500 Year Panel")
+head(data_file)
+```
+
+```{r}
+# remove dummy/unnecessary variables (as identified in study's variable key):
+
+data_cln = subset(data_file, select = -c(code, world, colony, indcent, madid))
+head(data_cln)
+
+# rename variables
+
+data_cln2 <- data_cln %>% rename("exec_constraint"="consfirstaug", "year_ind"="indyear", "log_settler_mort"="logem4", "log_pop_dens"="lpd1500s")
+head(data_cln2)
+```
+
+```{r}
+# remove duplicates:
+
+duplicates <- duplicated(data_cln2)
+duplicates["TRUE"]
+
+# remove blank observations (observations with some NAs are not removed):
+
+data_blank <- data_cln2[rowSums(is.na(data_cln2)) != ncol(data_cln2), ]
+head(data_blank)
+```
+
+```{r}
+# remove some NAs for description but not analysis:
+
+data_NA <- data_blank[rowSums(is.na(data_cln2)) == 0, ]
+dim(data_NA)
+```
+
+```{r}
+# confirm data frame size of clean data set:
+
+dim(data_cln2)
+```
+
+We can see that this data set has 10 variables and 173 observations (though there will be 12 variables once I collect and add data related to education and non-religious affiliation). There are no duplicate observations, nor are there any blank observations. However, in the case that we remove observations with any missing values, the data set would only have 76 observations. Nonetheless, because the study's authors elected to utilize incomplete observations, I will do the same.
+
+```{r}
+# summary of data (remove categorical variables):
+
+library(summarytools)
+
+summary <- subset(data_cln2, select = -c(country))
+summary(summary)
+```
+
+We can see here a data frame containing summary statistics for the 9 variables with numeric data, as the categorical variable simply indicates the country name. These statistics will be more meaningful upon following the addition of data related to education and non-religious affiliation.
+
+### Data Merge:
+
+```{r}
+# import new religious affiliation variables
+
+relig_1 <- read_csv("C:/Users/caitr/OneDrive/Documents/DACSS/DACSS 603/603_Spring_2023/posts/_data/DACSS603_religious_aff.csv")
+head(relig_1)
+
+# convert percentages to decimals
+
+relig_dec <- transform(relig_1, rel_unaffiliated = (Unaffiliated/100), Jewish = (Jews/100), Hindu = (Hindus/100), Buddhist = (Buddhists/100))
+head(relig_dec)
+
+# remove "all countries" from 'country' variable
+
+relig_country <- relig_dec[!(relig_dec$Country=="All Countries"),]
+head(relig_country)
+
+# remove unneeded columns
+
+relig_vars <- subset(relig_country, select = -c(Region, Buddhists, Christians, Folk.Religions, Hindus, Hindu, Jews, Jewish, Buddhist, Muslims, Other.Religions, Unaffiliated))
+head(relig_vars)
+
+# use data from 2010 (comparable to base data set)
+
+relig_2010 <- relig_vars[!(relig_vars$Year=="2020" | relig_vars$Year=="2030" | relig_vars$Year=="2040" | relig_vars$Year=="2050"),]
+head(relig_2010)
+
+# remove duplicates
+
+rel_duplicates <- duplicated(relig_2010)
+rel_duplicates["TRUE"]
+
+# remove "year" column
+
+relig_cln <- subset(relig_2010, select = -c(Year))
+head(relig_cln)
+
+# merge with data_file
+
+data_combined <- left_join(data_cln2, relig_cln,
+                   by = c("country" = "Country"))
+head(data_combined)
+```
+
+```{r}
+# merge additional control: education expenditure (GDP)
+
+edu <- read_csv("C:/Users/caitr/OneDrive/Documents/DACSS/DACSS 603/603_Spring_2023/posts/_data/DACSS603_edu_expend.csv")
+head(edu)
+
+# remove unneeded columns
+
+edu_vars <- subset(edu, select = c("Country Name", "2010"))
+head(edu_vars)
+
+# remove duplicates
+
+edu_duplicates <- duplicated(edu_vars)
+edu_duplicates["TRUE"]
+
+# merge with combined data
+
+data_merge <- left_join(data_combined, edu_vars,
+                   by = c("country" = "Country Name"))
+data_final <- rename(data_merge, "education"="2010")
+head(data_final)
+```
+
+```{r}
+# summary of final data frame
+
+summary(data_final)
+```
+
+### Visualization:
+
+```{r}
+# add religion as new categorical variable based on highest percentage of each religion:
+
+newdata <- select(data_final, country, rel_catho80, rel_muslim80, rel_protmg80, rel_unaffiliated)
+head(newdata)
+
+library(reshape2)
+
+data_final$religion <- apply(data_final[, c("rel_protmg80", "rel_muslim80", "rel_catho80", "rel_unaffiliated")], 1, function(row) {
+  religions <- c("rel_protmg80", "rel_muslim80", "rel_catho80", "rel_unaffiliated")
+  max_percentage <- max(row)
+  religion <- religions[row == max_percentage]
+  paste(religion, collapse = ", ")
+})
+head(data_final)
+```
+
+```{r}
+# pivot data to add variable with all religions
+
+data_pivot <- data_final %>% 
+  pivot_longer(cols=c('rel_catho80', 'rel_muslim80', 'rel_protmg80', 'rel_unaffiliated'),
+                    names_to='relig_affiliation',
+                    values_to='relig_pop')
+head(data_pivot)
+
+# remove NAs
+
+data_NA <- data_pivot%>%
+  na.omit(data_pivot)%>%
+  select(c(growth, democ, education, relig_affiliation, relig_pop))
+head(data_NA)
+
+# remove observations where values are equal
+
+data_final_vis <- subset(data_final, religion!="rel_protmg80, rel_catho80")
+head(data_final_vis)
+
+# scatterplot for income x democray by religion
+
+relig_vis3 <- data_final_vis%>%
+  na.omit(data_final_vis)%>%
+  ggplot(aes(democ, growth))+
+  facet_wrap("religion")+
+  labs(x="Shift in Democracy",y="Shift in Per Capita Income", title = "Shift in Per Capita Income and Democracy by Religious Affiliation") + geom_point(mapping = aes(color = religion))
+print(relig_vis3)
+```
+
+```{r}
+# scaterplot by median pop percentages by religion
+
+dem_inc_relig <- data_final_vis%>%
+  na.omit(data_final_vis)%>%
+  ggplot(aes(democ, growth))+
+  geom_point(aes(color=religion, shape=religion))+  
+  labs(x="Shift in Democracy", y="Shift in Income Per Capita", title = "Shift in Per Capita Income and Democracy by Religious Affiliation")
+print(dem_inc_relig)
+```
+
+```{r}
+# stacked bar chart
+
+inc_relig <- data_final_vis%>%
+  na.omit(data_final_vis)%>%
+ggplot(aes(x=democ, y=education, fill=religion)) +
+geom_bar(stat="identity") +
+scale_fill_hue() +
+  theme_classic() +
+  labs(x="Shift in Democracy", y="Education Funding", title="Shift in Education Funding and Democracy by Religious Affiliation")
+print(inc_relig)
+```
+
+```{r}
+# line chart
+
+line_chart <- data_final_vis%>%
+  na.omit(data_final_vis)%>%
+  ggplot(aes(x=democ, y=education, colour=religion, group=religion)) + labs(x="Shift in Democracy", y="Education Funding", title="Shift in Education Funding and Democracy by Religious Affiliation") +
+  geom_line()
+print(line_chart)
+```
+
+```{r}
+# scatterplot 
+
+relig_income2 <- data_final_vis%>%
+  na.omit(data_final_vis)%>%
+  ggplot(aes(education, growth))+
+  facet_wrap("religion")+
+  labs(x="Education Funding",y="Shift in Income Per Capita", title = "Shift in Per Capita Income and Education Funding by Religious Affiliation") + geom_point(mapping = aes(color = religion))
+print(relig_income2)
+```
+
+### Analysis:
+
+#### Hypothesis Testing:
+
+Define variables:
+
+1.  **Response (dependent) variable**: Shift in democracy over time ("democ").
+2.  **Explanatory (independent) variable**: Shift in per capita income over time ("growth").
+3.  **Control variables**: country ("country"); constraint on the executive at the time of independence ("exec_constraint"); year of independence ("year_ind"); settler mortality rate ("log_settler_mort"); population density ("log_pop_dens"); Catholic population ("rel_catho80"); Muslim population ("rel_muslim80"); Protestant population ("rel_protmg80"); **religiously-unaffiliated population ("rel_unaffiliated")**; and **education funding ("education")**.
+4.  **Interaction terms**: Education funding ("education")\*shift in per capita income ("growth").
+
+I specifically added religiously-unaffiliated population (by percentage of population by country) and education funding (by expenditure as a percentage of GDP by country) as additional control variables because of the role they played in Barro's 1999 study. Although Barro did not control for the same country-specific effects as the authors of "Income and Democracy," he nonetheless suggested that both education and religious affiliation are statistically significant indicators of the correlation between income and democracy. So, I elected to add religiously-unaffiliated population to my replication data set because it was included in Barro's study but excluded from "Income and Democracy." Additionally, even though education was deemed to be statistically insignificant in "Income and Democracy," I thought it would be interesting to see if adding religiously-unaffiliated population would affect the role of education a country-fixed effect.
+
+Moreover, as I initially speculated that education would be statistically significant prior to reviewing "Income and Democracy," I was curious to see if adding education funding\*shift as an interaction term would perhaps provide additional insight on the reach of education as a country-fixed effect.
+
+**Transform Variables**
+
+```{r}
+# transform education from continuous to ordinal (quartiles based on range)
+
+range_edu <- range(data_final$education, na.rm=TRUE)
+
+# ID quantiles
+
+quantile_edu <- quantile(range_edu)
+quantile_edu
+
+library(gtools)
+
+# add column for quantiles
+
+edu_quant <- quantcut(data_final$education, q = 4, na.rm = TRUE)
+data_final_edu <- mutate(data_final, edu_quant=edu_quant)
+head(data_final_edu)
+```
+
+```{r}
+newdata <- select(data_final, country, rel_catho80, rel_muslim80, rel_protmg80, rel_unaffiliated)
+head(newdata)
+
+library(reshape2)
+
+data_final$religion <- apply(data_final[, c("rel_protmg80", "rel_muslim80", "rel_catho80", "rel_unaffiliated")], 1, function(row) {
+  religions <- c("rel_protmg80", "rel_muslim80", "rel_catho80", "rel_unaffiliated")
+  max_percentage <- max(row)
+  religion <- religions[row == max_percentage]
+  paste(religion, collapse = ", ")
+})
+head(data_final)
+```
+
+**Correlation Tests**
+
+```{r}
+# remove observations with all NAs
+
+sans_NA <- na.omit(data_final)
+head(sans_NA)
+
+# correlation between income growth and education
+
+cor(sans_NA[c("growth", "education")])
+```
+
+There is a positive but low linear correlation (0.4) between shift in per capita income and education funding.
+
+```{r}
+# correlation between democracy and religious unaffiliation
+
+cor(sans_NA[c("democ", "rel_unaffiliated")])
+
+```
+
+There is a positive but very low linear correlation (0.1) between shift in democracy and religiously-unaffiliated population.
+
+```{r}
+# correlation between democracy and education
+
+cor(sans_NA[c("democ", "education")])
+```
+
+There is a positive but low linear correlation (0.3) between shift in democracy and education funding.
+
+#### Multiple regression models:
+
+First, I will check to see if either of my added control variables need to be logged.
+
+**Education**
+
+```{r}
+# education
+
+hist(data_final$education)
+```
+
+This distribution is moderately right-skewed, so I will log the education variable.
+
+```{r}
+# log() education
+
+log_education <- log(data_final$education)
+hist(log_education)
+```
+
+Next, I will add this logged variable to my final data set to incorporate into my regression model.
+
+```{r}
+# transform new log(eduation) variable
+
+data_final <- data_final %>%
+  transform(log_education=log(education))
+head(data_final)
+```
+
+**Religiously-unaffiliated population**
+
+```{r}
+# religiously-unaffiliated population
+
+hist(data_final$rel_unaffiliated)
+```
+
+This distribution is very right-skewed, so I will log the religiously-unaffiliated population variable.
+
+```{r}
+# log() rel_unaffiliated
+
+log_rel_unaff <- log(data_final$rel_unaffiliated)
+hist(log_rel_unaff)
+```
+
+Next, I will add this logged variable to my final data set to incorporate into my regression model.
+
+```{r}
+# transform new log(rel_unaffiliated) variable
+
+data_final <- data_final %>%
+  transform(log_rel_unaff=log(rel_unaffiliated))
+head(data_final)
+```
+
+**Original model:**
+
+```{r}
+# original study multiple regression model
+
+reg_1 <- lm(democ ~ growth + exec_constraint + year_ind + log_settler_mort + log_pop_dens + rel_catho80 + rel_muslim80 + rel_protmg80, data = data_final)
+summary(reg_1)
+```
+
+Interestingly, we see in the original model that the relationship between shift in per capita income ("growth") and shift in democracy is statistically significant at the 0.05 significance level (p-value=0.01). It is important to note that while the authors of "Income and Democracy" did conclude that there is no causal relationship between per capita shift in income and shift in democracy, this is not to say that there is no level of statistical significance. I will next add my additional control variables and interaction term to see if these terms cause an increase in statistical significance.
+
+**Original model plus two control variables:**
+
+```{r}
+# multiple regression model with all variables
+
+reg_2 <- lm(democ ~ growth + exec_constraint + year_ind + log_settler_mort + log_pop_dens + rel_catho80 + rel_muslim80 + rel_protmg80 + log_rel_unaff + log_education, data = data_final)
+summary(reg_2)
+```
+
+We can see based on this multiple regression model that, when controlling for shift in per capita income, constraint on the executive at the time of independence, year of independence, (log) settler mortality rate, (log) population density, Catholic population, Muslim population, Protestant population, religiously-unaffiliated population, and education funding, there is no statistical significance between shift in per capita income (growth) and shift in democracy (democ) when the significance level is 0.05.
+
+We can, however, see that year of independence (p-value=0.001) and constraint on the executive (p-value=0.02) are statistically significant on shift in democracy. Even more interesting is that religiously-unaffiliated population, a control variable that was added to this replication study, is also statistically significant in terms of its relationship with shift in democracy (p-value = 0.02).
+
+**Original model plus two control variables and an interaction term:**
+
+```{r}
+# multiple regression with education*growth interaction term
+
+reg_3 <- lm(democ ~ growth*log_education + exec_constraint + year_ind + log_settler_mort + log_pop_dens + rel_catho80 + rel_muslim80 + rel_protmg80 + log_rel_unaff, data = data_final)
+summary(reg_3)
+```
+
+In reviewing the third regression model which incorporates education\*growth as an interaction term, we do see some minor shifts in p-values, but no shift is large enough to affect statistical significance. So, we can again confirm that, even when adding an interaction term, shift in per capita income is not statistically significant in terms of its relationship with shift in democracy.
+
+I will now combine these three models into a single, more legible table using the 'stargazer()' function. We can again see that shift in income per capita is only statistically significant (though not indicative of a causal relationship) in the first model, which does not include the additional control variables or the interaction term.
+
+```{r}
+# use stargazer to create combined table
+
+library(stargazer)
+
+reg_model <- stargazer(reg_1, reg_2, reg_3, type='text')
+print(reg_model)
+```
+
+**Results of hypothesis test:** We can see based on these regression models that education funding, religiously-unaffiliated population, and education funding\*shift in per capita income actually lead to decreased statistical significance between shift in income per capita and shift in democracy. Thus, while these terms do change the causal relationship between shift in per capita income and shift in democracy, the regression outcome ultimately disproves my hypothesis.
+
+#### Model Comparison:
+
+**Adjusted R-Squared**
+
+```{r}
+# adjusted R-squared
+
+print(reg_model)
+```
+
+We can see in the stargazer table above that "reg_2," or the regression model that includes the additional control variables but not the interaction term, has the highest adjusted R-squared value , which is an indicator of best fit as it represents the model with the smallest residuals.
+
+**PRESS**
+
+```{r}
+# PRESS
+
+library(MPV)
+
+#reg_1 = 4.999083
+
+PRESS(reg_1)
+```
+
+```{r}
+#reg_2 = 3.258505
+
+PRESS(reg_2)
+```
+
+```{r}
+#reg_3 = 3.460336
+
+PRESS(reg_3)
+```
+
+We can see in the above Predicted Residual Sum of Squares (PRESS) tests that "reg_2," or the regression model that includes the additional control variables but not the interaction term, has the lowest PRESS value, thus indicating that it is the best-fit model.
+
+**AIC**
+
+```{r}
+# select number of observations from reg_1 to match reg_2 and reg_3
+
+reg_1_data <- data_final
+
+# set observations to sample
+
+observations <- 136
+
+# set seed
+
+set.seed(14)
+
+# select observations
+
+sampled_indices <- sample(nrow(reg_1_data), observations)
+sampled_data <- reg_1_data[sampled_indices, ]
+
+# fit  model with sample data
+
+reg_1_sample <- lm(democ ~ growth + exec_constraint + year_ind + log_settler_mort + log_pop_dens + rel_catho80 + rel_muslim80 + rel_protmg80, data=sampled_data)
+reg_1_sample
+
+# check number of observations
+
+reg_model <- stargazer(reg_1_sample, reg_2, reg_3, type='text')
+```
+
+```{r}
+# AIC
+
+library(AICcmodavg)
+
+models <- list(reg_1_sample, reg_2, reg_3)
+mod.names <- c('reg_1_sample', 'reg_2', 'reg_3')
+
+aictab(cand.set = models, modnames = mod.names)
+```
+
+We can see that based on the Akaike Information Criterion (AIC) test, "reg_2," or the regression model that includes the additional control variables but not the interaction term, has the lowest AICc value. Therefore, because minimizing the AICc value equates to minimizing the number of unnecessary model parameters, "reg_2" is the best fit.
+
+#### Diagnostics:
+
+Based on the Adjusted R-Squared, PRESS, and AIC tests, "reg_2," or the regression model that includes the additional control variables but not the interaction term, is universally considered the model of best fit.
+
+**Diagnostic plots for the final model (reg_2):**
+
+```{r}
+# plots for reg_2
+
+par(mfrow=c(2,3))
+plot(reg_2, which=1:6)
+```
+
+-   **Residuals vs. Fitted**: In applying the Residuals vs. Fitted plot, we can observe a violation due to the curvature of the red line. We also see that the distribution of data points does not "bounce randomly" about the 0 line. This plot is therefore a **bad fit** for this regression model.
+
+-   **Normal Q-Q**: In applying the Normal Q-Q plot, we observe that the data points do generally fall along the 0 line, which is indicative of a **good fit** for this regression model.
+
+-   **Scale-Location**: In applying the Scale-Location plot, we observe what appears to be heteroscedasticity across the data points as well as a non-horizontal red line. Because see indications of heteroscedasticity, we should run a Breusch-Pagan test to confirm.
+
+    ```{r}
+    library(lmtest)
+
+    bp_test <- lm(democ ~ growth + exec_constraint + year_ind + log_settler_mort + log_pop_dens + rel_catho80 + rel_muslim80 + rel_protmg80 + log_rel_unaff + log_education, data = data_final)
+    bptest(bp_test)
+    ```
+
+    The results of the Breusch-Pagan test show that we cannot reject the null hypothesis (p-value=0.45), which in this case is homoscedasticity. So, there is no violation of the assumption of homoscedasticity. This plot is therefore a **good fit** for this regression model.
+
+-   **Cook's Distance**: In applying the Cook's Distance plot, we observe a violation due to several data points yielding a Cook's distance value greater than 1. This plot is therefore a **bad fit** for this regression model.
+
+-   **Residuals vs. Leverage**: In applying the Residuals vs. Leverage plot, we can see that there are no data points outside of the dashed lines marked with '0.5.' This plot is therefore a **good fit** for this regression model.
+
+-   **Cook's Distance vs. Leverage**: In applying the Cook's Distance vs. Leverage plot, we do not really observe any influential data points. This plot does not contribute any value to this regression model.
+
+### Sources:
+
+1.  **Data set**: Acemoglu, Daron, et al. \"Replication Data For: Income and Democracy.\" *American Economic Association*, vol. 1, 12 Oct. 2019, www.openicpsr.org/openicpsr/project/113251/version/V1/view?path=%2Fopenicpsr%2F113251%2Ffcr%3Aversions%2FV1%2FIncome-and-Democracy-Data-AER-adjustment.xls&type=file, https://doi.org/10.3886/e113251v1.
+2.  **Study**: Acemoglu, D., Johnson, S., Robinson, J. A., & Yared, P. (2008, June 3). *Income and democracy*. American Economic Review. https://www.aeaweb.org/articles?id=10.1257%2Faer.98.3.808
+3.  **Comparison study**: Barro, Robert J. \"Determinants of Democracy.\" *Journal of Political Economy*, vol. 107, no. S6, Dec. 1999, pp. S158--S183, https://doi.org/10.1086/250107.und
+4.  **Additional religious affiliation variables**: Datopian. \"World Religion Projections.\" *DataHub*, 2018, datahub.io/sagargg/world-religion-projections#data.
+5.  **Education variable**: The World Bank. \"Government Expenditure on Education, Total (% of GDP) \| Data.\" *Worldbank.org*, 2019, data.worldbank.org/indicator/SE.XPD.TOTL.GD.ZS.
