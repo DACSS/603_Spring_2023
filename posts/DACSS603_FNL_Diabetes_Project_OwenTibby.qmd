@@ -1,0 +1,628 @@
+---
+title: "Final Project - Diabetes and General Health"
+author: "Owen Tibby"
+editor: visual
+output: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+
+library(tidyverse)
+library(knitr)
+library(corrplot)
+library(Hmisc)
+library(caret)
+library(nnet)
+library(stats)
+library(class)
+library(MLmetrics)
+library(e1071)
+library(MASS)
+library(reshape2)
+
+
+```
+
+### **Introduction:**
+
+Diabetes, particularly type 2 diabetes, is a widespread chronic disease in the United States, impacting the health of millions and placing a significant financial strain on the US economy (Xie Z, Nikolayeva O, Luo J, Li D., 2019). Recently becoming aware of the risks associated with consuming too much sugary food, I am passionate about promoting overall health awareness among everyday people.
+
+Xie et al. utilized the diabetes data set obtained from the 2014 Behavioral Risk Factor Surveillance System, which offers a wide array of observations associated with multiple significant variables.
+
+This research project aims to further explore the relationship between general health and various socio-economic and demographic factors, such as income, education, and gender.
+
+**Note: For a summary of this project's findings, please see link to poster:** [Poster link](https://www.canva.com/design/DAFhgdSVFaI/R02Fl8Rh4JIHe7a4STCHKw/view?utm_content=DAFhgdSVFaI&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink){.uri}
+
+#### Research Questions:
+
+Research Question: How do demographic factors compare to health indicators in predicting the risk of type II diabetes and general health?
+
+Hypothesis A: Among adults aged 30 and above, health factors are slightly more effective than demographic factors in predicting the occurrence of diabetes.
+
+Hypothesis B: Demographic factors play a significantly larger role than health indicators in predicting general health.
+
+#### Variables:
+
+Diabetes: Indicates whether the individual has diabetes or not.
+
+GenHlth: Represents the self-reported general health status of the individual, rescaled to a range of 1 (poor health) to 5 (excellent health).
+
+HighBP: Indicates whether the individual has been diagnosed with high blood pressure or not.
+
+HighChol: Indicates whether the individual has been diagnosed with high cholesterol or not.
+
+CholCheck: Represents whether the individual has undergone cholesterol checks or screenings in the past 5 years.
+
+BMI: Stands for Body Mass Index, a measure of body fat based on height and weight.
+
+Smoker: Indicates whether the individual has smoked more than 100 cigarettes in their lifetime or not.
+
+Stroke: Represents whether the individual has had a stroke or not.
+
+HeartDiseaseorAttack: Indicates whether the individual has a history of heart disease or heart attacks.
+
+PhysActivity: Indicates whether the individual reported engaging in any level of physical activity outside of their regular job or household activities in the past 30 days.
+
+HvyAlcoholConsump: Indicates whether the individual consumes alcohol heavily. For men, it means consuming more than 14 alcoholic drinks per week, and for women, it means consuming more than 7 drinks per week.
+
+NoDocbcCost: Indicates whether the individual has avoided visiting the doctor due to cost constraints.
+
+MentHlth_low: Refers to the mental health status or conditions of the individual. It represents the number of poor mental health days the individual experienced in the past 30 days.
+
+PhysHlth_low: Indicates the physical health status or conditions of the individual. It represents the number of days per month the individual's physical health was poor.
+
+Sex: Represents the biological sex of the individual. 0 indicates female, and 1 indicates male.
+
+Age: Refers to the age group of the individual. Group 1 represents individuals aged 18-24 years old, and group 13 represents individuals aged 80 or older.
+
+Education: Represents the educational attainment or level of the individual. The scale ranges from 1 (never attended any level of school beyond kindergarten) to 6 (college, 4 years or more).
+
+Income: Indicates the income level or range of the individual. The scale ranges from 1 (less than \$10,000 per annum) to 8 (greater than \$75,000 per annum).
+
+Diet: Refers to the dietary habits or patterns of the individual, specifically whether they consume fruits or vegetables at least once a day. The scale ranges from 0 (consumes neither fruits nor vegetables) to 3 (consumes both fruits and vegetables).
+
+#### Strategy
+
+This research project aims to investigate two main dependent variables: *diabetes* and *general health*. The goal is to develop models for predicting both variables and evaluate their performance using various metrics.
+
+For predicting both variables, three models will be fitted: Ordinal Logistic Regression, Random Forest classification, and Logistic Regression.
+
+The evaluation metrics for these models will include sensitivity, accuracy, AIC (Akaike Information Criterion), and confusion matrices. The prediction accuracy for both general health and diabetes will be compared to determine which models provide better predictions for each dependent variable.
+
+### Section 1: Data Preprocessing & Wrangling
+
+#### Reading in Data
+
+```{r Reading In data , message=FALSE, warning=FALSE }
+
+
+diabetes<- read_csv("_data/diabetes_012.csv", 
+    col_types = cols(DiffWalk = col_skip()))
+
+```
+
+```{r Initial Data Wrangling}
+#Renaming Columns
+diabetes <- diabetes %>% 
+  rename(Diabetes = Diabetes_012, MentHlth_low = MentHlth, PhysHlth_low = PhysHlth)
+
+
+#Re-factoring Diabetes & General Health
+diabetes$GenHlth<- as.numeric(ifelse(diabetes$GenHlth == "1", 5, ifelse(diabetes$GenHlth == "2", 4, ifelse(diabetes$GenHlth== "3", 3, ifelse(diabetes$GenHlth== "4", 2, ifelse(diabetes$GenHlth == "5", 1, "N/A"))))))
+
+diabetes$GenHlth <- diabetes$GenHlth %>% as.factor()
+diabetes$Diabetes <-  diabetes$Diabetes %>% as.factor()
+
+#Merging 'Fruits' and 'Veggies' into one column called Diet
+
+diabetes <-  diabetes %>%
+  mutate(Diet= as.numeric(ifelse(Fruits + Veggies == 2, 3,ifelse(Fruits == 1 & Veggies==0, 2, ifelse(Veggies==1 & Fruits ==0, 1, "0")))))
+
+# diabetes <- diabetes[,-c("Fruits", "Veggies" )]
+diabetes <- diabetes[, !(colnames(diabetes) %in% c("Fruits", "Veggies"))]
+
+
+
+```
+
+### Section 2: Exploratory Data Analysis
+
+Below are pie charts illustrating the proportion and distribution of diabetes categories, general health and the age groups of the respondents.
+
+```{r}
+# Summarize the data to get the count of records in each category
+summary_data <- diabetes %>%
+  count(Diabetes) %>%
+  mutate(Percentage = prop.table(n) * 100,
+         Total = sum(n)) %>% 
+  mutate(Diabetes = case_when(
+    Diabetes == 0 ~ "Non-diabetic",
+    Diabetes == 1 ~ "Prediabetic",
+    Diabetes == 2 ~ "Diabetic"))
+
+# Create the pie chart of Diabetes Categories
+plot1 <- ggplot(summary_data, aes(x = "", y = n, fill = Diabetes)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  labs(title = " Distribution of Diabetes Categories") +
+  geom_text(aes(label = paste0(round(Percentage) ,"%")),
+            position = position_stack(vjust = 0.5), color = "white")
+
+plot1
+```
+
+```{r}
+summary_data <- diabetes %>%
+  count(GenHlth) %>%
+  mutate(Percentage = prop.table(n) * 100,
+         Total = sum(n)) %>% 
+  mutate(GenHlth = case_when(
+    GenHlth == 1 ~ "1-Poor",
+    GenHlth == 2 ~ "2-Below Aveage",
+    GenHlth == 3 ~ "3-Average", 
+     GenHlth == 4 ~ "4-Good",
+     GenHlth == 5 ~ "5-Excellent")
+    )
+
+# Create the pie chart to show General Health Distribution
+plot2 <- ggplot(summary_data, aes(x = "", y = n, fill = GenHlth)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  labs(title = "Distribution of Self-Reported General Health" , fill= "General Health") +
+  geom_text(aes(label = paste0(round(Percentage) ,"%")),
+            position = position_stack(vjust = 0.5), color = "white")
+plot2
+```
+
+```{r}
+summary_data <- diabetes %>%
+  count(Age) %>%
+  mutate(Percentage = prop.table(n) * 100,
+         Total = sum(n), Age=factor(Age) )%>% 
+            mutate(Age = case_when(
+              Age == 1 ~ "18-24",
+              Age == 2 ~ "25-29",
+              Age == 3 ~ "30-34",
+              Age == 4 ~ "35-39", 
+              Age == 5 ~ "40-44",
+              Age == 6 ~ "45-49",
+              Age == 7~ "50-54",
+              Age == 8 ~ "55-59",
+              Age == 9 ~ "60-64",
+              Age == 10 ~ "65-69",
+              Age == 11 ~ "70-74",
+              Age == 12 ~ "75-79",
+              Age == 13 ~ "80-99"))
+
+
+
+# Create the pie chart to show Age Distribution
+plot3 <- ggplot(summary_data, aes(x = "", y = n, fill = Age)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  labs(title = "Distribution of Age groups" , fill= "Age") +
+  geom_text(aes(label = paste0(round(Percentage) ,"%")),
+            position = position_stack(vjust = 0.5), color = "white")
+plot3
+```
+
+```{r Correlation Plot }
+# Plot the correlation matrix for people with diabetes and pre-diabetes
+
+# Create correlation matrix
+correlation_matrix <- cor(diabetes %>% mutate(GenHlth=as.numeric(GenHlth), Diabetes = as.numeric(Diabetes)))
+
+# Melt correlation matrix into long format for ggplot2
+melted_correlation <- melt(correlation_matrix)
+
+# Create heat map with ggplot2
+ggplot(data = melted_correlation, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "darkred", mid = "white", high = "darkgreen", midpoint = 0) +
+  theme_minimal() +
+  labs(x= "", y="")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+
+  #labs(title = "Correlation Matrix")
+
+
+```
+
+#### Splitting the Data
+
+```{r Splitting data}
+
+
+# Create a data partition for cross-validation
+set.seed(123)
+partition <- createDataPartition(diabetes$Diabetes, p = 0.8, list = FALSE)
+
+# Split the data into training and validation sets
+train <- diabetes[partition, ]
+valid <- diabetes[-partition, ]
+
+```
+
+### Section 3: Modelling for Diabetes
+
+#### Random Forest
+
+```{r Model preprocessing }
+demographic_factors <- c("Sex", "Income", "Education", "Age", "NoDocbcCost")
+
+health_indicators <- c("GenHlth", "BMI",  "Smoker", "HighBP", "HighChol", "Stroke" , "HeartDiseaseorAttack" ,  "HvyAlcoholConsump" ,"Diet") 
+
+both <- c(demographic_factors, health_indicators)
+response <- "Diabetes"
+```
+
+```{r Random forest classification model}
+diab_rf_dem <-  train(x = train[,demographic_factors ], y =train[[response]], method = "rf", trControl = trainControl(method = "cv", number = 5), ntree=20)
+
+diab_rf_hlth <- diab_rf_hlth <- train(x = train[,health_indicators ], y = train[[response]], method = "rf", trControl = trainControl(method = "cv", number = 5), ntree= 20)
+
+diab_rf_both <- train(x = train[,both ], y = train[[response]], method = "rf", trControl = trainControl(method = "cv", number = 5), ntree= 20)
+
+```
+
+```{r Predictions-Random forest }
+actual <- factor(valid$Diabetes)
+
+# Make predictions on the validation set
+predictions_rf_dem <- predict(diab_rf_dem, newdata = valid[, demographic_factors]) %>%  as.factor
+
+# Make predictions on the validation set
+predictions_rf_hlth <- predict(diab_rf_hlth, newdata = valid[, health_indicators]) %>%  as.factor
+
+# Make predictions on the validation set
+predictions_rf_both <- predict(diab_rf_both, newdata = valid[, both]) %>%  as.factor
+```
+
+```{r Confusion Matrix Random forest Evaluation }
+# Print the confusion matrix and accuracy of the model
+cat("Demogrpahic Variables in RF")
+confusionMatrix(predictions_rf_dem, actual)
+
+cat("Health Variables in RF")
+confusionMatrix(predictions_rf_hlth, actual)
+
+cat("Demogrpahic & Health Variables in RF")
+confusionMatrix(predictions_rf_both, actual)
+
+```
+
+#### Ordinal Logistic Regression
+
+```{r Ordinal logistic model - demographic variables}
+
+# Fit ordinal logistic regression model for diabetes prediction using demographic factors
+diab_olm_dem <- polr(Diabetes ~ Income*Education + Age + Sex + NoDocbcCost, data = train)
+
+# Print the model summary
+summary(diab_olm_dem)
+
+```
+
+```{r Ordinal logistic model - health variables- Diabetes }
+
+diab_olm_hth <- polr(Diabetes~ GenHlth + BMI + Smoker+ HighBP + HighChol + Stroke + HeartDiseaseorAttack + HvyAlcoholConsump + Diet, data = train)
+
+summary(diab_olm_hth)
+```
+
+```{r}
+diab_olm_both <- polr(Diabetes~ Income*Education + Age + Sex + NoDocbcCost + GenHlth+ BMI + Smoker+ HighBP + HighChol + Stroke + HeartDiseaseorAttack + HvyAlcoholConsump + Diet, data = train)
+```
+
+```{r Predictions - Ordinal logistic model}
+
+# Predictions using demographic indicators with OLM
+predictions_olm_dem <- predict(diab_olm_dem, newdata= valid)
+
+
+# Predictions using health indicators with OLM
+predictions_olm_hlth <- predict(diab_olm_hth, newdata= valid)
+
+# Predictions using health indicators with both
+predictions_olm_both <- predict(diab_olm_both, newdata= valid)
+
+# Extract the response variable from the training data
+actual <- valid$Diabetes
+```
+
+```{r  Confusion Matrix Ordinal logistic model- Dem factors}
+
+# Confusion matrix for demographic variables
+
+cat("Demographic Variables in Ordinal logistic model")
+confusionMatrix(predictions_olm_dem, actual)
+```
+
+```{r Confusion Matrix Ordinal logistic model- Health indicators}
+# Confusion matrix for health indicators
+
+cat("Health Variables in Ordinal logistic model")
+confusionMatrix(predictions_olm_hlth, actual)
+
+```
+
+```{r}
+# Confusion matrix for health indicators
+cat("Demographic & health Variables in Ordinal logistic model")
+confusionMatrix(predictions_olm_both, actual)
+
+
+```
+
+#### Logistic Regression
+
+Note: The diabetes data was subsequently recoded to merge individuals classified as pre-diabetic and non-diabetic, creating two distinct classes. A value of 0 was assigned to those who were non-diabetic or pre-diabetic, while a value of 2 was assigned to those classified as diabetic.
+
+This re-coding process sets the stage for logistic regression analysis, aiming to evaluate how it compares to the sensitivity of the ordinal logistic model.
+
+```{r eval=FALSE}
+#count of prediabetics
+cat( "Number of pre-diabetics: ", length(diabetes$Diabetes[diabetes$Diabetes == "1"]))
+
+#Merging pre-diabetics with non-diabetics
+diabetes_binary <- diabetes
+diabetes_binary$Diabetes[diabetes_binary$Diabetes == "1"] <- 0
+
+
+```
+
+```{r eval=TRUE}
+#count of prediabetics
+cat( "Number of pre-diabetics: ", length(diabetes$Diabetes[diabetes$Diabetes == "1"]))
+
+#Merging pre-diabetics with non-diabetics
+diabetes_binary <- diabetes
+diabetes_binary$Diabetes[diabetes_binary$Diabetes == "1"] <- 2
+
+
+
+```
+
+```         
+```
+
+```{r  Logistic regression on diabates data, eval=TRUE}
+
+demographic_factors <- c("Sex", "Income", "Education", "Age", "NoDocbcCost")
+
+health_indicators <- c("GenHlth", "BMI",  "Smoker", "HighBP", "HighChol", "Stroke" , "HeartDiseaseorAttack" ,  "HvyAlcoholConsump" ,"Diet") 
+
+both <- c(demographic_factors, health_indicators)
+
+#Merging pre-diabetics with non-diabetics
+diabetes_binary <- diabetes
+diabetes_binary$Diabetes[diabetes_binary$Diabetes == "1"] <- 2
+
+
+# Create a data partition for cross-validation
+set.seed(123)
+partition <- createDataPartition(diabetes_binary$Diabetes, p = 0.8, list = FALSE)
+
+# Split the data into training and validation sets
+train2 <- diabetes_binary[partition, ]
+valid2 <- diabetes_binary[-partition, ]
+
+
+# LR models
+diab_lr_dem <-  multinom(Diabetes ~  Income*Education + Age + Sex + NoDocbcCost, data = train2)
+
+diab_lr_hlth <-  multinom(Diabetes ~ GenHlth + BMI + HighBP + HighChol + Stroke + HeartDiseaseorAttack + HvyAlcoholConsump + Diet, data = train2)
+
+diab_lr_both <- multinom(Diabetes ~ Income*Education + Age + Sex + NoDocbcCost + GenHlth +BMI + HighBP + HighChol + Stroke + HeartDiseaseorAttack + HvyAlcoholConsump + Diet, data = train2)
+
+
+
+actual <- factor(valid2$Diabetes)
+
+# Make predictions on the validation set
+predictions_lr_dem <- predict(diab_lr_dem, newdata = valid2[, demographic_factors]) %>%  as.factor
+
+# Make predictions on the validation set
+predictions_lr_hlth <- predict(diab_lr_hlth, newdata = valid2[, health_indicators]) %>%  as.factor
+
+# Make predictions on the validation set
+predictions_lr_both <- predict(diab_lr_both, newdata = valid2[, both]) %>%  as.factor
+
+
+# Print the confusion matrix and accuracy of the model
+
+cat("Demographic Variables in  logistic regression model")
+confusionMatrix(predictions_lr_dem, actual)
+
+cat("Health Variables in  logistic regression model")
+confusionMatrix(predictions_lr_hlth, actual)
+
+cat("Demographic & health Variables in  logistic regression model")
+confusionMatrix(predictions_lr_both, actual)
+```
+
+### Section 4: Model Comparison (Diabetes)
+
+```{r}
+model_names <- c("Demographic Variables", "Health Variables", "Both Dem. & Hlth")
+AIC_values_olm <- c(AIC(diab_olm_dem), AIC(diab_olm_hth), AIC(diab_olm_both))
+# BIC_values_olm <- c(BIC(diab_olm_dem), BIC(diab_olm_hth), BIC(diab_olm_both))
+
+# Plotting AIC values
+barplot(AIC_values_olm, names.arg = model_names, ylab = "AIC", main = "Ordinal Logistic Regression Model: AIC Comparison (Diabetes)", col = c("darkblue", "blue", "lightblue"))
+
+AIC_values_lr <- c(AIC(diab_lr_dem), AIC(diab_lr_hlth), AIC(diab_lr_both))
+
+# Plotting AIC values
+barplot(AIC_values_lr, names.arg = model_names, ylab = "AIC", main = "Logistic Regression Model: AIC Comparison (Diabetes)", col = c("darkred", "red", "pink"))
+
+
+```
+
+### Section 5: Modelling for General Health
+
+#### Random Forest
+
+```{r General Health - Random Forest, eval=FALSE}
+#### Random Forest
+
+demographic_factors <- c("Sex", "Income", "Education", "Age", "NoDocbcCost")
+
+health_indicators <- c( "Diabetes" ,"BMI",  "Smoker", "HighBP", "HighChol", "Stroke" , "HeartDiseaseorAttack" ,  "HvyAlcoholConsump" ,"Diet") 
+
+both <- c(demographic_factors, health_indicators)
+
+
+response <- "GenHlth"
+
+gen_rf_dem <- train(x = train[,demographic_factors ], y =train[[response]], method = "rf", trControl = trainControl(method = "cv", number = 5), ntree=15)
+
+gen_rf_hlth <- train(x = train[,health_indicators ], y = train[[response]], method = "rf", trControl = trainControl(method = "cv", number = 5), ntree= 15)
+
+gen_rf_both <- train(x = train[,both ], y = train[[response]], method = "rf", trControl = trainControl(method = "cv", number = 5), ntree= 15)
+
+# Predictions
+
+valid$GenHlth <- valid$GenHlth %>% as.factor
+actual_gen <- (valid$GenHlth) %>% as.factor()
+
+# Make predictions on the validation set using demographic factors
+predictions_gen_rf_dem <- predict(gen_rf_dem, newdata = valid[, demographic_factors]) %>%   as.factor()
+
+# Make predictions on the validation set using health factors
+predictions_gen_rf_hlth <- predict(gen_rf_hlth, newdata = valid[, health_indicators]) %>% as.factor()
+
+# Make predictions on the validation set using health factors
+predictions_gen_rf_both <- predict(gen_rf_both, newdata = valid[, both]) %>% as.factor()
+
+
+#predictions_gen_rf_dem <- factor(predictions_gen_rf_dem, levels = levels(actual_gen))
+
+
+#predictions_gen_rf_both <- factor(predictions_gen_rf_both, levels = levels(actual_gen))
+
+# Print the confusion matrix and accuracy of the model
+confusionMatrix(predictions_gen_rf_dem, actual_gen)
+confusionMatrix(predictions_gen_rf_hlth, actual_gen)
+
+
+confusionMatrix(predictions_gen_rf_both, actual_gen)
+
+```
+
+#### Ordinal Logistic Model
+
+```{r General health Ordinal logistic model - demographic variables}
+
+diabetes$GenHlth <- diabetes$GenHlth %>% as.factor()
+
+
+# Split the data into training and validation sets
+train <- diabetes[partition, ]
+valid <- diabetes[-partition, ]
+
+# Fit ordinal logistic regression model for diabetes prediction using demographic factors
+gen_olm_dem <- polr(GenHlth ~ Income*Education + Age + Sex + NoDocbcCost, data = train)
+
+# Print the model summary
+summary(gen_olm_dem)
+
+```
+
+```{r Ordinal logistic model - health variables}
+
+#OLR model
+gen_olm_hth <- polr(GenHlth~ Diabetes + BMI + Smoker+ HighBP + HighChol + Stroke + HeartDiseaseorAttack + HvyAlcoholConsump + Diet, data = train)
+
+summary(gen_olm_hth)
+```
+
+```{r Ordinal logistic model - both variables}
+gen_olm_both <- polr(GenHlth~ Diabetes +BMI + Smoker+ HighBP + HighChol + Stroke + HeartDiseaseorAttack + HvyAlcoholConsump + Diet + Income*Education + Age + Sex + NoDocbcCost
+, data = train)
+
+```
+
+```{r Predictions - Ordinal logistic model - Gen}
+
+
+# Predictions using demographic indicators with OLM
+predictions_olm_dem_gen <- predict(gen_olm_dem, newdata= valid)
+
+
+# Predictions using health indicators with OLM
+predictions_olm_hlth_gen <- predict(gen_olm_hth, newdata= valid)
+
+
+# Predictions using health indicators with OLM
+predictions_olm_both_gen <- predict(gen_olm_both, newdata= valid)
+
+# Extract the response variable from the training data
+actual_gen_olm <- valid$GenHlth
+```
+
+```{r  Confusion Matrix Ordinal logistic model- Dem factors - Gen}
+
+# Confusion matrix for demographic variables
+confusionMatrix(predictions_olm_dem_gen, actual_gen_olm)
+
+```
+
+```{r Confusion Matrix Ordinal logistic model- Health indicators - Gen}
+# Confusion matrix for health indicators
+confusionMatrix(predictions_olm_hlth_gen, actual_gen_olm)
+
+```
+
+```{r Confusion Matrix Ordinal logistic model- both indicators - Gen}
+# Confusion matrix for both indicators
+confusionMatrix(predictions_olm_both_gen, actual_gen_olm)
+```
+
+### Section 6: Model Comparison Part 2 (General Health)
+
+```{r}
+
+model_names <- c("Demographic Variables", "Health Variables", "Both Dem. & Hlth")
+AIC_values_olm_gen <- c(AIC(gen_olm_dem), AIC(gen_olm_hth), AIC(gen_olm_both))
+
+# Plotting AIC values
+barplot(AIC_values_olm_gen, names.arg = model_names, ylab = "AIC", main = "Ordinal Logistic Regression Model: AIC Comparison (General Health)", col = c("darkgreen", "green", "lightgreen"))
+
+
+
+
+
+```
+
+### **Section 7: Summary of Findings**
+
+Diabetes
+
+-   Contrary to the primary hypothesis, demographic variables alone demonstrate very limited effectiveness in predicting diabetes. In contrast, health indicators exhibit superior predictive capability for diabetes. When combining demographic variables with health indicators, there are only slight improvements in model accuracy and sensitivity compared to models fitted solely with health variables.
+
+-   Comparing the predictive performance of different models for diabetes and general health, the ordinal logistic regression model outperformed the random forest and logistic regression models.
+
+-   Logistic regression models (Fig.5) exhibited a lower AIC across all groups of variables after recoding the response variable, but sensitivity did not improve.
+
+General Health
+
+-   Demographic variables were more effective at predicting general health than classifying the presence of diabetes.
+
+-   In all models, including the random forest model, demographic variables such as age, sex, income, and education provided close predictions of general health for individuals. It is worth noting that the random forest model was less likely to classify respondents as having excellent health, typically predicting on a scale of 1-4
+
+-   This behavior may be attributed to the mismatch in sample size between the classes and the random forest model needing to sample across a wide number of trees to determine the most likely outcome. As a result, the predictions leaned towards good health but not excellent health, which aligns with the tendency of respondents to report higher general health ratings for themselves.
+
+### **Section 8: Conclusion**
+
+Fitting additional variables has minimal impact on accuracy and the true-positive rate. Health indicators alone are sufficient for predicting diabetes, as demographic variables, whether considered individually or in combination with health indicators, do not contribute significantly to predictive power.
+
+While health indicators alone may be suitable for diabetes prediction (despite a relatively low 15% sensitivity rate), it is important to acknowledge that the data relies on self-reports, which may introduce response bias or rating inflation.
+
+The findings did not substantially support the secondary hypothesis. For predicting general health, regression with a continuous outcome variable and metrics like root mean squared error could have provided a better measure of model performance. However, this aspect was beyond the scope of the project.
+
+The correlation matrix reveals a moderate relationship between demographic variables (such as income and age) and certain key health indicators. Although this relationship exists, it is not strong enough for demographic variables to predict (either diabetes or general health) well in the absence of health factors.
