@@ -1,0 +1,294 @@
+---
+title: "Homework_4"
+author: "Paritosh G"
+desription: "Something to describe what I did"
+date: "05/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - challenge1
+  - my name
+  - dataset
+  - ggplot2
+---
+
+```{r}
+library(tidyverse)
+library(alr4)
+library(ggplot2)
+library(smss)
+library(magrittr)
+```
+
+## Q.1)
+
+```{r}
+ y <- function(x1,x2) { 53.8*x1 + 2.84*x2 - 10536}
+```
+
+## a)
+
+```{r}
+predicted <- y(x1 = 1240, x2 = 18000)
+
+print(predicted)
+```
+
+```{r}
+print( 145000 - predicted)
+```
+
+The model is predicting the selling price of the house to be less than actual hence the residual is positive.
+
+## b)
+
+-   For each square foot increase in home for a particular lot size which is also present in the model the price will increase by 53.8\$
+
+## c)
+
+-   One square foot increase in lot size of the house will increase the price a by 2.84 dollars. to increase the price to 53.8dollars. we need to increase the size of houses by 53.8/2.84 equals 18.94 square feet.
+
+## Q.2)
+
+data
+
+```{r}
+data(salary)
+```
+
+## a)
+
+qs per question using variable sex
+
+```{r}
+model_1 <- lm(salary ~ sex, data = salary)
+summary(model_1)
+```
+
+negative value of coefficient suggests Female's are being paid less by that amount than male colleagues which is 3340 the variable is significant at 10% level but not at 5% level.
+
+## b)
+
+model for all predictors
+
+```{r}
+model_2 <- lm(salary ~ degree + rank + year + ysdeg , data = salary) 
+summary(model_2)
+```
+
+## c)
+
+```{r}
+confint(model_2)
+```
+
+95% confidence interval suggest 697 dollar less or 3031 dollars more for female faculty than male faculties. controlling for other variables.
+
+```{r}
+summary(model_2)
+```
+
+-   rank: The model takes rank as an **categorical** variable, ignoring its order. The most common practice for ordered categorical variables like rank is to either treat them as just a regular categorical variable or as a numeric variable. The latter is most acceptable when the variable has lots of levels and/or the distance between each level can be reasonably thought of as equal. In this case, because there are only three levels (one more than what a dummy variable has), it makes sense to accept this as a regular categorical variable.
+
+-   degree**:** The degree variable is insignificant at all level.
+
+The rankAssoc category suggests that Associate Professors make \$5292 more than Assistant Professors, rankProf suggests full professors make \$11118 more than Assistant Professors.
+
+-   if we want to test significance of whole rank variable and not an individual variable. we need to compare two models one with all variables and second without any rank dummies.
+
+```{r}
+M_3 <- lm(salary ~ ., data = salary)
+M_4 <- lm(salary ~ . -rank, data = salary)
+
+anova(M_3, M_4)
+```
+
+-   rank variable is significant as a whole.
+
+-   sex: As we saw with confidence intervals, this variable is now not statistically significant at conventional levels. The coefficient suggests female faculty make \$1166 more after everything is controlled, but interpreting coefficients when the effect is insignificant is not very meaningful.
+
+-   year: his variable is statistically significant. It suggests that every additional in current rank is associated with \$476 more salary.
+
+-   ysdeg: The variable is insignificant. The coefficient would suggest that every additional year that passes since degree is associated with \$124 less salary.
+
+## d)
+
+```{r}
+salary$rank <- relevel(salary$rank, ref = 'Prof')
+summary(lm(salary ~ ., data = salary))
+```
+
+Prof. rankAsst being -11118 means Assistant Professors make 11118 less than Full Professors, controlling for other variables. rankAssoc being -5826 means Associate Professors make 5826 less than Full Professors, controlling for other variables. The same information in the previous model is presented in a different way.
+
+## e)
+
+```{r}
+summary(lm(salary ~ . -rank, data = salary))
+```
+
+removing rank variables makes variable sex to be negative but still insignificant.
+
+## f)
+
+-   As per question we need to create a new variable called new_var from ys_deg variable. We should not create highly co-related variables to avoid multicollinearity. But, as a we are creating a new variable from already present it is likely that they will be co-related.
+
+```{r}
+salary$new_var <- ifelse(salary$ysdeg <= 15, 1, 0)
+cor.test(salary$new_var, salary$ysdeg)
+```
+
+-   new_var and ysdeg are -0.84 co-relation which is very high so we will remove them.
+
+```{r}
+summary(lm(salary ~ . -ysdeg, data = salary))
+```
+
+-   At 5% significance level the new dean is paying 2163 USD more to the faculties appointed under him.
+
+Let's see what would have happened if we included both variables:
+
+```{r}
+summary(lm(salary ~ . , data = salary))
+```
+
+-   none of the variable is significant because of multicollinearity.
+
+## Q.3)
+
+Loading the data
+
+```{r}
+data("house.selling.price")
+```
+
+## a)
+
+```{r}
+model <- lm(Price ~ Size + New, data = house.selling.price)
+summary(model)
+```
+
+size and the new variable are associated with price, both are significant at the 5% level. A square foot increase in the size will increase the price of house by usd 116, controlling for whether the house is new. controlling for size new houses are around usd 57736 more expensive.
+
+New houses are on average \$57736 more expensive than old houses, controlling for size.
+
+## b)
+
+the equation for predicted size of home is price = -40230.867 + 116.132\*Size + 57736.283\*new
+
+## c)
+
+```{r}
+new <- data.frame(Size = 3000, New = 1)
+
+predict(model, newdata = new)
+```
+
+```{r}
+not_new <- data.frame(Size = 3000, New = 0)
+
+predict(model, newdata = new)
+```
+
+## d)
+
+```{r}
+model_2<- lm(Price ~ Size + New + Size * New, data = house.selling.price)
+summary(model_2)
+```
+
+## e)
+
+y = 61.916\*size\**new + -78527.502*\*new +104.438\*size + -22227.808
+
+for new homes
+
+y = 61.916\*size\**1 + -78527.502*\*1 +104.438\*size + -22227.808
+
+= 166354\*size + -100755.3
+
+for old homes
+
+y = 61.916\*size\**0 + -78527.502*\*0 +104.438\*size + -22227.808
+
+= 104.438\*size + -22227.808
+
+## f)
+
+The predicted selling price, using the model with interaction terms, for a home of 3000 square feed that is new is below.
+
+```{r}
+
+predict(model_2, newdata = new)
+```
+
+The predicted selling price, using the model with interaction terms, for a home of 3000 square feed that is not new is below.
+
+```{r}
+predict(model_2, newdata = not_new)
+
+```
+
+## g)
+
+The predicted selling price, using the model with interaction terms, for a home of 1500 square feed that is new is below.
+
+```{r}
+new <- data.frame(Size = 1500, New = 1)
+
+predict(model_2, newdata = new)
+
+
+```
+
+The predicted selling price, using the model with interaction terms, for a home of 1500 square feed that is not new is below.
+
+Code
+
+    df_not_new <- data.frame(Size = 1500, New = 0)
+
+    predict(fit_3d, newdata = df_not_new)
+
+           1 
+    134429.8 
+
+In comparing the predictions for part F and G, it can be observed that the difference in selling price between a new and not new home increases as the size of the home increases.
+
+## **h**
+
+I believe the model with the interaction term best represents the relationship of size and new to the outcome price. I've come to this conclusion as the model with the interaction term has a higher adjusted R-squared and lower residual standard error than the model without the interaction term.
+
+\
+
+```{r}
+not_new <- data.frame(Size = 1500, New = 0)
+
+predict(model_2, newdata = not_new)
+```
+
+A new home of 1500 square feet has a predicted price of \$148776.1. An old home of 1500 square feet has a predicted price of \$134429.8. The difference is \$14346.3.
+
+The difference between new and old home prices is much more when the size of the home is larger. For 3000 sq ft homes, the difference is 107220.1 as opposed to the 14346.1 difference for homes that are 1500 sq ft. This is consistent with the positive coefficient for the interaction term.\
+
+## h)
+
+The model with interaction term has higher adjusted R squared even though it has a extra variable so it should be preffered.
+
+```{r}
+summary(model)
+
+
+
+```
+
+```{r}
+summary(model_2)
+
+```
+
+## 
