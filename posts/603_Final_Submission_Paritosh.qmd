@@ -1,0 +1,334 @@
+---
+title: "FInal Project Qmd file"
+author: "Paritosh G"
+desription: "Something to describe what I did"
+date: "05/25/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - challenge1
+  - my name
+  - dataset
+  - ggplot2
+---
+
+## Calling the Libraries.
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(rmarkdown)
+library(knitr)
+
+```
+
+## Reading the Data
+
+```{r}
+df <- read.csv("posts/_data/Bullying_2018.csv", sep = ";")
+```
+
+## Replacing white Spaces with "NA"
+
+Replacing the White Spaces with "NA"
+
+```{r}
+df[df == " "] <- NA
+```
+
+## Returning Relevant Numbers
+
+returning relevant numbers and getting rid of irrelevant strings such as "time", "times", "day", "days","or more" etc. as will not be helpful in model creation
+
+Using both str_sub and sub
+
+```{r}
+df$Custom_Age <- str_sub(df$Custom_Age,1,2)
+df$Physically_attacked <- sub(" .*", "", df$Physically_attacked)
+df$Physical_fighting <- sub(" .*","",df$Physical_fighting)
+df$Close_friends <- str_sub(df$Close_friends,1,2)
+df$Miss_school_no_permission <- sub(" .*","",df$Miss_school_no_permission)
+```
+
+## Recoding frequency adverbs to number
+
+Columns Such as "Felt_lonely", "Other_students_kind_and_helpful", "Parents_understand_problems" have 5 level of text responses which are replaced into numeric as follows:
+
+and levels are relevant as the value of integer increases the intensity is increasing as well
+
+1\) "Never" \<-1,
+
+2\) "Rarely" \<- 2,
+
+3\) "Sometimes" \<- 3,
+
+4\) "Most of the time" \<- 4,
+
+5\) "Always" \<- 5.
+
+```{r}
+df[df == "Never"] <- 1
+df[df == "Rarely"] <- 2
+df[df == "Sometimes"] <- 3
+df[df == "Most of the time"] <- 4
+df[df == "Always"] <- 5
+```
+
+## Replacing ***"YES" with 1*** and ***"No" with 0*** in the columns
+
+"Bullied_on_school_property_in_past_12_months" , "Bullied_not_on_school_property_in_past_12_months", "Cyber_bullied_in_past_12_months" , "Most_of_the_time_or_always_felt_lonely", "Missed_classes_or_school_without_permission".
+
+**"1" is for Bullied**
+
+**"0" is for not Bullied**
+
+```{r}
+df[df == "Yes"] <- 1
+df[df == "No"] <- 0
+```
+
+## ***Assigning data-types into Factors depending upon the requirement of the model***
+
+```{r}
+df$Bullied_on_school_property_in_past_12_months <- as.factor(df$Bullied_on_school_property_in_past_12_months)
+df$Bullied_not_on_school_property_in_past_12_months <- as.factor(df$Bullied_not_on_school_property_in_past_12_months)
+df$Cyber_bullied_in_past_12_months <- as.factor(df$Cyber_bullied_in_past_12_months)
+df$Sex <- as.factor(df$Sex)
+df$Most_of_the_time_or_always_felt_lonely <- as.factor(df$Most_of_the_time_or_always_felt_lonely)
+df$Missed_classes_or_school_without_permission <- as.factor(df$Missed_classes_or_school_without_permission)
+```
+
+## ***Assigning the data-types into integers depending upon the requirement of the model.***
+
+```{r}
+df$Custom_Age <- as.integer(df$Custom_Age)
+df$Physically_attacked <- as.integer(df$Physically_attacked)
+df$Physical_fighting <- as.integer(df$Physical_fighting)
+df$Close_friends <- as.integer(df$Close_friends)
+df$Miss_school_no_permission <- as.integer(df$Miss_school_no_permission)
+df$Felt_lonely <- as.integer(df$Felt_lonely)
+df$Other_students_kind_and_helpful <- as.integer(df$Other_students_kind_and_helpful)
+df$Parents_understand_problems <- as.integer(df$Parents_understand_problems)
+```
+
+## ***Deleting the columns which seems irrelevant to the model or they have high number of missing values***
+
+The columns we are deleting represent whether the student is overweight/underweight/obese due to following reasons
+
+1\) there are multiple responses where the entries in all 3 columns is "NA" so it is not possible to interpret it as yes/no.
+
+2\) there are multiple responses where the entries in all e columns is "NO" and we do not have a 4th option to interpret.
+
+3\) if we keep these 3 columns and delete all rows which contains atleast one "NA" we will have to delete about 20k rows out of 56981 but if we do the same task after deleting 3 columns only about 7k rows need to be deleted which contains at least one "NA" values.
+
+```{r}
+df <- df[, -c(16:18)] 
+```
+
+## ***Deleting all "NA" from columns 2 to 15***
+
+```{r}
+df <- df[complete.cases(df),]
+```
+
+## Visualizations
+
+Analysing Gender wise pattern for students who experienced bullying in past 12 months
+
+```{r}
+df %>% 
+  select(Bullied_on_school_property_in_past_12_months,Sex) %>% 
+  ggplot(aes(x = Bullied_on_school_property_in_past_12_months,fill = Sex)) +
+  geom_bar() +
+  scale_y_continuous(limits = c(0,42000), breaks = seq(0,42000,by=3000)) +
+  geom_hline(yintercept = c(4500), linetype = "dashed", color = "Brown")
+
+```
+
+-   there were about 23.26% female who experienced bullying 6219 out of 26732 of total and in males there were 4453 males out of 24022 which is about 18.53% of whom of total who expderienced bullying.
+
+***Table's showing the numbers plotted in Visualisation above.***
+
+```{r}
+df %>% 
+  count(Sex) 
+
+df %>% 
+  select(Bullied_on_school_property_in_past_12_months,Sex) %>% 
+  filter(Bullied_on_school_property_in_past_12_months == 1) %>% 
+  count(Sex)
+
+```
+
+```{r}
+df %>% 
+ggplot(aes(fill = Bullied_on_school_property_in_past_12_months, x = Custom_Age)) +
+  geom_bar() +
+  scale_x_continuous(breaks = seq(from = 10, to = 19, by = 1)) +
+  scale_y_continuous(breaks = seq(from = 0, to = 12000, by = 500))
+
+```
+
+from age 12 to 15 over 20% student overall have experience bullying and at ge 16 about 19.45 % of students have experienced bullying. the bar for 12% is not visible as very small number of responses were present for age 12.
+
+***Table's showing the values plotted in visualisation above.***
+
+```{r}
+df %>% 
+ count(Custom_Age)
+
+df %>% 
+  select(Bullied_on_school_property_in_past_12_months,Custom_Age) %>% 
+  filter(Bullied_on_school_property_in_past_12_months == 1) %>% 
+  count(Custom_Age)
+```
+
+## Model Building
+
+-   Building a model using multiple variables even if it seems slightly logical
+
+```{r}
+logistic <- glm(Bullied_on_school_property_in_past_12_months ~ Custom_Age + Sex + Felt_lonely + Close_friends + Miss_school_no_permission + Other_students_kind_and_helpful + Parents_understand_problems + Most_of_the_time_or_always_felt_lonely, family = binomial, data = df)
+summary(logistic)
+```
+
+-   Getting rid of multiple variables which are insignificant "Sex", "Parents Understand Problems", "Most of the times or always felt lonely".
+
+<div>
+
+```{r}
+logistic_U1 <- glm(Bullied_on_school_property_in_past_12_months ~ Custom_Age + Felt_lonely + Close_friends + Miss_school_no_permission + Other_students_kind_and_helpful, family = binomial, data = df)
+summary(logistic_U1)
+```
+
+</div>
+
+-   Aic score drops by 3 units after removing 3 varibles
+
+-   removing variable Missed_school_no_Permission and Close_friends
+
+```{r}
+logistic_U2 <- glm(Bullied_on_school_property_in_past_12_months ~  Felt_lonely + Custom_Age + Other_students_kind_and_helpful, family = binomial, data = df)
+summary(logistic_U2)
+```
+
+-   removing vatiable Custom_age and these are the variables with lowest p value though Custom_age as well had equally low p value the reason for removing both variables is discussed below.
+
+```{r}
+logistic_U3 <- glm(Bullied_on_school_property_in_past_12_months ~  Felt_lonely +  Other_students_kind_and_helpful, family = binomial, data = df)
+summary(logistic_U3)
+```
+
+Two Variables Custom_Age and Parents_understood_problems might be statistically significant but in practice they might not be logical.
+
+Custom_Age:- As we saw above age group in which Students are experiencing bullying around 12 to 16 in which the most number of victims are found which is in tune with most of the research papers. Secondly as the age grows around 17 to 18 students learn do differentiate with right and wrong victim starts acknowledging it and also a bully starts to realize a behavior which is might hinder their growth in society. Thirdly our data is female focused and is most likely female to female bully this form of bullying involves isolating, threatening, passing false information which could occur at any age.
+
+Parents_understand_problems :- Parents understanding problems is a variable statistically significant but logically must not be applicable much likely due to reasons.
+
+Firstly, Parents understanding problems even they did or did not it would not protect them from getting bullied as the act is carried out by a third party in absence of parents.
+
+Secondly, if the students complain and parents act on it by raising an issue with the concerned authorities irrespective of the action taken by authorities on the bully our dataset focuses on whether the victim experienced it in recent times or 12 months ago without taking note of frequency while parents not understanding the problem of bullying or some other problems faced by child is not clearly defined in the dataset.
+
+Thirdly. Suppose the parents understand the problem of their kids getting bullied and raises a complaint with the teacher but the teacher fails to solve the problem of it their is not many option apart from changing class or school.
+
+Fourthly there is not much clarity on what type of problems of the kid the parent did not understand and also evn if they acknowledge the problem of bullying or did not they cannot do much about it. Hence the variable is omitted.
+
+-   using same variables Felt_lonely, Other_students_kind_and helpful to plot two other models for "Cyber bullied in past 12 months" and "Bullied not on school property in past 12 months".
+
+```{r}
+logistic_2_a <- glm(Bullied_not_on_school_property_in_past_12_months ~  Felt_lonely +  Other_students_kind_and_helpful, family = binomial, data = df)
+summary(logistic_2_a)
+```
+
+-   The thing we should be keeping in mind is that variable "Bullied_not_on_school_property_in_past_12_months" is yes/true == 1 in case when a student is bullied outside of school premises or inside of school premises more than 12 months ago.
+
+```{r}
+logistic_3_a <- glm(Cyber_bullied_in_past_12_months ~  Felt_lonely +  Other_students_kind_and_helpful, family = binomial, data = df)
+summary(logistic_3_a)
+```
+
+## ***Plotting models***
+
+## ***Target variable is "Bullied_on school_property_in_past_12_months"***
+
+```{r}
+logistic_1.a <- glm(Bullied_on_school_property_in_past_12_months ~ Felt_lonely, family = binomial, data = df)
+x <- seq(min(df$Felt_lonely), max(df$Felt_lonely), length.out=100)
+y <- predict(logistic_1.a, newdata=data.frame(Felt_lonely=x), type="response")
+
+plot(x, y, type="l", xlab="Felt lonely", ylab="Probability of being bullied")
+
+
+```
+
+-   The kid who never felt lonely had the least probability of getting bullied than the one of who always felt lonely.( 1-\> Never, 2-\> Barely, 3-\> Sometimes, 4-\> Most of the time.)
+
+```{r}
+logistic_1.b <- glm(Bullied_on_school_property_in_past_12_months ~ Other_students_kind_and_helpful, family = binomial, data = df)
+
+x <- seq(min(df$Other_students_kind_and_helpful), max(df$Other_students_kind_and_helpful), length.out=100)
+y <- predict(logistic_1.b, newdata=data.frame(Other_students_kind_and_helpful=x), type="response")
+
+plot(x, y, type="l", xlab="Other_Students_kind_and_helpful", ylab="Probability of being bullied")
+```
+
+-   When Other students were "never" kind and helpful to a child it had the highest probability of being a victim of bullying than when when other students were "always" kind and helpful.( 1-\> Never, 2-\> Barely, 3-\> Sometimes, 4-\> Most of the time.)
+
+## ***Target variable is "Bullied\_`not`\_on school_property_in_past_12_months"*** 
+
+-   The thing we should be keeping in mind is that variable "Bullied_not_on_school_property_in_past_12_months" is yes/true == 1 in case when a student is bullied outside of school premises or inside of school premises more than 12 months ago.
+
+```{r}
+logistic_2_a <- glm(Bullied_not_on_school_property_in_past_12_months ~ Felt_lonely , family = binomial, data = df)
+summary(logistic_2_a)
+x <- seq(min(df$Felt_lonely), max(df$Felt_lonely), length.out=100)
+y <- predict(logistic_2_a, newdata=data.frame(Felt_lonely=x), type="response")
+
+plot(x, y, type="l", xlab="Felt lonely", ylab="Probability of being bullied")
+```
+
+-   The kid who never felt lonely had the least probability of getting bullied than the one of who always felt lonely.( 1-\> Never, 2-\> Barely, 3-\> Sometimes, 4-\> Most of the time.)
+
+```{r warning=FALSE}
+logistic_2_b <- glm(Bullied_not_on_school_property_in_past_12_months ~ Other_students_kind_and_helpful , family = binomial, data = df)
+summary(logistic_2_b)
+predictions <- data.frame(Other_students_kind_and_helpful = seq(min(df$Other_students_kind_and_helpful), max(df$Other_students_kind_and_helpful), length.out=100),
+Probability = predict(logistic_2_b, newdata=data.frame(Other_students_kind_and_helpful=x), type="response"))
+
+#Plot the data and the predicted probabilities
+ggplot(predictions, aes(x=Other_students_kind_and_helpful, y=Probability)) +
+geom_point() +
+geom_smooth(method="glm", se=TRUE, method.args = list(family=binomial)) +
+xlab("Other students kind and helpful") +
+ylab("Probability of being bullied") +
+scale_y_continuous(limits = c(0,1), breaks = seq(0,1,0.1))
+
+```
+
+-   When Other students were "never" kind and helpful to a child it had the highest probability of being a victim of bullying than when when other students were "always" kind and helpful.( 1-\> Never, 2-\> Barely, 3-\> Sometimes, 4-\> Most of the time.)
+
+## Using ggplot to plot "Felt_lonely" variable in logistics_2\_a it was carried out using plot function.
+
+```{r}
+logistic_2_c <- glm(Bullied_not_on_school_property_in_past_12_months ~ Felt_lonely , family = binomial, data = df)
+summary(logistic_2_c)
+predictions <- data.frame(Felt_lonely = seq(min(df$Felt_lonely), max(df$Felt_lonely), length.out=100),
+Probability = predict(logistic_2_c, newdata=data.frame(Felt_lonely=x), type="response"))
+
+#Plot the data and the predicted probabilities
+ggplot(predictions, aes(x=Felt_lonely, y=Probability)) +
+geom_point() +
+geom_smooth(method="glm", se=TRUE, method.args = list(family=binomial)) +
+xlab("Felt lonely") +
+ylab("Probability of being bullied") +
+scale_y_continuous(limits = c(0,1), breaks = seq(0,1,0.1))
+```
+
+-   The kid who never felt lonely had the least probability of getting bullied than the one of who always felt lonely.( 1-\> Never, 2-\> Barely, 3-\> Sometimes, 4-\> Most of the time.)
+
+-   The plots for cyber bullying provide the same information which the previous 2 variables provided thus not plotting it. Plots have also helped us to individual effects of levels or frequency adverbs such as (1-\> Never, 2-\> Barely, 3-\> Sometimes, 4-\> Most of the time for the variables "Felt_lonely" and "Other_students_kind_and_helpful". Hence, its not required to convert these two variable to a factor and create a model and summary gain to learn about effects of individual levels.

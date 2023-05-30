@@ -1,0 +1,165 @@
+---
+title: "Check in 1 and 2 "
+author: "Paritosh G"
+description: "Template of course blog qmd file"
+date: "04/05/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - Paritosh G
+
+---
+
+## Research Question
+
+Identifying the Factors which makes Students most vulnerable to be a victim of Bullying.
+
+Calling the libraries
+
+```{r}
+library(tidyverse)
+library(stringr)
+library(rmarkdown)
+library(knitr)
+
+```
+
+Reading the data
+
+```{r}
+data <- read.csv("_data/Bullying_2018.csv", sep = ";")
+```
+
+Replacing the White Spaces with "NA"
+
+```{r}
+data[data == " "] <- NA
+```
+
+returning Sub-Strings of **"years old"** from Column "Custom *Age" && **"time" , "times", " or..." f**rom Column "Physically\_* attacked", "Physical_fighting", "Close_friends" && **"day", "days", " \-\--to....", "\--or..."** from the column Miss_school_no_permission.
+
+Using both str_sub and sub
+
+```{r}
+data$Custom_Age <- str_sub(data$Custom_Age,1,2)
+data$Physically_attacked <- sub(" .*", "", data$Physically_attacked)
+data$Physical_fighting <- sub(" .*","",data$Physical_fighting)
+data$Close_friends <- str_sub(data$Close_friends,1,2)
+data$Miss_school_no_permission <- sub(" .*","",data$Miss_school_no_permission)
+```
+
+Columns Such as "Felt_lonely", "Other_students_kind_and_helpful", "Parents_understand_problems" have 5 level of text responses which are replaced into numeric as follows:
+
+1\) "Never" \<-1,
+
+2\) "Rarely" \<- 2,
+
+3\) "Sometimes" \<- 3,
+
+4\) "Most of the time" \<- 4,
+
+5\) "Always" \<- 5.
+
+```{r}
+data[data == "Never"] <- 1
+data[data == "Rarely"] <- 2
+data[data == "Sometimes"] <- 3
+data[data == "Most of the time"] <- 4
+data[data == "Always"] <- 5
+```
+
+Replacing ***"YES" with 1*** and ***"No" with 0*** in the columns "Bullied_on_school_property_in_past_12_months" , "Bullied_not_on_school_property_in_past_12_months", "Cyber_bullied_in_past_12_months" , "Most_of_the_time_or_always_felt_lonely", "Missed_classes_or_school_without_permission".
+
+```{r}
+data[data == "Yes"] <- 1
+data[data == "No"] <- 0
+```
+
+Assigning data-types into Factors depending upon the requirement of the model
+
+```{r}
+data$Bullied_on_school_property_in_past_12_months <- as.factor(data$Bullied_on_school_property_in_past_12_months)
+data$Bullied_not_on_school_property_in_past_12_months <- as.factor(data$Bullied_not_on_school_property_in_past_12_months)
+data$Cyber_bullied_in_past_12_months <- as.factor(data$Cyber_bullied_in_past_12_months)
+data$Sex <- as.factor(data$Sex)
+data$Felt_lonely <- as.factor(data$Felt_lonely)
+data$Other_students_kind_and_helpful <- as.factor(data$Other_students_kind_and_helpful)
+data$Parents_understand_problems <- as.factor(data$Parents_understand_problems)
+data$Most_of_the_time_or_always_felt_lonely <- as.factor(data$Most_of_the_time_or_always_felt_lonely)
+data$Missed_classes_or_school_without_permission <- as.factor(data$Missed_classes_or_school_without_permission)
+
+```
+
+Assigning the data-types into integers depending upon the requirement of the model.
+
+```{r}
+data$Custom_Age <- as.integer(data$Custom_Age)
+data$Physically_attacked <- as.integer(data$Physically_attacked)
+data$Physical_fighting <- as.integer(data$Physical_fighting)
+data$Close_friends <- as.integer(data$Close_friends)
+data$Miss_school_no_permission <- as.integer(data$Miss_school_no_permission)
+
+```
+
+Deleting the columns which seems irrelevant to the model or they have high number of missing values
+
+```{r}
+data <- data[, -c(16:18)]
+```
+
+Deleting "NA" from columns 2 to 15
+
+```{r}
+data <- data[complete.cases(data),]
+```
+
+Coding the Logistic Regression Model
+
+Null Hypothesis :- Factors such as:
+
+1)Custom_Age
+
+2\) Sex
+
+3)Degree to which the student was feeling lonely there are 5 levels in the dataset related to it
+
+4\) Number of Close friends the student has
+
+5\) Number of days the student missed school without permission there are 5 levels mentioned in the dataset related to it
+
+6\) Degree to which other students are kind and helpful
+
+7\) Degree to which parents understand their problems
+
+8\) Whether they felt lonely Most of the time or always.
+
+```{r}
+logistic <- glm(Bullied_on_school_property_in_past_12_months ~ Custom_Age + Sex + Felt_lonely + Close_friends + Miss_school_no_permission + Other_students_kind_and_helpful + Parents_understand_problems + Most_of_the_time_or_always_felt_lonely, family = binomial, data = data)
+summary(logistic)
+
+```
+
+Model-2 deleting variable Sex from the previous variable
+
+```{r}
+logistic_2 <- glm(Bullied_on_school_property_in_past_12_months ~ Custom_Age  + Felt_lonely + Close_friends + Miss_school_no_permission + Other_students_kind_and_helpful + Parents_understand_problems + Most_of_the_time_or_always_felt_lonely, family = binomial, data = data)
+summary(logistic_2)
+```
+
+Model-3 generating model to learn about the factors affecting cyber bullying
+
+```{r}
+logistic3 <- glm(Cyber_bullied_in_past_12_months ~ Custom_Age + Sex + Felt_lonely + Close_friends + Miss_school_no_permission + Other_students_kind_and_helpful + Parents_understand_problems + Most_of_the_time_or_always_felt_lonely, family = binomial, data = data)
+summary(logistic3)
+
+```
+
+```{r}
+#render("Check_in_1&2.qmd", output_file = "my_document.html", output_format = "html_document")
+
+```
