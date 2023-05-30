@@ -1,0 +1,207 @@
+---
+title: "Homework_5"
+author: "Paritosh G"
+desription: "HW_5"
+date: "05/28/2023"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - hw1
+  - challenge1
+  - my name
+  - dataset
+  - ggplot2
+---
+
+Loding the libraries
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(smss)
+library(alr4)
+library(magrittr)
+library(broom)
+```
+
+## Question 1
+
+```{r}
+
+data("house.selling.price.2")
+
+df <- house.selling.price.2
+```
+
+```{r}
+house_price <- lm(P ~ S + Be + Ba + New, data = df)
+summary(house_price)
+```
+
+## a)
+
+-   Beds would be deleted first as its p value of 0.4867 not statistically significant
+
+## b)
+
+-   Size(s) has the smallest p value and hence in forward method when we start with no explanatory variable Size(s) should be added first.
+
+## c)
+
+House with more bedrooms have most likely more number of bathrooms hence larger in size. If size, bedrooms, and bathrooms all are measuring price the high p value of bed is due to multi-collinearity.
+
+## d)
+
+```{r}
+fit_No_Bed <- lm(P ~ S + Ba + New, data = df)
+fit_No_Bed_and_Bath <- lm(P ~ S + New, data = df)
+fit_new <- lm(P ~ New, data = df)
+
+```
+
+***R2***
+
+```{r}
+summary(fit_No_Bed)$r.squared
+summary(fit_No_Bed_and_Bath)$r.squared
+summary(fit_new)$r.squared
+```
+
+-   fit_No_Bed model is the best with highest R2 and our best model.
+
+***Adjusted R2***
+
+```{r}
+summary(fit_No_Bed)$adj.r.squared
+summary(fit_No_Bed_and_Bath)$adj.r.squared
+summary(fit_new)$adj.r.squared
+
+
+
+
+
+```
+
+-   fit_No_Bed model has the highest adjusted R squared and our best model.
+
+***Press***
+
+**function for calculating press stat.**
+
+```{r}
+press_stat <- function(model) {
+  # Calculate PRESS residuals
+  pr <- resid(model) / (1 - lm.influence(model)$hat)
+  
+  # Compute the PRESS statistic
+  press <- sum(pr^2)
+  
+  return(press)
+}
+```
+
+calculating Press statistic for all models
+
+```{r}
+press_stat(fit_No_Bed)
+press_stat(fit_No_Bed_and_Bath)
+press_stat(fit_new)
+
+```
+
+-   fit_no_Bed_and_Bath has the lowest Press of 31066 and it is our best model.
+
+***AIC***
+
+```{r}
+AIC(fit_No_Bed)
+AIC(fit_No_Bed_and_Bath)
+AIC(fit_new)
+
+```
+
+-   fit_No_bed has the lowest AIC score and is our best model.
+
+***BIC***
+
+```{r}
+BIC(fit_No_Bed)
+BIC(fit_No_Bed_and_Bath)
+BIC(fit_new)
+```
+
+-   fit_No_Bed has the lowest BIC score and is our best model
+
+## e)
+
+hence model fit_no_Bed with variables size,bathroom and new is our best model.
+
+## Q.2)
+
+```{r}
+data(trees)
+```
+
+## a)
+
+```{r}
+model <- lm(Volume ~ Girth + Height, data = trees)
+summary(tree_model)
+```
+
+## b)
+
+```{r}
+par(mfrow = c(2,3))
+plot(model, which = 1:6)
+```
+
+**Residuals vs Fitted**
+
+The curved shape of the line suggests this model violates our assumption of linearity that the relationship between the independent and dependent variables is linear.
+
+**Scale-Location**
+
+The curved shape of the line suggests this model violates our assumption of constant variance, or homoscedasticity, which affects the statistical significance of the model.
+
+**Cooks Distance, Residuals vs Leverage, Cooks dist vs Leverage**
+
+All three charts show there is single, potentially influence point, which can impact whether our model meets the assumptions of linear regression and can disproportionately affect our regression coefficients.
+
+## Q.3)
+
+## a)
+
+```{r}
+data("florida")
+model_2 <- lm(Buchanan ~ Bush, data = florida)
+par(mfrow = c(2,3))
+plot(model_2, which = 1:6)
+```
+
+Yes, based on the diagnostic plots, Palm Beach County is an outlier.
+
+On the Residuals vs. Fitted Values plot, the residuals largely "bounce randomly" around the zero line and form a roughly horizontal band around the zero line - with Dade and Palm Beach as significant outliers.
+
+The Normal Q-Q plot follows a straight line and the points do not deviate significantly from the line - again, with two major exceptions: Dade, and Palm Beach. The Scale-Location plot is roughly horizonal, but again has a major exception: Palm Beach.
+
+Finally, the Resisuals vs. Leverage plot shows outliers outside of Cook's distance - Dade, and once again, Palm Beach.
+
+## b)
+
+```{r}
+LogBuchanan <- lm(log(Buchanan) ~ log(Bush), data = florida)
+summary(LogBuchanan)
+```
+
+```{r}
+# Produce the regression diagnostic plots
+par(mfrow = c(2, 2))
+plot(LogBuchanan)
+```
+
+The p-value has gotten smaller and the adjusted r squared has gone from 0.3795 to 0.8485, suggesting that the log-log model is a better-fitting model. When it comes to the diagnostic plots, however, Palm Beach is still a notable outlier on the Residuals vs. Fitted, Normal Q-Q, and Scale-Location plots. It is now within Cook's distance on the Residuals vs. Leverage plot.
