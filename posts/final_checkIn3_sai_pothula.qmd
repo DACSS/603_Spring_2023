@@ -14,6 +14,50 @@ categories:
   - sai Pothula
 ---
 
+Research question: 
+1.why is there a significant correlation between mental health status and CGPA among university students?
+       2.How does the use of mental health resources, such as counselling or therapy, have a positive impact on academic performance?
+      3. How does demographic factors, such as gender or ethnicity, influence the relationship between mental health and academic performance?
+
+
+Hypothesis: There is a significant correlation between poor mental health status and CGPA among university students. 
+
+Introduction:
+
+The mental health of university students has become a growing concern in recent years. Many students experience various stressors, such as academic pressures, social challenges, and the transition to a new environment, which can significantly impact their overall well-being. One area of particular interest is the relationship between mental health status and academic performance, measured by the Cumulative Grade Point Average (CGPA). Understanding this correlation is essential for developing effective strategies and interventions to support students' mental health and improve their academic outcomes.
+
+The hypothesis suggests that there is a significant correlation between poor mental health status and CGPA among university students. It is posited that students who experience mental health difficulties may face challenges in managing their academic responsibilities, leading to lower CGPA scores. Furthermore, demographic factors, such as gender, ethnicity, and course of study, may influence this relationship. Certain groups may be more vulnerable to poor mental health outcomes, which can in turn impact their academic performance.
+
+This research aims to explore the reasons behind the significant correlation between mental health status and CGPA among university students. By understanding the factors contributing to this relationship, educational institutions and support services can tailor interventions and resources to address the mental health needs of students, ultimately promoting both their well-being and academic success.
+
+
+Descriptive statistics        
+
+This dataset has 101 rows, 11 columns and 44 missing values 
+
+timestamp: indicates the date and time when the survey was completed by the respondent.
+
+Choose your gender : is a categorical variable that indicates the respondent's gender.
+
+Age: is a numerical variable that indicates the respondent's age in years.
+
+What is your course: is a categorical variable that indicates the respondent's academic program or field of study.
+
+Your current year of Study: is a categorical variable that indicates the respondent's current year of study in their academic program.
+
+What is your CGPA: is a numerical variable that indicates the respondent's cumulative grade point average.
+
+Marital status: is a categorical variable that indicates the respondent's current marital status.
+
+Do you have Depression: is a categorical variable that indicates whether the respondent has ever been diagnosed with or experienced symptoms of depression.
+
+Do you have Anxiety: is a categorical variable that indicates whether the respondent has ever been diagnosed with or experienced symptoms of anxiety.
+Do you have Panic attack: is a categorical variable that indicates whether the respondent has ever been diagnosed with or experienced symptoms of panic attacks.
+
+Did you seek any specialist for treatment: is a categorical variable that indicates whether the respondent has sought out any specialist for treatment related to their mental health issues. The variable includes a brief description of the types of specialists sought out by the respondents.
+
+
+
 ```{r}
 library(tidyverse)
 library(readr)
@@ -40,6 +84,87 @@ health[44,'Age'] <- median(health$Age, na.rm =T)
 
 ```{r}
 unique(health$Year)
+```
+
+```{r}
+# Assuming you have a data frame named 'health'
+
+# Group by Age and calculate the count
+grouped_data <- health %>%
+  group_by(Age) %>%
+  summarize(count = n())
+
+# Create the bar plot using ggplot2
+ggplot(grouped_data, aes(x = Age, y = count, fill = count)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = count), vjust = -0.5, size = 3) +
+  labs(title = "Distribution of Age") +
+  theme_minimal()
+
+```
+
+```{r}
+Health_SummaryStat2 <- health %>%
+  group_by(Depression) %>%
+  summarise(count = n(),
+            percentage = round((n()/ nrow(health)), digits = 4))
+
+colors <- c("pink", "cyan", "blue")  # Define colors for the pie chart
+
+# Create the pie chart using the pie() function
+pie(Health_SummaryStat2$percentage, labels = Health_SummaryStat2$Depression,
+    col = colors,
+    main = "Pie Chart of Depression",
+    cex.main = 1.2,
+    cex.lab = 1.2)
+
+# Add a legend
+legend("topright", legend = Health_SummaryStat2$Depression,
+       fill = colors, cex = 1.2)
+
+
+```
+
+
+```{r}
+health %>%
+  count(Gender, Depression, sort = F) %>%
+  group_by(Gender) %>%
+  mutate(prop = round((n / sum(n)), digits = 4)) %>%
+  ggplot(aes(x = Gender, y = prop, fill = Depression)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = paste(Gender, prop * 100, "%")), position = position_stack(vjust = 0.5)) +
+  labs(title = "Barplot of Depression amongst Genders") +
+  theme_minimal()
+
+```
+```{r}
+
+health %>%
+  count(CGPA, Depression, sort = F) %>%
+  mutate(proportion = round((n / sum(n)), digits = 4)) %>%
+  ggplot(aes(x = CGPA, y = proportion, fill = Depression)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Barplot of Depression vs CGPA") +
+  theme_minimal()
+
+```
+
+```{r}
+
+health %>%
+  filter(grepl('BIT|KOE|BCS|Engineering|Biomedical science', Course)) %>%
+  count(Course, Depression, sort = T) %>%
+  group_by(Course) %>%
+  mutate(prop = round((n / sum(n)), digits = 4)) %>%
+  ggplot(aes(x = Course, y = n, fill = Depression)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = paste(Course, n)),
+            position = position_stack(vjust = 0.5),
+            color = "black") +
+  labs(title = "Barplot of Depression amongst the top 5 Courses") +
+  theme_minimal()
+
 ```
 
 ```{r}
@@ -112,23 +237,25 @@ train_data$CGPA <- ifelse(train_data$CGPA >= 3.00, 1, 0)
 ```
 
 ```{r}
-view(train_data)
-```
-
-
-```{r}
 
 # Fit logistic regression models
 
 # Research Question 1: Why is there a significant correlation between mental health status and CGPA among university students?
 model1 <- glm(CGPA ~ Anxiety, data = train_data, family = binomial)
 
-
 # Print the model summaries
 summary(model1)
-
 ```
 Based on the output, the model suggests that there is no statistically significant association between Anxiety (as a predictor) and CGPA. The p-value for the AnxietyYes coefficient (p = 0.129) is greater than the conventional significance level (e.g., 0.05), indicating that the relationship between Anxiety and CGPA is not statistically significant in this model.
+
+```{r}
+# Calculate AIC and BIC
+AIC_val <- AIC(model1)
+BIC_val <- BIC(model1)
+cat("AIC:", AIC_val, "\n")
+cat("BIC:", BIC_val, "\n")
+
+```
 
 ```{r}
 
@@ -140,11 +267,31 @@ summary(model1)
 
 ```
 Based on the output, the model suggests that there is no statistically significant association between Depression (as a predictor) and CGPA. The p-value for the DepressionYes coefficient (p = 0.745) is greater than the conventional significance level (e.g., 0.05), indicating that the relationship between Depression and CGPA is not statistically significant in this model.
+
+```{r}
+# Calculate AIC and BIC
+AIC_val <- AIC(model1)
+BIC_val <- BIC(model1)
+cat("AIC:", AIC_val, "\n")
+cat("BIC:", BIC_val, "\n")
+
+```
+
 ```{r}
 model1 <- glm(CGPA ~ Panic_Attack, data = train_data, family = binomial)
 summary(model1)
 
 ```
+
+```{r}
+# Calculate AIC and BIC
+AIC_val <- AIC(model1)
+BIC_val <- BIC(model1)
+cat("AIC:", AIC_val, "\n")
+cat("BIC:", BIC_val, "\n")
+
+```
+
 Based on the output you shared, the model suggests that there is no statistically significant association between Panic_Attack (as a predictor) and CGPA. The p-value for the Panic_AttackYes coefficient (p = 0.228) is greater than the conventional significance level (e.g., 0.05), indicating that the relationship between Panic_Attack and CGPA is not statistically significant in this model.
 
 After performing logistic regression, based on these results, it can be concluded that the research question of whether there is a significant correlation between mental health status and CGPA among university students is not supported. This implies that anxiety,Panic attack,Depression levels alone may not have a direct impact on students' academic performance, as measured by CGPA, in the context of this study.
@@ -157,6 +304,15 @@ Model 2:
 model2 <- glm(CGPA ~ Treatment, data = train_data, family = binomial)
 summary(model2)
 
+
+```
+
+```{r}
+# Calculate AIC and BIC
+AIC_val <- AIC(model2)
+BIC_val <- BIC(model2)
+cat("AIC:", AIC_val, "\n")
+cat("BIC:", BIC_val, "\n")
 
 ```
 
@@ -182,7 +338,7 @@ Model 3:
 
 ```{r}
 # Research Question 3: How does demographic factors, such as gender or ethnicity, influence the relationship between mental health and academic performance?
-model3 <- glm(CGPA ~ Gender + Anxiety +Age + Course + Married + Depression data = train_data, family = binomial)
+model3 <- glm(CGPA ~ Gender + Anxiety +Age + Course + Married + Depression, data = train_data, family = binomial)
 summary(model3)
 
 ```
@@ -192,6 +348,16 @@ Hypothesis testing
 
 anova_test <- anova(model3, test = "Chi")
 print(anova_test)
+```
+
+
+```{r}
+# Calculate AIC and BIC
+AIC_val <- AIC(model3)
+BIC_val <- BIC(model3)
+cat("AIC:", AIC_val, "\n")
+cat("BIC:", BIC_val, "\n")
+
 ```
 
 
